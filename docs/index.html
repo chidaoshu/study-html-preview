@@ -1,8 +1,65 @@
-<!DOCTYPE html><html lang="zh"><head><meta charset="utf-8">
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>学习 HTML 预览</title>
-<style>body{font-family:system-ui,sans-serif;max-width:40rem;margin:2rem auto;padding:0 1rem;line-height:1.8}h2{margin-top:2rem;font-size:1.1rem}a{display:block}</style>
-</head><body><h1>学习 HTML 预览</h1>
-<h2>database</h2>
-<a href="database/vol-5/">vol-5/</a>
-</body></html>
+<meta name="robots" content="noindex">
+<title>学習ページ集</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:2.5rem 1.25rem 4rem;
+  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",
+    "Yu Gothic",Meiryo,sans-serif;
+  line-height:1.7;color:#1a1d21;background:#f6f7f9;
+  -webkit-text-size-adjust:100%}
+.wrap{max-width:46rem;margin:0 auto}
+header{margin-bottom:2.5rem}
+h1{margin:0;font-size:1.6rem;letter-spacing:.02em}
+.sub{margin:.4rem 0 0;color:#5c6672;font-size:.9rem}
+.card{background:#fff;border:1px solid #e3e6ea;border-radius:12px;
+  padding:1.25rem 1.4rem;margin-bottom:1rem}
+.card h2{margin:0 0 .9rem;font-size:1.1rem;display:flex;align-items:baseline;gap:.6rem}
+.card h2 .count{font-size:.75rem;font-weight:400;color:#8a94a0}
+.group{margin-top:1rem}
+.group:first-of-type{margin-top:0}
+.group h3{margin:0 0 .35rem;font-size:.75rem;font-weight:600;
+  letter-spacing:.08em;color:#7a8492;text-transform:none}
+ul{list-style:none;margin:0;padding:0}
+li+li{margin-top:.15rem}
+a{display:block;padding:.45rem .6rem;margin-left:-.6rem;border-radius:7px;
+  color:#15427a;text-decoration:none;font-size:.94rem}
+a:hover,a:focus-visible{background:#eef2f7;text-decoration:underline}
+footer{margin-top:2.5rem;color:#8a94a0;font-size:.8rem;line-height:1.6}
+.empty{color:#8a94a0;font-size:.9rem}
+@media (prefers-color-scheme:dark){
+  body{color:#e6e9ed;background:#15181c}
+  .sub,.card h2 .count,footer,.empty{color:#98a2ae}
+  .card{background:#1d2126;border-color:#2c323a}
+  .group h3{color:#8b96a4}
+  a{color:#8fbcf5}
+  a:hover,a:focus-visible{background:#262c34}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>学習ページ集</h1>
+    <p class="sub">授業内容のまとめ・復習用ページです。スマホでもそのまま見られます。</p>
+  </header>
+    <section class="card">
+      <h2>データベースⅠ<span class="count">1 ページ</span></h2>
+      <div class="group">
+        <h3>復習まとめ</h3>
+        <ul>
+        <li><a href="database/review/vol-5/">Vol.5 要点 — 3-5 ORDER BY 句</a></li>
+        </ul>
+      </div>
+    </section>
+  <footer>
+    学生が自習用に作成した非公式のまとめです。内容に誤りが含まれている可能性が
+    あるため、試験対策では授業のノートと教科書を優先してください。
+  </footer>
+</div>
+</body>
+</html>
