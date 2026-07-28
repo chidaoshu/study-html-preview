@@ -28,12 +28,16 @@ ul{list-style:none;margin:0;padding:0}
 li+li{margin-top:.15rem}
 a{display:block;padding:.45rem .6rem;margin-left:-.6rem;border-radius:7px;
   color:#15427a;text-decoration:none;font-size:.94rem}
-a:hover,a:focus-visible{background:#eef2f7;text-decoration:underline}
+a:hover,a:focus-visible{background:#eef2f7}
+a:hover .t,a:focus-visible .t{text-decoration:underline}
+.t{display:block}
+time{display:block;margin-top:.1rem;font-size:.74rem;color:#8a94a0;
+  font-variant-numeric:tabular-nums}
 footer{margin-top:2.5rem;color:#8a94a0;font-size:.8rem;line-height:1.6}
 .empty{color:#8a94a0;font-size:.9rem}
 @media (prefers-color-scheme:dark){
   body{color:#e6e9ed;background:#15181c}
-  .sub,.card h2 .count,footer,.empty{color:#98a2ae}
+  .sub,.card h2 .count,footer,.empty,time{color:#98a2ae}
   .card{background:#1d2126;border-color:#2c323a}
   .group h3{color:#8b96a4}
   a{color:#8fbcf5}
