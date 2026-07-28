@@ -26,13 +26,13 @@ h1{margin:0;font-size:1.6rem;letter-spacing:.02em}
   letter-spacing:.08em;color:#7a8492;text-transform:none}
 ul{list-style:none;margin:0;padding:0}
 li+li{margin-top:.15rem}
-a{display:block;padding:.45rem .6rem;margin-left:-.6rem;border-radius:7px;
+a{display:flex;justify-content:space-between;align-items:baseline;gap:.5rem;padding:.45rem .6rem;margin-left:-.6rem;border-radius:7px;
   color:#15427a;text-decoration:none;font-size:.94rem}
 a:hover,a:focus-visible{background:#eef2f7}
 a:hover .t,a:focus-visible .t{text-decoration:underline}
-.t{display:block}
-time{display:block;margin-top:.1rem;font-size:.74rem;color:#8a94a0;
-  font-variant-numeric:tabular-nums}
+.t{flex:1 1 auto;word-break:break-word}
+time{flex:0 0 auto;font-size:.74rem;color:#8a94a0;
+  font-variant-numeric:tabular-nums;white-space:nowrap}
 footer{margin-top:2.5rem;color:#8a94a0;font-size:.8rem;line-height:1.6}
 .empty{color:#8a94a0;font-size:.9rem}
 @media (prefers-color-scheme:dark){
