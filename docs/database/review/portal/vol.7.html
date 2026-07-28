@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vol.7 要点 — 3-16〜3-19 結合</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/review.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <div class="kick"><a href="index.html" style="color:var(--blue);text-decoration:none;margin-right:8px">← 全 Vol ポータル</a> Vol.7 ／ 要点</div>
+  <h1>3-16〜3-19 結合</h1>
+  
+</header>
+
+<nav class="toc">
+  <a href="#s1">3-16 結合とは？</a>
+  <a href="#s6">3-17 等価結合と自然結合</a>
+  <a href="#s10">3-18 非等価結合・デカルト積</a>
+  <a href="#s14">3-19 3つ以上の結合</a>
+</nav>
+
+<details class="ref">
+  <summary>参考：EMP / DEPT 表のデータと関係</summary>
+  <div class="rbody">
+
+  <div class="h first">EMP（子表・外部キー：DEPTNO）</div>
+  <div class="tw" style="margin-bottom:14px"><table class="dt">
+    <thead><tr><th>EMPNO</th><th>ENAME</th><th>JOB</th><th>MGR</th><th>HIREDATE</th><th>SAL</th><th>COMM</th><th>DEPTNO</th></tr></thead>
+    <tbody>
+      <tr><td>7369</td><td>SMITH</td><td>CLERK</td><td>7902</td><td>1980/12/17</td><td class="num">800</td><td class="nul"></td><td class="num">20</td></tr>
+      <tr><td>7499</td><td>ALLEN</td><td>SALESMAN</td><td>7698</td><td>1981/2/20</td><td class="num">1600</td><td class="num">300</td><td class="num">30</td></tr>
+      <tr><td>7521</td><td>WARD</td><td>SALESMAN</td><td>7698</td><td>1981/2/22</td><td class="num">1250</td><td class="num">500</td><td class="num">30</td></tr>
+      <tr><td>7566</td><td>JONES</td><td>MANAGER</td><td>7839</td><td>1981/4/2</td><td class="num">2975</td><td class="nul"></td><td class="num">20</td></tr>
+      <tr><td>7654</td><td>MARTIN</td><td>SALESMAN</td><td>7698</td><td>1981/9/28</td><td class="num">1250</td><td class="num">1400</td><td class="num">30</td></tr>
+      <tr><td>7698</td><td>BLAKE</td><td>MANAGER</td><td>7839</td><td>1981/5/1</td><td class="num">2850</td><td class="nul"></td><td class="num">30</td></tr>
+      <tr><td>7782</td><td>CLARK</td><td>MANAGER</td><td>7839</td><td>1981/6/9</td><td class="num">2450</td><td class="nul"></td><td class="num">10</td></tr>
+      <tr><td>7788</td><td>SCOTT</td><td>ANALYST</td><td>7566</td><td>1987/4/19</td><td class="num">3000</td><td class="nul"></td><td class="num">20</td></tr>
+      <tr><td>7839</td><td>KING</td><td>PRESIDENT</td><td class="nul"></td><td>1981/11/17</td><td class="num">5000</td><td class="nul"></td><td class="num">10</td></tr>
+      <tr><td>7844</td><td>TURNER</td><td>SALESMAN</td><td>7698</td><td>1981/9/8</td><td class="num">1500</td><td class="nul"></td><td class="num">30</td></tr>
+      <tr><td>7876</td><td>ADAMS</td><td>CLERK</td><td>7788</td><td>1987/5/23</td><td class="num">1100</td><td class="nul"></td><td class="num">20</td></tr>
+      <tr><td>7900</td><td>JAMES</td><td>CLERK</td><td>7698</td><td>1981/12/3</td><td class="num">950</td><td class="nul"></td><td class="num">30</td></tr>
+      <tr><td>7902</td><td>FORD</td><td>ANALYST</td><td>7566</td><td>1981/12/3</td><td class="num">3000</td><td class="nul"></td><td class="num">20</td></tr>
+      <tr><td>7934</td><td>MILLER</td><td>CLERK</td><td>7782</td><td>1982/1/23</td><td class="num">1300</td><td class="nul"></td><td class="num">10</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="h">DEPT（親表・主キー：DEPTNO）</div>
+  <div class="tw" style="margin-bottom:14px"><table class="dt">
+    <thead><tr><th>DEPTNO</th><th>DNAME</th><th>LOC</th></tr></thead>
+    <tbody>
+      <tr><td>10</td><td>ACCOUNTING</td><td>NEW YORK</td></tr>
+      <tr><td>20</td><td>RESEARCH</td><td>DALLAS</td></tr>
+      <tr><td>30</td><td>SALES</td><td>CHICAGO</td></tr>
+      <tr><td>40</td><td>OPERATIONS</td><td>BOSTON</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="h">DEPT／EMP の関係（ER図を転記）</div>
+  <div class="tw" style="margin-bottom:14px"><table class="gt">
+    <thead><tr><th>表</th><th>列</th><th>キー</th></tr></thead>
+    <tbody>
+      <tr><td>DEPT</td><td>DEPTNO</td><td>PK</td></tr>
+      <tr><td>DEPT</td><td>DNAME, LOC</td><td></td></tr>
+      <tr><td>EMP</td><td>EMPNO</td><td>PK</td></tr>
+      <tr><td>EMP</td><td>ENAME, JOB, MGR, HIREDATE, SAL, COMM</td><td></td></tr>
+      <tr><td>EMP</td><td>DEPTNO</td><td>FK → DEPT.DEPTNO</td></tr>
+      <tr><td>関係</td><td colspan="2">DEPT (1) ──o&#123; (多) EMP　＝　1対多</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="h">SALGRADE（給与階級）</div>
+  <div class="tw" style="margin-bottom:14px"><table class="dt">
+    <thead><tr><th>GRADE</th><th>LOSAL</th><th>HISAL</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td class="num">700</td><td class="num">1200</td></tr>
+      <tr><td>2</td><td class="num">1201</td><td class="num">1400</td></tr>
+      <tr><td>3</td><td class="num">1401</td><td class="num">2000</td></tr>
+      <tr><td>4</td><td class="num">2001</td><td class="num">3000</td></tr>
+      <tr><td>5</td><td class="num">3001</td><td class="num">9999</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="h">emp_dept（結合結果例・14件中13件表示）</div>
+  <div class="tw" style="margin-bottom:14px"><table class="dt">
+    <thead><tr><th>EMPNO</th><th>ENAME</th><th>JOB</th><th>MGR</th><th>HIREDATE</th><th>SAL</th><th>COMM</th><th>EMP.DEPTNO</th><th>DEPT.DEPTNO</th><th>DNAME</th><th>LOC</th></tr></thead>
+    <tbody>
+      <tr><td>7782</td><td>CLARK</td><td>MANAGER</td><td>7839</td><td>1981/06/09</td><td class="num">2450</td><td class="nul"></td><td class="num">10</td><td class="num">10</td><td>ACCOUNTING</td><td>NEW YORK</td></tr>
+      <tr><td>7839</td><td>KING</td><td>PRESIDENT</td><td class="nul"></td><td>1981/11/17</td><td class="num">5000</td><td class="nul"></td><td class="num">10</td><td class="num">10</td><td>ACCOUNTING</td><td>NEW YORK</td></tr>
+      <tr><td>7934</td><td>MILLER</td><td>CLERK</td><td>7782</td><td>1982/01/23</td><td class="num">1300</td><td class="nul"></td><td class="num">10</td><td class="num">10</td><td>ACCOUNTING</td><td>NEW YORK</td></tr>
+      <tr><td>7369</td><td>SMITH</td><td>CLERK</td><td>7902</td><td>1980/12/17</td><td class="num">800</td><td class="nul"></td><td class="num">20</td><td class="num">20</td><td>RESEARCH</td><td>DALLAS</td></tr>
+      <tr><td>7566</td><td>JONES</td><td>MANAGER</td><td>7839</td><td>1981/04/02</td><td class="num">2975</td><td class="nul"></td><td class="num">20</td><td class="num">20</td><td>RESEARCH</td><td>DALLAS</td></tr>
+      <tr><td>7788</td><td>SCOTT</td><td>ANALYST</td><td>7566</td><td>1987/04/19</td><td class="num">3000</td><td class="nul"></td><td class="num">20</td><td class="num">20</td><td>RESEARCH</td><td>DALLAS</td></tr>
+      <tr><td>7876</td><td>ADAMS</td><td>CLERK</td><td>7788</td><td>1987/05/23</td><td class="num">1100</td><td class="nul"></td><td class="num">20</td><td class="num">20</td><td>RESEARCH</td><td>DALLAS</td></tr>
+      <tr><td>7902</td><td>FORD</td><td>ANALYST</td><td>7566</td><td>1981/12/03</td><td class="num">3000</td><td class="nul"></td><td class="num">20</td><td class="num">20</td><td>RESEARCH</td><td>DALLAS</td></tr>
+      <tr><td>7499</td><td>ALLEN</td><td>SALESMAN</td><td>7698</td><td>1981/02/20</td><td class="num">1600</td><td class="num">300</td><td class="num">30</td><td class="num">30</td><td>SALES</td><td>CHICAGO</td></tr>
+      <tr><td>7521</td><td>WARD</td><td>SALESMAN</td><td>7698</td><td>1981/02/22</td><td class="num">1250</td><td class="num">500</td><td class="num">30</td><td class="num">30</td><td>SALES</td><td>CHICAGO</td></tr>
+      <tr><td>7654</td><td>MARTIN</td><td>SALESMAN</td><td>7698</td><td>1981/09/28</td><td class="num">1250</td><td class="num">1400</td><td class="num">30</td><td class="num">30</td><td>SALES</td><td>CHICAGO</td></tr>
+      <tr><td>7698</td><td>BLAKE</td><td>MANAGER</td><td>7839</td><td>1981/05/01</td><td class="num">2850</td><td class="nul"></td><td class="num">30</td><td class="num">30</td><td>SALES</td><td>CHICAGO</td></tr>
+      <tr><td>7844</td><td>TURNER</td><td>SALESMAN</td><td>7698</td><td>1981/09/08</td><td class="num">1500</td><td class="num">0</td><td class="num">30</td><td class="num">30</td><td>SALES</td><td>CHICAGO</td></tr>
+      <tr class="elip"><td>〈後略〉</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    </tbody>
+  </table></div>
+  <!-- removed note-s: COMM の TURNER：3.16.1 の EMP 表では空欄、この emp_dept 表では 0。<b>笔记原文どおり</b>（内部不一致だが補完しない）。 -->
+
+  <div class="h">department（DID・DEPTNAME・MANAGER_ID・LOCATION_ID）／locations 結合結果例（27件中13件表示）</div>
+  <div class="tw" style="margin-bottom:14px"><table class="dt">
+    <thead><tr><th>DID</th><th>DEPTNAME</th><th>MANAGER_ID</th><th>LOCATION_ID</th><th>STREET_ADDRESS</th><th>POSTAL_CODE</th><th>CITY</th><th>STATE_PROVINCE</th><th>COUNTRY_ID</th></tr></thead>
+    <tbody>
+      <tr><td>10</td><td>Administration</td><td class="num">200</td><td class="num">1700</td><td>2004 Charade Rd</td><td>98199</td><td>Seattle</td><td>Washington</td><td>US</td></tr>
+      <tr><td>20</td><td>Marketing</td><td class="num">201</td><td class="num">1800</td><td>147 Spadina Ave</td><td>M5V 2L7</td><td>Toronto</td><td>Ontario</td><td>CA</td></tr>
+      <tr><td>30</td><td>Purchasing</td><td class="num">114</td><td class="num">1700</td><td>2004 Charade Rd</td><td>98199</td><td>Seattle</td><td>Washington</td><td>US</td></tr>
+      <tr><td>40</td><td>Human Resources</td><td class="num">203</td><td class="num">2400</td><td>8204 Arthur St</td><td class="nul"></td><td>London</td><td class="nul"></td><td>UK</td></tr>
+      <tr><td>50</td><td>Shipping</td><td class="num">121</td><td class="num">1500</td><td>2011 Interiors Blvd</td><td>99236</td><td>South San Francisco</td><td>California</td><td>US</td></tr>
+      <tr><td>60</td><td>IT</td><td class="num">103</td><td class="num">1400</td><td>2014 Jabberwocky Rd</td><td>26192</td><td>Southlake</td><td>Texas</td><td>US</td></tr>
+      <tr><td>70</td><td>Public Relations</td><td class="num">204</td><td class="num">2700</td><td>Schwanthalerstr. 7031</td><td>80925</td><td>Munich</td><td>Bavaria</td><td>DE</td></tr>
+      <tr><td>80</td><td>Sales</td><td class="num">145</td><td class="num">2500</td><td>Magdalen Centre, The Oxford Science Park</td><td>OX9 9ZB</td><td>Oxford</td><td>Oxford</td><td>UK</td></tr>
+      <tr><td>90</td><td>Executive</td><td class="num">100</td><td class="num">1700</td><td>2004 Charade Rd</td><td>98199</td><td>Seattle</td><td>Washington</td><td>US</td></tr>
+      <tr><td>100</td><td>Finance</td><td class="num">108</td><td class="num">1700</td><td>2004 Charade Rd</td><td>98199</td><td>Seattle</td><td>Washington</td><td>US</td></tr>
+      <tr><td>110</td><td>Accounting</td><td class="num">205</td><td class="num">1700</td><td>2004 Charade Rd</td><td>98199</td><td>Seattle</td><td>Washington</td><td>US</td></tr>
+      <tr><td>120</td><td>Treasury</td><td class="nul"></td><td class="num">1700</td><td>2004 Charade Rd</td><td>98199</td><td>Seattle</td><td>Washington</td><td>US</td></tr>
+      <tr><td>130</td><td>Corporate Tax</td><td class="nul"></td><td class="num">1700</td><td>2004 Charade Rd</td><td>98199</td><td>Seattle</td><td>Washington</td><td>US</td></tr>
+      <tr class="elip"><td>〈後略〉</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="h">CUSTOMER／STUDENT（3.17.1 の USING 例で使う想定表・教材内の仮想スキーマ）</div>
+  <div class="tw" style="margin-bottom:6px"><table class="gt">
+    <thead><tr><th>表</th><th>列名</th><th>データ型</th><th>NULL</th></tr></thead>
+    <tbody>
+      <tr><td>CUSTOMER</td><td>ID</td><td>NUMBER(6)</td><td>NOT NULL</td></tr>
+      <tr><td>CUSTOMER</td><td>NAME, JOB, PHONE, ADDR</td><td>VARCHAR2(20) / VARCHAR2(10) / VARCHAR2(16) / NUMBER(8)</td><td></td></tr>
+      <tr><td>STUDENT</td><td>ID</td><td>NUMBER(6)</td><td>NOT NULL</td></tr>
+      <tr><td>STUDENT</td><td>NAME, CLASS, ADDR</td><td>VARCHAR2(10) / VARCHAR2(5) / VARCHAR2(30)</td><td></td></tr>
+    </tbody>
+  </table></div>
+  <!-- removed note-s: 実環境の CUSTOMERS／STUDENT 表は列構成が異なる（CUST_ID・STUDENTNO 等）。3.17.1 の USING 例は<b>この教材内定義でのみ成立</b>し、環境では実行不可。 -->
+
+  <div class="h">3.19.3 の関連図（5 表＋personVW）</div>
+  <div class="tw"><table class="gt">
+    <thead><tr><th>表</th><th>列（PK太字）</th><th>関連</th></tr></thead>
+    <tbody>
+      <tr><td>PERSON</td><td><b>PERSONID</b>, FIRST_NAME, LAST_NAME, EMAIL, PHONE_NUMBER, HIRE_DATE, JOB_ID, SALARY, COMMISSION_PCT, MANAGER_ID, DEPARTMENT_ID</td><td>PERSON }o── DEPARTMENT（DEPARTMENT_ID）</td></tr>
+      <tr><td>DEPARTMENT</td><td><b>DID</b>, DEPTNAME, MANAGER_ID, LOCATION_ID</td><td>DEPARTMENT ||──o&#123; LOCATIONS（LOCATION_ID）</td></tr>
+      <tr><td>LOCATIONS</td><td><b>LOCATION_ID</b>, STREET_ADDRESS, POSTAL_CODE, CITY, STATE_PROVINCE, COUNTRY_ID</td><td>LOCATIONS ||──o&#123; COUNTRIES（COUNTRY_ID）</td></tr>
+      <tr><td>COUNTRIES</td><td><b>COUNTRY_ID</b>, COUNTRY_NAME, REGION_ID</td><td>COUNTRIES ||──o&#123; REGIONS（REGION_ID）</td></tr>
+      <tr><td>REGIONS</td><td><b>REGION_ID</b>, REGION_NAME</td><td>―</td></tr>
+      <tr><td>PERSONVW</td><td><b>PID</b>, PERSONNAME, EMAIL, SALARY, MID, DID</td><td>PERSONVW }o── DEPARTMENT（DID）</td></tr>
+    </tbody>
+  </table></div>
+  <!-- removed note-s: 「線でつながっている列が結合条件で使用する列」（教材原文）。 -->
+
+  </div>
+</details>
+
+
+<!-- ══════════════════════════════════ 3-16 -->
+<section class="sec" id="s1">
+  <h2><span class="n">3.16.1</span>複数の表から必要なデータを取り出す<span class="lv">必修</span></h2>
+
+  <div class="h first">結合（Join）とは？　→　2つ以上の表をもとに必要なデータを取り出す。 ／ FROM～JOIN句には　結合に使用する表の名前を指定します。 ／ ON句には　どの列のデータとどの列のデータを照らし合わせるのか、指定します。</div>
+
+  <div class="demo">
+    <div class="dh"><span class="title">EMP と DEPT を DEPTNO で結合</span></div>
+    <div class="vars">
+      <div class="var" data-v="a">
+<pre class="code">SELECT EMPNO, ENAME, EMP.DEPTNO, DNAME
+FROM EMP JOIN DEPT
+ON EMP.DEPTNO = DEPT.DEPTNO ;</pre>
+        <div class="diffbar">SMITH（20番部門）→ DNAME＝<b>RESEARCH</b></div>
+        <div class="res"><div class="rbody">
+          <div class="tw"><table class="dt">
+            <thead><tr><th>EMPNO</th><th>ENAME</th><th>DEPTNO</th><th>DNAME</th></tr></thead>
+            <tbody>
+              <tr><td>7369</td><td>SMITH</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>7499</td><td>ALLEN</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>7521</td><td>WARD</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>7566</td><td>JONES</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>7654</td><td>MARTIN</td><td class="num">30</td><td>SALES</td></tr>
+              <tr class="elip"><td>〈以下略〉</td><td></td><td></td><td></td></tr>
+            </tbody>
+          </table></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="sec" id="s2">
+  <h2><span class="n">3.16.2</span>基本的な結合文の書き方<span class="lv">必修</span></h2>
+
+  <div class="h first">基本は、「両方の表に存在する同じ名前の列には、表名修飾を行わなければならない」 ／ 表名修飾は結合条件以外でもSELECT文全体で行う必要があります。</div>
+
+  <div class="demo">
+    <div class="dh">
+      <span class="title">EMP.DEPTNO と相手表のキー列</span>
+      <div class="sw">
+        <button data-v="diff" class="on" data-tone="alt">列名が異なる</button>
+        <button data-v="same" data-tone="warn">列名が同じ</button>
+      </div>
+    </div>
+    <div class="vars">
+      <div class="var" data-v="diff">
+<pre class="code">SELECT empno, ename, deptno, deptname
+FROM emp JOIN department
+ON deptno = ⟦did⟧ ;</pre>
+        <div class="diffbar">結合条件列の名前が異なっていても、結合することはできます。 ／ DEPT表(4件)とは番号は同じでも意味が異なる別スキーマ(HR表)。数値がたまたま一致するだけの参考実行</div>
+        <div class="res run"><div class="rbody">
+          <div class="tw"><table class="dt">
+            <thead><tr><th>EMPNO</th><th>ENAME</th><th>DEPTNO</th><th>DEPTNAME</th></tr></thead>
+            <tbody>
+              <tr><td>7782</td><td>CLARK</td><td class="num">10</td><td>Administration</td></tr>
+              <tr><td>7839</td><td>KING</td><td class="num">10</td><td>Administration</td></tr>
+              <tr><td>7934</td><td>MILLER</td><td class="num">10</td><td>Administration</td></tr>
+              <tr><td>7369</td><td>SMITH</td><td class="num">20</td><td>Marketing</td></tr>
+              <tr><td>7566</td><td>JONES</td><td class="num">20</td><td>Marketing</td></tr>
+              <tr><td>7788</td><td>SCOTT</td><td class="num">20</td><td>Marketing</td></tr>
+              <tr><td>7876</td><td>ADAMS</td><td class="num">20</td><td>Marketing</td></tr>
+              <tr><td>7902</td><td>FORD</td><td class="num">20</td><td>Marketing</td></tr>
+              <tr><td>7499</td><td>ALLEN</td><td class="num">30</td><td>Purchasing</td></tr>
+              <tr><td>7521</td><td>WARD</td><td class="num">30</td><td>Purchasing</td></tr>
+              <tr><td>7654</td><td>MARTIN</td><td class="num">30</td><td>Purchasing</td></tr>
+              <tr><td>7698</td><td>BLAKE</td><td class="num">30</td><td>Purchasing</td></tr>
+              <tr><td>7844</td><td>TURNER</td><td class="num">30</td><td>Purchasing</td></tr>
+              <tr class="elip"><td>〈後略〉</td><td></td><td></td><td></td></tr>
+            </tbody>
+          </table></div>
+        </div></div>
+      </div>
+      <div class="var" data-v="same" hidden>
+<pre class="code">SELECT empno, ename, emp.deptno, dname
+FROM emp JOIN dept
+ON emp.deptno = ⟦dept.deptno⟧;</pre>
+        <div class="diffbar">両方の表に存在する同じ名前の列には、表名修飾を行わなければならない ／ SELECT句に出てくる同名列。ここも表名による修飾を行う必要があります。</div>
+        <div class="res run"><div class="rbody">
+          <div class="tw"><table class="dt">
+            <thead><tr><th>EMPNO</th><th>ENAME</th><th>DEPTNO</th><th>DNAME</th></tr></thead>
+            <tbody>
+              <tr><td>7369</td><td>SMITH</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>7499</td><td>ALLEN</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>7521</td><td>WARD</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>7566</td><td>JONES</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>7654</td><td>MARTIN</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>7698</td><td>BLAKE</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>7782</td><td>CLARK</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>7788</td><td>SCOTT</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>7839</td><td>KING</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>7844</td><td>TURNER</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>7876</td><td>ADAMS</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>7900</td><td>JAMES</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>7902</td><td>FORD</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr class="elip"><td>〈後略〉</td><td></td><td></td><td></td></tr>
+            </tbody>
+          </table></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+<section class="sec" id="s4">
+  <h2><span class="n">3.16.4</span>結合の種類<span class="lv">必修</span></h2>
+
+  <div class="h first">結合には、分類の方法によって、次のような種類があります。</div>
+  <div class="tw" style="margin-bottom:18px"><table class="gt">
+    <thead><tr><th>種類</th><th>説明</th><th>結合条件の例</th></tr></thead>
+    <tbody>
+      <tr><td>等価結合</td><td>結合条件が＝で結ばれたもの</td><td>emp.deptno = dept.deptno</td></tr>
+      <tr><td>非等価結合</td><td>結合条件が＝でなく、幅のある条件</td><td>emp.sal BETWEEN salgrade.losal AND salgrade.hisal</td></tr>
+      <tr><td>自然結合</td><td>同名・同データ型の列を自然に結合条件列とみなす。結合条件列の一方が削除される</td><td>NATURAL JOIN／JOIN ～ USING（列名）</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="h">結果の戻し方による分類</div>
+  <div class="tw" style="margin-bottom:18px"><table class="gt">
+    <thead><tr><th>種類</th><th>説明</th><th>JOIN句の書き方</th></tr></thead>
+    <tbody>
+      <tr><td>デカルト積</td><td>結合条件のない結合。2つの表の全行を結合する</td><td>FROM emp CROSS JOIN dept</td></tr>
+      <tr><td>内部結合</td><td>結合条件を満たす行のみを返す</td><td>FROM emp INNER JOIN dept</td></tr>
+      <tr><td>外部結合</td><td>結合条件を満たす対応するデータが他方に無い行も返す</td><td>FROM emp LEFT OUTER JOIN dept（RIGHT／FULL OUTER JOIN）</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="h">特殊な結合</div>
+  <div class="tw"><table class="gt">
+    <thead><tr><th>種類</th><th>説明</th><th>JOIN句の書き方</th></tr></thead>
+    <tbody>
+      <tr><td>自己結合</td><td>表の別名を利用し、1つの表を自分自身と結合する</td><td>FROM emp e JOIN emp m ON e.mgr = m.empno</td></tr>
+    </tbody>
+  </table></div>
+  <!-- removed note-s: ここに掲載した結合文はANSI SQL1999構文。オラクル結合でも自然結合以外は表現できる。 -->
+</section>
+
+
+<section class="sec" id="s5">
+  <h2><span class="n">3.16.5</span>結合の基本的なアルゴリズム<span class="lv">応用</span></h2>
+
+  <div class="h first">まずはすべての組合せである直積が求められます。その中で結合条件が一致するデータ、つまりEMP表のdeptnoとDEPT表のdeptnoが同じ行のみが、結合条件がtrueとなります。</div>
+  <div class="demo">
+    <div class="dh"><span class="title">結合条件で絞り込んだ後の結果</span></div>
+    <div class="vars">
+      <div class="var" data-v="a">
+<pre class="code">SELECT ename, emp.deptno, dept.deptno, dname
+FROM emp JOIN dept
+ON emp.deptno = dept.deptno;</pre>
+        <div class="diffbar">デカルト積のうち<b>条件が true の行だけ</b>戻る（56行 → 下記のとおり絞り込み） ／ EMP表の1行が DEPT表の全行と結びつく。<b>emp行数 × dept行数</b> の行ができる</div>
+        <div class="rowviz">
+          <div class="r"><span>ADAMS</span><span class="v">10</span></div>
+          <div class="r take"><span>ADAMS</span><span class="v">20</span></div>
+          <div class="r"><span>ADAMS</span><span class="v">30</span></div>
+          <div class="r"><span>ADAMS</span><span class="v">40</span></div>
+          <div class="r"><span>ALLEN</span><span class="v">10</span></div>
+          <div class="r"><span>ALLEN</span><span class="v">20</span></div>
+          <div class="r take"><span>ALLEN</span><span class="v">30</span></div>
+          <div class="r"><span>ALLEN</span><span class="v">40</span></div>
+          <div class="r"><span>BLAKE</span><span class="v">10</span></div>
+          <div class="r"><span>BLAKE</span><span class="v">20</span></div>
+          <div class="r take"><span>BLAKE</span><span class="v">30</span></div>
+          <div class="r take"><span>CLARK</span><span class="v">10</span></div>
+        </div>
+        <div class="lg"><span class="g"><i></i>結合条件が true</span><span class="s"><i></i>条件が false（捨てられる）</span></div>
+        <div class="res run"><div class="rbody">
+          <div class="tw"><table class="dt">
+            <thead><tr><th>ENAME</th><th>EMP.DEPTNO</th><th>DEPT.DEPTNO</th><th>DNAME</th></tr></thead>
+            <tbody>
+              <tr><td>SMITH</td><td class="num">20</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>ALLEN</td><td class="num">30</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>WARD</td><td class="num">30</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>JONES</td><td class="num">20</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>MARTIN</td><td class="num">30</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>BLAKE</td><td class="num">30</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>CLARK</td><td class="num">10</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>SCOTT</td><td class="num">20</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>KING</td><td class="num">10</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>TURNER</td><td class="num">30</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>ADAMS</td><td class="num">20</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>JAMES</td><td class="num">30</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>FORD</td><td class="num">20</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr class="elip"><td>〈後略〉</td><td></td><td></td><td></td></tr>
+            </tbody>
+          </table></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+  <!-- removed note-s: EMP表14行 × DEPT表4行 ＝ <b>56行</b>のデカルト積からEMP.DEPTNO＝DEPT.DEPTNOの行だけ残る。 -->
+</section>
+
+
+<!-- ══════════════════════════════════ 3-17 -->
+<section class="sec" id="s6">
+  <h2><span class="n">3.17.1</span>自然結合<span class="lv">必修</span></h2>
+
+  <div class="h first">NATURAL JOINでは、結合条件列の「列名」と「データ型」が同じ場合、その列を自然に結合条件列とみなし結合します。</div>
+  <div class="demo">
+    <div class="dh"><span class="title">emp と dept を自然結合</span></div>
+    <div class="vars">
+      <div class="var" data-v="a">
+<pre class="code">SELECT ename , deptno , dname
+FROM emp NATURAL JOIN dept;</pre>
+        <div class="diffbar">deptno は<b>1列だけ</b>（表名修飾しない）</div>
+        <div class="res run"><div class="rbody">
+          <div class="tw"><table class="dt">
+            <thead><tr><th>ENAME</th><th>DEPTNO</th><th>DNAME</th></tr></thead>
+            <tbody>
+              <tr><td>SMITH</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>ALLEN</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>WARD</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>JONES</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>MARTIN</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>BLAKE</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>CLARK</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>SCOTT</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>KING</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>TURNER</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>ADAMS</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>JAMES</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>FORD</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>MILLER</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+            </tbody>
+          </table></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="h">同じ名前を持った列が複数ありその中の1つの列を結合条件としたい場合や、明示的に結合条件を示したい場合はUSING句を使用します。</div>
+  <div class="demo">
+    <div class="dh"><span class="title">customer と student を name で結合（教材の仮想スキーマ）</span></div>
+    <div class="vars">
+      <div class="var" data-v="a">
+<pre class="code">SELECT student.id , name, customer.job , student.class
+FROM customer JOIN student
+USING (name);</pre>
+        <div class="diffbar">ID・NAME・ADDR が同名 → <b>NAME だけ</b>を USING で指定 ／ 教材の仮想表・実行不可</div>
+      </div>
+    </div>
+  </div>
+  <!-- removed note-s: 環境の CUSTOMERS／STUDENT 表は列構成が異なり実行不可。教材にも実行結果の記載は無い（資料参照）。 -->
+</section>
+
+
+<section class="sec" id="s7">
+  <h2><span class="n">3.17.2</span>等価結合<span class="lv">必修</span></h2>
+
+  <div class="h first">ON句は等価結合だけでなく、非等価結合など、あらゆる結合条件を指定することができる柔軟な句です。次のように、列名が異なる場合でも結合条件に指定することができます。</div>
+  <div class="demo">
+    <div class="dh"><span class="title">emp と department（列名 deptno ⇄ did）</span></div>
+    <div class="vars">
+      <div class="var" data-v="a">
+<pre class="code">SELECT ename, deptno, deptname
+FROM emp JOIN department
+ON deptno = did;</pre>
+        <div class="diffbar">列名が違うので<b>修飾不要</b></div>
+        <div class="res run"><div class="rbody">
+          <div class="tw"><table class="dt">
+            <thead><tr><th>ENAME</th><th>DEPTNO</th><th>DEPTNAME</th></tr></thead>
+            <tbody>
+              <tr><td>CLARK</td><td class="num">10</td><td>Administration</td></tr>
+              <tr><td>KING</td><td class="num">10</td><td>Administration</td></tr>
+              <tr><td>MILLER</td><td class="num">10</td><td>Administration</td></tr>
+              <tr><td>SMITH</td><td class="num">20</td><td>Marketing</td></tr>
+              <tr><td>JONES</td><td class="num">20</td><td>Marketing</td></tr>
+              <tr><td>SCOTT</td><td class="num">20</td><td>Marketing</td></tr>
+              <tr><td>ADAMS</td><td class="num">20</td><td>Marketing</td></tr>
+              <tr><td>FORD</td><td class="num">20</td><td>Marketing</td></tr>
+              <tr><td>ALLEN</td><td class="num">30</td><td>Purchasing</td></tr>
+              <tr><td>WARD</td><td class="num">30</td><td>Purchasing</td></tr>
+              <tr><td>MARTIN</td><td class="num">30</td><td>Purchasing</td></tr>
+              <tr><td>BLAKE</td><td class="num">30</td><td>Purchasing</td></tr>
+              <tr><td>TURNER</td><td class="num">30</td><td>Purchasing</td></tr>
+              <tr><td>JAMES</td><td class="num">30</td><td>Purchasing</td></tr>
+            </tbody>
+          </table></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="h">ISOの結合文は、次のようにFROM句で結合に利用する表名をカンマで並べ、WHERE句で結合条件と行の選択条件を指定していました。</div>
+  <div class="demo">
+    <div class="dh"><span class="title">emp, dept ＋ 選択条件</span></div>
+    <div class="vars">
+      <div class="var" data-v="a">
+<pre class="code">SELECT ename, emp.deptno, dname
+FROM emp, dept
+WHERE emp.deptno = dept.deptno
+AND empno >= 8000;</pre>
+        <div class="diffbar">教材の例をそのまま実行 → <b>該当行なし</b> ／ EMPNOの最大値は7934。empno &gt;= 8000 は本環境データでは1件も一致しない</div>
+        <div class="res run"><div class="rbody">
+          <div class="rmsg">no rows selected</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="sec" id="s8">
+  <h2><span class="n">3.17.3</span>自然結合と等価結合の違い<span class="lv">応用</span></h2>
+
+  <div class="h first">自然結合と等価結合には若干の違いがあります。</div>
+  <div class="demo">
+    <div class="dh">
+      <span class="title">emp × dept のすべての表現</span>
+      <div class="sw">
+        <button data-v="cart" class="on">直積（全56行）</button>
+        <button data-v="equi" data-tone="warn">等価結合（14行）</button>
+        <button data-v="nat" data-tone="alt">自然結合（14行・deptno1列）</button>
+      </div>
+    </div>
+    <div class="vars">
+      <div class="var" data-v="cart">
+<pre class="code">SELECT * FROM emp, dept
+ORDER BY empno;</pre>
+        <div class="diffbar">結合条件なし → <b>emp × dept の全組合せ</b></div>
+        <div class="res"><div class="rbody">
+          <div class="tw"><table class="dt">
+            <thead><tr><th>EMPNO</th><th>ENAME</th><th>JOB</th><th>MGR</th><th>HIREDATE</th><th>SAL</th><th>COMM</th><th>DEPTNO</th><th>DEPTNO</th><th>DNAME</th><th>LOC</th></tr></thead>
+            <tbody>
+              <tr><td>7369</td><td>SMITH</td><td>CLERK</td><td>7902</td><td>80-12-17</td><td class="num">800</td><td class="nul"></td><td class="num">20</td><td class="num">40</td><td>OPERATIONS</td><td>BOSTON</td></tr>
+              <tr><td>7369</td><td>SMITH</td><td>CLERK</td><td>7902</td><td>80-12-17</td><td class="num">800</td><td class="nul"></td><td class="num">20</td><td class="num">30</td><td>SALES</td><td>CHICAGO</td></tr>
+              <tr><td>7369</td><td>SMITH</td><td>CLERK</td><td>7902</td><td>80-12-17</td><td class="num">800</td><td class="nul"></td><td class="num">20</td><td class="num">20</td><td>RESEARCH</td><td>DALLAS</td></tr>
+              <tr><td>7369</td><td>SMITH</td><td>CLERK</td><td>7902</td><td>80-12-17</td><td class="num">800</td><td class="nul"></td><td class="num">20</td><td class="num">10</td><td>ACCOUNTING</td><td>NEW YORK</td></tr>
+              <tr><td>7499</td><td>ALLEN</td><td>SALESMAN</td><td>7698</td><td>81-02-20</td><td class="num">1600</td><td class="num">300</td><td class="num">30</td><td class="num">30</td><td>SALES</td><td>CHICAGO</td></tr>
+              <tr><td>7499</td><td>ALLEN</td><td>SALESMAN</td><td>7698</td><td>81-02-20</td><td class="num">1600</td><td class="num">300</td><td class="num">30</td><td class="num">10</td><td>ACCOUNTING</td><td>NEW YORK</td></tr>
+              <tr><td>7499</td><td>ALLEN</td><td>SALESMAN</td><td>7698</td><td>81-02-20</td><td class="num">1600</td><td class="num">300</td><td class="num">30</td><td class="num">20</td><td>RESEARCH</td><td>DALLAS</td></tr>
+              <tr><td>7499</td><td>ALLEN</td><td>SALESMAN</td><td>7698</td><td>81-02-20</td><td class="num">1600</td><td class="num">300</td><td class="num">30</td><td class="num">40</td><td>OPERATIONS</td><td>BOSTON</td></tr>
+              <tr><td>7521</td><td>WARD</td><td>SALESMAN</td><td>7698</td><td>81-02-22</td><td class="num">1250</td><td class="num">500</td><td class="num">30</td><td class="num">30</td><td>SALES</td><td>CHICAGO</td></tr>
+              <tr><td>7521</td><td>WARD</td><td>SALESMAN</td><td>7698</td><td>81-02-22</td><td class="num">1250</td><td class="num">500</td><td class="num">30</td><td class="num">10</td><td>ACCOUNTING</td><td>NEW YORK</td></tr>
+              <tr class="elip"><td>〈以下略〉</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            </tbody>
+          </table></div>
+          <div class="rmsg">56行が選択されました。</div>
+        </div></div>
+      </div>
+      <div class="var" data-v="equi" hidden>
+<pre class="code">SELECT * FROM emp, dept
+WHERE emp.deptno = dept.deptno;</pre>
+        <div class="diffbar">条件を追加 → <b>deptno列が等しい行のみ</b> ／ 直積56行 → 14行に絞り込み</div>
+        <div class="res"><div class="rbody">
+          <div class="tw"><table class="dt">
+            <thead><tr><th>EMPNO</th><th>ENAME</th><th>JOB</th><th>MGR</th><th>HIREDATE</th><th>SAL</th><th>COMM</th><th>DEPTNO</th><th>DEPTNO</th><th>DNAME</th><th>LOC</th></tr></thead>
+            <tbody>
+              <tr><td>7782</td><td>CLARK</td><td>MANAGER</td><td>7839</td><td>81-06-09</td><td class="num">2450</td><td class="nul"></td><td class="num">10</td><td class="num">10</td><td>ACCOUNTING</td><td>NEW YORK</td></tr>
+              <tr><td>7839</td><td>KING</td><td>PRESIDENT</td><td class="nul"></td><td>81-11-17</td><td class="num">5000</td><td class="nul"></td><td class="num">10</td><td class="num">10</td><td>ACCOUNTING</td><td>NEW YORK</td></tr>
+              <tr><td>7934</td><td>MILLER</td><td>CLERK</td><td>7782</td><td>82-01-23</td><td class="num">1300</td><td class="nul"></td><td class="num">10</td><td class="num">10</td><td>ACCOUNTING</td><td>NEW YORK</td></tr>
+              <tr><td>7566</td><td>JONES</td><td>MANAGER</td><td>7839</td><td>81-04-02</td><td class="num">2975</td><td class="nul"></td><td class="num">20</td><td class="num">20</td><td>RESEARCH</td><td>DALLAS</td></tr>
+              <tr><td>7902</td><td>FORD</td><td>ANALYST</td><td>7566</td><td>81-12-03</td><td class="num">3000</td><td class="nul"></td><td class="num">20</td><td class="num">20</td><td>RESEARCH</td><td>DALLAS</td></tr>
+              <tr><td>7876</td><td>ADAMS</td><td>CLERK</td><td>7788</td><td>87-05-23</td><td class="num">1100</td><td class="nul"></td><td class="num">20</td><td class="num">20</td><td>RESEARCH</td><td>DALLAS</td></tr>
+              <tr><td>7369</td><td>SMITH</td><td>CLERK</td><td>7902</td><td>80-12-17</td><td class="num">800</td><td class="nul"></td><td class="num">20</td><td class="num">20</td><td>RESEARCH</td><td>DALLAS</td></tr>
+              <tr><td>7788</td><td>SCOTT</td><td>ANALYST</td><td>7566</td><td>87-04-19</td><td class="num">3000</td><td class="nul"></td><td class="num">20</td><td class="num">20</td><td>RESEARCH</td><td>DALLAS</td></tr>
+              <tr><td>7521</td><td>WARD</td><td>SALESMAN</td><td>7698</td><td>81-02-22</td><td class="num">1250</td><td class="num">500</td><td class="num">30</td><td class="num">30</td><td>SALES</td><td>CHICAGO</td></tr>
+              <tr><td>7844</td><td>TURNER</td><td>SALESMAN</td><td>7698</td><td>81-09-08</td><td class="num">1500</td><td class="num">0</td><td class="num">30</td><td class="num">30</td><td>SALES</td><td>CHICAGO</td></tr>
+              <tr><td>7499</td><td>ALLEN</td><td>SALESMAN</td><td>7698</td><td>81-02-20</td><td class="num">1600</td><td class="num">300</td><td class="num">30</td><td class="num">30</td><td>SALES</td><td>CHICAGO</td></tr>
+              <tr><td>7900</td><td>JAMES</td><td>CLERK</td><td>7698</td><td>81-12-03</td><td class="num">950</td><td class="nul"></td><td class="num">30</td><td class="num">30</td><td>SALES</td><td>CHICAGO</td></tr>
+              <tr><td>7698</td><td>BLAKE</td><td>MANAGER</td><td>7839</td><td>81-05-01</td><td class="num">2850</td><td class="nul"></td><td class="num">30</td><td class="num">30</td><td>SALES</td><td>CHICAGO</td></tr>
+              <tr><td>7654</td><td>MARTIN</td><td>SALESMAN</td><td>7698</td><td>81-09-28</td><td class="num">1250</td><td class="num">1400</td><td class="num">30</td><td class="num">30</td><td>SALES</td><td>CHICAGO</td></tr>
+            </tbody>
+          </table></div>
+          <div class="rmsg">14行が選択されました。</div>
+        </div></div>
+      </div>
+      <div class="var" data-v="nat" hidden>
+<pre class="code">SELECT * FROM emp NATURAL JOIN dept;</pre>
+        <div class="diffbar">DEPTNO が<b>1列だけ・先頭に移動</b> ／ 結合列が先頭に移動し1つだけになる点が等価結合と違う。</div>
+        <div class="res"><div class="rbody">
+          <div class="tw"><table class="dt">
+            <thead><tr><th>DEPTNO</th><th>EMPNO</th><th>ENAME</th><th>JOB</th><th>MGR</th><th>HIREDATE</th><th>SAL</th><th>COMM</th><th>DNAME</th><th>LOC</th></tr></thead>
+            <tbody>
+              <tr><td class="num">10</td><td>7782</td><td>CLARK</td><td>MANAGER</td><td>7839</td><td>81-06-09</td><td class="num">2450</td><td class="nul"></td><td>ACCOUNTING</td><td>NEW YORK</td></tr>
+              <tr><td class="num">10</td><td>7839</td><td>KING</td><td>PRESIDENT</td><td class="nul"></td><td>81-11-17</td><td class="num">5000</td><td class="nul"></td><td>ACCOUNTING</td><td>NEW YORK</td></tr>
+              <tr><td class="num">10</td><td>7934</td><td>MILLER</td><td>CLERK</td><td>7782</td><td>82-01-23</td><td class="num">1300</td><td class="nul"></td><td>ACCOUNTING</td><td>NEW YORK</td></tr>
+              <tr><td class="num">20</td><td>7566</td><td>JONES</td><td>MANAGER</td><td>7839</td><td>81-04-02</td><td class="num">2975</td><td class="nul"></td><td>RESEARCH</td><td>DALLAS</td></tr>
+              <tr><td class="num">20</td><td>7902</td><td>FORD</td><td>ANALYST</td><td>7566</td><td>81-12-03</td><td class="num">3000</td><td class="nul"></td><td>RESEARCH</td><td>DALLAS</td></tr>
+              <tr><td class="num">20</td><td>7876</td><td>ADAMS</td><td>CLERK</td><td>7788</td><td>87-05-23</td><td class="num">1100</td><td class="nul"></td><td>RESEARCH</td><td>DALLAS</td></tr>
+              <tr><td class="num">20</td><td>7369</td><td>SMITH</td><td>CLERK</td><td>7902</td><td>80-12-17</td><td class="num">800</td><td class="nul"></td><td>RESEARCH</td><td>DALLAS</td></tr>
+              <tr><td class="num">20</td><td>7788</td><td>SCOTT</td><td>ANALYST</td><td>7566</td><td>87-04-19</td><td class="num">3000</td><td class="nul"></td><td>RESEARCH</td><td>DALLAS</td></tr>
+              <tr><td class="num">30</td><td>7521</td><td>WARD</td><td>SALESMAN</td><td>7698</td><td>81-02-22</td><td class="num">1250</td><td class="num">500</td><td>SALES</td><td>CHICAGO</td></tr>
+              <tr><td class="num">30</td><td>7844</td><td>TURNER</td><td>SALESMAN</td><td>7698</td><td>81-09-08</td><td class="num">1500</td><td class="num">0</td><td>SALES</td><td>CHICAGO</td></tr>
+              <tr><td class="num">30</td><td>7499</td><td>ALLEN</td><td>SALESMAN</td><td>7698</td><td>81-02-20</td><td class="num">1600</td><td class="num">300</td><td>SALES</td><td>CHICAGO</td></tr>
+              <tr><td class="num">30</td><td>7900</td><td>JAMES</td><td>CLERK</td><td>7698</td><td>81-12-03</td><td class="num">950</td><td class="nul"></td><td>SALES</td><td>CHICAGO</td></tr>
+              <tr><td class="num">30</td><td>7698</td><td>BLAKE</td><td>MANAGER</td><td>7839</td><td>81-05-01</td><td class="num">2850</td><td class="nul"></td><td>SALES</td><td>CHICAGO</td></tr>
+              <tr><td class="num">30</td><td>7654</td><td>MARTIN</td><td>SALESMAN</td><td>7698</td><td>81-09-28</td><td class="num">1250</td><td class="num">1400</td><td>SALES</td><td>CHICAGO</td></tr>
+            </tbody>
+          </table></div>
+          <div class="rmsg">14行が選択されました。</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="sec" id="s9">
+  <h2><span class="n">3.17.4</span>表名による修飾<span class="lv">必修</span></h2>
+
+  <div class="h first">結合に使用する表の中に同じ名前の列がある場合、どちらの表の列なのかという情報を、オラクルサーバに示す必要があります。これを、「表名により修飾する」といい、「表名.列名」のように列名の前に表名を付けて表記します。</div>
+  <div class="h">同じ名前の列の場合、一般的には、表名で修飾しなければエラーとなる</div>
+  <div class="demo">
+    <div class="dh">
+      <span class="title">emp.deptno = dept.deptno を deptno = deptno と書くと？</span>
+      <div class="sw">
+        <button data-v="ng" class="on" data-tone="warn">修飾なし（NG）</button>
+        <button data-v="ok" data-tone="alt">修飾あり（OK）</button>
+      </div>
+    </div>
+    <div class="vars">
+      <div class="var" data-v="ng">
+<pre class="code">SELECT empno, ename, deptno, dname
+FROM emp JOIN dept
+ON deptno = deptno;</pre>
+        <div class="diffbar">EMP・DEPT 両方に DEPTNO 列がある → <b>どちらか不明</b></div>
+        <div class="res"><div class="rbody">
+          <div class="rmsg err">行3でエラーが発生しました。：
+ORA-00918: 列の定義が未確定です。</div>
+        </div></div>
+      </div>
+      <div class="var" data-v="ok" hidden>
+<pre class="code">SELECT empno, ename, emp.deptno, dname
+FROM emp JOIN dept
+ON emp.deptno = dept.deptno;</pre>
+        <div class="diffbar">ON句を<b>emp.deptno = dept.deptno</b>に修飾</div>
+        <div class="res run"><div class="rbody">
+          <div class="tw"><table class="dt">
+            <thead><tr><th>EMPNO</th><th>ENAME</th><th>DEPTNO</th><th>DNAME</th></tr></thead>
+            <tbody>
+              <tr><td>7369</td><td>SMITH</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>7499</td><td>ALLEN</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>7521</td><td>WARD</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>7566</td><td>JONES</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>7654</td><td>MARTIN</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>7698</td><td>BLAKE</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>7782</td><td>CLARK</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>7788</td><td>SCOTT</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>7839</td><td>KING</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>7844</td><td>TURNER</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>7876</td><td>ADAMS</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>7900</td><td>JAMES</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>7902</td><td>FORD</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>7934</td><td>MILLER</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+            </tbody>
+          </table></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="h">NATURAL JOINとUSINGでは、SELECT文全体で、結合条件列を表名で修飾してはいけない</div>
+  <div class="demo">
+    <div class="dh">
+      <span class="title">結合条件列を表名で修飾するとエラーとなるケース</span>
+      <div class="sw">
+        <button data-v="nj" class="on" data-tone="warn">NATURAL JOIN</button>
+        <button data-v="using1" data-tone="warn">USING ①</button>
+        <button data-v="using2" data-tone="warn">USING ②</button>
+      </div>
+    </div>
+    <div class="vars">
+      <div class="var" data-v="nj">
+<pre class="code">SELECT empno, ename, emp.deptno, dname
+FROM emp NATURAL JOIN dept;</pre>
+        <div class="diffbar">NATURAL JOIN の場合、結合条件列を表名で修飾するとエラー</div>
+        <div class="res run"><div class="rbody">
+          <div class="rmsg err">ORA-25155: column used in NATURAL join cannot have qualifier</div>
+        </div></div>
+      </div>
+      <div class="var" data-v="using1" hidden>
+<pre class="code">SELECT empno, ename, emp.deptno, dname
+FROM emp JOIN dept
+USING(emp.deptno);</pre>
+        <div class="diffbar">USING 句の場合も、結合条件列を表名で修飾するとエラー</div>
+        <div class="res run"><div class="rbody">
+          <div class="rmsg err">ORA-01748: only simple column names allowed here</div>
+        </div></div>
+      </div>
+      <div class="var" data-v="using2" hidden>
+<pre class="code">SELECT customer.id ,customer.name , customer.item , student.class
+FROM customer JOIN student
+USING (customer.id);</pre>
+        <div class="diffbar">こちらも USING 句で結合条件列を表名で修飾したため構文エラー ／ 教材の仮想表</div>
+        <div class="res run"><div class="rbody">
+          <div class="rmsg err">ORA-01748: only simple column names allowed here</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- removed note-s: dept2 は dept のコピー用サンプル表。環境には存在しないため未実行（笔记の画面出力をそのまま転記）。 -->
+</section>
+
+
+<!-- ══════════════════════════════════ 3-18 -->
+<section class="sec" id="s10">
+  <h2><span class="n">3.18.1</span>非等価結合<span class="lv">必修</span></h2>
+
+  <div class="h first">非等価結合（Non-Equi Join）とは、幅のある結合条件による結合文を指します。</div>
+  <div class="demo">
+    <div class="dh">
+      <span class="title">emp.sal を salgrade の階級にあてはめる<em>／ 2 つとも同じ結果</em></span>
+      <div class="sw">
+        <button data-v="between" class="on">BETWEEN</button>
+        <button data-v="cmp" data-tone="warn">&gt;= ／ &lt;=</button>
+      </div>
+    </div>
+    <div class="vars">
+      <div class="var" data-v="between">
+<pre class="code">SELECT empno, ename, sal, grade
+FROM emp JOIN salgrade
+ON sal ⟦BETWEEN losal AND hisal⟧;</pre>
+        <div class="diffbar">範囲指定は<b>BETWEEN</b>が簡潔</div>
+        <div class="res run"><div class="rbody">
+          <div class="tw"><table class="dt">
+            <thead><tr><th>EMPNO</th><th>ENAME</th><th>SAL</th><th>GRADE</th></tr></thead>
+            <tbody>
+              <tr><td>7369</td><td>SMITH</td><td class="num">800</td><td class="num">1</td></tr>
+              <tr><td>7900</td><td>JAMES</td><td class="num">950</td><td class="num">1</td></tr>
+              <tr><td>7876</td><td>ADAMS</td><td class="num">1100</td><td class="num">1</td></tr>
+              <tr><td>7521</td><td>WARD</td><td class="num">1250</td><td class="num">2</td></tr>
+              <tr><td>7654</td><td>MARTIN</td><td class="num">1250</td><td class="num">2</td></tr>
+              <tr><td>7934</td><td>MILLER</td><td class="num">1300</td><td class="num">2</td></tr>
+              <tr><td>7844</td><td>TURNER</td><td class="num">1500</td><td class="num">3</td></tr>
+              <tr><td>7499</td><td>ALLEN</td><td class="num">1600</td><td class="num">3</td></tr>
+              <tr><td>7782</td><td>CLARK</td><td class="num">2450</td><td class="num">4</td></tr>
+              <tr><td>7698</td><td>BLAKE</td><td class="num">2850</td><td class="num">4</td></tr>
+              <tr><td>7566</td><td>JONES</td><td class="num">2975</td><td class="num">4</td></tr>
+              <tr><td>7788</td><td>SCOTT</td><td class="num">3000</td><td class="num">4</td></tr>
+              <tr><td>7902</td><td>FORD</td><td class="num">3000</td><td class="num">4</td></tr>
+              <tr><td>7839</td><td>KING</td><td class="num">5000</td><td class="num">5</td></tr>
+            </tbody>
+          </table></div>
+        </div></div>
+      </div>
+      <div class="var" data-v="cmp" hidden>
+<pre class="code">SELECT empno, ename, sal, grade
+FROM emp JOIN salgrade
+ON sal ⟦>= losal AND sal <= hisal⟧;</pre>
+        <div class="diffbar">同じ範囲を<b>比較演算子2つ</b>で表現</div>
+        <div class="res run"><div class="rbody">
+          <div class="tw"><table class="dt">
+            <thead><tr><th>EMPNO</th><th>ENAME</th><th>SAL</th><th>GRADE</th></tr></thead>
+            <tbody>
+              <tr><td>7369</td><td>SMITH</td><td class="num">800</td><td class="num">1</td></tr>
+              <tr><td>7900</td><td>JAMES</td><td class="num">950</td><td class="num">1</td></tr>
+              <tr><td>7876</td><td>ADAMS</td><td class="num">1100</td><td class="num">1</td></tr>
+              <tr><td>7521</td><td>WARD</td><td class="num">1250</td><td class="num">2</td></tr>
+              <tr><td>7654</td><td>MARTIN</td><td class="num">1250</td><td class="num">2</td></tr>
+              <tr><td>7934</td><td>MILLER</td><td class="num">1300</td><td class="num">2</td></tr>
+              <tr><td>7844</td><td>TURNER</td><td class="num">1500</td><td class="num">3</td></tr>
+              <tr><td>7499</td><td>ALLEN</td><td class="num">1600</td><td class="num">3</td></tr>
+              <tr><td>7782</td><td>CLARK</td><td class="num">2450</td><td class="num">4</td></tr>
+              <tr><td>7698</td><td>BLAKE</td><td class="num">2850</td><td class="num">4</td></tr>
+              <tr><td>7566</td><td>JONES</td><td class="num">2975</td><td class="num">4</td></tr>
+              <tr><td>7788</td><td>SCOTT</td><td class="num">3000</td><td class="num">4</td></tr>
+              <tr><td>7902</td><td>FORD</td><td class="num">3000</td><td class="num">4</td></tr>
+              <tr><td>7839</td><td>KING</td><td class="num">5000</td><td class="num">5</td></tr>
+            </tbody>
+          </table></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<div style="border-top: 3px dashed #e74c3c; padding-top: 10px; margin: 40px 0; color: #e74c3c; font-weight: bold; text-align: center; font-size: 1.2em;">
+  <span style="display:inline-block; transform:scaleX(-1);">✂</span> ────────── 期末試験範囲 ここまで（3.18.1 終了） ────────── ✂
+</div>
+
+<section class="sec" id="s11">
+  <h2><span class="n">3.18.2</span>オラクル結合の構文<span class="lv">応用</span></h2>
+
+  <div class="h first">★ FROM句に表名を、カンマで区切って並べます ／ ★ 結合条件はUSING句やON句ではなく、WHERE句に書きます</div>
+  <div class="demo">
+    <div class="dh">
+      <span class="title">emp, dept</span>
+      <div class="sw">
+        <button data-v="base" class="on">結合条件のみ</button>
+        <button data-v="add" data-tone="warn">＋選択条件</button>
+      </div>
+    </div>
+    <div class="vars">
+      <div class="var" data-v="base">
+<pre class="code">SELECT ename , emp.deptno , dname
+FROM emp , dept
+WHERE emp.deptno = dept.deptno;</pre>
+        <div class="diffbar">結合条件だけ</div>
+        <div class="res run"><div class="rbody">
+          <div class="tw"><table class="dt">
+            <thead><tr><th>ENAME</th><th>DEPTNO</th><th>DNAME</th></tr></thead>
+            <tbody>
+              <tr><td>SMITH</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>ALLEN</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>WARD</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>JONES</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>MARTIN</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>BLAKE</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>CLARK</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>SCOTT</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>KING</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>TURNER</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>ADAMS</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>JAMES</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>FORD</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>MILLER</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+            </tbody>
+          </table></div>
+        </div></div>
+      </div>
+      <div class="var" data-v="add" hidden>
+<pre class="code">SELECT ename , emp.deptno , dname
+FROM emp , dept
+WHERE emp.deptno = dept.deptno
+AND emp.deptno >= 20;</pre>
+        <div class="diffbar">ANDで<b>選択条件</b>を追加 → 10番部門が消える ／ 10番部門（CLARK・KING・MILLER）が絞り込まれて消える</div>
+        <div class="res run"><div class="rbody">
+          <div class="tw"><table class="dt">
+            <thead><tr><th>ENAME</th><th>DEPTNO</th><th>DNAME</th></tr></thead>
+            <tbody>
+              <tr><td>SMITH</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>ALLEN</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>WARD</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>JONES</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>MARTIN</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>BLAKE</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>SCOTT</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>TURNER</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>ADAMS</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>JAMES</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>FORD</td><td class="num">20</td><td>RESEARCH</td></tr>
+            </tbody>
+          </table></div>
+          
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="sec" id="s12">
+  <h2><span class="n">3.18.3</span>デカルト積（CROSS JOIN結合）<span class="lv">必修</span></h2>
+
+  <div class="demo">
+    <div class="dh">
+      <span class="title">emp と dept の全組合せ<em>／ 2 つとも同じ56行</em></span>
+      <div class="sw">
+        <button data-v="old" class="on">旧オラクル結合（条件省略）</button>
+        <button data-v="cross" data-tone="warn">CROSS JOIN</button>
+      </div>
+    </div>
+    <div class="vars">
+      <div class="var" data-v="old">
+<pre class="code">SELECT ename, emp.deptno, dept.deptno, dname
+FROM emp ⟦, dept⟧;</pre>
+        <div class="diffbar">条件を書き忘れた場合と<b>見分けがつかない</b>（バグの温床）</div>
+        <div class="res run"><div class="rbody">
+          <div class="tw"><table class="dt">
+            <thead><tr><th>ENAME</th><th>EMP.DEPTNO</th><th>DEPT.DEPTNO</th><th>DNAME</th></tr></thead>
+            <tbody>
+              <tr><td>SMITH</td><td class="num">20</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>ALLEN</td><td class="num">30</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>WARD</td><td class="num">30</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>JONES</td><td class="num">20</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>MARTIN</td><td class="num">30</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>BLAKE</td><td class="num">30</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>CLARK</td><td class="num">10</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>SCOTT</td><td class="num">20</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>KING</td><td class="num">10</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>TURNER</td><td class="num">30</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>ADAMS</td><td class="num">20</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>JAMES</td><td class="num">30</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>FORD</td><td class="num">20</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr class="elip"><td>〈後略〉</td><td></td><td></td><td></td></tr>
+            </tbody>
+          </table></div>
+          <div class="rmsg">56 rows selected.</div>
+        </div></div>
+      </div>
+      <div class="var" data-v="cross" hidden>
+<pre class="code">SELECT ename , emp.deptno, dept.deptno, dname
+FROM emp ⟦CROSS JOIN⟧ dept ;</pre>
+        <div class="diffbar"><b>CROSS JOIN</b>は意図が明示され誤爆しない ／ 実測。3.17.3の等価結合14件と比較すると絞り込みの有無が分かる</div>
+        <div class="res run"><div class="rbody">
+          <div class="tw"><table class="dt">
+            <thead><tr><th>ENAME</th><th>EMP.DEPTNO</th><th>DEPT.DEPTNO</th><th>DNAME</th></tr></thead>
+            <tbody>
+              <tr><td>SMITH</td><td class="num">20</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>ALLEN</td><td class="num">30</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>WARD</td><td class="num">30</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>JONES</td><td class="num">20</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>MARTIN</td><td class="num">30</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>BLAKE</td><td class="num">30</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>CLARK</td><td class="num">10</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>SCOTT</td><td class="num">20</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>KING</td><td class="num">10</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>TURNER</td><td class="num">30</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>ADAMS</td><td class="num">20</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>JAMES</td><td class="num">30</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>FORD</td><td class="num">20</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr class="elip"><td>〈後略〉</td><td></td><td></td><td></td></tr>
+            </tbody>
+          </table></div>
+          <div class="rmsg">56 rows selected.</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+  <!-- removed note-s: CROSS JOINにON/USINGを付けるとエラーになる（教材原文）。 -->
+</section>
+
+
+<section class="sec" id="s13">
+  <h2><span class="n">3.18.4</span>表の別名<span class="lv">応用</span></h2>
+
+  <div class="demo">
+    <div class="dh"><span class="title">emp e / dept d</span></div>
+    <div class="vars">
+      <div class="var" data-v="a">
+<pre class="code">SELECT ename, e.deptno, dname
+FROM emp e JOIN dept d
+ON e.deptno = d.deptno;</pre>
+        <div class="diffbar">FROM 句でつけた別名（e / d）を SELECT 句や ON 句で使用する</div>
+        <div class="res run"><div class="rbody">
+          <div class="tw"><table class="dt">
+            <thead><tr><th>ENAME</th><th>DEPTNO</th><th>DNAME</th></tr></thead>
+            <tbody>
+              <tr><td>SMITH</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>ALLEN</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>WARD</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>JONES</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>MARTIN</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>BLAKE</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>CLARK</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>SCOTT</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>KING</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>TURNER</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>ADAMS</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>JAMES</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>FORD</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>MILLER</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+            </tbody>
+          </table></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<div style="border-top: 3px dashed #3498db; padding-top: 10px; margin: 40px 0; color: #3498db; font-weight: bold; text-align: center; font-size: 1.2em;">
+  <span style="display:inline-block; transform:scaleX(-1);">✂</span> ────────── 人工チェック完了 ここまで（3.18 終了） ────────── ✂
+</div>
+
+<!-- ══════════════════════════════════ 3-19 -->
+<section class="sec" id="s14">
+  <h2><span class="n">3.19.1</span>3つ以上の表の結合<span class="lv">応用</span></h2>
+
+  <div class="h first">もともとの導出結果に結合条件列が含まれていない場合は、条件のない結合（デカルト積）が形成されてしまいます。</div>
+  <div class="demo">
+    <div class="dh">
+      <span class="title">personVW・department・locations の3表結合</span>
+      <div class="sw">
+        <button data-v="on3" class="on">ON句を3つ並べる</button>
+        <button data-v="natok" data-tone="alt">USING+NATURAL（location_id含む）</button>
+        <button data-v="natng" data-tone="warn">USING+NATURAL（location_id含まない）</button>
+        <button data-v="reorder" data-tone="warn">結合順序を入れ替え</button>
+      </div>
+    </div>
+    <div class="vars">
+      <div class="var" data-v="on3">
+<pre class="code">SELECT personname , deptname , city, country_id
+FROM  personVW   p
+JOIN  department d  ON  p.did = d.did
+JOIN  locations  l  ON  d.location_id = l.location_id;</pre>
+        <div class="diffbar">ON句を<b>結合のたびに1つずつ</b>追加</div>
+        <div class="res run"><div class="rbody">
+          <div class="tw"><table class="dt">
+            <thead><tr><th>PERSONNAME</th><th>DEPTNAME</th><th>CITY</th><th>COUNTRY_ID</th></tr></thead>
+            <tbody>
+              <tr><td>Steven King</td><td>Executive</td><td>Seattle</td><td>US</td></tr>
+              <tr><td>Neena Kochhar</td><td>Executive</td><td>Seattle</td><td>US</td></tr>
+              <tr><td>Lex De Haan</td><td>Executive</td><td>Seattle</td><td>US</td></tr>
+              <tr><td>Alexander Hunold</td><td>IT</td><td>Southlake</td><td>US</td></tr>
+              <tr><td>Bruce Ernst</td><td>IT</td><td>Southlake</td><td>US</td></tr>
+              <tr><td>David Austin</td><td>IT</td><td>Southlake</td><td>US</td></tr>
+              <tr><td>Valli Pataballa</td><td>IT</td><td>Southlake</td><td>US</td></tr>
+              <tr><td>Diana Lorentz</td><td>IT</td><td>Southlake</td><td>US</td></tr>
+              <tr><td>Nancy Greenberg</td><td>Finance</td><td>Seattle</td><td>US</td></tr>
+              <tr><td>Daniel Faviet</td><td>Finance</td><td>Seattle</td><td>US</td></tr>
+              <tr><td>John Chen</td><td>Finance</td><td>Seattle</td><td>US</td></tr>
+              <tr><td>Ismael Sciarra</td><td>Finance</td><td>Seattle</td><td>US</td></tr>
+              <tr><td>Jose Manuel Urman</td><td>Finance</td><td>Seattle</td><td>US</td></tr>
+              <tr class="elip"><td>〈後略〉</td><td></td><td></td><td></td></tr>
+            </tbody>
+          </table></div>
+          <div class="rmsg">106 rows selected.</div>
+        </div></div>
+      </div>
+      <div class="var" data-v="natok" hidden>
+<pre class="code">SELECT personname , deptname , location_id , city, country_id
+FROM  personVW
+JOIN  department  USING(did)
+NATURAL JOIN  locations;</pre>
+        <div class="diffbar">location_idを<b>SELECT句に含める</b> → 正しく結合</div>
+        <div class="res run"><div class="rbody">
+          <div class="tw"><table class="dt">
+            <thead><tr><th>PERSONNAME</th><th>DEPTNAME</th><th>LOCATION_ID</th><th>CITY</th><th>COUNTRY_ID</th></tr></thead>
+            <tbody>
+              <tr><td>Steven King</td><td>Executive</td><td class="num">1700</td><td>Seattle</td><td>US</td></tr>
+              <tr><td>Neena Kochhar</td><td>Executive</td><td class="num">1700</td><td>Seattle</td><td>US</td></tr>
+              <tr><td>Lex De Haan</td><td>Executive</td><td class="num">1700</td><td>Seattle</td><td>US</td></tr>
+              <tr><td>Alexander Hunold</td><td>IT</td><td class="num">1400</td><td>Southlake</td><td>US</td></tr>
+              <tr><td>Bruce Ernst</td><td>IT</td><td class="num">1400</td><td>Southlake</td><td>US</td></tr>
+              <tr><td>David Austin</td><td>IT</td><td class="num">1400</td><td>Southlake</td><td>US</td></tr>
+              <tr><td>Valli Pataballa</td><td>IT</td><td class="num">1400</td><td>Southlake</td><td>US</td></tr>
+              <tr><td>Diana Lorentz</td><td>IT</td><td class="num">1400</td><td>Southlake</td><td>US</td></tr>
+              <tr><td>Nancy Greenberg</td><td>Finance</td><td class="num">1700</td><td>Seattle</td><td>US</td></tr>
+              <tr><td>Daniel Faviet</td><td>Finance</td><td class="num">1700</td><td>Seattle</td><td>US</td></tr>
+              <tr><td>John Chen</td><td>Finance</td><td class="num">1700</td><td>Seattle</td><td>US</td></tr>
+              <tr><td>Ismael Sciarra</td><td>Finance</td><td class="num">1700</td><td>Seattle</td><td>US</td></tr>
+              <tr><td>Jose Manuel Urman</td><td>Finance</td><td class="num">1700</td><td>Seattle</td><td>US</td></tr>
+              <tr class="elip"><td>〈後略〉</td><td></td><td></td><td></td><td></td></tr>
+            </tbody>
+          </table></div>
+          <div class="rmsg">106 rows selected.</div>
+        </div></div>
+      </div>
+      <div class="var" data-v="natng" hidden>
+<pre class="code">SELECT personname , deptname , city, country_id
+FROM personVW
+JOIN department  USING(did)
+NATURAL JOIN  locations;</pre>
+        <div class="diffbar">location_idを<b>SELECT句から外す</b> → 教材はデカルト積化すると説明 ／ 実測は「natok」タブと同一106行。デカルト積化は再現せず</div>
+        <div class="res run"><div class="rbody">
+          <div class="tw"><table class="dt">
+            <thead><tr><th>PERSONNAME</th><th>DEPTNAME</th><th>CITY</th><th>COUNTRY_ID</th></tr></thead>
+            <tbody>
+              <tr><td>Steven King</td><td>Executive</td><td>Seattle</td><td>US</td></tr>
+              <tr><td>Neena Kochhar</td><td>Executive</td><td>Seattle</td><td>US</td></tr>
+              <tr><td>Lex De Haan</td><td>Executive</td><td>Seattle</td><td>US</td></tr>
+              <tr><td>Alexander Hunold</td><td>IT</td><td>Southlake</td><td>US</td></tr>
+              <tr><td>Bruce Ernst</td><td>IT</td><td>Southlake</td><td>US</td></tr>
+              <tr><td>David Austin</td><td>IT</td><td>Southlake</td><td>US</td></tr>
+              <tr><td>Valli Pataballa</td><td>IT</td><td>Southlake</td><td>US</td></tr>
+              <tr><td>Diana Lorentz</td><td>IT</td><td>Southlake</td><td>US</td></tr>
+              <tr><td>Nancy Greenberg</td><td>Finance</td><td>Seattle</td><td>US</td></tr>
+              <tr><td>Daniel Faviet</td><td>Finance</td><td>Seattle</td><td>US</td></tr>
+              <tr><td>John Chen</td><td>Finance</td><td>Seattle</td><td>US</td></tr>
+              <tr><td>Ismael Sciarra</td><td>Finance</td><td>Seattle</td><td>US</td></tr>
+              <tr><td>Jose Manuel Urman</td><td>Finance</td><td>Seattle</td><td>US</td></tr>
+              <tr class="elip"><td>〈後略〉</td><td></td><td></td><td></td></tr>
+            </tbody>
+          </table></div>
+          <div class="rmsg">106 rows selected.</div>
+        </div></div>
+        <!-- removed note-s: <b>教材の説明と実測が食い違う点</b>：教材は「結合条件列(location_id)がSELECT句に無いとデカルト積になる」と説明するが、実際はNATURAL JOINの判定は中間表（personVW JOIN department USING(did)）の列構成で決まり、departmentが元々location_id列を持つため、SELECT句の有無に関わらず正しく結合される。実測は「natok」と同一の106行だった。 -->
+      </div>
+      <div class="var" data-v="reorder" hidden>
+<pre class="code">SELECT personname , deptname , city, country_id, location_id
+FROM personVW
+NATURAL JOIN  locations
+JOIN  department  USING(did);</pre>
+        <div class="diffbar">結合の<b>順序を入れ替える</b> → personVWとlocationsに共通列が無い ／ personVW×locationsが先にデカルト積になり、その後department結合でLOCATION_ID列が2つ重複するため</div>
+        <div class="res run"><div class="rbody">
+          <div class="rmsg err">ORA-00918: LOCATION_ID: column ambiguously specified</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="sec" id="s15">
+  <h2><span class="n">3.19.2</span>参考＞オラクル結合での3つの表の結合<span class="lv">参考</span></h2>
+
+  <div class="demo">
+    <div class="dh"><span class="title">personVW, department, locations（結合条件は n-1 個 ＝ 2個）<em>／ 3.19.1「ON句を3つ並べる」と同一結果</em></span></div>
+    <div class="vars">
+      <div class="var" data-v="a">
+<pre class="code">SELECT personname , deptname , city, country_id
+FROM personVW p , department  d , locations l
+WHERE   p.did = d.did
+AND     d.location_id = l.location_id;</pre>
+        <div class="diffbar">FROM句にカンマ区切り、WHERE句にAND連結の結合条件</div>
+      </div>
+    </div>
+    <div class="res run"><div class="rbody">
+      <div class="tw"><table class="dt">
+        <thead><tr><th>PERSONNAME</th><th>DEPTNAME</th><th>CITY</th><th>COUNTRY_ID</th></tr></thead>
+        <tbody>
+          <tr><td>Steven King</td><td>Executive</td><td>Seattle</td><td>US</td></tr>
+          <tr><td>Neena Kochhar</td><td>Executive</td><td>Seattle</td><td>US</td></tr>
+          <tr><td>Lex De Haan</td><td>Executive</td><td>Seattle</td><td>US</td></tr>
+          <tr><td>Alexander Hunold</td><td>IT</td><td>Southlake</td><td>US</td></tr>
+          <tr><td>Bruce Ernst</td><td>IT</td><td>Southlake</td><td>US</td></tr>
+          <tr><td>David Austin</td><td>IT</td><td>Southlake</td><td>US</td></tr>
+          <tr><td>Valli Pataballa</td><td>IT</td><td>Southlake</td><td>US</td></tr>
+          <tr><td>Diana Lorentz</td><td>IT</td><td>Southlake</td><td>US</td></tr>
+          <tr><td>Nancy Greenberg</td><td>Finance</td><td>Seattle</td><td>US</td></tr>
+          <tr><td>Daniel Faviet</td><td>Finance</td><td>Seattle</td><td>US</td></tr>
+          <tr><td>John Chen</td><td>Finance</td><td>Seattle</td><td>US</td></tr>
+          <tr><td>Ismael Sciarra</td><td>Finance</td><td>Seattle</td><td>US</td></tr>
+          <tr><td>Jose Manuel Urman</td><td>Finance</td><td>Seattle</td><td>US</td></tr>
+          <tr class="elip"><td>〈後略〉</td><td></td><td></td><td></td></tr>
+        </tbody>
+      </table></div>
+      <div class="rmsg">106 rows selected.</div>
+    </div></div>
+  </div>
+</section>
+
+
+
+
+
+<section class="sec" id="s17">
+  <h2><span class="n">3.19.4</span>選択条件の追加<span class="lv">必修</span></h2>
+
+  <div class="h first">句の順番は以下の通りです： 1. SELECT ／ 2. FROM（JOIN等） ／ 3. WHERE ／ 4. GROUP BY ／ 5. HAVING ／ 6. ORDER BY</div>
+  <div class="h">ON句やUSING句はFROM句に付随しているため、FROM句のあとに指定します。WHERE句のあとにON句のみ続ける書き方はできません。</div>
+  <div class="h">結合条件と選択条件をANDでつなぐ場合、どちらを先に指定しなければならないというルールはありません。</div>
+  <div class="demo">
+    <div class="dh">
+      <span class="title">emp / dept, empno &gt; 7800 の絞り込み</span>
+      <div class="sw">
+        <button data-v="using" class="on" data-tone="alt">USING ＋ WHERE</button>
+        <button data-v="where">オラクル結合＋WHERE</button>
+        <button data-v="onwhere" data-tone="alt">JOIN ON ＋ WHERE</button>
+        <button data-v="onand" data-tone="warn">JOIN ON ＋ AND</button>
+      </div>
+    </div>
+    <div class="vars">
+      <div class="var" data-v="using">
+<pre class="code">SELECT ename, deptno, dname
+FROM emp JOIN dept USING(deptno)
+WHERE empno > 7800;</pre>
+        <div class="diffbar">結合条件は<b>USING句</b>、選択条件は<b>WHERE句</b></div>
+        <div class="res run"><div class="rbody">
+          <div class="tw"><table class="dt">
+            <thead><tr><th>ENAME</th><th>DEPTNO</th><th>DNAME</th></tr></thead>
+            <tbody>
+              <tr><td>KING</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>TURNER</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>ADAMS</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>JAMES</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>FORD</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>MILLER</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+            </tbody>
+          </table></div>
+        </div></div>
+      </div>
+      <div class="var" data-v="where" hidden>
+<pre class="code">SELECT ename, e.deptno, dname
+FROM emp e , dept d
+WHERE e.deptno = d.deptno     ・・・結合条件
+AND empno > 7800;             ・・・選択条件</pre>
+        <div class="diffbar">結合条件・選択条件とも<b>WHERE句にAND連結</b> ／ 説明用の構文断片・実行不可</div>
+      </div>
+      <div class="var" data-v="onwhere" hidden>
+<pre class="code">SELECT ename, e.deptno, dname
+FROM emp e JOIN dept d ON e.deptno = d.deptno
+WHERE empno > 7800;</pre>
+        <div class="diffbar">結合条件は<b>ON句</b>、選択条件は<b>WHERE句</b></div>
+        <div class="res run"><div class="rbody">
+          <div class="tw"><table class="dt">
+            <thead><tr><th>ENAME</th><th>DEPTNO</th><th>DNAME</th></tr></thead>
+            <tbody>
+              <tr><td>KING</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>TURNER</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>ADAMS</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>JAMES</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>FORD</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>MILLER</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+            </tbody>
+          </table></div>
+        </div></div>
+      </div>
+      <div class="var" data-v="onand" hidden>
+<pre class="code">SELECT ename, e.deptno, dname
+FROM emp e JOIN dept d ON e.deptno = d.deptno
+AND empno > 7800;</pre>
+        <div class="diffbar">選択条件も<b>ON句にAND</b>で追加（内部結合では結果は同じ）</div>
+        <div class="res run"><div class="rbody">
+          <div class="tw"><table class="dt">
+            <thead><tr><th>ENAME</th><th>DEPTNO</th><th>DNAME</th></tr></thead>
+            <tbody>
+              <tr><td>KING</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+              <tr><td>TURNER</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>ADAMS</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>JAMES</td><td class="num">30</td><td>SALES</td></tr>
+              <tr><td>FORD</td><td class="num">20</td><td>RESEARCH</td></tr>
+              <tr><td>MILLER</td><td class="num">10</td><td>ACCOUNTING</td></tr>
+            </tbody>
+          </table></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+  <!-- removed note-s: ON句のANDとWHERE句の違いは<b>外部結合</b>で表面化する（教材原文。本節はいずれもINNER JOINなので差は出ない）。 -->
+</section>
+
+</div>
+<script src="assets/review-hl.js"></script>
+
+
+<!-- IFRAME SEAMLESS HELPER -->
+<script>
+if (window.parent !== window) {
+  document.querySelector('.hero').style.display = 'none';
+  var toc = document.querySelector('.toc');
+  if (toc) toc.style.display = 'none';
+  
+  var VOL_ID = window.location.pathname.split('/').pop().replace('.html', '');
+
+  function sendHeight() {
+    window.parent.postMessage({ type: 'resize', height: document.documentElement.scrollHeight, vol: VOL_ID }, '*');
+  }
+  window.addEventListener('load', sendHeight);
+  if (window.ResizeObserver) {
+    new ResizeObserver(sendHeight).observe(document.body);
+  }
+  
+  window.addEventListener('message', function(e) {
+    if (e.data.type === 'getOffset' && e.data.id) {
+      var el = document.getElementById(e.data.id);
+      if (el) {
+        window.parent.postMessage({ type: 'offset', vol: VOL_ID, id: e.data.id, top: el.offsetTop }, '*');
+      }
+    }
+  });
+
+  var secs = Array.from(document.querySelectorAll('section.sec'));
+  var secData = secs.map(function(s) {
+    var h2 = s.querySelector('h2');
+    return { id: s.id, title: h2 ? h2.textContent.replace(/必修|応用|参考/g, '').trim() : s.id };
+  });
+  window.parent.postMessage({ type: 'init', vol: VOL_ID, sections: secData }, '*');
+
+  if ('IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          window.parent.postMessage({ type: 'intersect', vol: VOL_ID, id: entry.target.id }, '*');
+        }
+      });
+    }, { rootMargin: '-10% 0px -65% 0px' });
+    secs.forEach(function (s) { observer.observe(s); });
+  }
+}
+</script>
+</body>
