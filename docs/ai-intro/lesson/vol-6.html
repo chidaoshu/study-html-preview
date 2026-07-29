@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ニューラルネットワーク 実習ガイド - 人工知能概論 vol.6</title>
+<style>
+:root{
+  --paper:#faf8f3; --card:#ffffff; --ink:#26241f; --sub:#6b675e;
+  --indigo:#3a5169; --indigo-soft:#e8edf2;
+  --red:#c2452d; --red-soft:#faece8;
+  --green:#3f7355; --green-soft:#e9f2ec;
+  --amber:#9a6b1f; --amber-soft:#f8f0dd;
+  --line:#e4e0d6; --code:#f3f1ea;
+  --radius:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#1c1b18; --card:#26241f; --ink:#ece9e1; --sub:#a49f93;
+    --indigo:#8fadc9; --indigo-soft:#2b3541;
+    --red:#e58a75; --red-soft:#412b25;
+    --green:#8dbfa2; --green-soft:#263a2f;
+    --amber:#d9b36b; --amber-soft:#3d341f;
+    --line:#3a372f; --code:#302d26;
+  }
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);
+  font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","PingFang SC","Yu Gothic",sans-serif;
+  font-size:17px;line-height:1.75;text-wrap:pretty}
+.wrap{max-width:900px;margin:0 auto;padding:0 20px 120px}
+
+header{padding:56px 0 24px}
+.kicker{color:var(--red);font-weight:700;letter-spacing:.18em;font-size:13px}
+h1{font-size:clamp(28px,5vw,42px);font-weight:800;line-height:1.25;margin:10px 0 14px}
+.lead{color:var(--sub);max-width:660px}.lead b{color:var(--ink)}
+
+nav{position:sticky;top:0;background:color-mix(in srgb,var(--paper) 88%,transparent);
+  backdrop-filter:blur(8px);z-index:50;padding:10px 0;border-bottom:1px solid var(--line);
+  display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav a{flex-shrink:0;font-size:13px;font-weight:600;color:var(--sub);text-decoration:none;
+  padding:5px 12px;border-radius:99px;border:1px solid var(--line);background:var(--card)}
+nav a:hover{color:var(--red);border-color:var(--red)}
+
+section{margin-top:64px}
+.sec-num{font-size:13px;font-weight:700;color:var(--red);letter-spacing:.15em}
+h2{font-size:clamp(22px,3.4vw,30px);font-weight:800;margin:4px 0 6px}
+.sec-sub{color:var(--sub);font-size:15px;margin-bottom:22px}
+h3{font-size:19px;font-weight:800;margin:24px 0 10px}
+
+.m{font-family:"STIX Two Math","Times New Roman",Georgia,serif;font-style:italic;white-space:nowrap}
+.m b{font-style:normal;font-weight:400}
+sup{font-size:.68em}
+.hl-red{color:var(--red);font-weight:700}
+.hl-green{color:var(--green);font-weight:700}
+.hl-amber{color:var(--amber);font-weight:700}
+.hl-indigo{color:var(--indigo);font-weight:700}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:16px}
+.rule-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.rule-jp{font-size:19px;font-weight:800}
+.rule-cn{color:var(--sub);font-size:14px}
+.koketsu{display:inline-block;background:var(--red-soft);color:var(--red);font-weight:700;
+  font-size:15px;padding:4px 14px;border-radius:6px;margin:10px 0}
+.card .note{font-size:14.5px;color:var(--sub);margin-top:10px}
+.card .note b{color:var(--ink)}
+.imp{display:inline-block;font-size:13.5px;font-weight:700;background:var(--indigo-soft);
+  color:var(--indigo);border-radius:6px;padding:3px 12px;margin-top:12px}
+.warn{background:var(--amber-soft);border-radius:8px;padding:14px 18px;margin-top:14px;font-size:15px}
+.warn b{color:var(--amber)}
+
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);overflow:hidden;font-size:15px}
+.table-scroll{overflow-x:auto;border-radius:var(--radius);margin-top:10px}
+th{background:var(--indigo-soft);color:var(--indigo);font-size:12.5px;font-weight:700;
+  padding:9px 10px;text-align:left;white-space:nowrap}
+td{padding:9px 10px;border-top:1px solid var(--line);vertical-align:middle}
+
+/* ---------- 交互练习器 ---------- */
+.trainer{background:var(--card);border:1.5px solid var(--indigo);border-radius:var(--radius);padding:24px;margin-top:14px}
+.round-badge{display:inline-block;background:var(--indigo);color:#fff;font-weight:700;
+  font-size:14px;padding:4px 14px;border-radius:6px;margin-bottom:14px}
+.excel-tip{background:var(--green-soft);border-radius:6px;padding:8px 14px;font-size:13.5px;
+  color:var(--green);margin-bottom:16px}
+.excel-tip b{color:var(--green)}
+
+.param-row{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;margin-bottom:16px}
+.param-row .pg{flex:0 0 auto}
+.param-row label{display:block;font-size:12px;color:var(--sub);font-weight:700;margin-bottom:3px}
+.param-row label .role{color:var(--indigo);font-weight:400}
+.param-row input{width:64px;font-size:18px;font-weight:700;text-align:center;padding:6px;
+  border:1.5px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink)}
+.param-row input:focus{outline:none;border-color:var(--indigo)}
+.param-divider{width:1px;align-self:stretch;background:var(--line);margin:0 4px}
+
+.col-guide{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:6px 0 4px;font-size:11.5px;color:var(--sub)}
+.col-guide div{padding:4px 6px;background:var(--code);border-radius:4px;text-align:center;line-height:1.35}
+@media(max-width:680px){.col-guide{grid-template-columns:repeat(3,1fr)}}
+
+.fill-table th,.fill-table td{text-align:center;font-size:14px}
+.fill-table .fixed{color:var(--sub);font-size:13px}
+.fill-table .truth-NG{color:var(--red);font-weight:700}
+.fill-table .truth-OK{color:var(--green);font-weight:700}
+.fill-table input[type=number]{width:54px;font-size:15px;font-weight:600;text-align:center;
+  padding:4px;border:1.5px solid var(--line);border-radius:5px;background:var(--paper);color:var(--ink)}
+.fill-table select{font-size:13px;padding:4px 6px;border:1.5px solid var(--line);border-radius:5px;
+  background:var(--paper);color:var(--ink);cursor:pointer}
+.fill-table .cell-ok{background:var(--green-soft)}
+.fill-table .cell-err{background:var(--red-soft)}
+.fill-table .fb{display:block;font-size:11px;margin-top:3px;line-height:1.3}
+.fill-table .fb.ok{color:var(--green)}
+.fill-table .fb.no{color:var(--red)}
+
+.btn{display:inline-block;cursor:pointer;border:none;border-radius:8px;padding:10px 22px;
+  font-size:15px;font-weight:700;font-family:inherit;margin:10px 8px 0 0;transition:.12s}
+.btn-primary{background:var(--indigo);color:#fff}
+.btn-primary:hover{opacity:.88}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed}
+.btn-accent{background:var(--red);color:#fff}
+.btn-accent:hover{opacity:.88}
+.btn-ghost{background:var(--card);color:var(--indigo);border:1.5px solid var(--indigo)}
+
+.trainer-msg{margin-top:12px;padding:10px 14px;border-radius:6px;font-size:14px}
+.trainer-msg.info{background:var(--indigo-soft);color:var(--indigo)}
+.trainer-msg.good{background:var(--green-soft);color:var(--green)}
+.trainer-msg.bad{background:var(--red-soft);color:var(--red)}
+
+/* 调参引导 */
+.adjust{margin-top:18px;border-top:1px dashed var(--line);padding-top:16px}
+.adjust h4{font-size:16px;font-weight:800;margin-bottom:10px;color:var(--amber)}
+.adjust-step{background:var(--code);border-radius:8px;padding:12px 14px;margin-bottom:10px;font-size:14px}
+.adjust-step .as-head{font-weight:700;color:var(--ink);margin-bottom:4px}
+.adjust-step .as-rule{color:var(--amber);font-weight:700;font-size:13px;margin-bottom:4px}
+.adjust-step .as-calc{font-family:"STIX Two Math",Georgia,serif;font-size:15px;color:var(--ink)}
+.adjust-step .as-calc .neg{color:var(--red)}
+.adjust-step .as-calc .pos{color:var(--green)}
+.adjust-final{background:var(--amber-soft);border-radius:8px;padding:12px 14px;font-size:15px;color:var(--amber);font-weight:700}
+
+/* 单行判断器 */
+.demo{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin-top:14px}
+.snack-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.snack-btn{flex:1 1 0;min-width:110px;cursor:pointer;border:1.5px solid var(--line);background:var(--card);
+  color:var(--ink);border-radius:8px;padding:10px 6px;text-align:center;font-size:14px;font-weight:600;
+  transition:.12s;user-select:none}
+.snack-btn .price{display:block;font-size:11px;color:var(--sub);font-weight:400;margin-top:2px}
+.snack-btn.on{border-color:var(--red);background:var(--red-soft);color:var(--red)}
+.snack-btn.on .price{color:var(--red)}
+.snack-btn:hover{border-color:var(--indigo)}
+.readout{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;font-size:14px}
+.readout .ro{flex:1 1 120px;background:var(--code);border-radius:6px;padding:8px 12px}
+.readout .ro span{display:block;font-size:11px;color:var(--sub)}
+.readout .ro b{font-size:17px;font-variant-numeric:tabular-nums}
+.verdict{margin-top:10px;text-align:center;border-radius:8px;padding:10px;font-size:20px;font-weight:800}
+.verdict.ng{background:var(--red-soft);color:var(--red)}
+.verdict.ok{background:var(--green-soft);color:var(--green)}
+.verdict .vsub{display:block;font-size:12px;font-weight:500;margin-top:2px;opacity:.85}
+
+.flow-box{display:flex;flex-direction:column;gap:0;margin-top:10px}
+.flow-step{position:relative;padding:12px 16px 12px 48px;background:var(--code);border-radius:8px;margin-bottom:6px;font-size:14.5px}
+.flow-step::before{content:attr(data-n);position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  width:26px;height:26px;background:var(--indigo);color:#fff;border-radius:50%;display:flex;
+  align-items:center;justify-content:center;font-weight:700;font-size:13px}
+.flow-step b{color:var(--indigo)}
+.flow-step.loop{border-left:3px solid var(--amber)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">人工知能概論 · vol.6 · ニューラルネットワーク · 実習ガイド</div>
+  <h1>ニューラルネットワーク実習ガイド・ステップバイステップ</h1>
+  <p class="lead">これは<b>正解が一つではない実践課題</b>です。初期重みから出発し、「判定 -> パラメータ調整」を繰り返し、ネットワークにお菓子を買えるかどうかの判定を学習させます。本ページでは<b>操作手順と概念を同時に解説</b>します。まず1行の判定方法を理解し、その後インタラクティブツールにパラメータを入力すると自動で結果と調整手順が計算されます。最終的に導き出されるのは<b>あなた自身</b>の解答であり、これをExcelに入力して課題として提出します。</p>
+</header>
+
+<nav>
+  <a href="#s0">§0 まずは判定プロセスから</a>
+  <a href="#s1">§1 課題の進め方</a>
+  <a href="#s2">§2 学習練習ツール</a>
+  <a href="#s3">§3 検証練習ツール</a>
+  <a href="#s4">§4 完了</a>
+</nav>
+
+<!-- ============ §0 ============ -->
+<section id="s0">
+  <div class="sec-num">§0 · 1行の判定方法を理解する</div>
+  <h2>1つの買い方に対し、ネットワークはどう判定するのか？</h2>
+  <p class="sec-sub">課題全体は、<b>以下の判定プロセスを何度も繰り返す</b>ことです。まずこの単行判定ツールを使い、1行の計算方法を理解しましょう。後の表埋め作業はそのバッチ処理版です。</p>
+
+  <div class="demo">
+    <p style="font-size:14px;color:var(--sub);margin-bottom:10px">買うお菓子にチェックを入れ、パラメータを変更して、ユニットAがどう反応するか観察してください：</p>
+    <div class="snack-row">
+      <div class="snack-btn" data-i="0">お菓子1<span class="price">310 円 / B</span></div>
+      <div class="snack-btn" data-i="1">お菓子2<span class="price">220 円 / C</span></div>
+      <div class="snack-btn" data-i="2">お菓子3<span class="price">70 円 / D</span></div>
+    </div>
+    <div class="param-row" style="margin-bottom:10px">
+      <div class="pg"><label>B <span class="role">重み</span></label><input id="jB" type="number" value="1" style="width:56px"></div>
+      <div class="pg"><label>C <span class="role">重み</span></label><input id="jC" type="number" value="3" style="width:56px"></div>
+      <div class="pg"><label>D <span class="role">重み</span></label><input id="jD" type="number" value="8" style="width:56px"></div>
+      <div class="param-divider"></div>
+      <div class="pg"><label>A <span class="role">閾値</span></label><input id="jA" type="number" value="6" style="width:56px"></div>
+    </div>
+    <div class="readout">
+      <div class="ro"><span>発火したユニット(買った)</span><b id="jFired">-</b></div>
+      <div class="ro"><span>重み合計</span><b id="jSum">0</b></div>
+      <div class="ro"><span>合計 vs 閾値</span><b id="jCmp">-</b></div>
+    </div>
+    <div class="verdict ok" id="jVerdict">OK<span class="vsub">A 不発火 -> 買い方はOK</span></div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <div class="rule-head"><span class="rule-jp">判定プロセス（要記憶）</span><span class="rule-cn">加总 -> 比閾値 -> 定発火 -> 定OK/NG</span></div>
+    <div class="table-scroll"><table>
+      <tr><th>手順</th><th>操作</th><th>概念</th></tr>
+      <tr><td>① 合計</td><td>「<b>買う</b>」ユニットの<b>重み</b>を足し合わせる = 重み合計</td><td>買う = 対応するユニットが<b>発火</b>し、自身の重みを送る；<b>買わない</b> = 不発火、送らない（0とする）</td></tr>
+      <tr><td>② 比閾値</td><td>合計 <b>></b> 閾値 A か？</td><td>「<b>超えた</b>」= 厳密に大きい。<b>等しい場合は超えたとは見なさず</b>、発火しない</td></tr>
+      <tr><td>③ 発火判定</td><td>合計 > 閾値 -> Aが<b>発火</b>する；そうでなければ発火しない</td><td>発火（Firing）= 信号が次に伝わる</td></tr>
+      <tr><td>④ OK/NG判定</td><td>発火 -> <span class="hl-red">NG</span>（失敗）；不発火 -> <span class="hl-green">OK</span>（成功）</td><td><b>直感に反する点</b>：発火は「超えた」ことを意味するため、NGとなる</td></tr>
+    </table></div>
+    <div class="koketsu">発火 = NG、不発火 = OK。これを逆に判定すると全て間違える。</div>
+    <p class="note"><b>2組のパラメータを混同しないこと：</b>重み B/C/D <b>入力層ユニット（買う時に送る）のパラメータ</b>（買う时送出），閾値 A <b>出力層ユニットのパラメータ</b>。学習とはこれら2組の数値を調整すること。正解ラベル（Ground Truth Label）は実際の金額に基づいた正しい答え（合計金額 > 500 -> NG）であり、ネットワークの判定と比較して正誤を確認する。</p>
+    <div class="imp">重要度：🔴 この4ステップは課題全体の基礎。§2の表埋めではこれを5回実行する。</div>
+  </div>
+</section>
+
+<!-- ============ §1 ============ -->
+<section id="s1">
+  <div class="sec-num">§1 · 課題の進め方</div>
+  <h2>指定された操作フロー</h2>
+  <p class="sec-sub">課題に唯一の正解はない。以下のサイクルを回し、<b>バリデーション（検証）も全て「正しい」</b>になるまで続ける。1ターム終わるごとにExcelで新しいシートをコピーして作成する。</p>
+
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">指定された操作フロー</span><span class="rule-cn">トレーニングサイクル -> バリデーション -> 間違いがあればトレーニングに戻る -> 再バリデーション</span></div>
+    <div class="flow-box">
+      <div class="flow-step" data-n="1"><b>学習1ターム目へ進む</b>：初期値 B=1 C=3 D=8 A=6 を使い、5行のトレーニングデータを計算し、各行の重み合計・正誤を判定。</div>
+      <div class="flow-step" data-n="2">有「間違い」-> 分 T1/T2 -> 调重み和閾値 -> <b>复制 sheet</b> 进学習2ターム目へ進む。</div>
+      <div class="flow-step loop" data-n="3">学習を複数ターム繰り返し、5行<b>全て「正しい」</b>になるまで続ける -> ここで<b>学習を中断</b>する（このパラメータが収束値）。</div>
+      <div class="flow-step" data-n="4"><b>バリデーション1ターム目へ進む</b>：収束したパラメータを使い、3行のバリデーションデータを判定。</div>
+      <div class="flow-step" data-n="5">バリデーションが<b>全て「正しい」</b> -> パラメータ完成、課題終了。</div>
+      <div class="flow-step loop" data-n="6">バリデーションに<b>「間違い」がある</b> -> T1/T2に分けてパラメータ調整 -> <b>新規学習タームを作成</b>して確認 -> 再び<b>新規バリデーションタームを作成</b> -> まだ間違いがあればこの手順を繰り返し、全て「正しい」になるまで続ける。</div>
+    </div>
+    <div class="warn"><b>重要な認識：</b>トレーニングデータで全問正解でも<b>完成ではない</b>（それに合わせて調整したのだから当然）。真の性能は<b>未知のバリデーションデータ</b>で試される。そのため、バリデーションで間違いがあれば学習に戻って再調整し、バリデーションでも全て正解になるまで繰り返す。</div>
+  </div>
+
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">Excelの3つのシート</span><span class="rule-cn">NN演習26CA02xx.xlsx</span></div>
+    <div class="table-scroll"><table>
+      <tr><th>sheet</th><th>役割</th><th>你要操作</th></tr>
+      <tr><td>学習用、検証用データ一覧</td><td>参考データ：5行のトレーニング用 + 3行のバリデーション用の買い方と正解</td><td>読み取り専用。正解ラベルの確認</td></tr>
+      <tr><td>作業用テンプレート(学習)</td><td>トレーニング用空白テンプレート（5行）</td><td>コピーして「学習Nターム目へ進む」とし、パラメータ + 重み合計 + 正誤 + タイプ分類を記入</td></tr>
+      <tr><td>作業用テンプレート(検証)</td><td>バリデーション用空白テンプレート（3行）</td><td>コピーして「検証Nターム目へ進む」とし、同様に記入</td></tr>
+    </table></div>
+    <p class="note"><b>毎タームの操作：</b>シートを右クリック -> 「移動またはコピー」 -> 「コピーを作成する」にチェック -> 「学習2ターム目へ進む」等に名前変更。表のヘッダー <span class="m">B( ) C( ) D( ) A( )</span> に現在のパラメータを記入し、各行に「重み合計 / 正誤 / タイプ分類」を記入。テンプレート下部にはT1/T2の調整ルールが記載されている。</p>
+    <div class="imp">重要度：🔴 固定の答えを出すことではなく、このプロセスを正しく実行できるかが評価のポイント。</div>
+  </div>
+
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">表を埋める4ステップ + 3つの間違いやすい点</span><span class="rule-cn">毎タームこれを行う</span></div>
+    <div class="table-scroll"><table>
+      <tr><th>列</th><th>記入内容</th><th>計算方法</th></tr>
+      <tr><td>ヘッダー B( ) C( ) D( ) A( )</td><td>現在のタームの重みと閾値</td><td>第1タームは初期値；以後は前タームの調整結果を記入</td></tr>
+      <tr><td>重み合計</td><td>毎行の買うユニットの重み合計</td><td>「<b>買う</b>」ユニットの重みだけを足し、「買わない」は0とする</td></tr>
+      <tr><td>正誤</td><td>正しい / 間違い</td><td>合計 > 閾値 -> 発火 -> NG；その行の正解ラベルと比較し、一致 = 正しい</td></tr>
+      <tr><td>タイプ分類</td><td>T1 / T2（間違い行のみ）</td><td>T1：正解はOKだがNGと判定した；T2：正解はNGだがOKと判定した</td></tr>
+    </table></div>
+    <div class="warn"><b>3つの間違いやすい点（毎ターム要確認）：</b><br>① <b>発火 = NG</b>（直感に反するが、逆にすると全滅する）<br>② <b>等しい場合は超えたとは見なされない</b>（合計 = 閾値の時は不発火となり、判定はOK）<br>③ パラメータ調整時、<b>発火していない（買わない）ユニットは変更せず</b>、発火したユニットのみ増減する</div>
+    <div class="koketsu">调参规则：T1（発火过头）-> 発火单元重み −1、閾値 +1；T2（発火不足）-> 発火单元重み +1、閾値 −1</div>
+    <p class="note"><b>なぜこのように調整するのか（ヘップの法則 Hebb's Rule）：</b>T1はAが過敏に発火してしまうため、重みを<b>下げ</b>、閾値を<b>上げて</b>発火しにくくする；T2はその逆。発火したユニットのみ調整するのは、発火していないユニットは今回の間違いに関与していないため。これはまさに「繰り返し発火することで伝達効率が向上する」仕組みの手動シミュレーションである。</p>
+  </div>
+</section>
+
+<!-- ============ §2 学習練習ツール ============ -->
+<section id="s2">
+  <div class="sec-num">§2 · 学習練習ツール</div>
+  <h2>ステップバイステップ：学習（トレーニング）ターム</h2>
+  <p class="sec-sub">以下に自動計算ツールを用意しています。Excelの計算を省き、パラメータを入力して「結果を計算」をクリックすると、各行の判定や次のタームへの調整手順が自動で表示されます。</p>
+
+  <div class="trainer" id="learnTrainer">
+    <div class="round-badge" id="learnBadge">学習 1 ターム目へ進む</div>
+    <div class="excel-tip" id="learnTip"><b>Excel操作：</b>第1タームは「作業用テンプレート(学習)」を直接使用し、ヘッダーに初期値 B=1 C=3 D=8 A=6 を記入します。</div>
+
+    <div class="param-row">
+      <div class="pg"><label>B <span class="role">重み(入力)</span></label><input id="LB" type="number" value="1"></div>
+      <div class="pg"><label>C <span class="role">重み(入力)</span></label><input id="LC" type="number" value="3"></div>
+      <div class="pg"><label>D <span class="role">重み(入力)</span></label><input id="LD" type="number" value="8"></div>
+      <div class="param-divider"></div>
+      <div class="pg"><label>A <span class="role">閾値(出力)</span></label><input id="LA" type="number" value="6"></div>
+    </div>
+
+    <div class="col-guide">
+      <div>買う/買わない<br>（問題指定）</div>
+      <div>正解ラベル<br>（問題指定）</div>
+      <div>重み合計<br>自動計算</div>
+      <div>正誤<br>自動計算</div>
+      <div>タイプ分類<br>自動計算</div>
+      <div>判定<br>（チェック後）</div>
+    </div>
+
+    <div class="table-scroll">
+      <table class="fill-table" id="learnTable">
+        <thead><tr>
+          <th>お菓子1 B</th><th>お菓子2 C</th><th>お菓子3 D</th><th>正解</th>
+          <th>重み合計</th><th>正誤</th><th>タイプ</th><th>結果を計算</th>
+        </tr></thead>
+        <tbody id="learnBody"></tbody>
+      </table>
+    </div>
+
+    <button class="btn btn-primary" onclick="checkLearn()">結果を計算</button>
+    <button class="btn btn-ghost" onclick="resetLearnAll()">最初からやり直す</button>
+    <div id="learnMsg"></div>
+    <div id="learnAdjust"></div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <div class="rule-head"><span class="rule-jp">この練習ツールの使い方</span><span class="rule-cn">Excelと照らし合わせて進める</span></div>
+    <p class="note"><b>第1ターム</b>：初期値 B=1 C=3 D=8 A=6 が入力済みです。「結果を計算」をクリックすると各行の判定が自動計算されます。<br><b>計算後</b>：ツールに各間違い行のパラメータ調整手順が表示され、次のタームのパラメータが計算されます。これらの値をExcelに記録し、ツールで「学習2ターム目へ進む」をクリックして進めます。<br><b>5行全てが「正しい」になるまで続ける</b>：ツールが学習の中断と §3 バリデーション（検証）への移行を促します。</p>
+  </div>
+</section>
+
+<!-- ============ §3 検証練習ツール ============ -->
+<section id="s3">
+  <div class="sec-num">§3 · 検証練習ツール</div>
+  <h2>ステップバイステップ：バリデーション（検証）ターム</h2>
+  <p class="sec-sub">学習で全て「正しい」になった後、そのパラメータを使って3行のバリデーションデータを判定します。<b>バリデーションデータはパラメータ調整に関与していない未知のデータ</b>であり、これで正解して初めて真に学習したと言えます。</p>
+
+  <div class="trainer" id="validTrainer">
+    <div class="round-badge" id="validBadge">検証 1 ターム目へ進む</div>
+    <div class="excel-tip"><b>Excel操作：</b>「作業用テンプレート(検証)」をコピー -> 「検証1ターム目へ進む」に名前変更 -> ヘッダーに<b>学習の収束パラメータ</b>（学習で全て正解した時の値）を記入します。</div>
+
+    <div class="param-row">
+      <div class="pg"><label>B <span class="role">重み</span></label><input id="VB" type="number" placeholder="?"></div>
+      <div class="pg"><label>C <span class="role">重み</span></label><input id="VC" type="number" placeholder="?"></div>
+      <div class="pg"><label>D <span class="role">重み</span></label><input id="VD" type="number" placeholder="?"></div>
+      <div class="param-divider"></div>
+      <div class="pg"><label>A <span class="role">閾値</span></label><input id="VA" type="number" placeholder="?"></div>
+      <button class="btn btn-ghost" style="margin:0 0 0 8px" onclick="carryParams()">学習から引き継ぐ</button>
+    </div>
+
+    <div class="col-guide">
+      <div>買う/買わない<br>（問題指定）</div>
+      <div>正解ラベル<br>（問題指定）</div>
+      <div>重み合計<br>自動計算</div>
+      <div>正誤<br>自動計算</div>
+      <div>タイプ分類<br>自動計算</div>
+      <div>チェック反馈</div>
+    </div>
+
+    <div class="table-scroll">
+      <table class="fill-table" id="validTable">
+        <thead><tr>
+          <th>お菓子1 B</th><th>お菓子2 C</th><th>お菓子3 D</th><th>正解</th>
+          <th>重み合計</th><th>正誤</th><th>タイプ</th><th>結果を計算</th>
+        </tr></thead>
+        <tbody id="validBody"></tbody>
+      </table>
+    </div>
+
+    <button class="btn btn-primary" onclick="checkValid()">結果を計算</button>
+    <button class="btn btn-ghost" onclick="resetValid()">このタームをリセット</button>
+    <div id="validMsg"></div>
+    <div id="validAdjust"></div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <div class="rule-head"><span class="rule-jp">バリデーション結果の扱い方</span><span class="rule-cn">全て正しい = 完成 / 間違いあり = 学習に戻る</span></div>
+    <p class="note"><b>全て正しい：</b>おめでとうございます。この重みと閾値はバリデーションを通過し、課題完了です！バリデーションシートも課題として提出してください。<br><b>間違いあり：</b>T1/T2に従ってパラメータを調整 -> §2 学習練習ツールに戻り、<b>新パラメータ</b>で新しい学習タームを作成して1通り実行（学習データが依然として全問正解か確認）-> その後再びこちらに戻り、新規バリデーションタームを作成して再検証します。バリデーションが全て「正しい」になるまで繰り返します。</p>
+    <div class="imp">重要度：🔴 バリデーションに間違いがある場合は必ず学習に戻って再調整すること。検証シート上で直接パラメータを繰り返し変更してはいけない。</div>
+  </div>
+</section>
+
+<!-- ============ §4 完了 ============ -->
+<section id="s4">
+  <div class="sec-num">§4 · 完了</div>
+  <h2>いつ完了と見なすか？</h2>
+  <p class="sec-sub">特定の固定された数値を算出するのではなく、<b>プロセスを完了させる</b>ことです：学習で全正解 -> バリデーションで全正解。</p>
+
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">完了条件</span><span class="rule-cn">両方を満たすこと</span></div>
+    <div class="flow-box">
+      <div class="flow-step" data-n="✓">トレーニングデータ5行が<b>全て「正しい」</b>（学習中断）</div>
+      <div class="flow-step" data-n="✓">バリデーションデータ3行が<b>全て「正しい」</b></div>
+    </div>
+    <p class="note"><b>パラメータは一意ではない：</b>教材では初期値から B=8 C=6 D=2 A=11 付近に収束すると言及されていますが、これが<b>唯一の正解ではありません</b>。手順通りに進め、バリデーションで全正解できるパラメータであればどれも正解です。重要なのは<b>プロセスが追跡可能であること</b>（各シートに1タームを記録し、パラメータ調整の根拠があること）です。</p>
+    <div class="warn"><b>課題提出：</b>Excelファイルには、学習1 -> 学習2 -> ... -> 検証1（-> 間違いがあれば：学習N -> 検証2 -> ...）という完全なシートの連鎖が残っている必要があります。担当教員が確認するのはこのパラメータ調整の軌跡です。</div>
+    <div class="koketsu">一言で言うと：学習で全て正解しても完了ではなく、バリデーションで全て正解して初めて真に学習したと言える。</div>
+  </div>
+
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">概念の振り返り</span><span class="rule-cn">課題終了後に再確認</span></div>
+    <div class="table-scroll"><table>
+      <tr><th>概念</th><th>この課題においてそれは何か</th></tr>
+      <tr><td>ニューロン / ユニット / パーセプトロン</td><td>B/C/D（入力層）および A（出力層）の各ノード</td></tr>
+      <tr><td>重み（Weight / 重み）</td><td>B/C/D に設定された値。買う時にAへ送られる</td></tr>
+      <tr><td>閾値（Threshold / 閾値）</td><td>Aに設定された値。合計がこれを超えると発火する</td></tr>
+      <tr><td>正解ラベル（Ground Truth Label）</td><td>実際の金額に基づく NG/OK の結果。「正解」列に記入する</td></tr>
+      <tr><td>トレーニング（Training / 学習）</td><td>5行のトレーニングデータを用いてパラメータを調整するプロセス</td></tr>
+      <tr><td>バリデーション（Validation / 検証）</td><td>未知のデータ3行を用いて検証すること</td></tr>
+      <tr><td>ヘップの法則（Hebb's Rule）</td><td>パラメータ調整の根拠：発火に関与した接続のみを変更する</td></tr>
+      <tr><td>収束（Converge）</td><td>トレーニングデータで全問正解する安定状態</td></tr>
+    </table></div>
+  </div>
+</section>
+
+</div>
+
+<script>
+/* ===== 单行判断器（§0）===== */
+(function(){
+  var PRICES=[310,220,70], BUDGET=500;
+  var buy=[false,false,false];
+  function $i(id){return document.getElementById(id)}
+  function upd(){
+    var B=+$i('jB').value, C=+$i('jC').value, D=+$i('jD').value, A=+$i('jA').value;
+    var w=[B,C,D], sum=0, fired=[];
+    for(var i=0;i<3;i++){ if(buy[i]){ sum+=w[i]; fired.push(['B','C','D'][i]); } }
+    var fire = sum > A;
+    $i('jFired').textContent = fired.length? fired.join('・') : 'なし';
+    $i('jFired').style.color = fired.length? 'var(--red)':'var(--sub)';
+    $i('jSum').textContent = sum;
+    $i('jCmp').innerHTML = sum + (fire?' <b>&gt;</b> ':' <b>≤</b> ') + A;
+    $i('jCmp').style.color = fire?'var(--red)':'var(--green)';
+    var v=$i('jVerdict');
+    if(fire){ v.className='verdict ng'; v.innerHTML='NG<span class="vsub">A 発火 -> 買い方はNG（超えた）</span>'; }
+    else{ v.className='verdict ok'; v.innerHTML='OK<span class="vsub">A 不発火 -> 買い方はOK</span>'; }
+  }
+  document.querySelectorAll('.snack-btn').forEach(function(b){
+    b.addEventListener('click',function(){
+      var i=+b.getAttribute('data-i'); buy[i]=!buy[i]; b.classList.toggle('on',buy[i]); upd();
+    });
+  });
+  ['jB','jC','jD','jA'].forEach(function(id){ $i(id).addEventListener('input',upd); });
+  upd();
+})();
+
+/* ===== 学習 / 検証 数据 ===== */
+var LEARN_DATA=[
+  {buy:[1,1,1],truth:'NG'},
+  {buy:[1,1,0],truth:'NG'},
+  {buy:[1,0,1],truth:'OK'},
+  {buy:[0,1,1],truth:'OK'},
+  {buy:[0,0,0],truth:'OK'}
+];
+var VALID_DATA=[
+  {buy:[0,1,0],truth:'OK'},
+  {buy:[0,0,1],truth:'OK'},
+  {buy:[1,0,0],truth:'OK'}
+];
+
+/* 计算一行：合計 / 网络判断 / 正しい? / タイプ分類 */
+function compute(p,row){
+  var sum = row.buy[0]*p.B + row.buy[1]*p.C + row.buy[2]*p.D;
+  var net = sum > p.A ? 'NG' : 'OK';        // 网络判断（発火->NG）
+  var ok  = (net === row.truth);            // 和正解一致 = 正しい
+  var type = ok ? '' : (row.truth==='OK' ? 'T1' : 'T2');
+  // T1: 正解OK却判NG（発火过头）/ T2: 正解NG却判OK（発火不足）
+  return {sum:sum, net:net, ok:ok, type:type};
+}
+
+/* 串行调参：按間違い行顺序逐个更新参数 */
+function adjust(p, mistakeRows){
+  // mistakeRows: [{buy,type},...]（按表顺序）
+  var cur = {B:p.B, C:p.C, D:p.D, A:p.A};
+  var steps = [];
+  for(var k=0;k<mistakeRows.length;k++){
+    var m = mistakeRows[k];
+    var before = {B:cur.B, C:cur.C, D:cur.D, A:cur.A};
+    var d = {B:0,C:0,D:0,A:0};
+    if(m.type==='T1'){ // 発火单元 -1, A +1
+      d.B = -m.buy[0]; d.C = -m.buy[1]; d.D = -m.buy[2]; d.A = +1;
+    } else { // T2: 発火单元 +1, A -1
+      d.B = +m.buy[0]; d.C = +m.buy[1]; d.D = +m.buy[2]; d.A = -1;
+    }
+    cur.B += d.B; cur.C += d.C; cur.D += d.D; cur.A += d.A;
+    steps.push({m:m, before:before, d:d, after:{B:cur.B,C:cur.C,D:cur.D,A:cur.A}});
+  }
+  return {final:cur, steps:steps};
+}
+
+/* 渲染结果行 */
+function renderRows(bodyId, data){
+  var body = document.getElementById(bodyId);
+  body.innerHTML = '';
+  data.forEach(function(row, idx){
+    var tr = document.createElement('tr');
+    var bcd = row.buy.map(function(b){return b?'買う':'買わない'}).join('</td><td class="fixed">');
+    var truthCls = row.truth==='NG'?'truth-NG':'truth-OK';
+    tr.innerHTML =
+      '<td class="fixed">'+bcd+'</td>'+
+      '<td class="'+truthCls+'">'+row.truth+'</td>'+
+      '<td id="'+bodyId+'_sum_'+idx+'" style="font-weight:bold;">-</td>'+
+      '<td id="'+bodyId+'_ok_'+idx+'" style="font-weight:bold;">-</td>'+
+      '<td id="'+bodyId+'_tp_'+idx+'" style="font-weight:bold;">-</td>'+
+      '<td id="'+bodyId+'_fb_'+idx+'" class="fixed"></td>';
+    body.appendChild(tr);
+  });
+}
+
+/* 計算・判定：通用 */
+function checkTrainer(bodyId, data, p, prefix){
+  var allRight = true;
+  var mistakes = [];
+  
+  if (isNaN(p.B) || isNaN(p.C) || isNaN(p.D) || isNaN(p.A)) {
+    return {allRight: false, mistakes: []};
+  }
+
+  for(var idx=0; idx<data.length; idx++){
+    var row = data[idx];
+    var c = compute(p, row);
+    
+    document.getElementById(bodyId+'_sum_'+idx).textContent = c.sum;
+    var okStr = c.ok ? '正しい' : '間違い';
+    var okCls = c.ok ? 'truth-OK' : 'truth-NG';
+    document.getElementById(bodyId+'_ok_'+idx).innerHTML = '<span class="'+okCls+'">'+okStr+'</span>';
+    document.getElementById(bodyId+'_tp_'+idx).textContent = c.type;
+    
+    var fb = document.getElementById(bodyId+'_fb_'+idx);
+    if(c.ok){
+      fb.innerHTML = '<span class="fb ok">✓</span>';
+      fb.className = 'cell-ok';
+    } else {
+      fb.innerHTML = '<span class="fb no">NG判定</span>';
+      fb.className = 'cell-err';
+      // allRight is kept true because the table is auto-filled correctly.
+      mistakes.push({buy:row.buy, type:c.type, idx:idx});
+    }
+  }
+  return {allRight:allRight, mistakes:mistakes};
+}
+
+/* ===== 学習练习器 ===== */
+var learnRound = 1;
+var learnParams = {B:1,C:3,D:8,A:6};
+
+function loadLearnParams(){
+  document.getElementById('LB').value = learnParams.B;
+  document.getElementById('LC').value = learnParams.C;
+  document.getElementById('LD').value = learnParams.D;
+  document.getElementById('LA').value = learnParams.A;
+}
+function readLearnParams(){
+  learnParams = {B:+document.getElementById('LB').value, C:+document.getElementById('LC').value,
+                 D:+document.getElementById('LD').value, A:+document.getElementById('LA').value};
+}
+function resetLearn(){
+  renderRows('learnBody', LEARN_DATA);
+  document.getElementById('learnMsg').innerHTML = '';
+  document.getElementById('learnAdjust').innerHTML = '';
+}
+function resetLearnAll(){
+  learnRound = 1;
+  learnParams = {B:1,C:3,D:8,A:6};
+  document.getElementById('learnBadge').textContent = '学習 1 ターム目';
+  document.getElementById('learnTip').innerHTML = '<b>Excel操作：</b>第1タームは「作業用テンプレート(学習)」を直接使用し、ヘッダーに初期値 B=1 C=3 D=8 A=6 を記入します。';
+  loadLearnParams();
+  resetLearn();
+}
+function nextLearnRound(newParams){
+  learnRound++;
+  learnParams = newParams;
+  document.getElementById('learnBadge').textContent = '学習 '+learnRound+' ターム目へ進む';
+  document.getElementById('learnTip').innerHTML = '<b>Excel操作：</b>前のタームのシートをコピー -> 「学習'+learnRound+'ターム目」に名前変更 -> 調整後のパラメータ B='+newParams.B+' C='+newParams.C+' D='+newParams.D+' A='+newParams.A+' を記入。';
+  loadLearnParams();
+  resetLearn();
+  document.getElementById('s2').scrollIntoView({behavior:'smooth'});
+}
+function checkLearn(){
+  readLearnParams();
+  var r = checkTrainer('learnBody', LEARN_DATA, learnParams, 'L');
+  var msg = document.getElementById('learnMsg');
+  var adj = document.getElementById('learnAdjust');
+  if(!r.allRight){
+    msg.innerHTML = '<div class="trainer-msg bad">ヘッダーのパラメータを入力し、「結果を計算」をクリックしてください。</div>';
+    adj.innerHTML = '';
+    return;
+  }
+  // 全格子对
+  if(r.mistakes.length === 0){
+    msg.innerHTML = '<div class="trainer-msg good">5行全て「正しい」！学習収束。パラメータ B='+learnParams.B+' C='+learnParams.C+' D='+learnParams.D+' A='+learnParams.A+'。学習を中断し、§3 検証へ。</div>';
+    adj.innerHTML = '<div class="adjust"><div class="adjust-final">学習収束パラメータ：B='+learnParams.B+' C='+learnParams.C+' D='+learnParams.D+' A='+learnParams.A+'<br>この数値を検証シートに記入し、§3で「学習から引き継ぐ」をクリック。</div></div>';
+    return;
+  }
+  // 全格子对但有間違い -> 调参引导
+  msg.innerHTML = '<div class="trainer-msg info">計算完了！このタームには '+r.mistakes.length+' 個の「間違い」があります。以下の順序でパラメータを調整します（直前の結果を引き継いで計算）：</div>';
+  var ad = adjust(learnParams, r.mistakes);
+  var html = '<div class="adjust"><h4>調整手順（直列更新）</h4>';
+  ad.steps.forEach(function(s, k){
+    var buyStr = s.m.buy.map(function(b){return b?'買う':'買わない'}).join('/');
+    var calc = 'B: '+s.before.B+(s.d.B>=0?'+':'')+s.d.B+'=<b>'+s.after.B+'</b>　'+
+               'C: '+s.before.C+(s.d.C>=0?'+':'')+s.d.C+'=<b>'+s.after.C+'</b>　'+
+               'D: '+s.before.D+(s.d.D>=0?'+':'')+s.d.D+'=<b>'+s.after.D+'</b>　'+
+               'A: '+s.before.A+(s.d.A>=0?'+':'')+s.d.A+'=<b>'+s.after.A+'</b>';
+    html += '<div class="adjust-step">'+
+      '<div class="as-head">間違い'+(k+1)+'：'+buyStr+'（'+s.m.type+'）'+(s.m.buy.some(function(b){return !b;})?'　※買わないユニットは変更しない':'')+'</div>'+
+      '<div class="as-rule">'+(s.m.type==='T1'?'T1：発火ユニット重み −1、閾値 +1（让 A 难発火）':'T2：発火ユニット重み +1、閾値 −1（让 A 易発火）')+'</div>'+
+      '<div class="as-calc">'+calc+'</div>'+
+      '</div>';
+  });
+  html += '<div class="adjust-final">次のタームのパラメータ：B='+ad.final.B+' C='+ad.final.C+' D='+ad.final.D+' A='+ad.final.A+'</div>';
+  html += '<button class="btn btn-accent" style="margin-top:12px" onclick="nextLearnRound({B:'+ad.final.B+',C:'+ad.final.C+',D:'+ad.final.D+',A:'+ad.final.A+'})">学習'+(learnRound+1)+'ターム目へ進む</button>';
+  html += '</div>';
+  adj.innerHTML = html;
+}
+
+/* ===== 検証练习器 ===== */
+var validRound = 1;
+function resetValid(){
+  renderRows('validBody', VALID_DATA);
+  document.getElementById('validMsg').innerHTML = '';
+  document.getElementById('validAdjust').innerHTML = '';
+}
+function carryParams(){
+  document.getElementById('VB').value = learnParams.B;
+  document.getElementById('VC').value = learnParams.C;
+  document.getElementById('VD').value = learnParams.D;
+  document.getElementById('VA').value = learnParams.A;
+}
+function checkValid(){
+  var p = {B:+document.getElementById('VB').value, C:+document.getElementById('VC').value,
+           D:+document.getElementById('VD').value, A:+document.getElementById('VA').value};
+  if(isNaN(p.B)||isNaN(p.A)){ document.getElementById('validMsg').innerHTML='<div class="trainer-msg bad">先填表头参数（可点「学習から引き継ぐ」）</div>'; return; }
+  var r = checkTrainer('validBody', VALID_DATA, p, 'V');
+  var msg = document.getElementById('validMsg');
+  var adj = document.getElementById('validAdjust');
+  if(!r.allRight){
+    msg.innerHTML = '<div class="trainer-msg bad">未記入または間違っているセルがあります。ヒントを見て修正してください。検証ルールは学習と同じです：合計 &gt; 閾値 -> 発火 -> NG。</div>';
+    adj.innerHTML = '';
+    return;
+  }
+  if(r.mistakes.length === 0){
+    msg.innerHTML = '<div class="trainer-msg good">検証3行全て「正しい」！パラメータ B='+p.B+' C='+p.C+' D='+p.D+' A='+p.A+' 検証を通過しました。課題完了です！</div>';
+    adj.innerHTML = '<div class="adjust"><div class="adjust-final">完了！このパラメータと検証シートを提出してください。<br>Excel内には完全なシートの連鎖が必要です：学習1 -> 学習2 -> ... -> 検証1（間違いがあった場合はさらに多くのターム）。</div></div>';
+  } else {
+    msg.innerHTML = '<div class="trainer-msg info">表の記入は全て正解ですが、検証に '+r.mistakes.length+' 個の「間違い」があります。これは学習データに過学習しており、未知のデータに対応できていないことを示します。T1/T2に従って調整後、§2に戻って新しい学習タームを作成・確認し、その後再びここで新規検証タームを作成してください。</div>';
+    var ad = adjust(p, r.mistakes);
+    window._pendingLearnParams = ad.final;
+    var html = '<div class="adjust"><h4>調整手順（学習に戻り新パラメータを使用）</h4>';
+    ad.steps.forEach(function(s,k){
+      var buyStr = s.m.buy.map(function(b){return b?'買う':'買わない'}).join('/');
+      var calc = 'B: '+s.before.B+(s.d.B>=0?'+':'')+s.d.B+'=<b>'+s.after.B+'</b>　'+
+                 'C: '+s.before.C+(s.d.C>=0?'+':'')+s.d.C+'=<b>'+s.after.C+'</b>　'+
+                 'D: '+s.before.D+(s.d.D>=0?'+':'')+s.d.D+'=<b>'+s.after.D+'</b>　'+
+                 'A: '+s.before.A+(s.d.A>=0?'+':'')+s.d.A+'=<b>'+s.after.A+'</b>';
+      html += '<div class="adjust-step">'+
+        '<div class="as-head">間違い'+(k+1)+'：'+buyStr+'（'+s.m.type+'）</div>'+
+        '<div class="as-rule">'+(s.m.type==='T1'?'T1：発火ユニット重み −1、閾値 +1':'T2：発火ユニット重み +1、閾値 −1')+'</div>'+
+        '<div class="as-calc">'+calc+'</div></div>';
+    });
+    html += '<div class="adjust-final">新パラメータ：B='+ad.final.B+' C='+ad.final.C+' D='+ad.final.D+' A='+ad.final.A+'<br>下の「学習に戻って続ける」ボタンを押すと、自動で学習ツールにこの数値がセットされ、次の学習タームが始まります。1通り実行し、全て正解することを確認してからここに戻ってください。</div>';
+    html += '<button class="btn btn-accent" style="margin-top:12px" onclick="backToLearn()">学習に戻って続ける</button>';
+    html += '</div>';
+    adj.innerHTML = html;
+  }
+}
+
+function backToLearn(){
+  learnParams = window._pendingLearnParams || learnParams;
+  learnRound++;
+  document.getElementById('learnBadge').textContent = '学習 '+learnRound+' ターム目へ進む';
+  document.getElementById('learnTip').innerHTML = '<b>Excel 操作：</b>検証有错、调参后回学習。复制 sheet -> 命名「学習'+learnRound+'ターム目へ進む」-> 表头填 B='+learnParams.B+' C='+learnParams.C+' D='+learnParams.D+' A='+learnParams.A+'。';
+  loadLearnParams();
+  resetLearn();
+  document.getElementById('s2').scrollIntoView({behavior:'smooth'});
+}
+
+/* ===== 初始化 ===== */
+renderRows('learnBody', LEARN_DATA);
+renderRows('validBody', VALID_DATA);
+</script>
+</body>
+</html>
