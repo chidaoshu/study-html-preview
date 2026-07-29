@@ -27,7 +27,7 @@
 
 <!-- ══════════════════════════════════ 3-12 タイムゾーン -->
 <section class="sec" id="s3-12">
-  <h2><span class="n">3.12.1</span>新たに指定された関数<span class="lv">標準</span></h2>
+  <h2><span class="n">3.12.1</span>新たに指定された関数<span class="lv lv-y">理解</span></h2>
   <div class="h">SYSDATE 関数や SYSTIMESTAMP 関数は「システムの時刻」を戻します</div>
   <div class="tw" style="margin-bottom:18px">
     <table class="gt">
@@ -44,7 +44,7 @@
 </section>
 
 <section class="sec" id="s3-12-2">
-  <h2><span class="n">3.12.2</span>CURRENT_DATE、CURRENT_TIMESTAMP、LOCALTIMESTAMP<span class="lv">標準</span></h2>
+  <h2><span class="n">3.12.2</span>CURRENT_DATE、CURRENT_TIMESTAMP、LOCALTIMESTAMP<span class="lv lv-y">理解</span></h2>
   <div class="h">SYSDATE・SYSTIMESTAMP はサーバの時刻 ／ CURRENT_DATE・CURRENT_TIMESTAMP はクライアントの時刻 ／ LOCALTIMESTAMP は時差を表示しない</div>
 
   <div class="demo">
@@ -57,7 +57,7 @@
     </div>
     <div class="vars">
       <div class="var" data-v="ny1">
-<pre class="code">SELECT current_date FROM dual;</pre>
+<pre class="code">SELECT ⟦current_date⟧ FROM dual;</pre>
         <div class="diffbar">ニューヨークのクライアント時刻を返す</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -67,7 +67,7 @@
         </div></div>
       </div>
       <div class="var" data-v="jp1" hidden>
-<pre class="code">SELECT current_date FROM dual;</pre>
+<pre class="code">SELECT ⟦current_date⟧ FROM dual;</pre>
         <div class="diffbar">日本のクライアント時刻を返す</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -89,7 +89,7 @@
     </div>
     <div class="vars">
       <div class="var" data-v="ny2">
-<pre class="code">SELECT SYSTIMESTAMP FROM dual;</pre>
+<pre class="code">SELECT ⟦SYSTIMESTAMP⟧ FROM dual;</pre>
         <div class="diffbar">サーバのタイムスタンプ (+00:00) を返す</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -99,7 +99,7 @@
         </div></div>
       </div>
       <div class="var" data-v="jp2" hidden>
-<pre class="code">SELECT SYSTIMESTAMP FROM dual;</pre>
+<pre class="code">SELECT ⟦SYSTIMESTAMP⟧ FROM dual;</pre>
         <div class="diffbar">日本から実行しても同じサーバのタイムスタンプを返す</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -121,7 +121,7 @@
     </div>
     <div class="vars">
       <div class="var" data-v="ny3">
-<pre class="code">SELECT current_timestamp FROM dual;</pre>
+<pre class="code">SELECT ⟦current_timestamp⟧ FROM dual;</pre>
         <div class="diffbar">UTC との時差 -04:00 を付与して返す</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -131,7 +131,7 @@
         </div></div>
       </div>
       <div class="var" data-v="jp3" hidden>
-<pre class="code">SELECT current_timestamp FROM dual;</pre>
+<pre class="code">SELECT ⟦current_timestamp⟧ FROM dual;</pre>
         <div class="diffbar">UTC との時差 +09:00 を付与して返す</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -153,7 +153,7 @@
     </div>
     <div class="vars">
       <div class="var" data-v="ny4">
-<pre class="code">SELECT localtimestamp FROM dual;</pre>
+<pre class="code">SELECT ⟦localtimestamp⟧ FROM dual;</pre>
         <div class="diffbar">時差情報を含まずクライアント時刻のみ返す</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -163,7 +163,7 @@
         </div></div>
       </div>
       <div class="var" data-v="jp4" hidden>
-<pre class="code">SELECT localtimestamp FROM dual;</pre>
+<pre class="code">SELECT ⟦localtimestamp⟧ FROM dual;</pre>
         <div class="diffbar">日本のクライアント時刻（時差なし）を返す</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -177,7 +177,7 @@
 </section>
 
 <section class="sec" id="s3-12-3">
-  <h2><span class="n">3.12.3</span>SESSIONTIMEZONE<span class="lv">標準</span></h2>
+  <h2><span class="n">3.12.3</span>SESSIONTIMEZONE<span class="lv lv-y">理解</span></h2>
   <div class="h">SESSIONTIMEZONE はセッションのタイムゾーンを調べる ／ DBTIMEZONE は初期化パラメータ time_zone の設定値を返す</div>
 
   <div class="demo">
@@ -204,7 +204,7 @@
         <div class="diffbar">DB の初期化パラメータ time_zone の設定値（推奨値: +00:00）</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
-        <thead><tr><th>DBTIME</th></tr></thead>
+        <thead><tr><th>DBTIMEZONE</th></tr></thead>
         <tbody><tr><td>+00:00</td></tr></tbody>
         </table></div>
         </div></div>
@@ -214,7 +214,7 @@
 </section>
 
 <section class="sec" id="s3-12-4">
-  <h2><span class="n">3.12.4</span>ALTER SESSION によるセッションのタイムゾーンの変更<span class="lv">応用</span></h2>
+  <h2><span class="n">3.12.4</span>ALTER SESSION によるセッションのタイムゾーンの変更<span class="lv lv-y">理解</span></h2>
   <div class="h">セッションのタイムゾーンの変更は地域名または時差で行うことができる</div>
 
   <div class="demo">
@@ -227,7 +227,7 @@
     </div>
     <div class="vars">
       <div class="var" data-v="tz1">
-<pre class="code">ALTER SESSION SET time_zone = 'Europe/London';</pre>
+<pre class="code">ALTER SESSION SET ⟦time_zone = 'Europe/London'⟧;</pre>
         <div class="diffbar">地域名 ('Europe/London') でセッションタイムゾーンを変更</div>
 <pre class="code">SELECT sessiontimezone FROM dual;</pre>
         <div class="diffbar">変更後のセッションタイムゾーンを確認</div>
@@ -240,7 +240,7 @@
         </div></div>
       </div>
       <div class="var" data-v="tz2" hidden>
-<pre class="code">ALTER SESSION SET time_zone = '-07:00';</pre>
+<pre class="code">ALTER SESSION SET ⟦time_zone = '-07:00'⟧;</pre>
         <div class="diffbar">時差 ('-07:00') でセッションタイムゾーンを変更</div>
 <pre class="code">SELECT sessiontimezone FROM dual;</pre>
         <div class="diffbar">変更後のセッションタイムゾーンを確認</div>
@@ -259,7 +259,7 @@
 
 <!-- ══════════════════════════════════ 3-13 一般関数 -->
 <section class="sec" id="s3-13">
-  <h2><span class="n">3.13.1</span>一般関数の種類<span class="lv">必修</span></h2>
+  <h2><span class="n">3.13.1</span>一般関数の種類<span class="lv">重要</span></h2>
   <div class="h">一般関数は主に NULL 値を変換する処理を中心に、ユーティリティとしての機能を持つ関数</div>
 
   <div class="tw" style="margin-bottom:18px">
@@ -279,7 +279,7 @@
 </section>
 
 <section class="sec" id="s3-13-2">
-  <h2><span class="n">3.13.2</span>NVL、NVL2、COALESCE 関数<span class="lv">必修</span></h2>
+  <h2><span class="n">3.13.2</span>NVL、NVL2、COALESCE 関数<span class="lv">重要</span></h2>
   <div class="h">NVL は NULL の場合第２引数を返す ／ NVL2 は NULL でない場合第２引数・NULL の場合第３引数を返す ／ COALESCE は最初の非 NULL 値を返す</div>
 
   <div class="demo">
@@ -309,7 +309,8 @@
         </div></div>
       </div>
       <div class="var" data-v="nvl1" hidden>
-<pre class="code">SELECT ename, sal, comm, sal + comm, sal + ⟦NVL(comm, 0)⟧ 歩合込み給与 FROM emp;</pre>
+<pre class="code">SELECT ename, sal, comm, sal + comm, sal + ⟦NVL(comm, 0)⟧ 歩合込み給与
+FROM emp;</pre>
         <div class="diffbar">第 1 引数が NULL でない場合は第 1 引数、NULL の場合は第 2 引数 (0) を返す</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -325,7 +326,8 @@
         </div></div>
       </div>
       <div class="var" data-v="nvl2" hidden>
-<pre class="code">SELECT ename, sal, comm, sal + ⟦NVL2(comm, 5000, 3000)⟧ 手当つき給与 FROM emp;</pre>
+<pre class="code">SELECT ename, sal, comm, sal + ⟦NVL2(comm, 5000, 3000)⟧ 手当つき給与
+FROM emp;</pre>
         <div class="diffbar">第 1 引数が NULL でない場合は第 2 引数 (5000)、NULL の場合は第 3 引数 (3000) を返す</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -349,18 +351,11 @@
     </div>
     <div class="vars">
       <div class="var" data-v="coa">
-<pre class="code">-- 例) SELECT COALESCE(col1, col2, col3, col4, 0) AS result FROM coa_test;</pre>
+<pre class="code">
+SELECT COALESCE(col1, col2, col3, col4, 0) AS result
+FROM coa_test;</pre>
         <div class="diffbar">左から順に評価し最初の非 NULL 値を返す（引数 2〜256 個）</div>
-        <div class="vz" style="border:none;border-radius:0;margin:0;background:transparent;border-top:1px solid var(--line)">
-          <div class="vh"><b>COALESCE 評価順序</b> col1 → col2 → col3 → col4</div>
-          <div class="bar">
-            <div class="cell mark">col1 (1)</div>
-            <div class="cell null">col1(N)/col2(N) → col3 (13)</div>
-            <div class="cell null">col1(N) → col2 (22)</div>
-            <div class="cell null">col1-3(N) → col4 (34)</div>
-          </div>
-          <div class="axis"><span>行 1</span><span>行 4</span></div>
-        </div>
+        <div class="note" style="margin-bottom:12px"><b>COALESCE 評価順序</b> col1 → col2 → col3 → col4<br>行1: col1 が非 NULL → 1／行2: col1・col2 が NULL、col3 → 13／行3: col1 が NULL、col2 → 22／行4: col1〜col3 が NULL、col4 → 34</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
         <thead><tr><th>RESULT</th></tr></thead>
@@ -378,7 +373,7 @@
 </section>
 
 <section class="sec" id="s3-13-3">
-  <h2><span class="n">3.13.3</span>NULLIF<span class="lv">標準</span></h2>
+  <h2><span class="n">3.13.3</span>NULLIF<span class="lv lv-y">理解</span></h2>
   <div class="h">NULLIF は２つの引数の値を比較して同じ値ならば NULL に変換する ／ 0 除算エラーを回避する</div>
 
   <div class="demo">
@@ -387,7 +382,8 @@
     </div>
     <div class="vars">
       <div class="var" data-v="ex1">
-<pre class="code">SELECT ename, sal, comm, sal + NVL(⟦NULLIF(comm, 1400)⟧, 0) 一部除外 FROM emp;</pre>
+<pre class="code">SELECT ename, sal, comm, sal + NVL(⟦NULLIF(comm, 1400)⟧, 0) 一部除外
+FROM emp;</pre>
         <div class="diffbar">comm=1400 の MARTIN さんの手当を NULL に置換し計算から除外</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -416,7 +412,8 @@
     </div>
     <div class="vars">
       <div class="var" data-v="err0">
-<pre class="code">SELECT ename, sal, comm, ⟦sal / comm⟧ "0除算" FROM emp;</pre>
+<pre class="code">SELECT ename, sal, comm, ⟦sal / comm⟧ "0除算"
+FROM emp;</pre>
         <div class="diffbar">comm が 0 の行で 0 除算エラーが発生</div>
         <div class="res"><div class="rbody">
         <div class="rmsg err">ERROR:
@@ -424,7 +421,8 @@ ORA-01476: 除数がゼロです。</div>
         </div></div>
       </div>
       <div class="var" data-v="nif" hidden>
-<pre class="code">SELECT ename, sal, comm, sal / ⟦NULLIF(comm, 0)⟧ "0除算" FROM emp;</pre>
+<pre class="code">SELECT ename, sal, comm, sal / ⟦NULLIF(comm, 0)⟧ "0除算"
+FROM emp;</pre>
         <div class="diffbar">comm=0 を NULL に変換して 0 除算エラーを回避</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -441,7 +439,8 @@ ORA-01476: 除数がゼロです。</div>
         </div></div>
       </div>
       <div class="var" data-v="nvn" hidden>
-<pre class="code">SELECT ename, sal, comm, ⟦NVL(sal / NULLIF(comm, 0), 0)⟧ "0除算" FROM emp;</pre>
+<pre class="code">SELECT ename, sal, comm, ⟦NVL(sal / NULLIF(comm, 0), 0)⟧ "0除算"
+FROM emp;</pre>
         <div class="diffbar">0 除算回避後、NVL で NULL を 0 に変換</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -462,7 +461,7 @@ ORA-01476: 除数がゼロです。</div>
 </section>
 
 <section class="sec" id="s3-13-4">
-  <h2><span class="n">3.13.4</span>CASE 式<span class="lv">必修</span></h2>
+  <h2><span class="n">3.13.4</span>CASE 式<span class="lv">重要</span></h2>
   <div class="h">CASE 式は If 〜 Then 〜 Else ロジックを表現する ／ ELSE を省略すると該当なしで NULL が返る</div>
 
   <div class="demo">
@@ -546,7 +545,7 @@ FROM emp;</pre>
       </div>
 
       <div class="var" data-v="c4" hidden>
-<pre class="code">SELECT job, deptno from emp order by deptno, job;</pre>
+<pre class="code">SELECT job, ⟦deptno⟧ from emp order by ⟦deptno⟧, job;</pre>
         <div class="diffbar">UPDATE emp SET deptno = CASE... 実行後の確認結果</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -570,7 +569,7 @@ FROM emp;</pre>
 
 <!-- ══════════════════════════════════ 3-14 グループ関数 -->
 <section class="sec" id="s3-14">
-  <h2><span class="n">3.14.1</span>グループ関数の特徴<span class="lv">必修</span></h2>
+  <h2><span class="n">3.14.1</span>グループ関数の特徴<span class="lv">重要</span></h2>
   <div class="h">グループ関数は行のグループに対してひとつの結果を返す ／ SELECT 句、HAVING 句、ORDER BY 句でのみ使用可能</div>
 
   <div class="tw" style="margin-bottom:18px">
@@ -589,7 +588,7 @@ FROM emp;</pre>
 </section>
 
 <section class="sec" id="s3-14-2">
-  <h2><span class="n">3.14.2</span>グループ関数の種類<span class="lv">必修</span></h2>
+  <h2><span class="n">3.14.2</span>グループ関数の種類<span class="lv">重要</span></h2>
   <div class="h">グループ関数の計算結果には通常 NULL 値は含まれない ／ COUNT(*) のみ NULL 値を含んだ行数が返る</div>
 
   <div class="tw" style="margin-bottom:18px">
@@ -609,15 +608,16 @@ FROM emp;</pre>
 </section>
 
 <section class="sec" id="s3-14-3">
-  <h2><span class="n">3.14.3</span>AVG、SUM 関数<span class="lv">標準</span></h2>
+  <h2><span class="n">3.14.3</span>AVG、SUM 関数<span class="lv lv-y">理解</span></h2>
   <div class="h">AVG は平均・SUM は合計を返す ／ 引数は数値型のみ ／ NULL 値は自動的に無視される</div>
 
   <div class="demo">
     <div class="dh">
-      <span class="title">AVG と SUM 関数 <em>／ 全社員の sal を集計</em></span>
+      <span class="title">AVG と SUM 関数 <em>／ 集計と NULL 値の扱い</em></span>
       <div class="sw">
         <button data-v="avg1" class="on">AVG(sal)</button>
         <button data-v="sum1">SUM(sal)</button>
+        <button data-v="comm1">NULL は無視 (comm)</button>
       </div>
     </div>
     <div class="vars">
@@ -641,16 +641,8 @@ FROM emp;</pre>
         </table></div>
         </div></div>
       </div>
-    </div>
-  </div>
-
-  <div class="demo">
-    <div class="dh">
-      <span class="title">comm 列の SUM と AVG <em>／ 14 行中 10 行が NULL</em></span>
-    </div>
-    <div class="vars">
-      <div class="var" data-v="comm1">
-<pre class="code">SELECT SUM(comm) comm 合計, AVG(comm) comm 平均 FROM emp;</pre>
+      <div class="var" data-v="comm1" hidden>
+<pre class="code">SELECT ⟦SUM(comm)⟧ comm 合計, ⟦AVG(comm)⟧ comm 平均 FROM emp;</pre>
         <div class="diffbar">NULL 値は無視されるため 2200 ÷ 4 ＝ 550（14 で割らない）</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -664,7 +656,7 @@ FROM emp;</pre>
 </section>
 
 <section class="sec" id="s3-14-4">
-  <h2><span class="n">3.14.4</span>MAX、MIN 関数<span class="lv">標準</span></h2>
+  <h2><span class="n">3.14.4</span>MAX、MIN 関数<span class="lv lv-y">理解</span></h2>
   <div class="h">MAX は最大値・MIN は最小値を求める ／ 数値・文字・日付のいずれも指定可能 ／ NULL 値は無視される</div>
 
   <div class="demo">
@@ -678,7 +670,7 @@ FROM emp;</pre>
     </div>
     <div class="vars">
       <div class="var" data-v="mm_num">
-<pre class="code">SELECT MAX(sal) 最大給与, MIN(sal) 最小給与 FROM emp;</pre>
+<pre class="code">SELECT ⟦MAX(sal)⟧ 最大給与, ⟦MIN(sal)⟧ 最小給与 FROM emp;</pre>
         <div class="diffbar">数値型：最小＝800, 最大＝5000</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -688,7 +680,7 @@ FROM emp;</pre>
         </div></div>
       </div>
       <div class="var" data-v="mm_str" hidden>
-<pre class="code">SELECT MAX(ename) 名前の最大, MIN(ename) 名前の最小 FROM emp;</pre>
+<pre class="code">SELECT ⟦MAX(ename)⟧ 名前の最大, ⟦MIN(ename)⟧ 名前の最小 FROM emp;</pre>
         <div class="diffbar">文字型：アルファベット順（最小＝ADAMS, 最大＝WARD）</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -698,7 +690,7 @@ FROM emp;</pre>
         </div></div>
       </div>
       <div class="var" data-v="mm_dt" hidden>
-<pre class="code">SELECT MAX(hiredate) 入社最大, MIN(hiredate) 入社最小 FROM emp;</pre>
+<pre class="code">SELECT ⟦MAX(hiredate)⟧ 入社最大, ⟦MIN(hiredate)⟧ 入社最小 FROM emp;</pre>
         <div class="diffbar">日付型：古い日付＝最小(80-12-17), 新しい日付＝最大(87-05-23)</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -712,7 +704,7 @@ FROM emp;</pre>
 </section>
 
 <section class="sec" id="s3-14-5">
-  <h2><span class="n">3.14.5</span>COUNT 関数<span class="lv">必修</span></h2>
+  <h2><span class="n">3.14.5</span>COUNT 関数<span class="lv">重要</span></h2>
   <div class="h">COUNT(*) は NULL を含む全行数 ／ COUNT(列名) は NULL 以外の行数 ／ COUNT(DISTINCT 列名) は重複を除いた種類数</div>
 
   <div class="demo">
@@ -761,20 +753,20 @@ FROM emp;</pre>
         <div class="diffbar">表全体の行数をカウント（NULL を含む全 14 行）</div>
         <div style="padding:14px 16px;border-top:1px solid var(--line)">
           <div class="rowviz">
-            <div class="r take"><span>SMITH</span><span class="v">comm: NULL</span></div>
-            <div class="r take"><span>ALLEN</span><span class="v">comm: 300</span></div>
-            <div class="r take"><span>WARD</span><span class="v">comm: 500</span></div>
-            <div class="r take"><span>JONES</span><span class="v">comm: NULL</span></div>
-            <div class="r take"><span>MARTIN</span><span class="v">comm: 1400</span></div>
-            <div class="r take"><span>BLAKE</span><span class="v">comm: NULL</span></div>
-            <div class="r take"><span>CLARK</span><span class="v">comm: NULL</span></div>
-            <div class="r take"><span>KING</span><span class="v">comm: NULL</span></div>
-            <div class="r take"><span>TURNER</span><span class="v">comm: 0</span></div>
-            <div class="r take"><span>ADAMS</span><span class="v">comm: NULL</span></div>
-            <div class="r take"><span>JAMES</span><span class="v">comm: NULL</span></div>
-            <div class="r take"><span>FORD</span><span class="v">comm: NULL</span></div>
-            <div class="r take"><span>MILLER</span><span class="v">comm: NULL</span></div>
-            <div class="r take"><span>SCOTT</span><span class="v">comm: NULL</span></div>
+            <div class="r take"><span>SMITH</span><span class="v">NULL</span></div>
+            <div class="r take"><span>ALLEN</span><span class="v">300</span></div>
+            <div class="r take"><span>WARD</span><span class="v">500</span></div>
+            <div class="r take"><span>JONES</span><span class="v">NULL</span></div>
+            <div class="r take"><span>MARTIN</span><span class="v">1400</span></div>
+            <div class="r take"><span>BLAKE</span><span class="v">NULL</span></div>
+            <div class="r take"><span>CLARK</span><span class="v">NULL</span></div>
+            <div class="r take"><span>KING</span><span class="v">NULL</span></div>
+            <div class="r take"><span>TURNER</span><span class="v">0</span></div>
+            <div class="r take"><span>ADAMS</span><span class="v">NULL</span></div>
+            <div class="r take"><span>JAMES</span><span class="v">NULL</span></div>
+            <div class="r take"><span>FORD</span><span class="v">NULL</span></div>
+            <div class="r take"><span>MILLER</span><span class="v">NULL</span></div>
+            <div class="r take"><span>SCOTT</span><span class="v">NULL</span></div>
           </div>
           <div class="lg"><span class="g"><i></i>カウント対象 (14行)</span></div>
         </div>
@@ -816,7 +808,7 @@ FROM emp;</pre>
 </section>
 
 <section class="sec" id="s3-14-6">
-  <h2><span class="n">3.14.6</span>グループ関数の注意点<span class="lv">必修</span></h2>
+  <h2><span class="n">3.14.6</span>グループ関数の注意点<span class="lv">重要</span></h2>
   <div class="h">グループ関数と単一行をともに表示できない ／ MAX 関数とともに単一列を取り出すことはできない</div>
 
   <div class="demo">
@@ -830,7 +822,7 @@ FROM emp;</pre>
     </div>
     <div class="vars">
       <div class="var" data-v="grp_ok">
-<pre class="code">SELECT MAX(sal) FROM emp;</pre>
+<pre class="code">SELECT ⟦MAX(sal)⟧ FROM emp;</pre>
         <div class="diffbar">表全体を 1 グループとして最大給与 5000 を返す</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -841,10 +833,8 @@ FROM emp;</pre>
       </div>
 
       <div class="var" data-v="grp_err" hidden>
-<pre class="code">SELECT ename, MAX(sal) FROM emp;
-                *
-行 1 でエラーが発生しました。：
-ORA-00937: 単一グループのグループ関数ではありません。</pre>
+<pre class="code">SELECT ⟦ename⟧, ⟦MAX(sal)⟧ FROM emp;
+</pre>
         <div class="diffbar">グループ化前の単一列 (ename) を混在させたためエラーが発生</div>
         <div class="res"><div class="rbody">
         <div class="rmsg err">行 1 でエラーが発生しました。：
@@ -853,7 +843,7 @@ ORA-00937: 単一グループのグループ関数ではありません。</div>
       </div>
 
       <div class="var" data-v="grp_sum" hidden>
-<pre class="code">SELECT SUM(sal) FROM emp;</pre>
+<pre class="code">SELECT ⟦SUM(sal)⟧ FROM emp;</pre>
         <div class="diffbar">全社員の給与合計 (29025) を 1 行で返す</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -869,7 +859,7 @@ ORA-00937: 単一グループのグループ関数ではありません。</div>
 
 <!-- ══════════════════════════════════ 3-15 GROUP BY 句、HAVING 句 -->
 <section class="sec" id="s3-15">
-  <h2><span class="n">3.15.1</span>GROUP BY 句<span class="lv">必修</span></h2>
+  <h2><span class="n">3.15.1</span>GROUP BY 句<span class="lv">重要</span></h2>
   <div class="h">GROUP BY 句は表を小グループに分ける ／ SELECT 句に指定できるのはグループ関数と GROUP BY 句で指定した列のみ</div>
 
   <div class="demo">
@@ -882,7 +872,7 @@ ORA-00937: 単一グループのグループ関数ではありません。</div>
     </div>
     <div class="vars">
       <div class="var" data-v="gb1">
-<pre class="code">SELECT job, AVG(sal) sal 平均 FROM emp GROUP BY job;</pre>
+<pre class="code">SELECT job, ⟦AVG(sal)⟧ sal 平均 FROM emp GROUP BY ⟦job⟧;</pre>
         <div class="diffbar">job ごとに小グループ化して平均給与を算出</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -899,7 +889,9 @@ ORA-00937: 単一グループのグループ関数ではありません。</div>
       </div>
 
       <div class="var" data-v="gb2" hidden>
-<pre class="code">SELECT job, AVG(sal) sal 平均, SUM(sal) sal 合計, MAX(sal) sal 最大 FROM emp GROUP BY job ORDER BY job;</pre>
+<pre class="code">SELECT job, ⟦AVG(sal)⟧ sal 平均, ⟦SUM(sal)⟧ sal 合計, ⟦MAX(sal)⟧ sal 最大
+FROM emp GROUP BY ⟦job⟧
+ORDER BY job;</pre>
         <div class="diffbar">複数のグループ関数を同時に適用し job 順に並べ替え</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -919,7 +911,7 @@ ORA-00937: 単一グループのグループ関数ではありません。</div>
 </section>
 
 <section class="sec" id="s3-15-2">
-  <h2><span class="n">3.15.2</span>複数の列でグループ化する場合<span class="lv">標準</span></h2>
+  <h2><span class="n">3.15.2</span>複数の列でグループ化する場合<span class="lv lv-y">理解</span></h2>
   <div class="h">GROUP BY 句に複数の列を指定した場合、指定した列値の組み合わせごとに小グループが作成される</div>
 
   <div class="demo">
@@ -928,7 +920,9 @@ ORA-00937: 単一グループのグループ関数ではありません。</div>
     </div>
     <div class="vars">
       <div class="var" data-v="gb_multi">
-<pre class="code">SELECT deptno, job, AVG(sal) sal 平均 FROM emp GROUP BY deptno, job ORDER BY deptno, job;</pre>
+<pre class="code">SELECT deptno, job, AVG(sal) sal 平均
+FROM emp GROUP BY deptno, job
+ORDER BY deptno, job;</pre>
         <div class="diffbar">deptno と job の 2 列の組み合わせごとに小グループ（9 グループ）を作成</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -952,7 +946,7 @@ ORA-00937: 単一グループのグループ関数ではありません。</div>
 </section>
 
 <section class="sec" id="s3-15-3">
-  <h2><span class="n">3.15.3</span>HAVING 句<span class="lv">必修</span></h2>
+  <h2><span class="n">3.15.3</span>HAVING 句<span class="lv">重要</span></h2>
   <div class="h">グループ関数の条件は HAVING 句でのみ表現できる ／ GROUP BY 指定列の条件は WHERE 句で絞り込むべき</div>
 
   <div class="demo">
@@ -966,7 +960,9 @@ ORA-00937: 単一グループのグループ関数ではありません。</div>
     </div>
     <div class="vars">
       <div class="var" data-v="hav_func">
-<pre class="code">SELECT job, AVG(sal) sal 平均 FROM emp GROUP BY job ⟦HAVING AVG(sal) >= 2000⟧;</pre>
+<pre class="code">SELECT job, AVG(sal) sal 平均
+FROM emp GROUP BY job
+⟦HAVING AVG(sal) >= 2000⟧;</pre>
         <div class="diffbar">グループ関数結果に対する絞り込み（5 グループ中 3 グループが残る）</div>
         <div style="padding:14px 16px;border-top:1px solid var(--line)">
           <div class="rowviz">
@@ -991,7 +987,9 @@ ORA-00937: 単一グループのグループ関数ではありません。</div>
       </div>
 
       <div class="var" data-v="hav_col" hidden>
-<pre class="code">SELECT job, AVG(sal) sal 平均 FROM emp GROUP BY job ⟦HAVING job = 'SALESMAN'⟧;</pre>
+<pre class="code">SELECT job, AVG(sal) sal 平均
+FROM emp GROUP BY job
+⟦HAVING job = 'SALESMAN'⟧;</pre>
         <div class="diffbar">グループ化後に HAVING 句で列条件を指定（動作するが遅い）</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -1004,7 +1002,10 @@ ORA-00937: 単一グループのグループ関数ではありません。</div>
       </div>
 
       <div class="var" data-v="whe_col" hidden>
-<pre class="code">SELECT job, AVG(sal) sal 平均 FROM emp ⟦WHERE job = 'SALESMAN'⟧ GROUP BY job;</pre>
+<pre class="code">SELECT job, AVG(sal) sal 平均
+FROM emp
+⟦WHERE job = 'SALESMAN'⟧
+GROUP BY job;</pre>
         <div class="diffbar">グループ化前に WHERE 句で事前絞り込み（推奨・処理速度が速い）</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -1020,46 +1021,113 @@ ORA-00937: 単一グループのグループ関数ではありません。</div>
 </section>
 
 <section class="sec" id="s3-15-4">
-  <h2><span class="n">3.15.4</span>句の順番<span class="lv">必修</span></h2>
+  <h2><span class="n">3.15.4</span>句の順番<span class="lv">重要</span></h2>
   <div class="h">処理順: FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY ／ WHERE 句は GROUP BY 句より先</div>
 
-  <div class="tw" style="margin-bottom:18px">
-    <table class="gt">
-      <thead>
-        <tr><th>順序</th><th>句</th><th>内部処理内容</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>1</td><td>FROM 句</td><td>対象表の特定および結合の実行</td></tr>
-        <tr><td>2</td><td>WHERE 句</td><td>グループ化前に行単位での絞り込み（グループ関数不可）</td></tr>
-        <tr><td>3</td><td>GROUP BY 句</td><td>残った行を小グループにグループ化</td></tr>
-        <tr><td>4</td><td>HAVING 句</td><td>グループ化された行・集計結果に対する絞り込み</td></tr>
-        <tr><td>5</td><td>SELECT 句</td><td>列の取り出し、式・単一行関数・グループ関数の評価</td></tr>
-        <tr><td>6</td><td>ORDER BY 句</td><td>最終結果の並べ替え（列別名の利用が可能）</td></tr>
-      </tbody>
-    </table>
+  <div class="demo">
+    <div class="dh">
+      <span class="title">SQL 句の順番 <em>／ 記述順と内部処理順の違い</em></span>
+      <div class="sw">
+        <button data-v="seq_write" class="on">書式 (記述する順番)</button>
+        <button data-v="seq_exec">内部処理 (実行される順番)</button>
+      </div>
+    </div>
+    <div class="vars">
+      <div class="var" data-v="seq_write">
+        <div class="tw" style="margin-bottom:0"><table class="gt">
+          <thead>
+            <tr><th>順序</th><th>記述する句</th><th>補足</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>⟦SELECT⟧ 句</td><td rowspan="2">必須句のため最初に記述する</td></tr>
+            <tr><td>2</td><td>⟦FROM⟧ 句</td></tr>
+            <tr><td>3</td><td>⟦WHERE⟧ 句</td><td rowspan="4">以降は内部処理順どおりに記述する</td></tr>
+            <tr><td>4</td><td>⟦GROUP BY⟧ 句</td></tr>
+            <tr><td>5</td><td>⟦HAVING⟧ 句</td></tr>
+            <tr><td>6</td><td>⟦ORDER BY⟧ 句</td></tr>
+          </tbody>
+        </table></div>
+        <div class="diffbar">SELECT と FROM を最初に記述し、以降は処理順どおりに記述する</div>
+      </div>
+      
+      <div class="var" data-v="seq_exec" hidden>
+        <div class="tw" style="margin-bottom:0"><table class="gt">
+          <thead>
+            <tr><th>順序</th><th>実行される句</th><th>内部処理内容</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>⟦FROM⟧ 句</td><td>対象表の特定および結合の実行</td></tr>
+            <tr><td>2</td><td>⟦WHERE⟧ 句</td><td>グループ化前に行単位での絞り込み（グループ関数不可）</td></tr>
+            <tr><td>3</td><td>⟦GROUP BY⟧ 句</td><td>残った行を小グループにグループ化</td></tr>
+            <tr><td>4</td><td>⟦HAVING⟧ 句</td><td>グループ化された行・集計結果に対する絞り込み</td></tr>
+            <tr><td>5</td><td>⟦SELECT⟧ 句</td><td>列の取り出し、式・単一行関数・グループ関数の評価</td></tr>
+            <tr><td>6</td><td>⟦ORDER BY⟧ 句</td><td>最終結果の並べ替え（列別名の利用が可能）</td></tr>
+          </tbody>
+        </table></div>
+        <div class="diffbar">サーバ側での実際の処理順序。SELECT 句はかなり後（5番目）に評価される</div>
+      </div>
+    </div>
   </div>
 </section>
 
 <section class="sec" id="s3-15-5">
-  <h2><span class="n">3.15.5</span>グループ関数と GROUP BY 句によって戻される行数<span class="lv">標準</span></h2>
+  <h2><span class="n">3.15.5</span>グループ関数と GROUP BY 句によって戻される行数<span class="lv lv-y">理解</span></h2>
   <div class="h">グループ関数のネストは第 2 レベルまで ／ ネストする場合は必ず GROUP BY 句を伴う</div>
 
-  <div class="tw" style="margin-bottom:18px">
-    <table class="gt">
-      <thead>
-        <tr><th>構文パターン</th><th>返される行数</th><th>特徴</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>SELECT AVG(sal) FROM emp;</td><td>1 行</td><td>表全体で 1 つの結果を返す</td></tr>
-        <tr><td>SELECT job, AVG(sal) FROM emp GROUP BY job;</td><td>複数行 (5行)</td><td>グループごとに 1 つの結果を返す</td></tr>
-        <tr><td>SELECT MAX(AVG(sal)) FROM emp GROUP BY job;</td><td>1 行</td><td>ネスト時は GROUP BY が必須で最終結果は 1 行</td></tr>
-      </tbody>
-    </table>
+  <div class="demo">
+    <div class="dh">
+      <span class="title">グループ関数と戻される行数 <em>／ ネストの仕組み</em></span>
+      <div class="sw">
+        <button data-v="r1" class="on">全表集計 (1行)</button>
+        <button data-v="r2">GROUP BY (複数行)</button>
+        <button data-v="r3">ネスト (1行)</button>
+      </div>
+    </div>
+    <div class="vars">
+      <div class="var" data-v="r1">
+<pre class="code">SELECT ⟦AVG(sal)⟧ 給与平均 FROM emp;</pre>
+        <div class="diffbar">emp 表全体が１つのグループになり、表全体で１つの結果を返す</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>給与平均</th></tr></thead>
+        <tbody><tr><td class="num">2073.21429</td></tr></tbody>
+        </table></div>
+        </div></div>
+      </div>
+
+      <div class="var" data-v="r2" hidden>
+<pre class="code">SELECT ⟦job⟧, ⟦AVG(sal)⟧ 給与平均 FROM emp ⟦GROUP BY job⟧;</pre>
+        <div class="diffbar">job のグループごとに１つの結果を返す。SELECT 文全体は複数行（5行）を返す</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>JOB</th><th>給与平均</th></tr></thead>
+        <tbody>
+          <tr><td>CLERK</td><td class="num">1037.5</td></tr>
+          <tr><td>SALESMAN</td><td class="num">1400</td></tr>
+          <tr><td>PRESIDENT</td><td class="num">5000</td></tr>
+          <tr><td>MANAGER</td><td class="num">2758.33333</td></tr>
+          <tr><td>ANALYST</td><td class="num">3000</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+
+      <div class="var" data-v="r3" hidden>
+<pre class="code">SELECT ⟦MAX(AVG(sal))⟧ 平均の最大 FROM emp ⟦GROUP BY job⟧;</pre>
+        <div class="diffbar">グループ関数をネストした場合は最終的に１つの結果が返される（GROUP BY 句必須）</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>平均の最大</th></tr></thead>
+        <tbody><tr><td class="num">5000</td></tr></tbody>
+        </table></div>
+        </div></div>
+      </div>
+    </div>
   </div>
 </section>
 
 <section class="sec" id="s3-15-6">
-  <h2><span class="n">3.15.6</span>単一行関数とグループ関数の特徴の違い<span class="lv">必修</span></h2>
+  <h2><span class="n">3.15.6</span>単一行関数とグループ関数の特徴の違い<span class="lv">重要</span></h2>
   <div class="h">単一行関数とグループ関数の特徴の違い</div>
 
   <div class="tw" style="margin-bottom:18px">
@@ -1078,7 +1146,7 @@ ORA-00937: 単一グループのグループ関数ではありません。</div>
 </section>
 
 <section class="sec" id="s3-15-7">
-  <h2><span class="n">3.15.7</span>グループ内の値を連結して表示する（Oracle 11gR2〜）<span class="lv">標準</span></h2>
+  <h2><span class="n">3.15.7</span>グループ内の値を連結して表示する（Oracle 11gR2〜）<span class="lv lv-y">理解</span></h2>
   <div class="h">LISTAGG 関数は指定した列の複数行のデータを 1 行にまとめて連結表示する</div>
 
   <div class="demo">
@@ -1091,7 +1159,7 @@ ORA-00937: 単一グループのグループ関数ではありません。</div>
     </div>
     <div class="vars">
       <div class="var" data-v="la_raw">
-<pre class="code">SELECT LISTAGG(ename) WITHIN GROUP (ORDER BY empno) AS ename FROM emp;</pre>
+<pre class="code">SELECT ⟦LISTAGG(ename) WITHIN GROUP (ORDER BY empno)⟧ AS ename FROM emp;</pre>
         <div class="diffbar">全社員名を区切り記号なしでそのまま 1 行に連結</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -1102,7 +1170,7 @@ ORA-00937: 単一グループのグループ関数ではありません。</div>
       </div>
 
       <div class="var" data-v="la_sep" hidden>
-<pre class="code">SELECT LISTAGG(ename, ',') WITHIN GROUP (ORDER BY empno) AS ename FROM emp;</pre>
+<pre class="code">SELECT ⟦LISTAGG(ename, ',') WITHIN GROUP (ORDER BY empno)⟧ AS ename FROM emp;</pre>
         <div class="diffbar">カンマ区切り記号 ',' を挟んで全社員名を連結</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -1125,7 +1193,10 @@ ORA-00937: 単一グループのグループ関数ではありません。</div>
     </div>
     <div class="vars">
       <div class="var" data-v="la_grp">
-<pre class="code">SELECT deptno, LISTAGG(ename, ', ') WITHIN GROUP (ORDER BY empno) AS ename FROM emp GROUP BY deptno;</pre>
+<pre class="code">SELECT deptno,
+⟦LISTAGG(ename, ', ') WITHIN GROUP (ORDER BY empno)⟧ AS ename
+FROM emp
+GROUP BY deptno;</pre>
         <div class="diffbar">GROUP BY deptno と組み合わせ、部門別に社員名を連結表示</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -1140,7 +1211,11 @@ ORA-00937: 単一グループのグループ関数ではありません。</div>
       </div>
 
       <div class="var" data-v="la_sum" hidden>
-<pre class="code">SELECT deptno, LISTAGG(ename, ', ') WITHIN GROUP (ORDER BY empno) AS ename, SUM(sal) AS totalSal FROM emp GROUP BY deptno;</pre>
+<pre class="code">SELECT deptno,
+⟦LISTAGG(ename, ', ') WITHIN GROUP (ORDER BY empno)⟧ AS ename,
+SUM(sal) AS totalSal
+FROM emp
+GROUP BY deptno;</pre>
         <div class="diffbar">LISTAGG と他のグループ関数 (SUM) を同時に指定</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -1155,7 +1230,9 @@ ORA-00937: 単一グループのグループ関数ではありません。</div>
       </div>
 
       <div class="var" data-v="la_sub" hidden>
-<pre class="code">SELECT deptno, ename, (SELECT SUM(sal) AS totalSal FROM emp WHERE deptno = e.deptno) AS totalsal FROM emp e ORDER BY deptno;</pre>
+<pre class="code">SELECT deptno, ename,
+⟦(SELECT SUM(sal) AS totalSal FROM emp WHERE deptno = e.deptno)⟧ AS totalsal
+FROM emp e ORDER BY deptno;</pre>
         <div class="diffbar">LISTAGG 非使用時（相関副問合せ）：14 行で出力され視認性が落ちる</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -1180,48 +1257,61 @@ ORA-00937: 単一グループのグループ関数ではありません。</div>
 
 <!-- IFRAME SEAMLESS HELPER -->
 <script>
-if (window.parent !== window) {
-  document.querySelector('.hero').style.display = 'none';
-  var toc = document.querySelector('.toc');
-  if (toc) toc.style.display = 'none';
-  
-  var VOL_ID = window.location.pathname.split('/').pop().replace('.html', '');
-
-  function sendHeight() {
-    window.parent.postMessage({ type: 'resize', height: document.documentElement.scrollHeight, vol: VOL_ID }, '*');
-  }
-  window.addEventListener('load', sendHeight);
-  if (window.ResizeObserver) {
-    new ResizeObserver(sendHeight).observe(document.body);
-  }
-  
-  window.addEventListener('message', function(e) {
-    if (e.data.type === 'getOffset' && e.data.id) {
-      var el = document.getElementById(e.data.id);
-      if (el) {
-        window.parent.postMessage({ type: 'offset', vol: VOL_ID, id: e.data.id, top: el.offsetTop }, '*');
-      }
-    }
-  });
-
+(function () {
   var secs = Array.from(document.querySelectorAll('section.sec'));
-  var secData = secs.map(function(s) {
-    var h2 = s.querySelector('h2');
-    return { id: s.id, title: h2 ? h2.textContent.replace(/必修|標準|応用|参考/g, '').trim() : s.id };
-  });
-  window.parent.postMessage({ type: 'init', vol: VOL_ID, sections: secData }, '*');
+  var tocLinks = Array.from(document.querySelectorAll('.toc a'));
+
+  function setActiveToc(id) {
+    tocLinks.forEach(function (a) {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+    });
+  }
 
   if ('IntersectionObserver' in window) {
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
-          window.parent.postMessage({ type: 'intersect', vol: VOL_ID, id: entry.target.id }, '*');
+          setActiveToc(entry.target.id);
+          if (window.parent !== window) {
+            window.parent.postMessage({ type: 'intersect', vol: VOL_ID, id: entry.target.id }, '*');
+          }
         }
       });
     }, { rootMargin: '-10% 0px -65% 0px' });
     secs.forEach(function (s) { observer.observe(s); });
   }
-}
+
+  if (window.parent !== window) {
+    document.querySelector('.hero').style.display = 'none';
+    var toc = document.querySelector('.toc');
+    if (toc) toc.style.display = 'none';
+
+    var VOL_ID = window.location.pathname.split('/').pop().replace('.html', '');
+
+    function sendHeight() {
+      window.parent.postMessage({ type: 'resize', height: document.documentElement.scrollHeight, vol: VOL_ID }, '*');
+    }
+    window.addEventListener('load', sendHeight);
+    if (window.ResizeObserver) {
+      new ResizeObserver(sendHeight).observe(document.body);
+    }
+
+    window.addEventListener('message', function(e) {
+      if (e.data.type === 'getOffset' && e.data.id) {
+        var el = document.getElementById(e.data.id);
+        if (el) {
+          window.parent.postMessage({ type: 'offset', vol: VOL_ID, id: e.data.id, top: el.offsetTop }, '*');
+        }
+      }
+    });
+
+    var secData = secs.map(function(s) {
+      var h2 = s.querySelector('h2');
+      return { id: s.id, title: h2 ? h2.textContent.replace(/重要|理解|参考/g, '').trim() : s.id };
+    });
+    window.parent.postMessage({ type: 'init', vol: VOL_ID, sections: secData }, '*');
+  }
+})();
 </script>
 </body>
 </html>

@@ -34,7 +34,7 @@
 
 <!-- ══════════════════════════════════ 3.1.1 -->
 <section class="sec" id="s1">
-  <h2><span class="n">3.1.1</span>SELECT 文の主な句<span class="lv">必修</span></h2>
+  <h2><span class="n">3.1.1</span>SELECT 文の主な句<span class="lv">重要</span></h2>
 
   <div class="h">SELECT 句と FROM 句は必須 ／ 記述順を間違えるとエラー</div>
 
@@ -72,7 +72,7 @@
     </div>
     <div class="vars">
       <div class="var" data-v="1">
-<pre class="code">SELECT * FROM EMP;</pre>
+<pre class="code">SELECT * FROM ⟦EMP⟧;</pre>
         <div class="diffbar">表のすべてのデータを取り出す</div>
         <div class="res"><div class="rbody">
           <div class="tw"><table class="dt">
@@ -97,7 +97,7 @@
         </div></div>
       </div>
       <div class="var" data-v="2" hidden>
-<pre class="code">SELECT * FROM emp</pre>
+<pre class="code">SELECT * FROM ⟦emp⟧</pre>
         <div class="diffbar">SQL は大文字・小文字を区別しない</div>
         <div class="res"><div class="rbody">
           <div class="tw"><table class="dt">
@@ -129,47 +129,18 @@
 
 <!-- ══════════════════════════════════ 3.2.2 -->
 <section class="sec" id="s3">
-  <h2><span class="n">3.2.2</span>射影（SELECT 句）<span class="lv">必修</span></h2>
+  <h2><span class="n">3.2.2</span>射影（SELECT 句）<span class="lv">重要</span></h2>
 
   <div class="h">射影 — 表から必要な列（Column）データのみを取り出す ／ キーワード・列名・表名は大文字・小文字は区別しない（ただし、後に説明しますが文字リテラル（Character Literal）については、大文字・小文字を区別します。）</div>
 
   <div class="demo">
     <div class="dh">
       <span class="title">ENAME 列と SAL 列を抽出する（射影）</span>
-      <div class="sw">
-        <button data-v="1" class="on">大文字</button>
-        <button data-v="2">小文字</button>
-      </div>
     </div>
     <div class="vars">
       <div class="var" data-v="1">
-<pre class="code">SELECT ENAME, SAL FROM EMP;</pre>
-        <div class="diffbar">SELECT 句で指定した列のみを取り出す</div>
-        <div class="res"><div class="rbody">
-          <div class="tw"><table class="dt">
-            <thead><tr><th>ENAME</th><th>SAL</th></tr></thead>
-            <tbody>
-              <tr><td>SMITH</td><td class="num">800</td></tr>
-              <tr><td>ALLEN</td><td class="num">1600</td></tr>
-              <tr><td>WARD</td><td class="num">1250</td></tr>
-              <tr><td>JONES</td><td class="num">2975</td></tr>
-              <tr><td>MARTIN</td><td class="num">1250</td></tr>
-              <tr><td>BLAKE</td><td class="num">2850</td></tr>
-              <tr><td>CLARK</td><td class="num">2450</td></tr>
-              <tr><td>SCOTT</td><td class="num">3000</td></tr>
-              <tr><td>KING</td><td class="num">5000</td></tr>
-              <tr><td>TURNER</td><td class="num">1500</td></tr>
-              <tr><td>ADAMS</td><td class="num">1100</td></tr>
-              <tr><td>JAMES</td><td class="num">950</td></tr>
-              <tr><td>FORD</td><td class="num">3000</td></tr>
-              <tr class="elip"><td>〈後略〉</td><td></td></tr>
-            </tbody>
-          </table></div>
-        </div></div>
-      </div>
-      <div class="var" data-v="2" hidden>
 <pre class="code">SELECT ename, sal FROM emp;</pre>
-        <div class="diffbar">キーワードは大文字、列名・表名は小文字で書くのが一般的</div>
+        <div class="diffbar">SELECT 句で指定した列のみを取り出す ／ キーワードは大文字、列名・表名は小文字で書くのが一般的</div>
         <div class="res"><div class="rbody">
           <div class="tw"><table class="dt">
             <thead><tr><th>ENAME</th><th>SAL</th></tr></thead>
@@ -200,22 +171,19 @@
 
 <!-- ══════════════════════════════════ 3.2.3 -->
 <section class="sec" id="s4">
-  <h2><span class="n">3.2.3</span>選択（WHERE 句）<span class="lv">必修</span></h2>
+  <h2><span class="n">3.2.3</span>選択（WHERE 句）<span class="lv">重要</span></h2>
 
   <div class="h">選択 — WHERE 句で指定した条件に一致する行のみ取り出す ／ 列名を左・リテラルを右に記述</div>
 
   <div class="demo">
     <div class="dh">
       <span class="title">empno が 7499 または 7876 の行を抽出する（選択）</span>
-      <div class="sw">
-        <button data-v="1" class="on">1 行表記</button>
-        <button data-v="2">改行あり</button>
-      </div>
     </div>
     <div class="vars">
       <div class="var" data-v="1">
-<pre class="code">SELECT * FROM emp WHERE empno = 7499 OR empno = 7876;</pre>
-        <div class="diffbar">WHERE 句の条件に一致する行のみ絞り込む ／ 条件省略時は全行表示</div>
+<pre class="code">SELECT * FROM emp
+WHERE empno = 7499 OR empno = 7876;</pre>
+        <div class="diffbar">WHERE 句の条件に一致する行のみ絞り込む ／ 列名を左、リテラル（値）を右に記述する ／ 条件省略時は全行表示</div>
         <div style="padding:14px 16px;border-top:1px solid var(--line)">
           <div class="rowviz">
             <div class="r"><span>7369</span><span class="v">SMITH</span></div>
@@ -231,23 +199,9 @@
             <div class="r take"><span>7876</span><span class="v">ADAMS</span></div>
             <div class="r"><span>7900</span><span class="v">JAMES</span></div>
             <div class="r"><span>7902</span><span class="v">FORD</span></div>
-            <div class="r"><span>7934</span><span class="v">MILLER</span></div>
           </div>
           <div class="lg"><span class="g"><i></i>取得</span><span class="s"><i></i>対象外</span></div>
         </div>
-        <div class="res"><div class="rbody">
-          <div class="tw"><table class="dt">
-            <thead><tr><th>EMPNO</th><th>ENAME</th><th>JOB</th><th>MGR</th><th>HIREDATE</th><th>SAL</th><th>COMM</th><th>DEPTNO</th></tr></thead>
-            <tbody>
-              <tr><td>7499</td><td>ALLEN</td><td>SALESMAN</td><td class="num">7698</td><td>81-02-20</td><td class="num">1600</td><td class="num">300</td><td class="num">30</td></tr>
-              <tr><td>7876</td><td>ADAMS</td><td>CLERK</td><td class="num">7788</td><td>87-05-23</td><td class="num">1100</td><td class="nul"></td><td class="num">20</td></tr>
-            </tbody>
-          </table></div>
-        </div></div>
-      </div>
-      <div class="var" data-v="2" hidden>
-<pre class="code">SELECT * FROM emp WHERE empno = 7499 OR empno = 7876;</pre>
-        <div class="diffbar">列名を左、リテラル（値）を右に記述する</div>
         <div class="res"><div class="rbody">
           <div class="tw"><table class="dt">
             <thead><tr><th>EMPNO</th><th>ENAME</th><th>JOB</th><th>MGR</th><th>HIREDATE</th><th>SAL</th><th>COMM</th><th>DEPTNO</th></tr></thead>
@@ -265,7 +219,7 @@
 
 <!-- ══════════════════════════════════ 3.2.4 -->
 <section class="sec" id="s5">
-  <h2><span class="n">3.2.4</span>結合（FROM～JOIN 句）<span class="lv">必修</span></h2>
+  <h2><span class="n">3.2.4</span>結合（FROM～JOIN 句）<span class="lv">重要</span></h2>
 
   <div class="h">結合 — ２つ以上の表をもとに結合条件に基づきデータを取り出す ／ 結果の表を「導出表」と呼ぶ</div>
 
@@ -287,37 +241,13 @@
   <div class="demo">
     <div class="dh">
       <span class="title">EMP 表と DEPT 表を DEPTNO で結合する</span>
-      <div class="sw">
-        <button data-v="1" class="on">小文字</button>
-        <button data-v="2">大文字</button>
-      </div>
     </div>
     <div class="vars">
       <div class="var" data-v="1">
-<pre class="code">SELECT empno, ename, emp.deptno, dname FROM emp JOIN dept ON emp.deptno = dept.deptno;</pre>
-        <div class="diffbar">FROM～JOIN 句で表名を指定し、ON 句で照らし合わせるキー列を指定</div>
-        <div class="res"><div class="rbody">
-          <div class="tw"><table class="dt">
-            <thead><tr><th>EMPNO</th><th>ENAME</th><th>DEPTNO</th><th>DNAME</th></tr></thead>
-            <tbody>
-              <tr><td>7782</td><td>CLARK</td><td class="num">10</td><td>ACCOUNTING</td></tr>
-              <tr><td>7839</td><td>KING</td><td class="num">10</td><td>ACCOUNTING</td></tr>
-              <tr><td>7934</td><td>MILLER</td><td class="num">10</td><td>ACCOUNTING</td></tr>
-              <tr><td>7566</td><td>JONES</td><td class="num">20</td><td>RESEARCH</td></tr>
-              <tr><td>7902</td><td>FORD</td><td class="num">20</td><td>RESEARCH</td></tr>
-              <tr><td>7876</td><td>ADAMS</td><td class="num">20</td><td>RESEARCH</td></tr>
-              <tr><td>7369</td><td>SMITH</td><td class="num">20</td><td>RESEARCH</td></tr>
-              <tr><td>7788</td><td>SCOTT</td><td class="num">20</td><td>RESEARCH</td></tr>
-              <tr><td>7521</td><td>WARD</td><td class="num">30</td><td>SALES</td></tr>
-              <tr><td>7844</td><td>TURNER</td><td class="num">30</td><td>SALES</td></tr>
-              <tr class="elip"><td>〈以下略〉</td><td></td><td></td><td></td></tr>
-            </tbody>
-          </table></div>
-        </div></div>
-      </div>
-      <div class="var" data-v="2" hidden>
-<pre class="code">SELECT EMPNO, ENAME, EMP.DEPTNO, DNAME FROM EMP JOIN DEPT ON EMP.DEPTNO = DEPT.DEPTNO</pre>
-        <div class="diffbar">あらかじめ共通のキー項目（DEPTNO）が定義・格納されている必要がある</div>
+<pre class="code">SELECT empno, ename, emp.deptno, dname
+  FROM emp JOIN dept
+    ON emp.deptno = dept.deptno;</pre>
+        <div class="diffbar">FROM～JOIN 句で表名を指定し、ON 句で照らし合わせるキー列を指定 ／ あらかじめ共通のキー項目が定義・格納されている必要がある</div>
         <div class="res"><div class="rbody">
           <div class="tw"><table class="dt">
             <thead><tr><th>EMPNO</th><th>ENAME</th><th>DEPTNO</th><th>DNAME</th></tr></thead>
@@ -344,30 +274,37 @@
 
 <!-- ══════════════════════════════════ 3.3.1 -->
 <section class="sec" id="s6">
-  <h2><span class="n">3.3.1</span>射影 ― projection<span class="lv">必修</span></h2>
+  <h2><span class="n">3.3.1</span>射影 ― projection<span class="lv">重要</span></h2>
 
-  <div class="h">SELECT 句と FROM 句は必須 ／ 表名を指定した方が検索の速度が向上する ／ SQL 文の終わりは ;（セミコロン）を打つ</div>
+  <div class="h">すべての SELECT 文において、SELECT 句と FROM 句は必須 ／ 単一の表から取り出す場合でも、表名を指定した方が検索の速度が向上します ／ SQL 文の終わりは ;（セミコロン）を打ちます</div>
 
   <div class="demo">
     <div class="dh">
-      <span class="title">1 列の抜き出しと表名修飾</span>
-      <div class="sw">
-        <button data-v="1" class="on">基本構文</button>
-        <button data-v="2">列名指定</button>
-        <button data-v="3">表名修飾</button>
-      </div>
+      <span class="title">SELECT 文の基本構造</span>
     </div>
     <div class="vars">
       <div class="var" data-v="1">
 <pre class="code">SELECT 列名 FROM 表名</pre>
         <div class="diffbar">SELECT 句と FROM 句はすべての SELECT 文で必須</div>
       </div>
-      <div class="var" data-v="2" hidden>
-<pre class="code">SELECT ename FROM emp;</pre>
+    </div>
+  </div>
+
+  <div class="demo">
+    <div class="dh">
+      <span class="title">1 列の抜き出しと表名修飾</span>
+      <div class="sw">
+        <button data-v="1" class="on">列名指定</button>
+        <button data-v="2">表名修飾</button>
+      </div>
+    </div>
+    <div class="vars">
+      <div class="var" data-v="1">
+<pre class="code">SELECT ⟦ename⟧ FROM emp;</pre>
         <div class="diffbar">1 つの列を抜き出す</div>
       </div>
-      <div class="var" data-v="3" hidden>
-<pre class="code">SELECT emp.ename FROM emp;</pre>
+      <div class="var" data-v="2" hidden>
+<pre class="code">SELECT ⟦emp.ename⟧ FROM emp;</pre>
         <div class="diffbar">表名.列名 と指定すると検索速度が向上する（複数表指定時は必須）</div>
       </div>
     </div>
@@ -391,22 +328,26 @@
 <section class="sec" id="s7">
   <h2><span class="n">3.3.2</span>全データの表示<span class="lv">重要</span></h2>
 
-  <div class="h">*（アスタリスク）を利用してすべての列を表示する ／ プログラムに SQL を埋め込む場合はなるべく列名を明記する</div>
+  <div class="h">表に格納された全てのデータを表示するには、*（アスタリスク）を使用することができる ／ プログラムに SQL を埋め込む場合はなるべく列名を明記します</div>
 
   <div class="demo">
     <div class="dh">
-      <span class="title">すべての列を表示する 2 つの方法</span>
-      <div class="sw">
-        <button data-v="1" class="on">* ワイルドカード</button>
-        <button data-v="2">全列名を列挙</button>
-      </div>
+      <span class="title">* ワイルドカードですべての列を表示する</span>
     </div>
     <div class="vars">
       <div class="var" data-v="1">
 <pre class="code">SELECT * FROM emp;</pre>
         <div class="diffbar">CREATE TABLE で定義した順番で全列表示 ／ 行の並び順は挿入順と無関係</div>
       </div>
-      <div class="var" data-v="2" hidden>
+    </div>
+  </div>
+
+  <div class="demo">
+    <div class="dh">
+      <span class="title">全列名を列挙する</span>
+    </div>
+    <div class="vars">
+      <div class="var" data-v="1">
 <pre class="code">SELECT empno, ename, job, mgr, hiredate, sal, comm, deptno FROM emp;</pre>
         <div class="diffbar">プログラム埋め込み時はデータ構造変更によるバグを防ぐため列名を明記する</div>
       </div>
@@ -419,15 +360,14 @@
 <section class="sec" id="s8">
   <h2><span class="n">3.3.3</span>表の定義を調べる<span class="lv">重要</span></h2>
 
-  <div class="h">DESCRIBE コマンド（DESC）は SQL*Plus 固有のコマンド ／ SQL Plus のコマンドは文末の ; は必要ありません ／ 改行するときは -（ハイフン）を指定する</div>
+  <div class="h">DESCRIBE コマンドは SQL ではなく、SQL*Plus 固有のコマンドです ／ SQL*Plus のコマンドは、文末の；は必要ありません ／ 自由改行ではないため、改行するときは －（ハイフン）を指定します</div>
 
   <div class="demo">
     <div class="dh">
       <span class="title">DESCRIBE コマンドで表の構造を確認する</span>
       <div class="sw">
-        <button data-v="1" class="on">DESC</button>
-        <button data-v="2">小文字</button>
-        <button data-v="3">ハイフン改行</button>
+        <button data-v="1" class="on">1 行</button>
+        <button data-v="2">ハイフン改行</button>
       </div>
     </div>
     <div class="vars">
@@ -451,27 +391,9 @@
         </div></div>
       </div>
       <div class="var" data-v="2" hidden>
-<pre class="code">desc emp</pre>
-        <div class="diffbar">小文字でも実行可能</div>
-        <div class="res"><div class="rbody">
-          <div class="tw"><table class="dt">
-            <thead><tr><th>名前</th><th>NULL?</th><th>型</th></tr></thead>
-            <tbody>
-              <tr><td>EMPNO</td><td>NOT NULL</td><td>NUMBER(4)</td></tr>
-              <tr><td>ENAME</td><td></td><td>VARCHAR2(10)</td></tr>
-              <tr><td>JOB</td><td></td><td>VARCHAR2(9)</td></tr>
-              <tr><td>MGR</td><td></td><td>NUMBER(4)</td></tr>
-              <tr><td>HIREDATE</td><td></td><td>DATE</td></tr>
-              <tr><td>SAL</td><td></td><td>NUMBER(7,2)</td></tr>
-              <tr><td>COMM</td><td></td><td>NUMBER(7,2)</td></tr>
-              <tr><td>DEPTNO</td><td></td><td>NUMBER(2)</td></tr>
-            </tbody>
-          </table></div>
-        </div></div>
-      </div>
-      <div class="var" data-v="3" hidden>
-<pre class="code">DESC - emp</pre>
-        <div class="diffbar">通常 1 行で指定。改行するときはハイフン（-）を使う</div>
+<pre class="code">DESC ⟦-⟧
+⟦emp⟧</pre>
+        <div class="diffbar">自由改行ではないため、改行するときはハイフン（-）を指定する</div>
         <div class="res"><div class="rbody">
           <div class="tw"><table class="dt">
             <thead><tr><th>名前</th><th>NULL?</th><th>型</th></tr></thead>
@@ -497,48 +419,61 @@
 
 <!-- IFRAME SEAMLESS HELPER -->
 <script>
-if (window.parent !== window) {
-  document.querySelector('.hero').style.display = 'none';
-  var toc = document.querySelector('.toc');
-  if (toc) toc.style.display = 'none';
-  
-  var VOL_ID = window.location.pathname.split('/').pop().replace('.html', '');
-
-  function sendHeight() {
-    window.parent.postMessage({ type: 'resize', height: document.documentElement.scrollHeight, vol: VOL_ID }, '*');
-  }
-  window.addEventListener('load', sendHeight);
-  if (window.ResizeObserver) {
-    new ResizeObserver(sendHeight).observe(document.body);
-  }
-  
-  window.addEventListener('message', function(e) {
-    if (e.data.type === 'getOffset' && e.data.id) {
-      var el = document.getElementById(e.data.id);
-      if (el) {
-        window.parent.postMessage({ type: 'offset', vol: VOL_ID, id: e.data.id, top: el.offsetTop }, '*');
-      }
-    }
-  });
-
+(function () {
   var secs = Array.from(document.querySelectorAll('section.sec'));
-  var secData = secs.map(function(s) {
-    var h2 = s.querySelector('h2');
-    return { id: s.id, title: h2 ? h2.textContent.replace(/必修|応用|参考/g, '').trim() : s.id };
-  });
-  window.parent.postMessage({ type: 'init', vol: VOL_ID, sections: secData }, '*');
+  var tocLinks = Array.from(document.querySelectorAll('.toc a'));
+
+  function setActiveToc(id) {
+    tocLinks.forEach(function (a) {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+    });
+  }
 
   if ('IntersectionObserver' in window) {
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
-          window.parent.postMessage({ type: 'intersect', vol: VOL_ID, id: entry.target.id }, '*');
+          setActiveToc(entry.target.id);
+          if (window.parent !== window) {
+            window.parent.postMessage({ type: 'intersect', vol: VOL_ID, id: entry.target.id }, '*');
+          }
         }
       });
     }, { rootMargin: '-10% 0px -65% 0px' });
     secs.forEach(function (s) { observer.observe(s); });
   }
-}
+
+  if (window.parent !== window) {
+    document.querySelector('.hero').style.display = 'none';
+    var toc = document.querySelector('.toc');
+    if (toc) toc.style.display = 'none';
+
+    var VOL_ID = window.location.pathname.split('/').pop().replace('.html', '');
+
+    function sendHeight() {
+      window.parent.postMessage({ type: 'resize', height: document.documentElement.scrollHeight, vol: VOL_ID }, '*');
+    }
+    window.addEventListener('load', sendHeight);
+    if (window.ResizeObserver) {
+      new ResizeObserver(sendHeight).observe(document.body);
+    }
+
+    window.addEventListener('message', function(e) {
+      if (e.data.type === 'getOffset' && e.data.id) {
+        var el = document.getElementById(e.data.id);
+        if (el) {
+          window.parent.postMessage({ type: 'offset', vol: VOL_ID, id: e.data.id, top: el.offsetTop }, '*');
+        }
+      }
+    });
+
+    var secData = secs.map(function(s) {
+      var h2 = s.querySelector('h2');
+      return { id: s.id, title: h2 ? h2.textContent.replace(/重要|理解|参考/g, '').trim() : s.id };
+    });
+    window.parent.postMessage({ type: 'init', vol: VOL_ID, sections: secData }, '*');
+  }
+})();
 </script>
 </body>
 </html>

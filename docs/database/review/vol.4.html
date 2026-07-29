@@ -33,10 +33,14 @@
   <a href="#s348">3.4.8 LIKE 演算子</a>
 </nav>
 
-<section class="sec" id="s334">
-  <h2><span class="n">3.3.4</span>列データを加工して表示する<span class="lv">必修</span></h2>
+<section class="sec" id="s3-3">
+  <h2><span class="n">3-3</span>SELECT句とFROM句</h2>
+</section>
 
-  <div class="h">◆ 算術演算子</div>
+<section class="sec" id="s334">
+  <h2><span class="n">3.3.4</span>列データを加工して表示する<span class="lv">重要</span></h2>
+
+  <div class="h">◆ 算術演算子 ／ NULL との演算は結果も NULL</div>
 
   <div class="tw" style="margin-bottom:18px">
     <table class="gt">
@@ -47,6 +51,7 @@
         <tr><td>/</td><td>2つの数値の除算を行います。</td></tr>
         <tr><td>+</td><td>2つの数値、または日付と数値の加算を行います。日付同士は不可。<br>単項プラス符号演算子としても使用できます。</td></tr>
         <tr><td>-</td><td>2つの数値、または日付の差を求めたり、日付と数値の減算を行います。<br>単項マイナス符号演算子としても使用できます。</td></tr>
+        <tr><td>MOD(m, n)</td><td>剰余（m % n）を求める計算を行います。</td></tr>
       </tbody>
     </table>
   </div>
@@ -167,18 +172,23 @@
 </section>
 
 <section class="sec" id="s335">
-  <h2><span class="n">3.3.5</span>列見出しを変更する（別名）<span class="lv">参考</span></h2>
+  <h2><span class="n">3.3.5</span>列見出しを変更する（別名）<span class="lv lv-w">参考</span></h2>
 
-  <div class="h">◆ 列見出しには式がそのまま表示されます</div>
+  <div class="h">◆ 列見出しには式がそのまま表示されます ／ AS は省略することができます ／ 列別名に含める際には、ダブルクォーテーションで囲みます</div>
 
   <div class="demo">
     <div class="dh">
-      <span class="title">emp 表から sal を計算</span>
+      <span class="title">emp 表から sal に別名をつける</span>
+      <div class="sw">
+        <button data-v="1" class="on">そのまま</button>
+        <button data-v="2">列見出しを変更</button>
+        <button data-v="3" data-tone="warn">記号入り</button>
+      </div>
     </div>
     <div class="vars">
-      <div class="var">
+      <div class="var" data-v="1">
 <pre class="code">SELECT empno, sal, (sal + sal) * - 0.2 FROM emp;</pre>
-        <div class="diffbar">長くて読みづらい</div>
+        <div class="diffbar">式がそのまま列見出しになるため長くて読みづらい</div>
         <div class="res run"><div class="rbody">
         <div class="tw"><table class="dt">
         <thead><tr><th>EMPNO</th><th>SAL</th><th>(SAL+SAL)*-0.2</th></tr></thead>
@@ -201,21 +211,7 @@
         </table></div>
         </div></div>
       </div>
-    </div>
-  </div>
-
-  <div class="h">◆ AS は省略することができます ／ 列別名に含める際には、ダブルクォーテーションで囲みます</div>
-
-  <div class="demo">
-    <div class="dh">
-      <span class="title">emp 表から sal に別名をつける</span>
-      <div class="sw">
-        <button data-v="1" class="on">列見出しを変更</button>
-        <button data-v="2" data-tone="warn">記号入りの列見出し</button>
-      </div>
-    </div>
-    <div class="vars">
-      <div class="var" data-v="1">
+      <div class="var" data-v="2" hidden>
 <pre class="code">SELECT empno, sal ⟦元の給与⟧, sal + sal * 0.2 ⟦AS 新給与⟧ FROM emp;</pre>
         <div class="diffbar">AS は省略可能</div>
         <div class="res run"><div class="rbody">
@@ -240,7 +236,7 @@
         </table></div>
         </div></div>
       </div>
-      <div class="var" data-v="2" hidden>
+      <div class="var" data-v="3" hidden>
 <pre class="code">SELECT empno, sal 元の給与, sal + sal * 0.2 AS ⟦"新 給与"⟧ FROM emp;</pre>
         <div class="diffbar">使用できない記号（スペース等）を含める際はダブルクォーテーションで囲む ／ 列名に使える記号は _ $ # のみ</div>
         <div class="res run"><div class="rbody">
@@ -270,7 +266,7 @@
 </section>
 
 <section class="sec" id="s336">
-  <h2><span class="n">3.3.6</span>文字列データの連結<span class="lv">参考</span></h2>
+  <h2><span class="n">3.3.6</span>文字列データの連結<span class="lv lv-w">参考</span></h2>
 
   <div class="h">◆ 文字列連結をして、一つの列として結果を返すことができます</div>
 
@@ -337,7 +333,7 @@
 </section>
 
 <section class="sec" id="s337">
-  <h2><span class="n">3.3.7</span>q演算子<span class="lv">応用</span></h2>
+  <h2><span class="n">3.3.7</span>q演算子<span class="lv lv-y">理解</span></h2>
 
   <div class="h">◆ q演算子の使い方の例</div>
 
@@ -349,12 +345,13 @@
         <button data-v="2">デリミタ A</button>
         <button data-v="3">デリミタ 0</button>
         <button data-v="4">デリミタ &lt; &gt;</button>
-        <button data-v="5" data-tone="warn">q演算子を使わない例</button>
+        <button data-v="5" data-tone="warn">q演算子を使わない</button>
+        <button data-v="6" data-tone="warn">エラーになる使い方</button>
       </div>
     </div>
     <div class="vars">
       <div class="var" data-v="1">
-<pre class="code">SELECT q'[I'm boy]' AS moji FROM dual;</pre>
+<pre class="code">SELECT q'⟦[⟧I'm boy⟦]⟧' AS moji FROM dual;</pre>
         <div class="diffbar"><b>[</b> と <b>]</b> をデリミタとして使用</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -402,7 +399,7 @@
         </div></div>
       </div>
       <div class="var" data-v="5" hidden>
-<pre class="code">SELECT ⟦'I''m boy'⟧ AS moji FROM dual;</pre>
+<pre class="code">SELECT 'I⟦''⟧m boy' AS moji FROM dual;</pre>
         <div class="diffbar">シングルクォーテーションを <b>2 回重ねる</b>方法</div>
         <div class="res run"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -413,17 +410,20 @@
         </table></div>
         </div></div>
       </div>
+      <div class="var" data-v="6" hidden>
+<pre class="code">SELECT q'II'm boyI' AS moji FROM dual;</pre>
+        <div class="diffbar">強調部分がデリミタとして認識されエラーになる</div>
+        <div class="res run"><div class="rbody">
+        <div class="rmsg err">ERROR:
+ORA-01756: 引用符付き文字列が正しく終了していません</div>
+        </div></div>
+      </div>
     </div>
-  </div>
-
-  <div class="cmp">
-    <div class="ok"><b>正しい使い方</b><div class="note">カッコを使う場合は左右対の記号（<code>&lt; &gt;</code>, <code>[ ]</code> など）</div></div>
-    <div class="ng"><b>エラーになる使い方</b><div class="note"><code>SELECT q'II'm boyI' AS moji FROM dual;</code><br>強調部分がデリミタとして認識されエラーになる</div></div>
   </div>
 </section>
 
 <section class="sec" id="s338">
-  <h2><span class="n">3.3.8</span>DISTINCT キーワード<span class="lv">必修</span></h2>
+  <h2><span class="n">3.3.8</span>DISTINCT キーワード<span class="lv">重要</span></h2>
 
   <div class="h">◆ DISTINCT なしで job 列を調べる</div>
 
@@ -488,6 +488,8 @@
       <div class="sw">
         <button data-v="1" class="on">DISTINCT</button>
         <button data-v="2">ORDER BY つき</button>
+        <button data-v="3" data-tone="warn">エラーになる使い方 1</button>
+        <button data-v="4" data-tone="warn">エラーになる使い方 2</button>
       </div>
     </div>
     <div class="vars">
@@ -512,7 +514,8 @@
         </div></div>
       </div>
       <div class="var" data-v="2" hidden>
-<pre class="code">SELECT DISTINCT deptno, job FROM emp ORDER BY deptno, job;</pre>
+<pre class="code">SELECT DISTINCT deptno, job FROM emp
+⟦ORDER BY deptno, job⟧;</pre>
         <div class="diffbar">結果を見やすくするために、ORDER BY 句を使って並べ替えています。</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -532,48 +535,72 @@
         <div class="rmsg">9 行が選択されました。</div>
         </div></div>
       </div>
+      <div class="var" data-v="3" hidden>
+<pre class="code">SELECT empno, ename, DISTINCT job FROM emp;</pre>
+        <div class="diffbar">DISTINCT は SELECT 句の最初に 1 つだけ記述する必要がある</div>
+        <div class="res run"><div class="rbody">
+        <div class="rmsg err">SELECT empno, ename, DISTINCT job FROM emp
+                     *
+行1でエラーが発生しました。:
+ORA-03045: SELECT文のselect_listのDISTINCTまたはUNIQUEキーワード</div>
+        </div></div>
+      </div>
+      <div class="var" data-v="4" hidden>
+<pre class="code">SELECT DISTINCT deptno, DISTINCT job FROM emp;</pre>
+        <div class="diffbar">複数列の組み合わせに DISTINCT を適用する場合は 1 度だけ記述する</div>
+        <div class="res run"><div class="rbody">
+        <div class="rmsg err">SELECT DISTINCT deptno, DISTINCT job FROM emp
+                        *
+行1でエラーが発生しました。:
+ORA-03045: SELECT文のselect_listのDISTINCTまたはUNIQUEキーワード</div>
+        </div></div>
+      </div>
     </div>
   </div>
 
-  <div class="h">◆ 間違った DISTINCT キーワードの使い方</div>
-  <div class="cmp">
-    <div class="ng"><b>エラーになる使い方</b><div class="note"><code>SELECT empno, ename, DISTINCT job FROM emp;</code><br><code>SELECT DISTINCT deptno, DISTINCT job FROM emp;</code></div></div>
-  </div>
-
   <div class="h">◆ すべての行を重複も含め表示する、ALL キーワード</div>
-  <div class="exlist">
-    <div class="ex">
-      <div class="ex-lbl">重複データも含めて表示する</div>
+
+  <div class="demo">
+    <div class="dh">
+      <span class="title">重複データも含めて表示する</span>
+    </div>
+    <div class="vars">
+      <div class="var">
 <pre class="code">SELECT ALL job FROM emp;</pre>
-      <div class="ex-desc">ALL をつけない通常の SELECT 文と同じ結果となります。</div>
-      <div class="res run"><div class="rbody">
-      <div class="tw"><table class="dt">
-      <thead><tr><th>JOB</th></tr></thead>
-      <tbody>
-      <tr><td>CLERK</td></tr>
-      <tr><td>SALESMAN</td></tr>
-      <tr><td>SALESMAN</td></tr>
-      <tr><td>MANAGER</td></tr>
-      <tr><td>SALESMAN</td></tr>
-      <tr><td>MANAGER</td></tr>
-      <tr><td>MANAGER</td></tr>
-      <tr><td>ANALYST</td></tr>
-      <tr><td>PRESIDENT</td></tr>
-      <tr><td>SALESMAN</td></tr>
-      <tr><td>CLERK</td></tr>
-      <tr><td>CLERK</td></tr>
-      <tr><td>ANALYST</td></tr>
-      <tr><td>CLERK</td></tr>
-      </tbody>
-      </table></div>
-      <div class="rmsg">14行が選択されました。</div>
-      </div></div>
+        <div class="diffbar">ALL をつけない通常の SELECT 文と同じ結果となります。</div>
+        <div class="res run"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>JOB</th></tr></thead>
+        <tbody>
+        <tr><td>CLERK</td></tr>
+        <tr><td>SALESMAN</td></tr>
+        <tr><td>SALESMAN</td></tr>
+        <tr><td>MANAGER</td></tr>
+        <tr><td>SALESMAN</td></tr>
+        <tr><td>MANAGER</td></tr>
+        <tr><td>MANAGER</td></tr>
+        <tr><td>ANALYST</td></tr>
+        <tr><td>PRESIDENT</td></tr>
+        <tr><td>SALESMAN</td></tr>
+        <tr><td>CLERK</td></tr>
+        <tr><td>CLERK</td></tr>
+        <tr><td>ANALYST</td></tr>
+        <tr><td>CLERK</td></tr>
+        </tbody>
+        </table></div>
+        <div class="rmsg">14行が選択されました。</div>
+        </div></div>
+      </div>
     </div>
   </div>
 </section>
 
+<section class="sec" id="s3-4">
+  <h2><span class="n">3-4</span>WHERE 句</h2>
+</section>
+
 <section class="sec" id="s341">
-  <h2><span class="n">3.4.1</span>選択 - selection（条件による行の絞り込み）<span class="lv">必修</span></h2>
+  <h2><span class="n">3.4.1</span>選択 - selection（条件による行の絞り込み）<span class="lv">重要</span></h2>
 
   <div class="h">◆ WHERE 句</div>
 
@@ -587,7 +614,8 @@
     </div>
     <div class="vars">
       <div class="var" data-v="1">
-<pre class="code">SELECT * FROM emp WHERE job = 'SALESMAN';</pre>
+<pre class="code">SELECT * FROM emp
+WHERE ⟦job = 'SALESMAN'⟧;</pre>
         <div class="diffbar">条件に一致した行のみが表示される</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -602,93 +630,93 @@
         </div></div>
       </div>
       <div class="var" data-v="2" hidden>
-<pre class="code">SELECT * FROM emp WHERE mgr = 7698;</pre>
+<pre class="code">SELECT * FROM emp
+WHERE ⟦mgr = 7698⟧;</pre>
         <div class="diffbar">比較条件式が true を返した行のみが返される</div>
-        <div class="res run"><div class="rbody">
+        <div style="padding:14px 16px;border-top:1px solid var(--line)">
+          <div class="rowviz">
+            <div class="r"><span>SMITH</span><span class="v">7902</span></div>
+            <div class="r take"><span>ALLEN</span><span class="v">7698</span></div>
+            <div class="r take"><span>WARD</span><span class="v">7698</span></div>
+            <div class="r"><span>JONES</span><span class="v">7839</span></div>
+            <div class="r take"><span>MARTIN</span><span class="v">7698</span></div>
+            <div class="r"><span>BLAKE</span><span class="v">7839</span></div>
+            <div class="r"><span>CLARK</span><span class="v">7839</span></div>
+            <div class="r"><span>SCOTT</span><span class="v">7566</span></div>
+            <div class="r tie"><span>KING</span><span class="v">NULL</span></div>
+            <div class="r take"><span>TURNER</span><span class="v">7698</span></div>
+            <div class="r"><span>ADAMS</span><span class="v">7788</span></div>
+            <div class="r take"><span>JAMES</span><span class="v">7698</span></div>
+            <div class="r"><span>FORD</span><span class="v">7566</span></div>
+            <div class="r"><span>MILLER</span><span class="v">7782</span></div>
+          </div>
+          <div class="lg"><span class="g"><i></i>取得</span><span class="s"><i></i>対象外</span></div>
+        </div>
+        <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
         <thead><tr><th>EMPNO</th><th>ENAME</th><th>JOB</th><th>MGR</th><th>HIREDATE</th><th>SAL</th><th>COMM</th><th>DEPTNO</th></tr></thead>
         <tbody>
-        <tr><td class="num">7499</td><td>ALLEN</td><td>SALESMAN</td><td class="num">7698</td><td>20-FEB-81</td><td class="num">1600</td><td class="num">300</td><td class="num">30</td></tr>
-        <tr><td class="num">7521</td><td>WARD</td><td>SALESMAN</td><td class="num">7698</td><td>22-FEB-81</td><td class="num">1250</td><td class="num">500</td><td class="num">30</td></tr>
-        <tr><td class="num">7654</td><td>MARTIN</td><td>SALESMAN</td><td class="num">7698</td><td>28-SEP-81</td><td class="num">1250</td><td class="num">1400</td><td class="num">30</td></tr>
-        <tr><td class="num">7844</td><td>TURNER</td><td>SALESMAN</td><td class="num">7698</td><td>08-SEP-81</td><td class="num">1500</td><td class="num">0</td><td class="num">30</td></tr>
-        <tr><td class="num">7900</td><td>JAMES</td><td>CLERK</td><td class="num">7698</td><td>03-DEC-81</td><td class="num">950</td><td class="nul"></td><td class="num">30</td></tr>
+        <tr><td class="num">7499</td><td>ALLEN</td><td>SALESMAN</td><td class="num">7698</td><td>81-02-20</td><td class="num">1600</td><td class="num">300</td><td class="num">30</td></tr>
+        <tr><td class="num">7521</td><td>WARD</td><td>SALESMAN</td><td class="num">7698</td><td>81-02-22</td><td class="num">1250</td><td class="num">500</td><td class="num">30</td></tr>
+        <tr><td class="num">7654</td><td>MARTIN</td><td>SALESMAN</td><td class="num">7698</td><td>81-09-28</td><td class="num">1250</td><td class="num">1400</td><td class="num">30</td></tr>
+        <tr><td class="num">7844</td><td>TURNER</td><td>SALESMAN</td><td class="num">7698</td><td>81-09-08</td><td class="num">1500</td><td class="num">0</td><td class="num">30</td></tr>
+        <tr><td class="num">7900</td><td>JAMES</td><td>CLERK</td><td class="num">7698</td><td>81-12-03</td><td class="num">950</td><td class="nul"></td><td class="num">30</td></tr>
         </tbody>
         </table></div>
         </div></div>
-        <div style="padding:14px 16px;border-top:1px solid var(--line)">
-          <div class="rowviz">
-            <div class="r"><span>SMITH</span><span class="v">7902</span><span class="v">false</span></div>
-            <div class="r take"><span>ALLEN</span><span class="v">7698</span><span class="v">true</span></div>
-            <div class="r take"><span>WARD</span><span class="v">7698</span><span class="v">true</span></div>
-            <div class="r"><span>JONES</span><span class="v">7839</span><span class="v">false</span></div>
-            <div class="r take"><span>MARTIN</span><span class="v">7698</span><span class="v">true</span></div>
-            <div class="r"><span>BLAKE</span><span class="v">7839</span><span class="v">false</span></div>
-            <div class="r"><span>CLARK</span><span class="v">7839</span><span class="v">false</span></div>
-            <div class="r"><span>SCOTT</span><span class="v">7566</span><span class="v">false</span></div>
-            <div class="r"><span>KING</span><span class="v">NULL</span><span class="v">unknown</span></div>
-            <div class="r take"><span>TURNER</span><span class="v">7698</span><span class="v">true</span></div>
-            <div class="r"><span>ADAMS</span><span class="v">7788</span><span class="v">false</span></div>
-            <div class="r take"><span>JAMES</span><span class="v">7698</span><span class="v">true</span></div>
-            <div class="r"><span>FORD</span><span class="v">7566</span><span class="v">false</span></div>
-            <div class="r"><span>MILLER</span><span class="v">7782</span><span class="v">false</span></div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
 </section>
 
 <section class="sec" id="s342">
-  <h2><span class="n">3.4.2</span>リテラル値と演算子<span class="lv">必修</span></h2>
+  <h2><span class="n">3.4.2</span>リテラル値と演算子<span class="lv">重要</span></h2>
 
   <div class="h">◆ リテラル値</div>
 
-  <div class="exlist">
-    <div class="ex">
-      <div class="ex-lbl">SELECT 句やその他の句で使用可能</div>
+  <div class="demo">
+    <div class="dh">
+      <span class="title">SELECT 句やその他の句で使用可能</span>
+    </div>
+    <div class="vars">
+      <div class="var">
 <pre class="code">SELECT sal * 12 FROM emp;</pre>
-      <div class="ex-desc">sal は列名ですが、12 は列名ではありません。これは数値リテラルです。</div>
-      <div class="res run"><div class="rbody">
-      <div class="tw"><table class="dt">
-      <thead><tr><th>SAL*12</th></tr></thead>
-      <tbody>
-      <tr><td class="num">9600</td></tr>
-      <tr><td class="num">19200</td></tr>
-      <tr><td class="num">15000</td></tr>
-      <tr><td class="num">35700</td></tr>
-      <tr><td class="num">15000</td></tr>
-      <tr><td class="num">34200</td></tr>
-      <tr><td class="num">29400</td></tr>
-      <tr><td class="num">36000</td></tr>
-      <tr><td class="num">60000</td></tr>
-      <tr><td class="num">18000</td></tr>
-      <tr><td class="num">13200</td></tr>
-      <tr><td class="num">11400</td></tr>
-      <tr><td class="num">36000</td></tr>
-      <tr class="elip"><td>〈後略〉</td></tr>
-      </tbody>
-      </table></div>
-      <div class="rmsg">14行が選択されました。</div>
-      </div></div>
+        <div class="diffbar">sal は列名ですが、12 は列名ではありません。これは数値リテラルです。</div>
+        <div class="res run"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>SAL*12</th></tr></thead>
+        <tbody>
+        <tr><td class="num">9600</td></tr>
+        <tr><td class="num">19200</td></tr>
+        <tr><td class="num">15000</td></tr>
+        <tr><td class="num">35700</td></tr>
+        <tr><td class="num">15000</td></tr>
+        <tr><td class="num">34200</td></tr>
+        <tr><td class="num">29400</td></tr>
+        <tr><td class="num">36000</td></tr>
+        <tr><td class="num">60000</td></tr>
+        <tr><td class="num">18000</td></tr>
+        <tr><td class="num">13200</td></tr>
+        <tr><td class="num">11400</td></tr>
+        <tr><td class="num">36000</td></tr>
+        <tr class="elip"><td>〈後略〉</td></tr>
+        </tbody>
+        </table></div>
+        <div class="rmsg">14行が選択されました。</div>
+        </div></div>
+      </div>
     </div>
   </div>
 
   <div class="h">◆ 数値リテラル</div>
-  <div class="exlist">
-    <div class="ex">
-      <div class="ex-lbl">単に数値を指定（正負の符号、指数表記可）</div>
+  <ul><li>単に数値を指定（正負の符号、指数表記可）
 <pre class="code">19800  0.2  +5.67  -1  1.2E3  1.2E-3</pre>
-    </div>
-  </div>
+  </li></ul>
 
   <div class="h">◆ 文字列リテラル</div>
-  <div class="exlist">
-    <div class="ex">
-      <div class="ex-lbl">半角のシングルクォーテーションで囲む</div>
+  <ul><li>半角のシングルクォーテーションで囲む
 <pre class="code">'山田太郎'  'oracle'</pre>
-    </div>
-  </div>
+  </li></ul>
 
   <div class="demo">
     <div class="dh">
@@ -703,11 +731,7 @@
 <pre class="code">SELECT * FROM emp WHERE ename = 'scott';</pre>
         <div class="diffbar">格納されたデータは大文字のため false となる ／ 0 件</div>
         <div class="res"><div class="rbody">
-        <div class="tw"><table class="dt">
-        <thead><tr><th>EMPNO</th><th>ENAME</th><th>JOB</th><th>MGR</th><th>HIREDATE</th><th>SAL</th><th>COMM</th><th>DEPTNO</th></tr></thead>
-        <tbody>
-        </tbody>
-        </table></div>
+        <div class="rmsg">レコードが選択されませんでした。</div>
         </div></div>
       </div>
       <div class="var" data-v="2" hidden>
@@ -726,27 +750,45 @@
   </div>
 
   <div class="h">◆ 日付リテラル</div>
-  <div class="exlist">
-    <div class="ex">
-      <div class="ex-lbl">日付形式をシングルクォーテーションで囲む</div>
-<pre class="code">'17-09-30'  '2017-09-30'  '2017-09-30 07:30:05'  '17-09-30 07:30:05'</pre>
-<pre class="code">DATE '2005-05-05'</pre>
-<pre class="code">TIMESTAMP '2004-02-25 08:15:35.500'</pre>
-    </div>
-  </div>
+  <ul><li>日付形式をシングルクォーテーションで囲む
+<pre class="code">'17-09-30'  '2017-09-30'  '2017-09-30 07:30:05'  '17-09-30 07:30:05'
+DATE '2005-05-05'
+TIMESTAMP '2004-02-25 08:15:35.500'</pre>
+  </li></ul>
 
-  <div class="cmp">
-    <div class="ok"><b>正しい使い方</b><div class="note">日付リテラルは必ず、' で囲むことを忘れないようにしましょう。</div></div>
-    <div class="ng"><b>エラーになる使い方</b><div class="note">
+  <div class="demo">
+    <div class="dh">
+      <span class="title">日付リテラルによる検索</span>
+      <div class="sw">
+        <button data-v="1" class="on" data-tone="warn">エラーになる使い方</button>
+        <button data-v="2" data-tone="alt">正しい使い方</button>
+      </div>
+    </div>
+    <div class="vars">
+      <div class="var" data-v="1">
 <pre class="code">SELECT * FROM emp WHERE hiredate = 87-04-19;</pre>
-囲まないと数値の引き算とみなされデータ型不一致エラー
-      <div class="res run"><div class="rbody">
+        <div class="diffbar">囲まないと数値の引き算とみなされデータ型不一致エラー</div>
+        <div class="res run"><div class="rbody">
         <div class="rmsg err">SELECT * FROM emp WHERE hiredate = 87-04-19
                                         *
-ERROR at line 1:
-ORA-00932: expression (64) is of data type NUMBER, which is incompatible with expected data type DATE</div>
-      </div></div>
-    </div></div>
+行1でエラーが発生しました。:
+ORA-00932: 式 (64)のデータ型はNUMBERですが、これは予期されたデータ型DATEと互換性がありません</div>
+        </div></div>
+      </div>
+      <div class="var" data-v="2" hidden>
+<pre class="code">SELECT * FROM emp WHERE hiredate = ⟦'1987-04-19'⟧;</pre>
+        <div class="diffbar">日付リテラルは必ず ' で囲む</div>
+        <div class="res run"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>EMPNO</th><th>ENAME</th><th>JOB</th><th>MGR</th><th>HIREDATE</th><th>SAL</th><th>COMM</th><th>DEPTNO</th></tr></thead>
+        <tbody>
+        <tr><td class="num">7788</td><td>SCOTT</td><td>ANALYST</td><td class="num">7566</td><td>87-04-19</td><td class="num">3000</td><td class="nul"></td><td class="num">20</td></tr>
+        </tbody>
+        </table></div>
+        <div class="rmsg">1行が選択されました。</div>
+        </div></div>
+      </div>
+    </div>
   </div>
 
   <div class="h">◆ 比較演算子（関係演算子）</div>
@@ -769,32 +811,51 @@ ORA-00932: expression (64) is of data type NUMBER, which is incompatible with ex
     </table>
   </div>
   <div class="h">◆ 演算子の種類における優先順位</div>
+  <p>異なる種類の演算子が式の中にある場合、以下の順に評価されます。</p>
+  <div class="tw" style="margin-bottom:18px">
+    <table class="gt">
+      <thead>
+        <tr><th>大分類</th><th>優先順位</th><th>演算子</th><th>意味</th></tr>
+      </thead>
+      <tbody>
+        <tr><td rowspan="3">1. 算術演算子</td><td>1（高）</td><td><b>+</b>　<b>-</b></td><td>正、負（単項演算子）</td></tr>
+        <tr><td>2</td><td><b>*</b>　<b>/</b></td><td>乗算、除算</td></tr>
+        <tr><td>3</td><td><b>+</b>　<b>-</b>　<b>||</b></td><td>加算、減算、文字列連結</td></tr>
+        <tr><td>2. 比較演算子</td><td>4</td><td><b>=</b>　<b>&lt;&gt;</b>　<b>&gt;</b>　<b>&lt;</b>　<b>&gt;=</b>　<b>&lt;=</b><br><b>LIKE</b>　<b>IN</b>　<b>BETWEEN</b>　<b>IS NULL</b></td><td>すべての比較</td></tr>
+        <tr><td rowspan="3">3. 論理演算子</td><td>5</td><td><b>NOT</b></td><td>否定</td></tr>
+        <tr><td>6</td><td><b>AND</b></td><td>論理積（かつ）</td></tr>
+        <tr><td>7（低）</td><td><b>OR</b></td><td>論理和（または）</td></tr>
+      </tbody>
+    </table>
+  </div>
 
-  <div class="exlist">
-    <div class="ex">
-      <div class="ex-lbl">複数の演算子が混在</div>
+  <div class="demo">
+    <div class="dh">
+      <span class="title">複数の演算子が混在</span>
+    </div>
+    <div class="vars">
+      <div class="var">
 <pre class="code">SELECT ename FROM emp WHERE sal + comm >= 3000 AND deptno = 20;</pre>
-      <div class="ex-desc">単項 → 二項(+) → 比較(>=,=) → 論理(AND) の順</div>
-      <div class="res run"><div class="rbody">
-        <div class="rmsg">no rows selected</div>
-      </div></div>
+        <div class="diffbar">単項 → 二項(+) → 比較(>=,=) → 論理(AND) の順</div>
+        <div class="res run"><div class="rbody">
+        <div class="rmsg">レコードが選択されませんでした。</div>
+        </div></div>
+      </div>
     </div>
   </div>
 </section>
 
 <section class="sec" id="s343">
-  <h2><span class="n">3.4.3</span>NULL との比較<span class="lv">必修</span></h2>
+  <h2><span class="n">3.4.3</span>NULL との比較<span class="lv">重要</span></h2>
 
   <div class="h">◆ NULL との比較</div>
-  <div class="exlist">
-    <div class="ex">
-      <div class="ex-lbl">NULL は不定値であり = による比較はできない ／ NULL との比較は IS NULL または IS NOT NULL で行う</div>
-    </div>
-  </div>
+  <ul>
+    <li>NULL は不定値であり = による比較はできない ／ NULL との比較は IS NULL または IS NOT NULL で行う</li>
+  </ul>
 </section>
 
 <section class="sec" id="s344">
-  <h2><span class="n">3.4.4</span>論理演算子を使った条件<span class="lv">必修</span></h2>
+  <h2><span class="n">3.4.4</span>論理演算子を使った条件<span class="lv">重要</span></h2>
 
   <div class="h">◆ 論理演算子</div>
   <div class="tw" style="margin-bottom:18px">
@@ -819,7 +880,8 @@ ORA-00932: expression (64) is of data type NUMBER, which is incompatible with ex
     </div>
     <div class="vars">
       <div class="var" data-v="1">
-<pre class="code">SELECT ename, deptno FROM emp WHERE NOT deptno = 10;</pre>
+<pre class="code">SELECT ename, deptno FROM emp
+WHERE ⟦NOT deptno = 10⟧;</pre>
         <div class="diffbar">NOT で条件を否定</div>
         <div class="res run"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -841,7 +903,8 @@ ORA-00932: expression (64) is of data type NUMBER, which is incompatible with ex
         </div></div>
       </div>
       <div class="var" data-v="2" hidden>
-<pre class="code">SELECT ename, deptno FROM emp WHERE ⟦deptno &lt;&gt; 10⟧;</pre>
+<pre class="code">SELECT ename, deptno FROM emp
+WHERE ⟦deptno &lt;&gt; 10⟧;</pre>
         <div class="diffbar">同じ結果</div>
         <div class="res run"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -876,7 +939,8 @@ ORA-00932: expression (64) is of data type NUMBER, which is incompatible with ex
     </div>
     <div class="vars">
       <div class="var" data-v="1">
-<pre class="code">SELECT ename, sal, deptno FROM emp WHERE sal &lt;= 2000 ⟦AND⟧ deptno = 30;</pre>
+<pre class="code">SELECT ename, sal, deptno FROM emp
+WHERE sal &lt;= 2000 ⟦AND⟧ deptno = 30;</pre>
         <div class="diffbar">両方の条件を満たす行のみ</div>
         <div class="res run"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -892,7 +956,8 @@ ORA-00932: expression (64) is of data type NUMBER, which is incompatible with ex
         </div></div>
       </div>
       <div class="var" data-v="2" hidden>
-<pre class="code">SELECT ename, sal, deptno FROM emp WHERE sal &lt;= 2000 ⟦OR⟧ deptno = 30;</pre>
+<pre class="code">SELECT ename, sal, deptno FROM emp
+WHERE sal &lt;= 2000 ⟦OR⟧ deptno = 30;</pre>
         <div class="diffbar">片方でも条件を満たす行</div>
         <div class="res run"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -915,7 +980,22 @@ ORA-00932: expression (64) is of data type NUMBER, which is incompatible with ex
   </div>
   
   <div class="h">◆ コラム —— unknown を含めた論理演算</div>
-  <div class="tw" style="margin-bottom:18px">
+  <p>論理演算では <b>AND は「すべてが true の時に true となる」</b>、<b>OR は「どれかひとつでも true なら true となる」</b>という原則をきちんと覚えておけば問題はありません。</p>
+  <p style="margin-bottom: 16px;">参考までに以下に unknown を含めた論理演算の演算結果を記載します。</p>
+
+  <p><b>NOT 演算</b></p>
+  <div class="tw" style="margin-bottom:8px">
+    <table class="gt">
+      <thead><tr><th></th><th>true</th><th>false</th><th>unknown</th></tr></thead>
+      <tbody>
+        <tr><td>NOT</td><td>false</td><td>true</td><td>unknown</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note" style="margin-bottom:18px">※ unknown の場合は否定しても結果は unknown です</div>
+
+  <p><b>AND 演算</b></p>
+  <div class="tw" style="margin-bottom:8px">
     <table class="gt">
       <thead><tr><th>AND</th><th>true</th><th>false</th><th>unknown</th></tr></thead>
       <tbody>
@@ -925,7 +1005,10 @@ ORA-00932: expression (64) is of data type NUMBER, which is incompatible with ex
       </tbody>
     </table>
   </div>
-  <div class="tw" style="margin-bottom:18px">
+  <div class="note" style="margin-bottom:18px">※ true になるのはすべてが true の時のみ</div>
+
+  <p><b>OR 演算</b></p>
+  <div class="tw" style="margin-bottom:8px">
     <table class="gt">
       <thead><tr><th>OR</th><th>true</th><th>false</th><th>unknown</th></tr></thead>
       <tbody>
@@ -935,13 +1018,23 @@ ORA-00932: expression (64) is of data type NUMBER, which is incompatible with ex
       </tbody>
     </table>
   </div>
+  <div class="note">※ true になるのはどれかひとつでも true の時</div>
 
 </section>
 
 <section class="sec" id="s345">
-  <h2><span class="n">3.4.5</span>演算子の優先順位<span class="lv">必修</span></h2>
+  <h2><span class="n">3.4.5</span>演算子の優先順位<span class="lv">重要</span></h2>
 
-
+  <div class="h">◆ 論理演算子間の優先順位</div>
+  <p>論理演算子の評価順序は以下のとおりです。</p>
+  <div class="tw" style="margin-bottom:18px">
+    <table class="gt">
+      <thead><tr><th>優先度</th><th>演算子</th></tr></thead>
+      <tbody>
+        <tr><td>高い<br>↓<br>低い</td><td><b>NOT</b><br><b>AND</b><br><b>OR</b></td></tr>
+      </tbody>
+    </table>
+  </div>
 
   <div class="h">◆ AND と OR が混在している場合の例</div>
 
@@ -955,7 +1048,8 @@ ORA-00932: expression (64) is of data type NUMBER, which is incompatible with ex
     </div>
     <div class="vars">
       <div class="var" data-v="1">
-<pre class="code">SELECT ename, job, sal FROM emp WHERE job = 'MANAGER' OR job = 'PRESIDENT' AND sal >= 2500;</pre>
+<pre class="code">SELECT ename, job, sal FROM emp
+WHERE job = 'MANAGER' OR job = 'PRESIDENT' AND sal >= 2500;</pre>
         <div class="diffbar">AND が先に評価されるため sal が 2500 未満の MANAGER も含まれる</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -970,7 +1064,8 @@ ORA-00932: expression (64) is of data type NUMBER, which is incompatible with ex
         </div></div>
       </div>
       <div class="var" data-v="2" hidden>
-<pre class="code">SELECT ename, job, sal FROM emp WHERE ⟦(⟧job = 'MANAGER' OR job = 'PRESIDENT'⟦)⟧ AND sal >= 2500;</pre>
+<pre class="code">SELECT ename, job, sal FROM emp
+WHERE ⟦(⟧job = 'MANAGER' OR job = 'PRESIDENT'⟦)⟧ AND sal >= 2500;</pre>
         <div class="diffbar">() でくくって優先順位を変更 ／ sal >= 2500 が MANAGER にも適用される</div>
         <div class="res"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -998,7 +1093,8 @@ ORA-00932: expression (64) is of data type NUMBER, which is incompatible with ex
     </div>
     <div class="vars">
       <div class="var" data-v="1">
-<pre class="code">SELECT ename, sal FROM emp WHERE NOT sal >= 1000 AND sal < 4000;</pre>
+<pre class="code">SELECT ename, sal FROM emp
+WHERE NOT sal >= 1000 AND sal < 4000;</pre>
         <div class="diffbar">sal &lt; 1000 AND sal &lt; 4000 になる</div>
         <div class="res run"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -1011,7 +1107,8 @@ ORA-00932: expression (64) is of data type NUMBER, which is incompatible with ex
         </div></div>
       </div>
       <div class="var" data-v="2" hidden>
-<pre class="code">SELECT ename, sal FROM emp WHERE NOT ⟦( ⟧sal >= 1000 AND sal < 4000⟦ )⟧;</pre>
+<pre class="code">SELECT ename, sal FROM emp
+WHERE NOT ⟦( ⟧sal >= 1000 AND sal < 4000⟦ )⟧;</pre>
         <div class="diffbar">sal &lt; 1000 OR sal &gt;= 4000 になる</div>
         <div class="res run"><div class="rbody">
         <div class="tw"><table class="dt">
@@ -1028,18 +1125,15 @@ ORA-00932: expression (64) is of data type NUMBER, which is incompatible with ex
   </div>
   
   <div class="h">◆ ド・モルガンの法則</div>
-  <div class="exlist">
-    <div class="ex">
-      <div class="ex-lbl">展開後</div>
+  <ul><li>展開後
 <pre class="code">NOT (A AND B) = NOT A OR NOT B
 NOT (A OR B)  = NOT A AND NOT B</pre>
-    </div>
-  </div>
+  </li></ul>
 
 </section>
 
 <section class="sec" id="s346">
-  <h2><span class="n">3.4.6</span>特殊な比較演算子 - BETWEEN 演算子<span class="lv">必修</span></h2>
+  <h2><span class="n">3.4.6</span>特殊な比較演算子 - BETWEEN 演算子<span class="lv">重要</span></h2>
 
   <div class="h">◆ 単価が 1000 円台 という条件</div>
 
@@ -1053,7 +1147,7 @@ NOT (A OR B)  = NOT A AND NOT B</pre>
     </div>
     <div class="vars">
       <div class="var" data-v="1">
-<pre class="code">WHERE 単価 BETWEEN 1000 AND 1999</pre>
+<pre class="code">WHERE ⟦単価 BETWEEN 1000 AND 1999⟧</pre>
         <div class="diffbar">左側に小さい数値、右側に大きい数値を指定する</div>
       </div>
       <div class="var" data-v="2" hidden>
@@ -1064,9 +1158,37 @@ NOT (A OR B)  = NOT A AND NOT B</pre>
   </div>
 
   <div class="h">◆ よくある間違い</div>
-  <div class="cmp">
-    <div class="ng"><b>エラーになる・結果が戻らない使い方</b><div class="note"><code>WHERE 単価 &gt;= 1000 AND 1999</code><br>AND の後が比較条件になっていない<br><code>WHERE 単価 BETWEEN 1999 AND 1000</code><br>大小が逆だと結果が戻されない<br><code>WHERE 単価 = 1000 AND 単価 &lt;= 1999</code><br>単価が 1000 の行のみ戻される</div></div>
+  <div class="demo">
+    <div class="dh">
+      <span class="title">BETWEEN の誤った使い方</span>
+      <div class="sw">
+        <button data-v="1" class="on" data-tone="warn">AND の誤用</button>
+        <button data-v="2" data-tone="warn">大小の逆転</button>
+        <button data-v="3" data-tone="warn">条件の重複</button>
+      </div>
+    </div>
+    <div class="vars">
+      <div class="var" data-v="1">
+<pre class="code">WHERE 単価 >= 1000 AND 1999</pre>
+        <div class="diffbar">AND の後が比較条件になっていないためエラー</div>
+        <div class="res run"><div class="rbody">
+        <div class="rmsg err">ORA-00920: 無効な関係演算子です。</div>
+        </div></div>
+      </div>
+      <div class="var" data-v="2" hidden>
+<pre class="code">WHERE 単価 BETWEEN 1999 AND 1000</pre>
+        <div class="diffbar">大小が逆だと結果が戻されない</div>
+        <div class="res run"><div class="rbody">
+        <div class="rmsg">レコードが選択されませんでした。</div>
+        </div></div>
+      </div>
+      <div class="var" data-v="3" hidden>
+<pre class="code">WHERE 単価 = 1000 AND 単価 &lt;= 1999</pre>
+        <div class="diffbar">単価が 1000 の行のみ戻される</div>
+      </div>
+    </div>
   </div>
+
 
   <div class="h">◆ NOT BETWEEN</div>
 
@@ -1081,7 +1203,7 @@ NOT (A OR B)  = NOT A AND NOT B</pre>
     </div>
     <div class="vars">
       <div class="var" data-v="1">
-<pre class="code">WHERE 単価 NOT BETWEEN 1000 AND 1999</pre>
+<pre class="code">WHERE ⟦単価 NOT BETWEEN 1000 AND 1999⟧</pre>
         <div class="diffbar">BETWEEN 全体を否定する</div>
       </div>
       <div class="var" data-v="2" hidden>
@@ -1139,75 +1261,153 @@ NOT (A OR B)  = NOT A AND NOT B</pre>
 </section>
 
 <section class="sec" id="s347">
-  <h2><span class="n">3.4.7</span>特殊な比較演算子 - IN 演算子<span class="lv">必修</span></h2>
+  <h2><span class="n">3.4.7</span>特殊な比較演算子 - IN 演算子<span class="lv">重要</span></h2>
 
-  <div class="h">◆ IN 演算子</div>
+  <div class="h">◆ 製造者が「キリンジ」か「ユウヒ」という条件</div>
 
   <div class="demo">
     <div class="dh">
-      <span class="title">製造者が「キリンジ」か「ユウヒ」</span>
+      <span class="title">複数 OR の代用</span>
       <div class="sw">
         <button data-v="1" class="on">IN</button>
         <button data-v="2">OR で書き換え</button>
+        <button data-v="3" data-tone="warn">よくある間違い</button>
       </div>
     </div>
     <div class="vars">
       <div class="var" data-v="1">
-<pre class="code">WHERE 製造者 IN ('キリンジ', 'ユウヒ')</pre>
+<pre class="code">WHERE ⟦製造者 IN ('キリンジ', 'ユウヒ')⟧</pre>
         <div class="diffbar">リストのいずれかに一致する行が戻される</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>商品コード</th><th>商品名</th><th>単価</th><th>割引</th><th>製造者</th></tr></thead>
+        <tbody>
+        <tr><td class="num">99002</td><td>新橋焼酎</td><td class="num">1000</td><td class="nul"></td><td>キリンジ</td></tr>
+        <tr><td class="num">99003</td><td>極上ウィスキー</td><td class="num">5000</td><td class="nul"></td><td>キリンジ</td></tr>
+        <tr><td class="num">99005</td><td>発泡酒</td><td class="num">150</td><td class="num">.8</td><td>ユウヒ</td></tr>
+        <tr><td class="num">99006</td><td>缶ビール</td><td class="num">250</td><td class="num">.9</td><td>ユウヒ</td></tr>
+        <tr><td class="num">99007</td><td>瓶ビール</td><td class="num">350</td><td class="num">.8</td><td>ユウヒ</td></tr>
+        <tr><td class="num">99008</td><td>地ビール</td><td class="num">500</td><td class="nul"></td><td>ユウヒ</td></tr>
+        <tr><td class="num">99011</td><td>ノンアルコールビール</td><td class="num">130</td><td class="nul"></td><td>キリンジ</td></tr>
+        <tr><td class="num">99012</td><td>トマトビール</td><td class="num">500</td><td class="nul"></td><td>キリンジ</td></tr>
+        <tr><td class="num">99014</td><td>六本木焼酎</td><td class="num">1000</td><td class="nul"></td><td>キリンジ</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
       </div>
       <div class="var" data-v="2" hidden>
 <pre class="code">WHERE ⟦製造者 = 'キリンジ' OR 製造者 = 'ユウヒ'⟧</pre>
         <div class="diffbar">結果は同じ</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>商品コード</th><th>商品名</th><th>単価</th><th>割引</th><th>製造者</th></tr></thead>
+        <tbody>
+        <tr><td class="num">99002</td><td>新橋焼酎</td><td class="num">1000</td><td class="nul"></td><td>キリンジ</td></tr>
+        <tr><td class="num">99003</td><td>極上ウィスキー</td><td class="num">5000</td><td class="nul"></td><td>キリンジ</td></tr>
+        <tr><td class="num">99005</td><td>発泡酒</td><td class="num">150</td><td class="num">.8</td><td>ユウヒ</td></tr>
+        <tr><td class="num">99006</td><td>缶ビール</td><td class="num">250</td><td class="num">.9</td><td>ユウヒ</td></tr>
+        <tr><td class="num">99007</td><td>瓶ビール</td><td class="num">350</td><td class="num">.8</td><td>ユウヒ</td></tr>
+        <tr><td class="num">99008</td><td>地ビール</td><td class="num">500</td><td class="nul"></td><td>ユウヒ</td></tr>
+        <tr><td class="num">99011</td><td>ノンアルコールビール</td><td class="num">130</td><td class="nul"></td><td>キリンジ</td></tr>
+        <tr><td class="num">99012</td><td>トマトビール</td><td class="num">500</td><td class="nul"></td><td>キリンジ</td></tr>
+        <tr><td class="num">99014</td><td>六本木焼酎</td><td class="num">1000</td><td class="nul"></td><td>キリンジ</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+      <div class="var" data-v="3" hidden>
+<pre class="code">WHERE 製造者 = 'キリンジ' OR 'ユウヒ'</pre>
+        <div class="diffbar">OR の右側が比較条件になっていないためエラー</div>
+        <div class="res run"><div class="rbody">
+        <div class="rmsg err">ORA-00920: 無効な関係演算子です。</div>
+        </div></div>
       </div>
     </div>
   </div>
 
-  <div class="h">◆ よくある間違い</div>
-  <div class="cmp">
-    <div class="ng"><b>エラーになる使い方</b><div class="note"><code>WHERE 製造者 = 'キリンジ' OR 'ユウヒ'</code><br>OR の右側が比較条件になっていない</div></div>
-  </div>
-
-  <div class="h">◆ NOT IN 演算子</div>
-
+  <div class="h">◆ 製造者が「キリンジ」でも「ユウヒ」でもない、という条件</div>
+  
   <div class="demo">
     <div class="dh">
-      <span class="title">製造者がどちらでもない</span>
+      <span class="title">IN 演算子の否定</span>
       <div class="sw">
         <button data-v="1" class="on">NOT IN</button>
         <button data-v="2">NOT ＋ OR</button>
         <button data-v="3">比較演算子 ＋ AND</button>
+        <button data-v="4" data-tone="warn">よくある間違い</button>
       </div>
     </div>
     <div class="vars">
       <div class="var" data-v="1">
-<pre class="code">WHERE 製造者 NOT IN ('キリンジ', 'ユウヒ')</pre>
+<pre class="code">WHERE ⟦製造者 NOT IN ('キリンジ', 'ユウヒ')⟧</pre>
         <div class="diffbar">IN で戻される結果以外</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>商品コード</th><th>商品名</th><th>単価</th><th>割引</th><th>製造者</th></tr></thead>
+        <tbody>
+        <tr><td class="num">99001</td><td>オーガニックワイン</td><td class="num">2000</td><td class="nul"></td><td>カントリー</td></tr>
+        <tr><td class="num">99004</td><td>スパークリングワイン</td><td class="num">2500</td><td class="nul"></td><td>カントリー</td></tr>
+        <tr><td class="num">99009</td><td>大手町カクテル</td><td class="num">1000</td><td class="nul"></td><td>ハコダテ</td></tr>
+        <tr><td class="num">99010</td><td>グラニュー糖梅酒</td><td class="num">1500</td><td class="nul"></td><td>ハコダテ</td></tr>
+        <tr><td class="num">99013</td><td>銀座カクテル</td><td class="num">1000</td><td class="nul"></td><td>ハコダテ</td></tr>
+        <tr><td class="num">99015</td><td>シャトーマンゴー</td><td class="num">50000</td><td class="nul"></td><td>カントリー</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
       </div>
       <div class="var" data-v="2" hidden>
 <pre class="code">WHERE ⟦NOT (製造者 = 'キリンジ' OR 製造者 = 'ユウヒ')⟧</pre>
         <div class="diffbar">結果は同じ</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>商品コード</th><th>商品名</th><th>単価</th><th>割引</th><th>製造者</th></tr></thead>
+        <tbody>
+        <tr><td class="num">99001</td><td>オーガニックワイン</td><td class="num">2000</td><td class="nul"></td><td>カントリー</td></tr>
+        <tr><td class="num">99004</td><td>スパークリングワイン</td><td class="num">2500</td><td class="nul"></td><td>カントリー</td></tr>
+        <tr><td class="num">99009</td><td>大手町カクテル</td><td class="num">1000</td><td class="nul"></td><td>ハコダテ</td></tr>
+        <tr><td class="num">99010</td><td>グラニュー糖梅酒</td><td class="num">1500</td><td class="nul"></td><td>ハコダテ</td></tr>
+        <tr><td class="num">99013</td><td>銀座カクテル</td><td class="num">1000</td><td class="nul"></td><td>ハコダテ</td></tr>
+        <tr><td class="num">99015</td><td>シャトーマンゴー</td><td class="num">50000</td><td class="nul"></td><td>カントリー</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
       </div>
       <div class="var" data-v="3" hidden>
 <pre class="code">WHERE ⟦製造者 &lt;&gt; 'キリンジ' AND 製造者 &lt;&gt; 'ユウヒ'⟧</pre>
         <div class="diffbar">結果は同じ</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>商品コード</th><th>商品名</th><th>単価</th><th>割引</th><th>製造者</th></tr></thead>
+        <tbody>
+        <tr><td class="num">99001</td><td>オーガニックワイン</td><td class="num">2000</td><td class="nul"></td><td>カントリー</td></tr>
+        <tr><td class="num">99004</td><td>スパークリングワイン</td><td class="num">2500</td><td class="nul"></td><td>カントリー</td></tr>
+        <tr><td class="num">99009</td><td>大手町カクテル</td><td class="num">1000</td><td class="nul"></td><td>ハコダテ</td></tr>
+        <tr><td class="num">99010</td><td>グラニュー糖梅酒</td><td class="num">1500</td><td class="nul"></td><td>ハコダテ</td></tr>
+        <tr><td class="num">99013</td><td>銀座カクテル</td><td class="num">1000</td><td class="nul"></td><td>ハコダテ</td></tr>
+        <tr><td class="num">99015</td><td>シャトーマンゴー</td><td class="num">50000</td><td class="nul"></td><td>カントリー</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+      <div class="var" data-v="4" hidden>
+<pre class="code">WHERE 製造者 &lt;&gt; 'キリンジ' OR 製造者 &lt;&gt; 'ユウヒ'</pre>
+        <div class="diffbar">「キリンジ以外」と「ユウヒ以外」の論理和となり、すべての行が戻されてしまう</div>
       </div>
     </div>
   </div>
-
 </section>
 
 <section class="sec" id="s348">
-  <h2><span class="n">3.4.8</span>特殊な比較演算子 - LIKE 演算子<span class="lv">必修</span></h2>
+  <h2><span class="n">3.4.8</span>特殊な比較演算子 - LIKE 演算子<span class="lv">重要</span></h2>
 
-  <div class="h">◆ ワイルドカード</div>
+  <div class="h">◆ ワイルドカードによる文字列のパターンマッチング</div>
 
   <div class="tw" style="margin-bottom:18px">
     <table class="gt">
       <thead><tr><th>文字</th><th>意味</th></tr></thead>
       <tbody>
-        <tr><td>_ (アンダースコア)</td><td>任意の一文字を示す。</td></tr>
-        <tr><td>% (パーセント)</td><td>任意の 0 文字以上の数の文字を示す。</td></tr>
+        <tr><td>_ (アンダースコア)</td><td>任意の一文字を示す</td></tr>
+        <tr><td>% (パーセント)</td><td>任意の 0 文字以上の数の文字を示す</td></tr>
       </tbody>
     </table>
   </div>
@@ -1220,16 +1420,49 @@ NOT (A OR B)  = NOT A AND NOT B</pre>
       <div class="sw">
         <button data-v="1" class="on">A を含む</button>
         <button data-v="2">A から始まる</button>
+        <button data-v="3" data-tone="warn">よくある間違い 1</button>
+        <button data-v="4" data-tone="warn">よくある間違い 2</button>
       </div>
     </div>
     <div class="vars">
       <div class="var" data-v="1">
-<pre class="code">WHERE ename LIKE '%A%'</pre>
-        <div class="diffbar">任意文字 ＋ A ＋ 任意文字</div>
+<pre class="code">WHERE ename LIKE ⟦'%A%'⟧</pre>
+        <div class="diffbar">「ename」列に「A」を含むという条件</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>EMPNO</th><th>ENAME</th></tr></thead>
+        <tbody>
+        <tr><td class="num">7499</td><td><mark>A</mark>LLEN</td></tr>
+        <tr><td class="num">7521</td><td>W<mark>A</mark>RD</td></tr>
+        <tr><td class="num">7654</td><td>M<mark>A</mark>RTIN</td></tr>
+        <tr><td class="num">7698</td><td>BL<mark>A</mark>KE</td></tr>
+        <tr><td class="num">7782</td><td>CL<mark>A</mark>RK</td></tr>
+        <tr><td class="num">7876</td><td><mark>A</mark>D<mark>A</mark>MS</td></tr>
+        <tr><td class="num">7900</td><td>J<mark>A</mark>MES</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
       </div>
       <div class="var" data-v="2" hidden>
 <pre class="code">WHERE ename LIKE ⟦'A%'⟧</pre>
-        <div class="diffbar">A ＋ 任意文字</div>
+        <div class="diffbar">「ename」列が「A」から始まるという条件</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>EMPNO</th><th>ENAME</th></tr></thead>
+        <tbody>
+        <tr><td class="num">7499</td><td><mark>A</mark>LLEN</td></tr>
+        <tr><td class="num">7876</td><td><mark>A</mark>DAMS</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+      <div class="var" data-v="3" hidden>
+<pre class="code">WHERE ename = ⟦'%A%'⟧</pre>
+        <div class="diffbar">% はワイルドカードではなく文字として作用する ／ 「%A%」という文字に完全一致するデータのみ対象</div>
+      </div>
+      <div class="var" data-v="4" hidden>
+<pre class="code">WHERE ename LIKE ⟦'A'⟧</pre>
+        <div class="diffbar">ワイルドカードがない場合はただの完全一致条件 ／ 「A」というデータのみ対象</div>
       </div>
     </div>
   </div>
@@ -1246,30 +1479,64 @@ NOT (A OR B)  = NOT A AND NOT B</pre>
     </div>
     <div class="vars">
       <div class="var" data-v="1">
-<pre class="code">WHERE 商品名 LIKE '%ビール'</pre>
-        <div class="diffbar">任意文字 ＋ ビール</div>
+<pre class="code">WHERE 商品名 LIKE ⟦'%ビール'⟧</pre>
+        <div class="diffbar">「商品名」列が「ビール」で終わるという条件</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>商品コード</th><th>商品名</th></tr></thead>
+        <tbody>
+        <tr><td class="num">99006</td><td>缶<mark>ビール</mark></td></tr>
+        <tr><td class="num">99007</td><td>瓶<mark>ビール</mark></td></tr>
+        <tr><td class="num">99008</td><td>地<mark>ビール</mark></td></tr>
+        <tr><td class="num">99011</td><td>ノンアルコール<mark>ビール</mark></td></tr>
+        <tr><td class="num">99012</td><td>トマト<mark>ビール</mark></td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
       </div>
       <div class="var" data-v="2" hidden>
-<pre class="code">WHERE 商品名 LIKE ⟦'_⟧ビール'</pre>
-        <div class="diffbar">全体で4文字でビールで終わる（1文字にビールが続く）</div>
+<pre class="code">WHERE 商品名 LIKE ⟦'_ビール'⟧</pre>
+        <div class="diffbar">全体で 4 文字で「ビール」で終わる（1 文字に「ビール」が続く）という条件</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>商品コード</th><th>商品名</th></tr></thead>
+        <tbody>
+        <tr><td class="num">99006</td><td><mark>缶</mark><mark>ビール</mark></td></tr>
+        <tr><td class="num">99007</td><td><mark>瓶</mark><mark>ビール</mark></td></tr>
+        <tr><td class="num">99008</td><td><mark>地</mark><mark>ビール</mark></td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
       </div>
       <div class="var" data-v="3" hidden>
-<pre class="code">WHERE 商品名 LIKE ⟦'ノン%⟧ビール'</pre>
-        <div class="diffbar">ノンで始まりビールで終わる</div>
+<pre class="code">WHERE 商品名 LIKE ⟦'ノン%ビール'⟧</pre>
+        <div class="diffbar">「商品名」列が「ノン」で始まり「ビール」で終わるという条件</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>商品コード</th><th>商品名</th></tr></thead>
+        <tbody>
+        <tr><td class="num">99011</td><td><mark>ノン</mark>アルコール<mark>ビール</mark></td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
       </div>
       <div class="var" data-v="4" hidden>
 <pre class="code">WHERE 商品名 LIKE ⟦'%ー%ク%ワイン'⟧</pre>
-        <div class="diffbar">ーとクを含みワインで終わる</div>
+        <div class="diffbar">「商品名」列が「ー」と「ク」を含み「ワイン」で終わるという条件</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>商品コード</th><th>商品名</th></tr></thead>
+        <tbody>
+        <tr><td class="num">99001</td><td>オ<mark>ー</mark>ガニッ<mark>ク</mark><mark>ワイン</mark></td></tr>
+        <tr><td class="num">99004</td><td>スパ<mark>ー</mark><mark>ク</mark>リング<mark>ワイン</mark></td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
       </div>
     </div>
   </div>
 
-  <div class="cmp">
-    <div class="ok"><b>正しい使い方</b><div class="note">LIKE はワイルドカードとともに使用したとき初めてあいまい検索になる</div></div>
-    <div class="ng"><b>エラーになる使い方</b><div class="note"><code>WHERE ename = '%A%'</code><br>% を文字として完全一致検索してしまう<br><code>WHERE ename LIKE 'A'</code><br>ワイルドカードがない場合はただの完全一致条件になる</div></div>
-  </div>
-
-  <div class="h">◆ NOT LIKE</div>
+  <div class="h">◆ LIKE 演算子の否定</div>
 
   <div class="demo">
     <div class="dh">
@@ -1282,22 +1549,55 @@ NOT (A OR B)  = NOT A AND NOT B</pre>
     </div>
     <div class="vars">
       <div class="var" data-v="1">
-<pre class="code">WHERE ename NOT LIKE '%A%'</pre>
-        <div class="diffbar">A が含まれていないデータのみ戻される</div>
+<pre class="code">WHERE ename NOT LIKE ⟦'%A%'⟧</pre>
+        <div class="diffbar">「ename」列に「A」を含まないという条件</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>EMPNO</th><th>ENAME</th></tr></thead>
+        <tbody>
+        <tr><td class="num">7369</td><td>SMITH</td></tr>
+        <tr><td class="num">7566</td><td>JONES</td></tr>
+        <tr><td class="num">7788</td><td>SCOTT</td></tr>
+        <tr><td class="num">7839</td><td>KING</td></tr>
+        <tr><td class="num">7844</td><td>TURNER</td></tr>
+        <tr><td class="num">7902</td><td>FORD</td></tr>
+        <tr><td class="num">7934</td><td>MILLER</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
       </div>
       <div class="var" data-v="2" hidden>
 <pre class="code">WHERE ename NOT LIKE ⟦'A%'⟧</pre>
-        <div class="diffbar">最初の一文字が A でないデータのみ戻される（途中には A が入っているものも含まれる）</div>
+        <div class="diffbar">最初の一文字が A でないデータのみ戻される</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>EMPNO</th><th>ENAME</th></tr></thead>
+        <tbody>
+        <tr><td class="num">7369</td><td>SMITH</td></tr>
+        <tr><td class="num">7521</td><td>W<mark>A</mark>RD</td></tr>
+        <tr><td class="num">7566</td><td>JONES</td></tr>
+        <tr><td class="num">7654</td><td>M<mark>A</mark>RTIN</td></tr>
+        <tr><td class="num">7698</td><td>BL<mark>A</mark>KE</td></tr>
+        <tr><td class="num">7782</td><td>CL<mark>A</mark>RK</td></tr>
+        <tr><td class="num">7788</td><td>SCOTT</td></tr>
+        <tr><td class="num">7839</td><td>KING</td></tr>
+        <tr><td class="num">7844</td><td>TURNER</td></tr>
+        <tr><td class="num">7900</td><td>J<mark>A</mark>MES</td></tr>
+        <tr><td class="num">7902</td><td>FORD</td></tr>
+        <tr><td class="num">7934</td><td>MILLER</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
       </div>
       <div class="var" data-v="3" hidden>
-<pre class="code">WHERE ⟦NOT ename LIKE '%A%'⟧</pre>
+<pre class="code">WHERE ⟦NOT⟧ ename LIKE ⟦'%A%'⟧</pre>
         <div class="diffbar">NOT LIKE と同じ結果になる</div>
       </div>
     </div>
   </div>
 
-  <div class="h">◆ ESCAPE</div>
-
+  <div class="h">◆ % や _ をワイルドカードではなく、文字として使用したいとき</div>
+  
   <div class="demo">
     <div class="dh">
       <span class="title">エスケープ文字の指定</span>
@@ -1308,65 +1608,79 @@ NOT (A OR B)  = NOT A AND NOT B</pre>
     </div>
     <div class="vars">
       <div class="var" data-v="1">
-<pre class="code">WHERE 列名 LIKE '%\\%%' ESCAPE '\\' ;</pre>
-        <div class="diffbar">2 つめの % が文字として認識される</div>
+<pre class="code">WHERE 列名 LIKE ⟦'%\%%' ESCAPE '\'⟧ ;</pre>
+        <div class="diffbar">続く 1 文字のみが文字として認識される</div>
       </div>
       <div class="var" data-v="2" hidden>
-<pre class="code">WHERE 列名 LIKE '%⟦#⟧%%' ESCAPE '⟦#⟧' ;</pre>
-        <div class="diffbar"># をエスケープ文字に指定</div>
+<pre class="code">WHERE 列名 LIKE ⟦'%#%%' ESCAPE '#'⟧ ;</pre>
+        <div class="diffbar">エスケープ文字は \ 以外も指定可能 ／ # をエスケープ文字に指定した場合</div>
       </div>
     </div>
   </div>
 
 </section>
 
+
 </div>
 <script src="assets/review-hl.js"></script>
 
 <!-- IFRAME SEAMLESS HELPER -->
 <script>
-if (window.parent !== window) {
-  document.querySelector('.hero').style.display = 'none';
-  var toc = document.querySelector('.toc');
-  if (toc) toc.style.display = 'none';
-  
-  var VOL_ID = window.location.pathname.split('/').pop().replace('.html', '');
-
-  function sendHeight() {
-    window.parent.postMessage({ type: 'resize', height: document.documentElement.scrollHeight, vol: VOL_ID }, '*');
-  }
-  window.addEventListener('load', sendHeight);
-  if (window.ResizeObserver) {
-    new ResizeObserver(sendHeight).observe(document.body);
-  }
-  
-  window.addEventListener('message', function(e) {
-    if (e.data.type === 'getOffset' && e.data.id) {
-      var el = document.getElementById(e.data.id);
-      if (el) {
-        window.parent.postMessage({ type: 'offset', vol: VOL_ID, id: e.data.id, top: el.offsetTop }, '*');
-      }
-    }
-  });
-
+(function () {
   var secs = Array.from(document.querySelectorAll('section.sec'));
-  var secData = secs.map(function(s) {
-    var h2 = s.querySelector('h2');
-    return { id: s.id, title: h2 ? h2.textContent.replace(/必修|応用|参考/g, '').trim() : s.id };
-  });
-  window.parent.postMessage({ type: 'init', vol: VOL_ID, sections: secData }, '*');
+  var tocLinks = Array.from(document.querySelectorAll('.toc a'));
+
+  function setActiveToc(id) {
+    tocLinks.forEach(function (a) {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+    });
+  }
 
   if ('IntersectionObserver' in window) {
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
-          window.parent.postMessage({ type: 'intersect', vol: VOL_ID, id: entry.target.id }, '*');
+          setActiveToc(entry.target.id);
+          if (window.parent !== window) {
+            window.parent.postMessage({ type: 'intersect', vol: VOL_ID, id: entry.target.id }, '*');
+          }
         }
       });
     }, { rootMargin: '-10% 0px -65% 0px' });
     secs.forEach(function (s) { observer.observe(s); });
   }
-}
+
+  if (window.parent !== window) {
+    document.querySelector('.hero').style.display = 'none';
+    var toc = document.querySelector('.toc');
+    if (toc) toc.style.display = 'none';
+
+    var VOL_ID = window.location.pathname.split('/').pop().replace('.html', '');
+
+    function sendHeight() {
+      window.parent.postMessage({ type: 'resize', height: document.documentElement.scrollHeight, vol: VOL_ID }, '*');
+    }
+    window.addEventListener('load', sendHeight);
+    if (window.ResizeObserver) {
+      new ResizeObserver(sendHeight).observe(document.body);
+    }
+
+    window.addEventListener('message', function(e) {
+      if (e.data.type === 'getOffset' && e.data.id) {
+        var el = document.getElementById(e.data.id);
+        if (el) {
+          window.parent.postMessage({ type: 'offset', vol: VOL_ID, id: e.data.id, top: el.offsetTop }, '*');
+        }
+      }
+    });
+
+    var secData = secs.map(function(s) {
+      var h2 = s.querySelector('h2');
+      return { id: s.id, title: h2 ? h2.textContent.replace(/重要|理解|参考/g, '').trim() : s.id };
+    });
+    window.parent.postMessage({ type: 'init', vol: VOL_ID, sections: secData }, '*');
+  }
+})();
 </script>
 </body>
 </html>

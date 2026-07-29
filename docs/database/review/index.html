@@ -99,20 +99,9 @@
   .shell.mobile-open .rail {
     transform: translateX(0);
   }
-  
-  /* Mobile toggle behavior */
-  .rail-toggle {
-    left: 16px;
-    background: var(--bg-2);
-    border-color: var(--line);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  }
-  .shell.mobile-open .rail-toggle {
-    left: 232px;
-    background: transparent;
-    border-color: transparent;
-    box-shadow: none;
-  }
+
+  /* モバイルは独自の.mnav（大導航+小導航）に一本化。デスクトップ用ハンバーガー/ドロワーは出さない */
+  .rail-toggle { display: none; }
 }
 
 .rail-header {
@@ -230,6 +219,66 @@
   .main { padding: 32px 24px 120px; }
 }
 
+/* Mobile Sticky Nav（大導航=グループ 3-3／小導航=節 3.3.4） */
+.mnav { display: none; }
+@media (max-width: 900px) {
+  .mnav {
+    display: block;
+    position: sticky;
+    top: 0;
+    z-index: 90;
+    margin: 0 -24px 24px;
+    padding: 8px 0 6px;
+    background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .mnav-row {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 4px 24px;
+    scrollbar-width: none;
+  }
+  .mnav-row::-webkit-scrollbar { display: none; }
+  .mnav-row.small { padding-top: 0; }
+  .mnav-chip {
+    flex: none;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 5px 11px;
+    border-radius: 99px;
+    border: 1px solid var(--line);
+    background: var(--bg-2);
+    color: var(--fg-2);
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .mnav-row.big .mnav-chip { color: var(--yellow); }
+  .mnav-row.small .mnav-chip {
+    font-family: var(--sans);
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--fg-2);
+  }
+  .mnav-chip.active {
+    color: var(--blue) !important;
+    border-color: var(--blue);
+    background: color-mix(in srgb, var(--blue) 16%, transparent);
+  }
+}
+
+/* vol-container はiframeを内包する:iframe内の.wrapが自前でpadding(24px)を持つため、
+   ここでmainのpaddingを打ち消して幅を単独表示時と揃える(二重paddingで実効幅が狭くなる問題の修正)。
+   vol-head(タイトル文言)はmain同等のpaddingを個別に付け直す。 */
+#vol-container { margin: 0 -48px; }
+.vol-head { padding: 0 48px; }
+@media (max-width: 900px) {
+  #vol-container { margin: 0 -24px; }
+  .vol-head { padding: 0 24px; }
+}
+
 /* Vol Divider Section Header (seamless text divider) */
 .vol-head {
   margin: 56px 0 20px;
@@ -293,6 +342,11 @@
   </aside>
 
   <main class="main">
+    <div class="mnav" id="mnav">
+      <div class="mnav-row big" id="mnavBig"></div>
+      <div class="mnav-row small" id="mnavSmall"></div>
+    </div>
+
     <div class="hero">
       <div class="kick">Database I ／ 総復習</div>
       <h1>データベースⅠ 要点復習版</h1>
@@ -355,6 +409,68 @@
   var rail = document.querySelector('.rail');
   var railToggle = document.getElementById('railToggle');
   var tocData = {};
+  var mnav = document.getElementById('mnav');
+  var mnavBig = document.getElementById('mnavBig');
+  var mnavSmall = document.getElementById('mnavSmall');
+  var mobileGroups = [];
+  var activeCh = null;
+  var activeGrp = null;
+
+  function jumpToItem(item) {
+    var iframe = document.getElementById('iframe-' + item.vol);
+    if (iframe) {
+      iframe.contentWindow.postMessage({ type: 'getOffset', id: item.id, vol: item.vol }, '*');
+    }
+  }
+
+  function renderBigNav() {
+    mnavBig.innerHTML = '';
+    mobileGroups.filter(function (g) { return g.chNo === activeCh; }).forEach(function (g) {
+      var chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = 'mnav-chip';
+      chip.textContent = g.grpNo;
+      chip.title = g.title;
+      chip.dataset.grp = g.grpNo;
+      chip.addEventListener('click', function () {
+        if (g.items[0]) jumpToItem(g.items[0]);
+      });
+      mnavBig.appendChild(chip);
+    });
+  }
+
+  function setActiveChapter(chNo) {
+    if (!chNo || chNo === activeCh) return;
+    activeCh = chNo;
+    renderBigNav();
+  }
+
+  function renderSmallNav(grpNo) {
+    var g = mobileGroups.filter(function (x) { return x.grpNo === grpNo; })[0];
+    mnavSmall.innerHTML = '';
+    if (!g) return;
+    g.items.forEach(function (item) {
+      var chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = 'mnav-chip';
+      var m = item.title.match(/^(\d+[.\-]\d+(?:[.\-]\d+)?)/);
+      chip.textContent = m ? m[1] : item.title;
+      chip.title = item.title;
+      chip.dataset.vol = item.vol;
+      chip.dataset.secId = item.id;
+      chip.addEventListener('click', function () { jumpToItem(item); });
+      mnavSmall.appendChild(chip);
+    });
+  }
+
+  function setActiveGroup(grpNo) {
+    if (!grpNo) return;
+    activeGrp = grpNo;
+    renderSmallNav(grpNo);
+    Array.prototype.forEach.call(mnavBig.querySelectorAll('.mnav-chip'), function (c) {
+      c.classList.toggle('active', c.dataset.grp === grpNo);
+    });
+  }
 
   // Sync toggle button position with rail scroll
   function updateTogglePosition() {
@@ -422,7 +538,8 @@
   function buildToc() {
     railToc.innerHTML = '';
     var chapters = {};
-    
+    var flatGroups = [];
+
     VOLS.forEach(function (v) {
       if (!tocData[v.id]) return;
       
@@ -449,7 +566,8 @@
       
       var chDet = document.createElement('div');
       chDet.className = 'rail-toc-ch';
-      
+      chDet.dataset.ch = chNo;
+
       var chSum = document.createElement('div');
       chSum.className = 'rail-toc-ch-title';
       chSum.textContent = ch.title;
@@ -464,12 +582,15 @@
         
         var grpDet = document.createElement('details');
         grpDet.className = 'rail-toc-grp-det';
+        grpDet.dataset.grp = grpNo;
         grpDet.open = true;
-        
+
         var grpSum = document.createElement('summary');
         grpSum.textContent = grp.no + ' ' + grp.title;
         grpDet.appendChild(grpSum);
-        
+
+        flatGroups.push({ grpNo: grpNo, chNo: chNo, title: grp.title, items: grp.items });
+
         grp.items.forEach(function(item) {
           var a = document.createElement('a');
           a.className = 'rail-toc-item';
@@ -494,6 +615,15 @@
       });
       railToc.appendChild(chDet);
     });
+
+    mobileGroups = flatGroups;
+    activeCh = null;
+    activeGrp = null;
+    if (mobileGroups[0]) {
+      activeCh = mobileGroups[0].chNo;
+      renderBigNav();
+      setActiveGroup(mobileGroups[0].grpNo);
+    }
   }
 
   // Handle postMessage from iframes
@@ -516,14 +646,15 @@
       iframe.style.height = e.data.height + 'px';
     }
     else if (e.data.type === 'offset') {
-      var targetY = iframe.offsetTop + e.data.top - 20; 
+      var mnavH = (window.innerWidth <= 900 && mnav.offsetHeight) ? mnav.offsetHeight : 0;
+      var targetY = iframe.offsetTop + e.data.top - 20 - mnavH;
       window.scrollTo({ top: targetY, behavior: 'smooth' });
     }
     else if (e.data.type === 'intersect') {
       var tocItems = railToc.querySelectorAll('.rail-toc-item');
       var matchedGroupDetail = null;
       var matchedChDetail = null;
-      
+
       tocItems.forEach(function (item) {
         var isMatch = item.dataset.vol === e.data.vol && item.dataset.secId === e.data.id;
         item.classList.toggle('active', isMatch);
@@ -532,8 +663,14 @@
           matchedChDetail = item.closest('.rail-toc-ch');
         }
       });
-      
+
       if (matchedGroupDetail && !matchedGroupDetail.open) matchedGroupDetail.open = true;
+
+      if (matchedChDetail) setActiveChapter(matchedChDetail.dataset.ch);
+      if (matchedGroupDetail) setActiveGroup(matchedGroupDetail.dataset.grp);
+      Array.prototype.forEach.call(mnavSmall.querySelectorAll('.mnav-chip'), function (c) {
+        c.classList.toggle('active', c.dataset.vol === e.data.vol && c.dataset.secId === e.data.id);
+      });
     }
   });
 

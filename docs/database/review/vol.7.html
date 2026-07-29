@@ -161,7 +161,7 @@
 
 <!-- ══════════════════════════════════ 3-16 -->
 <section class="sec" id="s1">
-  <h2><span class="n">3.16.1</span>複数の表から必要なデータを取り出す<span class="lv">必修</span></h2>
+  <h2><span class="n">3.16.1</span>複数の表から必要なデータを取り出す<span class="lv">重要</span></h2>
 
   <div class="h first">結合（Join）とは？　→　2つ以上の表をもとに必要なデータを取り出す。 ／ FROM～JOIN句には　結合に使用する表の名前を指定します。 ／ ON句には　どの列のデータとどの列のデータを照らし合わせるのか、指定します。</div>
 
@@ -193,7 +193,7 @@ ON EMP.DEPTNO = DEPT.DEPTNO ;</pre>
 
 
 <section class="sec" id="s2">
-  <h2><span class="n">3.16.2</span>基本的な結合文の書き方<span class="lv">必修</span></h2>
+  <h2><span class="n">3.16.2</span>基本的な結合文の書き方<span class="lv">重要</span></h2>
 
   <div class="h first">基本は、「両方の表に存在する同じ名前の列には、表名修飾を行わなければならない」 ／ 表名修飾は結合条件以外でもSELECT文全体で行う必要があります。</div>
 
@@ -269,7 +269,7 @@ ON emp.deptno = ⟦dept.deptno⟧;</pre>
 
 
 <section class="sec" id="s4">
-  <h2><span class="n">3.16.4</span>結合の種類<span class="lv">必修</span></h2>
+  <h2><span class="n">3.16.4</span>結合の種類<span class="lv">重要</span></h2>
 
   <div class="h first">結合には、分類の方法によって、次のような種類があります。</div>
   <div class="tw" style="margin-bottom:18px"><table class="gt">
@@ -303,7 +303,7 @@ ON emp.deptno = ⟦dept.deptno⟧;</pre>
 
 
 <section class="sec" id="s5">
-  <h2><span class="n">3.16.5</span>結合の基本的なアルゴリズム<span class="lv">応用</span></h2>
+  <h2><span class="n">3.16.5</span>結合の基本的なアルゴリズム<span class="lv lv-y">理解</span></h2>
 
   <div class="h first">まずはすべての組合せである直積が求められます。その中で結合条件が一致するデータ、つまりEMP表のdeptnoとDEPT表のdeptnoが同じ行のみが、結合条件がtrueとなります。</div>
   <div class="demo">
@@ -359,7 +359,7 @@ ON emp.deptno = dept.deptno;</pre>
 
 <!-- ══════════════════════════════════ 3-17 -->
 <section class="sec" id="s6">
-  <h2><span class="n">3.17.1</span>自然結合<span class="lv">必修</span></h2>
+  <h2><span class="n">3.17.1</span>自然結合<span class="lv">重要</span></h2>
 
   <div class="h first">NATURAL JOINでは、結合条件列の「列名」と「データ型」が同じ場合、その列を自然に結合条件列とみなし結合します。</div>
   <div class="demo">
@@ -411,7 +411,7 @@ USING (name);</pre>
 
 
 <section class="sec" id="s7">
-  <h2><span class="n">3.17.2</span>等価結合<span class="lv">必修</span></h2>
+  <h2><span class="n">3.17.2</span>等価結合<span class="lv">重要</span></h2>
 
   <div class="h first">ON句は等価結合だけでなく、非等価結合など、あらゆる結合条件を指定することができる柔軟な句です。次のように、列名が異なる場合でも結合条件に指定することができます。</div>
   <div class="demo">
@@ -467,7 +467,7 @@ AND empno >= 8000;</pre>
 
 
 <section class="sec" id="s8">
-  <h2><span class="n">3.17.3</span>自然結合と等価結合の違い<span class="lv">応用</span></h2>
+  <h2><span class="n">3.17.3</span>自然結合と等価結合の違い<span class="lv lv-y">理解</span></h2>
 
   <div class="h first">自然結合と等価結合には若干の違いがあります。</div>
   <div class="demo">
@@ -563,7 +563,7 @@ WHERE emp.deptno = dept.deptno;</pre>
 
 
 <section class="sec" id="s9">
-  <h2><span class="n">3.17.4</span>表名による修飾<span class="lv">必修</span></h2>
+  <h2><span class="n">3.17.4</span>表名による修飾<span class="lv">重要</span></h2>
 
   <div class="h first">結合に使用する表の中に同じ名前の列がある場合、どちらの表の列なのかという情報を、オラクルサーバに示す必要があります。これを、「表名により修飾する」といい、「表名.列名」のように列名の前に表名を付けて表記します。</div>
   <div class="h">同じ名前の列の場合、一般的には、表名で修飾しなければエラーとなる</div>
@@ -663,7 +663,7 @@ USING (customer.id);</pre>
 
 <!-- ══════════════════════════════════ 3-18 -->
 <section class="sec" id="s10">
-  <h2><span class="n">3.18.1</span>非等価結合<span class="lv">必修</span></h2>
+  <h2><span class="n">3.18.1</span>非等価結合<span class="lv">重要</span></h2>
 
   <div class="h first">非等価結合（Non-Equi Join）とは、幅のある結合条件による結合文を指します。</div>
   <div class="demo">
@@ -739,7 +739,7 @@ ON sal ⟦>= losal AND sal <= hisal⟧;</pre>
 </div>
 
 <section class="sec" id="s11">
-  <h2><span class="n">3.18.2</span>オラクル結合の構文<span class="lv">応用</span></h2>
+  <h2><span class="n">3.18.2</span>オラクル結合の構文<span class="lv lv-y">理解</span></h2>
 
   <div class="h first">★ FROM句に表名を、カンマで区切って並べます ／ ★ 結合条件はUSING句やON句ではなく、WHERE句に書きます</div>
   <div class="demo">
@@ -810,7 +810,7 @@ AND emp.deptno >= 20;</pre>
 
 
 <section class="sec" id="s12">
-  <h2><span class="n">3.18.3</span>デカルト積（CROSS JOIN結合）<span class="lv">必修</span></h2>
+  <h2><span class="n">3.18.3</span>デカルト積（CROSS JOIN結合）<span class="lv">重要</span></h2>
 
   <div class="demo">
     <div class="dh">
@@ -882,7 +882,7 @@ FROM emp ⟦CROSS JOIN⟧ dept ;</pre>
 
 
 <section class="sec" id="s13">
-  <h2><span class="n">3.18.4</span>表の別名<span class="lv">応用</span></h2>
+  <h2><span class="n">3.18.4</span>表の別名<span class="lv lv-y">理解</span></h2>
 
   <div class="demo">
     <div class="dh"><span class="title">emp e / dept d</span></div>
@@ -925,7 +925,7 @@ ON e.deptno = d.deptno;</pre>
 
 <!-- ══════════════════════════════════ 3-19 -->
 <section class="sec" id="s14">
-  <h2><span class="n">3.19.1</span>3つ以上の表の結合<span class="lv">応用</span></h2>
+  <h2><span class="n">3.19.1</span>3つ以上の表の結合<span class="lv lv-y">理解</span></h2>
 
   <div class="h first">もともとの導出結果に結合条件列が含まれていない場合は、条件のない結合（デカルト積）が形成されてしまいます。</div>
   <div class="demo">
@@ -1043,7 +1043,7 @@ JOIN  department  USING(did);</pre>
 
 
 <section class="sec" id="s15">
-  <h2><span class="n">3.19.2</span>参考＞オラクル結合での3つの表の結合<span class="lv">参考</span></h2>
+  <h2><span class="n">3.19.2</span>参考＞オラクル結合での3つの表の結合<span class="lv lv-w">参考</span></h2>
 
   <div class="demo">
     <div class="dh"><span class="title">personVW, department, locations（結合条件は n-1 個 ＝ 2個）<em>／ 3.19.1「ON句を3つ並べる」と同一結果</em></span></div>
@@ -1086,7 +1086,7 @@ AND     d.location_id = l.location_id;</pre>
 
 
 <section class="sec" id="s17">
-  <h2><span class="n">3.19.4</span>選択条件の追加<span class="lv">必修</span></h2>
+  <h2><span class="n">3.19.4</span>選択条件の追加<span class="lv">重要</span></h2>
 
   <div class="h first">句の順番は以下の通りです： 1. SELECT ／ 2. FROM（JOIN等） ／ 3. WHERE ／ 4. GROUP BY ／ 5. HAVING ／ 6. ORDER BY</div>
   <div class="h">ON句やUSING句はFROM句に付随しているため、FROM句のあとに指定します。WHERE句のあとにON句のみ続ける書き方はできません。</div>
@@ -1177,47 +1177,60 @@ AND empno > 7800;</pre>
 
 <!-- IFRAME SEAMLESS HELPER -->
 <script>
-if (window.parent !== window) {
-  document.querySelector('.hero').style.display = 'none';
-  var toc = document.querySelector('.toc');
-  if (toc) toc.style.display = 'none';
-  
-  var VOL_ID = window.location.pathname.split('/').pop().replace('.html', '');
-
-  function sendHeight() {
-    window.parent.postMessage({ type: 'resize', height: document.documentElement.scrollHeight, vol: VOL_ID }, '*');
-  }
-  window.addEventListener('load', sendHeight);
-  if (window.ResizeObserver) {
-    new ResizeObserver(sendHeight).observe(document.body);
-  }
-  
-  window.addEventListener('message', function(e) {
-    if (e.data.type === 'getOffset' && e.data.id) {
-      var el = document.getElementById(e.data.id);
-      if (el) {
-        window.parent.postMessage({ type: 'offset', vol: VOL_ID, id: e.data.id, top: el.offsetTop }, '*');
-      }
-    }
-  });
-
+(function () {
   var secs = Array.from(document.querySelectorAll('section.sec'));
-  var secData = secs.map(function(s) {
-    var h2 = s.querySelector('h2');
-    return { id: s.id, title: h2 ? h2.textContent.replace(/必修|応用|参考/g, '').trim() : s.id };
-  });
-  window.parent.postMessage({ type: 'init', vol: VOL_ID, sections: secData }, '*');
+  var tocLinks = Array.from(document.querySelectorAll('.toc a'));
+
+  function setActiveToc(id) {
+    tocLinks.forEach(function (a) {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+    });
+  }
 
   if ('IntersectionObserver' in window) {
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
-          window.parent.postMessage({ type: 'intersect', vol: VOL_ID, id: entry.target.id }, '*');
+          setActiveToc(entry.target.id);
+          if (window.parent !== window) {
+            window.parent.postMessage({ type: 'intersect', vol: VOL_ID, id: entry.target.id }, '*');
+          }
         }
       });
     }, { rootMargin: '-10% 0px -65% 0px' });
     secs.forEach(function (s) { observer.observe(s); });
   }
-}
+
+  if (window.parent !== window) {
+    document.querySelector('.hero').style.display = 'none';
+    var toc = document.querySelector('.toc');
+    if (toc) toc.style.display = 'none';
+
+    var VOL_ID = window.location.pathname.split('/').pop().replace('.html', '');
+
+    function sendHeight() {
+      window.parent.postMessage({ type: 'resize', height: document.documentElement.scrollHeight, vol: VOL_ID }, '*');
+    }
+    window.addEventListener('load', sendHeight);
+    if (window.ResizeObserver) {
+      new ResizeObserver(sendHeight).observe(document.body);
+    }
+
+    window.addEventListener('message', function(e) {
+      if (e.data.type === 'getOffset' && e.data.id) {
+        var el = document.getElementById(e.data.id);
+        if (el) {
+          window.parent.postMessage({ type: 'offset', vol: VOL_ID, id: e.data.id, top: el.offsetTop }, '*');
+        }
+      }
+    });
+
+    var secData = secs.map(function(s) {
+      var h2 = s.querySelector('h2');
+      return { id: s.id, title: h2 ? h2.textContent.replace(/重要|理解|参考/g, '').trim() : s.id };
+    });
+    window.parent.postMessage({ type: 'init', vol: VOL_ID, sections: secData }, '*');
+  }
+})();
 </script>
 </body>

@@ -51,7 +51,8 @@
   }
 
   function highlightAll(root) {
-    (root || document).querySelectorAll('pre.code').forEach(function (p) {
+    /* code.code は一行例を .demo へ格上げしたときの SQL（指南 §4-4・2026-07-29） */
+    (root || document).querySelectorAll('pre.code, code.code').forEach(function (p) {
       if (p.dataset.done) return;
       try {
         p.innerHTML = render(p.textContent);
@@ -62,7 +63,7 @@
 
   /* 変化スイッチ */
   function flash(box) {
-    box.querySelectorAll('pre.code mark').forEach(function (m) {
+    box.querySelectorAll('pre.code mark, code.code mark').forEach(function (m) {
       m.classList.remove('fx');
       void m.offsetWidth;          /* reflow で再生 */
       m.classList.add('fx');

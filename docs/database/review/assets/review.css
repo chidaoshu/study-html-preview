@@ -86,6 +86,7 @@ code{font-family:var(--mono)}
   transition:.15s;
 }
 .toc a:hover{border-color:var(--blue);color:var(--blue);background:color-mix(in srgb,var(--blue) 15%,var(--bg-2))}
+.toc a.active{border-color:var(--blue);color:var(--blue);background:color-mix(in srgb,var(--blue) 15%,var(--bg-2));font-weight:700}
 
 /* ============ 節 ============ */
 .sec{margin-bottom:76px;scroll-margin-top:70px}
@@ -105,6 +106,13 @@ code{font-family:var(--mono)}
   padding:3px 10px;border-radius:99px;flex:none;
   color:var(--red);background:color-mix(in srgb,var(--red) 16%,transparent);
   border:1px solid color-mix(in srgb,var(--red) 40%,transparent);
+}
+.sec>h2 .lv-y{
+  color:var(--yellow);background:color-mix(in srgb,var(--yellow) 16%,transparent);
+  border-color:color-mix(in srgb,var(--yellow) 40%,transparent);
+}
+.sec>h2 .lv-w{
+  color:var(--fg-2);background:transparent;border-color:var(--line);
 }
 
 /* 小見出し */
@@ -164,33 +172,38 @@ code{font-family:var(--mono)}
 .sw button.on[data-tone="warn"]{background:var(--yellow);color:var(--bg);box-shadow:0 0 12px color-mix(in srgb,var(--yellow) 45%,transparent)}
 .sw button.on[data-tone="alt"]{background:var(--green);color:var(--bg);box-shadow:0 0 12px color-mix(in srgb,var(--green) 45%,transparent)}
 
-/* コード面 */
-pre.code{
+/* コード面
+   pre.code … ```sql 由来（§8① の権威集）
+   code.code … 一行例（例 n）… ⇒ …）を .demo の Tab に格上げしたときの SQL。
+               §8① の権威集に混ざらないよう pre ではなく code を使う（2026-07-29 ユーザー確定・指南 §4-4） */
+pre.code,code.code{
+  display:block;
   margin:0;padding:16px 18px;overflow-x:auto;
   font-family:var(--mono);font-size:13.5px;line-height:1.85;
   background:var(--code-bg);color:var(--fg);
   white-space:pre;tab-size:2;
 }
-pre.code .kw{color:var(--sx-kw);font-weight:700}
-pre.code .id{color:var(--sx-id)}
-pre.code .num{color:var(--sx-num)}
-pre.code .str{color:var(--sx-str)}
-pre.code .op{color:var(--sx-op)}
-pre.code .com{color:var(--sx-com);font-style:italic}
+pre.code .kw,code.code .kw{color:var(--sx-kw);font-weight:700}
+pre.code .id,code.code .id{color:var(--sx-id)}
+pre.code .num,code.code .num{color:var(--sx-num)}
+pre.code .str,code.code .str{color:var(--sx-str)}
+pre.code .op,code.code .op{color:var(--sx-op)}
+pre.code .com,code.code .com{color:var(--sx-com);font-style:italic}
 
 /* 変化点ハイライト */
-pre.code mark{
+pre.code mark,code.code mark{
   background:color-mix(in srgb,var(--yellow) 22%,transparent);
   color:inherit;border-radius:3px;padding:1px 4px;margin:0 -1px;
   box-shadow:0 0 0 1px color-mix(in srgb,var(--yellow) 45%,transparent);
 }
-pre.code mark .kw{color:var(--yellow)}
-pre.code mark .id,pre.code mark .num,pre.code mark .op{color:var(--yellow)}
+pre.code mark .kw,code.code mark .kw{color:var(--yellow)}
+pre.code mark .id,pre.code mark .num,pre.code mark .op,
+code.code mark .id,code.code mark .num,code.code mark .op{color:var(--yellow)}
 @keyframes flash{
   0%{background:color-mix(in srgb,var(--yellow) 65%,transparent)}
   100%{background:color-mix(in srgb,var(--yellow) 22%,transparent)}
 }
-pre.code mark.fx{animation:flash .55s ease-out}
+pre.code mark.fx,code.code mark.fx{animation:flash .55s ease-out}
 
 /* 変化の説明バー */
 .demo .diffbar{
@@ -343,7 +356,7 @@ table.dt td mark, table.gt td mark{
 /* ============ 可視化：行の取り出し ============ */
 .rowviz{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:12px}
 .rowviz .r{
-  min-width:0;flex:1 1 42px;height:38px;border-radius:4px;
+  flex:0 0 42px;height:38px;border-radius:4px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   font-family:var(--mono);font-size:10px;line-height:1.25;
   background:var(--code-bg);color:var(--fg-2);
@@ -378,7 +391,7 @@ table.dt td mark, table.gt td mark{
 }
 .cmp>.ok>b{color:var(--green)}
 .cmp>.ng>b{color:var(--orange)}
-.cmp .note{padding:10px 14px;font-size:12.5px;color:var(--fg-2);line-height:1.7}
+.note{padding:10px 14px;font-size:12.5px;color:var(--fg-2);line-height:1.7}
 
 /* ============ 印刷 ============ */
 @media print{

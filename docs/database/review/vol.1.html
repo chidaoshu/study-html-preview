@@ -32,7 +32,7 @@
 
 <!-- ══════════════════════════════════ 1.1.1 -->
 <section class="sec" id="s1">
-  <h2><span class="n">1.1.1</span>データとデータベース<span class="lv">必修</span></h2>
+  <h2><span class="n">1.1.1</span>データとデータベース<span class="lv">重要</span></h2>
 
   <div class="h">DBMS は整合性（Integrity）の維持・トランザクション（Transaction）処理機能・不正アクセス防止・ログ取得とバックアップ／リカバリ機能を持つ</div>
 
@@ -56,7 +56,7 @@
 
 <!-- ══════════════════════════════════ 1.1.2 -->
 <section class="sec" id="s2">
-  <h2><span class="n">1.1.2</span>リレーショナル型データベース (RDB)<span class="lv">必修</span></h2>
+  <h2><span class="n">1.1.2</span>リレーショナル型データベース (RDB)<span class="lv">重要</span></h2>
 
   <div class="h">RDB は行と列からなる 2 次元の表形式（テーブル）で表現 ／ E. F. Codd 博士が提唱 ／ NULL は未定義（unknown）であり空白や 0 と異なる</div>
 
@@ -89,7 +89,7 @@
 
 <!-- ══════════════════════════════════ 1.1.3 -->
 <section class="sec" id="s3">
-  <h2><span class="n">1.1.3</span>リレーショナル型以外のデータベースモデル<span class="lv">応用</span></h2>
+  <h2><span class="n">1.1.3</span>リレーショナル型以外のデータベースモデル<span class="lv lv-y">理解</span></h2>
 
   <div class="h">階層型：木構造（ツリー型）で子レコードはただ 1 つの親レコードしか持てず重複する（代表例 XML） ／ 網型：子レコードは複数の親レコードをもつことができる（言語 NDL）</div>
 
@@ -119,7 +119,7 @@
 
 <!-- ══════════════════════════════════ 1.2.1 -->
 <section class="sec" id="s4">
-  <h2><span class="n">1.2.1</span>SQL とは？<span class="lv">必修</span></h2>
+  <h2><span class="n">1.2.1</span>SQL とは？<span class="lv">重要</span></h2>
 
   <div class="h">SQL は非手続き型言語で処理手順はオプティマイザが決定 ／ SEQUEL 由来で ANSI・ISO・JIS が標準化（SQL:1999 / SQL:2016）</div>
 
@@ -150,7 +150,7 @@
 
 <!-- ══════════════════════════════════ 1.2.2 -->
 <section class="sec" id="s5">
-  <h2><span class="n">1.2.2</span>SQL の種類<span class="lv">必修</span></h2>
+  <h2><span class="n">1.2.2</span>SQL の種類<span class="lv">重要</span></h2>
 
   <div class="h">DDL（データ定義言語・スキーマ記述） ／ DML（データ操作言語） ／ DCL（データ制御言語） ／ TCL（トランザクション制御言語）</div>
 
@@ -196,7 +196,7 @@
 
 <!-- ══════════════════════════════════ 1.2.3 -->
 <section class="sec" id="s6">
-  <h2><span class="n">1.2.3</span>SQL の文と句<span class="lv">応用</span></h2>
+  <h2><span class="n">1.2.3</span>SQL の文と句<span class="lv lv-y">理解</span></h2>
 
   <div class="h">文（Statement）は命令全体、句（Clause）は文を構成する各パーツ ／ SELECT 句（列の指定）・FROM 句（表の指定）・WHERE 句（行の絞込）</div>
 
@@ -225,7 +225,7 @@
 
 <!-- ══════════════════════════════════ 1.2.4 -->
 <section class="sec" id="s7">
-  <h2><span class="n">1.2.4</span>関数の利用<span class="lv">応用</span></h2>
+  <h2><span class="n">1.2.4</span>関数の利用<span class="lv lv-y">理解</span></h2>
 
   <div class="h">単一行関数（Single-row function）とグループ関数（Group function）に分類 ／ SELECT 句・WHERE 句・HAVING 句などで使用</div>
 
@@ -243,7 +243,7 @@
 
 <!-- ══════════════════════════════════ 1.2.5 -->
 <section class="sec" id="s8">
-  <h2><span class="n">1.2.5</span>Java 等のプログラムと DB の関係<span class="lv">応用</span></h2>
+  <h2><span class="n">1.2.5</span>Java 等のプログラムと DB の関係<span class="lv lv-y">理解</span></h2>
 
   <div class="h">SQL は Java などのプログラムに埋め込んで利用 ／ 各言語が連携してシステム全体を構成</div>
 
@@ -271,7 +271,7 @@ ResultSet rs = stmt.executeQuery(sql);</pre>
 
 <!-- ══════════════════════════════════ 1-3 -->
 <section class="sec" id="s9">
-  <h2><span class="n">1-3</span>主な RDBMS 製品<span class="lv">応用</span></h2>
+  <h2><span class="n">1-3</span>主な RDBMS 製品<span class="lv lv-y">理解</span></h2>
 
   <div class="h">現在主流となっている RDBMS 製品（Oracle・SQL Server・DB2・MySQL・PostgreSQL・Access・SQLite）</div>
 
@@ -297,48 +297,61 @@ ResultSet rs = stmt.executeQuery(sql);</pre>
 
 <!-- IFRAME SEAMLESS HELPER -->
 <script>
-if (window.parent !== window) {
-  document.querySelector('.hero').style.display = 'none';
-  var toc = document.querySelector('.toc');
-  if (toc) toc.style.display = 'none';
-  
-  var VOL_ID = window.location.pathname.split('/').pop().replace('.html', '');
-
-  function sendHeight() {
-    window.parent.postMessage({ type: 'resize', height: document.documentElement.scrollHeight, vol: VOL_ID }, '*');
-  }
-  window.addEventListener('load', sendHeight);
-  if (window.ResizeObserver) {
-    new ResizeObserver(sendHeight).observe(document.body);
-  }
-  
-  window.addEventListener('message', function(e) {
-    if (e.data.type === 'getOffset' && e.data.id) {
-      var el = document.getElementById(e.data.id);
-      if (el) {
-        window.parent.postMessage({ type: 'offset', vol: VOL_ID, id: e.data.id, top: el.offsetTop }, '*');
-      }
-    }
-  });
-
+(function () {
   var secs = Array.from(document.querySelectorAll('section.sec'));
-  var secData = secs.map(function(s) {
-    var h2 = s.querySelector('h2');
-    return { id: s.id, title: h2 ? h2.textContent.replace(/必修|応用|参考/g, '').trim() : s.id };
-  });
-  window.parent.postMessage({ type: 'init', vol: VOL_ID, sections: secData }, '*');
+  var tocLinks = Array.from(document.querySelectorAll('.toc a'));
+
+  function setActiveToc(id) {
+    tocLinks.forEach(function (a) {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+    });
+  }
 
   if ('IntersectionObserver' in window) {
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
-          window.parent.postMessage({ type: 'intersect', vol: VOL_ID, id: entry.target.id }, '*');
+          setActiveToc(entry.target.id);
+          if (window.parent !== window) {
+            window.parent.postMessage({ type: 'intersect', vol: VOL_ID, id: entry.target.id }, '*');
+          }
         }
       });
     }, { rootMargin: '-10% 0px -65% 0px' });
     secs.forEach(function (s) { observer.observe(s); });
   }
-}
+
+  if (window.parent !== window) {
+    document.querySelector('.hero').style.display = 'none';
+    var toc = document.querySelector('.toc');
+    if (toc) toc.style.display = 'none';
+
+    var VOL_ID = window.location.pathname.split('/').pop().replace('.html', '');
+
+    function sendHeight() {
+      window.parent.postMessage({ type: 'resize', height: document.documentElement.scrollHeight, vol: VOL_ID }, '*');
+    }
+    window.addEventListener('load', sendHeight);
+    if (window.ResizeObserver) {
+      new ResizeObserver(sendHeight).observe(document.body);
+    }
+
+    window.addEventListener('message', function(e) {
+      if (e.data.type === 'getOffset' && e.data.id) {
+        var el = document.getElementById(e.data.id);
+        if (el) {
+          window.parent.postMessage({ type: 'offset', vol: VOL_ID, id: e.data.id, top: el.offsetTop }, '*');
+        }
+      }
+    });
+
+    var secData = secs.map(function(s) {
+      var h2 = s.querySelector('h2');
+      return { id: s.id, title: h2 ? h2.textContent.replace(/重要|理解|参考/g, '').trim() : s.id };
+    });
+    window.parent.postMessage({ type: 'init', vol: VOL_ID, sections: secData }, '*');
+  }
+})();
 </script>
 </body>
 </html>

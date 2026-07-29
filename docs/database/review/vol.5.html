@@ -26,7 +26,7 @@
 
 <!-- ══════════════════════════════════ 3.5.1 -->
 <section class="sec" id="s1">
-  <h2><span class="n">3.5.1</span>行を並べ替える<span class="lv">必修</span></h2>
+  <h2><span class="n">3.5.1</span>行を並べ替える<span class="lv">重要</span></h2>
 
 
   <div class="h">列名の代わりに、列別名、列番号を使用できる</div>
@@ -340,7 +340,7 @@ ORDER BY ⟦2⟧ ;</pre>
 
 <!-- ══════════════════════════════════ 3.5.2 -->
 <section class="sec" id="s2">
-  <h2><span class="n">3.5.2</span>複数の列で並べ替える<span class="lv">必修</span></h2>
+  <h2><span class="n">3.5.2</span>複数の列で並べ替える<span class="lv">重要</span></h2>
 
 
   <div class="h">並べ替えの優先度の高い順に列を指定する ／ 昇順・降順のキーワードはキー列名ごとに指定する必要がある</div>
@@ -468,7 +468,7 @@ ORDER BY ⟦2⟧ ;</pre>
 
 <!-- ══════════════════════════════════ 3.5.3 -->
 <section class="sec" id="s3">
-  <h2><span class="n">3.5.3</span>トップ N の表示（12c 以降）<span class="lv">必修</span></h2>
+  <h2><span class="n">3.5.3</span>トップ N の表示（12c 以降）<span class="lv">重要</span></h2>
 
 
   <div class="h">ROWS ONLY は同順位が複数いても n 件しか表示されない ／ WITH TIES なら同順位をすべて表示できる ／ スキップする行数は同順位を考慮できない</div>
@@ -711,47 +711,60 @@ ORDER BY salary DESC FETCH FIRST 10 ⟦PERCENT⟧ ROWS ONLY;</pre>
 
 <!-- IFRAME SEAMLESS HELPER -->
 <script>
-if (window.parent !== window) {
-  document.querySelector('.hero').style.display = 'none';
-  var toc = document.querySelector('.toc');
-  if (toc) toc.style.display = 'none';
-  
-  var VOL_ID = window.location.pathname.split('/').pop().replace('.html', '');
-
-  function sendHeight() {
-    window.parent.postMessage({ type: 'resize', height: document.documentElement.scrollHeight, vol: VOL_ID }, '*');
-  }
-  window.addEventListener('load', sendHeight);
-  if (window.ResizeObserver) {
-    new ResizeObserver(sendHeight).observe(document.body);
-  }
-  
-  window.addEventListener('message', function(e) {
-    if (e.data.type === 'getOffset' && e.data.id) {
-      var el = document.getElementById(e.data.id);
-      if (el) {
-        window.parent.postMessage({ type: 'offset', vol: VOL_ID, id: e.data.id, top: el.offsetTop }, '*');
-      }
-    }
-  });
-
+(function () {
   var secs = Array.from(document.querySelectorAll('section.sec'));
-  var secData = secs.map(function(s) {
-    var h2 = s.querySelector('h2');
-    return { id: s.id, title: h2 ? h2.textContent.replace(/必修|応用|参考/g, '').trim() : s.id };
-  });
-  window.parent.postMessage({ type: 'init', vol: VOL_ID, sections: secData }, '*');
+  var tocLinks = Array.from(document.querySelectorAll('.toc a'));
+
+  function setActiveToc(id) {
+    tocLinks.forEach(function (a) {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+    });
+  }
 
   if ('IntersectionObserver' in window) {
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
-          window.parent.postMessage({ type: 'intersect', vol: VOL_ID, id: entry.target.id }, '*');
+          setActiveToc(entry.target.id);
+          if (window.parent !== window) {
+            window.parent.postMessage({ type: 'intersect', vol: VOL_ID, id: entry.target.id }, '*');
+          }
         }
       });
     }, { rootMargin: '-10% 0px -65% 0px' });
     secs.forEach(function (s) { observer.observe(s); });
   }
-}
+
+  if (window.parent !== window) {
+    document.querySelector('.hero').style.display = 'none';
+    var toc = document.querySelector('.toc');
+    if (toc) toc.style.display = 'none';
+
+    var VOL_ID = window.location.pathname.split('/').pop().replace('.html', '');
+
+    function sendHeight() {
+      window.parent.postMessage({ type: 'resize', height: document.documentElement.scrollHeight, vol: VOL_ID }, '*');
+    }
+    window.addEventListener('load', sendHeight);
+    if (window.ResizeObserver) {
+      new ResizeObserver(sendHeight).observe(document.body);
+    }
+
+    window.addEventListener('message', function(e) {
+      if (e.data.type === 'getOffset' && e.data.id) {
+        var el = document.getElementById(e.data.id);
+        if (el) {
+          window.parent.postMessage({ type: 'offset', vol: VOL_ID, id: e.data.id, top: el.offsetTop }, '*');
+        }
+      }
+    });
+
+    var secData = secs.map(function(s) {
+      var h2 = s.querySelector('h2');
+      return { id: s.id, title: h2 ? h2.textContent.replace(/重要|理解|参考/g, '').trim() : s.id };
+    });
+    window.parent.postMessage({ type: 'init', vol: VOL_ID, sections: secData }, '*');
+  }
+})();
 </script>
 </body>
