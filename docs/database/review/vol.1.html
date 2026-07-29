@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vol.1 要点 — 第1章 データベースとSQL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/review.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <div class="kick"><a href="index.html" style="color:var(--blue);text-decoration:none;margin-right:8px">← 全 Vol ポータル</a> Vol.1 ／ 要点</div>
+  <h1>第1章 データベースとSQL</h1>
+</header>
+
+<nav class="toc">
+  <a href="#s1">1.1.1 データと DB</a>
+  <a href="#s2">1.1.2 RDB</a>
+  <a href="#s3">1.1.3 構造型 DB</a>
+  <a href="#s4">1.2.1 SQL とは</a>
+  <a href="#s5">1.2.2 SQL の種類</a>
+  <a href="#s6">1.2.3 文と句</a>
+  <a href="#s7">1.2.4 関数</a>
+  <a href="#s8">1.2.5 Java 連携</a>
+  <a href="#s9">1-3 RDBMS 製品</a>
+</nav>
+
+
+<!-- ══════════════════════════════════ 1.1.1 -->
+<section class="sec" id="s1">
+  <h2><span class="n">1.1.1</span>データとデータベース<span class="lv">必修</span></h2>
+
+  <div class="h">DBMS は整合性（Integrity）の維持・トランザクション（Transaction）処理機能・不正アクセス防止・ログ取得とバックアップ／リカバリ機能を持つ</div>
+
+  <div class="tw">
+    <table class="gt">
+      <thead><tr><th>基本概念・用語</th><th>定義・試験の問われ方（キー概念）</th></tr></thead>
+      <tbody>
+        <tr><td><b>データベース（Database）</b></td><td>大量のデータを一カ所にまとめて蓄え、簡単に検索ができるように整理したもの（紙や Excel ファイルも該当する）。</td></tr>
+        <tr><td><b>データ（Data）</b></td><td>コンピュータで処理されるデジタル情報。内部的には 0 または 1 の<b>ビット（bit）</b>の集まり。</td></tr>
+        <tr><td><b>DBMS（データベース管理システム）</b></td><td>Oracle や MySQL 等、データベースを専門に管理するシステム。</td></tr>
+        <tr><td><b>データベース操作言語</b></td><td>データベースを操作するための専用言語（<b>SQL</b> 等）を持つ。</td></tr>
+        <tr><td><b>整合性（Integrity）の維持</b></td><td>記録されるデータの<b>整合性（Integrity）</b>を維持する機能を持つ。</td></tr>
+        <tr><td><b>マルチユーザ & トランザクション</b></td><td><b>Multi-user</b> を前提とし、<b>トランザクション（Transaction）</b>処理機能を持つ。</td></tr>
+        <tr><td><b>不正アクセス・改ざん防止</b></td><td>権限のない者によるアクセスを防止し、データの改ざんを防ぐ機能を持つ。</td></tr>
+        <tr><td><b>障害回復（リカバリ）</b></td><td>障害回復のためのログ取得、<b>バックアップ（Backup）</b>や<b>リカバリ（Recovery）</b>機能を持つ。</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ 1.1.2 -->
+<section class="sec" id="s2">
+  <h2><span class="n">1.1.2</span>リレーショナル型データベース (RDB)<span class="lv">必修</span></h2>
+
+  <div class="h">RDB は行と列からなる 2 次元の表形式（テーブル）で表現 ／ E. F. Codd 博士が提唱 ／ NULL は未定義（unknown）であり空白や 0 と異なる</div>
+
+  <div class="tw" style="margin-bottom:18px">
+    <table class="gt">
+      <thead><tr><th>基本用語</th><th>同義語・試験キーワード</th></tr></thead>
+      <tbody>
+        <tr><td><b>表</b></td><td><b>テーブル（table）</b>、<b>リレーショナル（relation）</b></td></tr>
+        <tr><td><b>行</b></td><td><b>レコード（record）</b>、<b>タプル（tuple: 組）</b>、<b>ロー（row: 行）</b></td></tr>
+        <tr><td><b>列</b></td><td><b>カラム（column）</b>、<b>属性（attribute: アトリビュート）</b>、<b>項目</b></td></tr>
+        <tr><td><b>関連</b></td><td><b>リレーションシップ（relationship）</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tw">
+    <table class="gt">
+      <thead><tr><th>RDB 核心概念</th><th>詳細・定義キーワード</th></tr></thead>
+      <tbody>
+        <tr><td><b>提唱者</b></td><td>1970年、<b>E. F. コッド（E. F. Codd）博士</b>が提唱。数学の<b>集合演算（Set operations）</b>と<b>関係演算（Relational operations）</b>に基づく。</td></tr>
+        <tr><td><b>2 次元表形式（テーブル）</b></td><td>データを <b>行（row）</b> と <b>列（column）</b> からなる 2 次元の表で表現する。</td></tr>
+        <tr><td><b>NULL 値</b></td><td>何も格納されていない状態。<b>未定義（unknown）</b>を意味し、<b>空白や 0 とは異なる</b>。</td></tr>
+        <tr><td><b>主キー（PK: Primary Key）</b></td><td>表の中で各行を唯一に識別するための列。</td></tr>
+        <tr><td><b>外部キー（FK: Foreign Key）</b></td><td>他の表を参照して表同士を関連づけるための列。</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ 1.1.3 -->
+<section class="sec" id="s3">
+  <h2><span class="n">1.1.3</span>リレーショナル型以外のデータベースモデル<span class="lv">応用</span></h2>
+
+  <div class="h">階層型：木構造（ツリー型）で子レコードはただ 1 つの親レコードしか持てず重複する（代表例 XML） ／ 網型：子レコードは複数の親レコードをもつことができる（言語 NDL）</div>
+
+  <div class="tw">
+    <table class="gt">
+      <thead><tr><th>モデル名</th><th>データ構造</th><th>親子関係・データ重複</th><th>特徴・課題</th><th>代表例・言語</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><b>階層型データベース</b><br>（Hierarchical DB）</td>
+          <td><b>木構造</b><br>（ツリー型 / Tree type）</td>
+          <td><b>親 1 対 子 多</b><br>（子はただ 1 つの親しか持てない）<br><b>データ重複あり</b></td>
+          <td>同一データが複数位置に重複し、修正漏れによる不整合のリスクがある</td>
+          <td><b>XML</b></td>
+        </tr>
+        <tr>
+          <td><b>網(ネットワーク)型データベース</b><br>（Network DB）</td>
+          <td><b>網目状構造</b></td>
+          <td><b>親 多 対 子 多</b><br>（子は複数の親を持てる）<br><b>レコード重複なし</b></td>
+          <td>複雑な構造を表現可能だが検索経路が複数でき経路選択で処理速度に影響・構造が複雑化</td>
+          <td><b>NDL</b><br>（Network Database Language）</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ 1.2.1 -->
+<section class="sec" id="s4">
+  <h2><span class="n">1.2.1</span>SQL とは？<span class="lv">必修</span></h2>
+
+  <div class="h">SQL は非手続き型言語で処理手順はオプティマイザが決定 ／ SEQUEL 由来で ANSI・ISO・JIS が標準化（SQL:1999 / SQL:2016）</div>
+
+  <div class="tw" style="margin-bottom:18px">
+    <table class="gt">
+      <thead><tr><th>項目</th><th>特長・内容キーワード</th></tr></thead>
+      <tbody>
+        <tr><td><b>名称の由来</b></td><td>もともと <b>SEQUEL</b>（Structured English Query Language）に由来し、商標問題により <b>SQL</b>（Structured Query Language）に改名。</td></tr>
+        <tr><td><b>言語分類</b></td><td><b>非手続き型言語（Non-procedural language）</b>。「こういうデータをください」という命令のみを行い、処理手順は DBMS の<b>オプティマイザ（Optimizer）</b>が自動決定する。</td></tr>
+        <tr><td><b>標準 SQL 規格</b></td><td><b>ANSI</b>、<b>ISO</b>、<b>JIS</b> により標準化。完成度の高い <b>SQL:1999</b> や最新の <b>SQL:2016</b> などの規格がある。</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tw">
+    <table class="gt">
+      <thead><tr><th>基本 DML 命令</th><th>命令文例</th><th>処理目的</th></tr></thead>
+      <tbody>
+        <tr><td><b>INSERT</b></td><td><code>INSERT INTO 表 VALUES (...)</code></td><td>表に新しい<b>行を追加</b>する命令</td></tr>
+        <tr><td><b>UPDATE</b></td><td><code>UPDATE 表 SET 列 = 値 WHERE ...</code></td><td>表内の指定した<b>行の値を変更</b>する命令</td></tr>
+        <tr><td><b>SELECT</b></td><td><code>SELECT 列 FROM 表 WHERE ...</code></td><td>表から特定条件の<b>行を抽出（検索）</b>する命令</td></tr>
+        <tr><td><b>DELETE</b></td><td><code>DELETE FROM 表 WHERE ...</code></td><td>表から指定した<b>行を削除</b>する命令</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ 1.2.2 -->
+<section class="sec" id="s5">
+  <h2><span class="n">1.2.2</span>SQL の種類<span class="lv">必修</span></h2>
+
+  <div class="h">DDL（データ定義言語・スキーマ記述） ／ DML（データ操作言語） ／ DCL（データ制御言語） ／ TCL（トランザクション制御言語）</div>
+
+  <div class="tw" style="margin-bottom:18px">
+    <table class="gt">
+      <thead><tr><th>分類名（略称・和名）</th><th>目的・役割（キーワード）</th><th>代表的な SQL 文</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><b>DDL</b><br>（Data Definition Language / データ定義言語）</td>
+          <td><b>スキーマ（Schema）</b>やデータベースオブジェクト（表・ビュー・索引等）を定義・作成・削除する。</td>
+          <td><code>CREATE</code>、<code>DROP</code>、<code>ALTER</code>、<code>RENAME</code> など</td>
+        </tr>
+        <tr>
+          <td><b>DML</b><br>（Data Manipulation Language / データ操作言語）</td>
+          <td>表の中のデータを操作（検索・挿入・更新・削除）する。</td>
+          <td><code>SELECT</code>、<code>INSERT</code>、<code>UPDATE</code>、<code>DELETE</code> など</td>
+        </tr>
+        <tr>
+          <td><b>DCL</b><br>（Data Control Language / データ制御言語）</td>
+          <td>ユーザー権限やデータアクセス権を制御する。</td>
+          <td><code>GRANT</code>（権限付与）、<code>REVOKE</code>（権限取消） など</td>
+        </tr>
+        <tr>
+          <td><b>TCL</b><br>（Transaction Control Language / トランザクション制御言語）</td>
+          <td><b>トランザクション（Transaction）</b>処理の確定や取消を制御する。</td>
+          <td><code>COMMIT</code>（確定）、<code>ROLLBACK</code>（取消）、<code>SAVEPOINT</code>（保存点） など</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tw">
+    <table class="gt">
+      <thead><tr><th>階層レベル</th><th>含まれるオブジェクト・定義要素</th></tr></thead>
+      <tbody>
+        <tr><td><b>データベース（Database）</b></td><td>各ユーザーの <b>スキーマ（Schema）</b></td></tr>
+        <tr><td><b>スキーマ（Schema）</b></td><td><b>テーブル（Table）</b>、<b>ビュー（View）</b>、<b>索引（Index）</b>、その他オブジェクト</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ 1.2.3 -->
+<section class="sec" id="s6">
+  <h2><span class="n">1.2.3</span>SQL の文と句<span class="lv">応用</span></h2>
+
+  <div class="h">文（Statement）は命令全体、句（Clause）は文を構成する各パーツ ／ SELECT 句（列の指定）・FROM 句（表の指定）・WHERE 句（行の絞込）</div>
+
+  <div class="tw" style="margin-bottom:18px">
+    <table class="gt">
+      <thead><tr><th>区分</th><th>定義</th><th>代表例</th></tr></thead>
+      <tbody>
+        <tr><td><b>文（Statement）</b></td><td>データを抽出・操作・定義する命令全体</td><td>DDL: <code>CREATE 文</code>, <code>DROP 文</code>, <code>ALTER 文</code><br>DML: <code>SELECT 文</code>, <code>INSERT 文</code>, <code>UPDATE 文</code>, <code>DELETE 文</code></td></tr>
+        <tr><td><b>句（Clause）</b></td><td>文を構成する個々のパーツ</td><td><code>SELECT 句</code>, <code>FROM 句</code>, <code>WHERE 句</code>, <code>ORDER BY 句</code>, <code>HAVING 句</code> など</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tw">
+    <table class="gt">
+      <thead><tr><th>SELECT 文の構成パーツ（句）</th><th>役割・指定内容キーワード</th></tr></thead>
+      <tbody>
+        <tr><td><b>SELECT 句</b></td><td>取得する<b>列の指定</b></td></tr>
+        <tr><td><b>FROM 句</b></td><td>対象とする<b>表の指定</b></td></tr>
+        <tr><td><b>WHERE 句</b></td><td>対象とする<b>行の絞り込み</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ 1.2.4 -->
+<section class="sec" id="s7">
+  <h2><span class="n">1.2.4</span>関数の利用<span class="lv">応用</span></h2>
+
+  <div class="h">単一行関数（Single-row function）とグループ関数（Group function）に分類 ／ SELECT 句・WHERE 句・HAVING 句などで使用</div>
+
+  <div class="tw">
+    <table class="gt">
+      <thead><tr><th>関数分類</th><th>処理の特徴・挙動</th><th>使用可能な主な句</th></tr></thead>
+      <tbody>
+        <tr><td><b>単一行関数</b><br>（Single-row function）</td><td><b>1 行ごとに</b>処理を実行し、行ごとに 1 つの結果を返す。</td><td><code>SELECT 句</code>、<code>WHERE 句</code>、<code>ORDER BY 句</code> など</td></tr>
+        <tr><td><b>グループ関数</b><br>（Group function）</td><td><b>複数行（グループ）をまとめて</b>集計処理し、1 つの結果を返す。</td><td><code>SELECT 句</code>、<code>HAVING 句</code>、<code>ORDER BY 句</code> など</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ 1.2.5 -->
+<section class="sec" id="s8">
+  <h2><span class="n">1.2.5</span>Java 等のプログラムと DB の関係<span class="lv">応用</span></h2>
+
+  <div class="h">SQL は Java などのプログラムに埋め込んで利用 ／ 各言語が連携してシステム全体を構成</div>
+
+  <div class="tw" style="margin-bottom:18px">
+    <table class="gt">
+      <thead><tr><th>システム階層</th><th>役割</th><th>使用技術・言語</th></tr></thead>
+      <tbody>
+        <tr><td><b>フロントエンド（画面）</b></td><td>ユーザー操作の受け付け・画面の作成と表示</td><td><b>HTML</b>, <b>CSS</b></td></tr>
+        <tr><td><b>AP サーバー（ロジック）</b></td><td>システム全体の制御・Java 実行環境（プログラム内に SQL を埋め込む）</td><td><b>Java</b>（JDBC 等）</td></tr>
+        <tr><td><b>DB サーバー（DBMS）</b></td><td>SQL 命令に応じてデータの検索・追加・更新・削除を実行</td><td><b>SQL</b>, <b>RDBMS</b>（Oracle 等）</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tw">
+    <div style="padding:12px;background:var(--code-bg)">
+      <div style="font-family:var(--mono);font-size:11.5px;color:var(--fg-3);margin-bottom:6px">■ Java コード内での SQL 埋め込み例 (JDBC)</div>
+      <pre style="margin:0;font-family:var(--mono);font-size:12.5px;line-height:1.7;color:var(--fg-2);white-space:pre;overflow-x:auto">String sql = "SELECT itemid, itemname, type FROM item WHERE itemname LIKE '"
+           + text.getText() + "%' ORDER BY itemid";
+ResultSet rs = stmt.executeQuery(sql);</pre>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════ 1-3 -->
+<section class="sec" id="s9">
+  <h2><span class="n">1-3</span>主な RDBMS 製品<span class="lv">応用</span></h2>
+
+  <div class="h">現在主流となっている RDBMS 製品（Oracle・SQL Server・DB2・MySQL・PostgreSQL・Access・SQLite）</div>
+
+  <div class="tw">
+    <table class="gt">
+      <thead><tr><th>製品名</th><th>ベンダー</th><th>対応 OS</th><th>分類・特徴（試験キーワード）</th></tr></thead>
+      <tbody>
+        <tr><td><b>Oracle</b></td><td>Oracle</td><td>UNIX, Linux, Windows</td><td><b>市場シェア No.1</b>。大規模システムでの実績豊富で学習対象として一般的。参考書籍・情報が豊富。</td></tr>
+        <tr><td><b>SQL Server (MSDE)</b></td><td>Microsoft</td><td>Windows</td><td>コストと性能のバランスが優れる。Microsoft の <b>.NET 技術</b>との親和性が高い。</td></tr>
+        <tr><td><b>DB2</b></td><td>IBM</td><td>UNIX, Linux, Windows, OS/400</td><td>歴史と実績があるが、参考書籍や情報が少なめで近年シェア縮小傾向。</td></tr>
+        <tr><td><b>MySQL</b></td><td>Oracle（元 MySQL AB）</td><td>UNIX, Linux, Windows など</td><td><b>オープンソース（Open source）</b>。動作軽快で小・中規模 Web システムで実績多数。Ver 5.0 以降<b>ストアドプロシージャ</b>、<b>ビュー</b>、<b>トリガー</b>を実装。</td></tr>
+        <tr><td><b>PostgreSQL</b></td><td>PostgreSQLプロジェクト</td><td>UNIX, Linux, Windows</td><td><b>オープンソース（Open source）</b>。ストアドプログラム機能。Oracle と同様<b>マルチバージョニング（Multi-versioning）</b>による同時実行制御を採用。</td></tr>
+        <tr><td><b>Access (Jet DB Engine)</b></td><td>Microsoft</td><td>Windows</td><td>フォームと一体構築が容易。<b>ネットワーク利用や大容量・本格的学習には不向き</b>。</td></tr>
+        <tr><td><b>SQLite</b></td><td>パブリックドメイン（Public domain）</td><td>Windows, Mac, Linux, Android, iOS</td><td>サーバーではなく<b>アプリに組み込んで使用</b>される軽量ライブラリ。データ保存は<b>単一ファイル</b>（Android 等）。</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+</div>
+<script src="assets/review-hl.js"></script>
+
+
+<!-- IFRAME SEAMLESS HELPER -->
+<script>
+if (window.parent !== window) {
+  document.querySelector('.hero').style.display = 'none';
+  var toc = document.querySelector('.toc');
+  if (toc) toc.style.display = 'none';
+  
+  var VOL_ID = window.location.pathname.split('/').pop().replace('.html', '');
+
+  function sendHeight() {
+    window.parent.postMessage({ type: 'resize', height: document.documentElement.scrollHeight, vol: VOL_ID }, '*');
+  }
+  window.addEventListener('load', sendHeight);
+  if (window.ResizeObserver) {
+    new ResizeObserver(sendHeight).observe(document.body);
+  }
+  
+  window.addEventListener('message', function(e) {
+    if (e.data.type === 'getOffset' && e.data.id) {
+      var el = document.getElementById(e.data.id);
+      if (el) {
+        window.parent.postMessage({ type: 'offset', vol: VOL_ID, id: e.data.id, top: el.offsetTop }, '*');
+      }
+    }
+  });
+
+  var secs = Array.from(document.querySelectorAll('section.sec'));
+  var secData = secs.map(function(s) {
+    var h2 = s.querySelector('h2');
+    return { id: s.id, title: h2 ? h2.textContent.replace(/必修|応用|参考/g, '').trim() : s.id };
+  });
+  window.parent.postMessage({ type: 'init', vol: VOL_ID, sections: secData }, '*');
+
+  if ('IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          window.parent.postMessage({ type: 'intersect', vol: VOL_ID, id: entry.target.id }, '*');
+        }
+      });
+    }, { rootMargin: '-10% 0px -65% 0px' });
+    secs.forEach(function (s) { observer.observe(s); });
+  }
+}
+</script>
+</body>
+</html>

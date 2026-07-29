@@ -1097,5 +1097,52 @@ ORA-01722: 数値が無効です。</div>
 </section>
 </div>
 <script src="assets/review-hl.js"></script>
+
+
+<!-- IFRAME SEAMLESS HELPER -->
+<script>
+if (window.parent !== window) {
+  document.querySelector('.hero').style.display = 'none';
+  var toc = document.querySelector('.toc');
+  if (toc) toc.style.display = 'none';
+
+  var VOL_ID = window.location.pathname.split('/').pop().replace('.html', '');
+
+  function sendHeight() {
+    window.parent.postMessage({ type: 'resize', height: document.documentElement.scrollHeight, vol: VOL_ID }, '*');
+  }
+  window.addEventListener('load', sendHeight);
+  if (window.ResizeObserver) {
+    new ResizeObserver(sendHeight).observe(document.body);
+  }
+
+  window.addEventListener('message', function(e) {
+    if (e.data.type === 'getOffset' && e.data.id) {
+      var el = document.getElementById(e.data.id);
+      if (el) {
+        window.parent.postMessage({ type: 'offset', vol: VOL_ID, id: e.data.id, top: el.offsetTop }, '*');
+      }
+    }
+  });
+
+  var secs = Array.from(document.querySelectorAll('section.sec'));
+  var secData = secs.map(function(s) {
+    var h2 = s.querySelector('h2');
+    return { id: s.id, title: h2 ? h2.textContent.replace(/必修|応用|参考/g, '').trim() : s.id };
+  });
+  window.parent.postMessage({ type: 'init', vol: VOL_ID, sections: secData }, '*');
+
+  if ('IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          window.parent.postMessage({ type: 'intersect', vol: VOL_ID, id: entry.target.id }, '*');
+        }
+      });
+    }, { rootMargin: '-10% 0px -65% 0px' });
+    secs.forEach(function (s) { observer.observe(s); });
+  }
+}
+</script>
 </body>
 </html>

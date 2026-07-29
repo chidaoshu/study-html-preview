@@ -245,20 +245,23 @@ details.ref .rbody{padding:0 16px 16px}
 }
 .exlist>div:last-child{border-bottom:none}
 
-/* ============ 表共通・結果表（全セル左寄せ） ============ */
+/* ============ 表共通（全セル左寄せ） ============ */
 .tw{
-  overflow:auto;
-  max-height:260px; /* vh in seamless iframe becomes relative to total height; use fixed px */
   border:1px solid var(--line);border-radius:var(--r-s);
   background:var(--code-bg);margin-bottom:6px;
+}
+/* 固定高さ+スクロールは SQL 実行結果（.res 内）だけ。.ref・素の table.gt 等の講解表は高さ制限しない（2026-07-29 ユーザー確定） */
+.res .tw{
+  overflow:auto;
+  max-height:260px; /* vh in seamless iframe becomes relative to total height; use fixed px */
 }
 /* スクロール中もヘッダを見失わない */
 .tw table.dt thead th, .tw table.gt thead th{position:sticky;top:0;z-index:2}
 /* スクロールできることを見せる：下端にフェード */
-.tw{scrollbar-width:thin;scrollbar-color:var(--line) transparent}
-.tw::-webkit-scrollbar{width:9px;height:9px}
-.tw::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
-.tw::-webkit-scrollbar-track{background:transparent}
+.res .tw{scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+.res .tw::-webkit-scrollbar{width:9px;height:9px}
+.res .tw::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
+.res .tw::-webkit-scrollbar-track{background:transparent}
 /* 結果表（SQL実行結果） */
 table.dt{border-collapse:collapse;width:100%;font-family:var(--mono);font-size:12.5px}
 table.dt th{

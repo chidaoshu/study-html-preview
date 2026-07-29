@@ -310,23 +310,39 @@
   'use strict';
 
   var VOLS = [
+    { id: 'vol.1', file: 'vol.1.html', label: 'Vol.1 ／ 第1章', title: '1-1〜1-3 データベースと SQL', desc: 'DBMS の特徴、RDB、SQL の分類、主要 RDBMS 製品' },
+    { id: 'vol.3', file: 'vol.3.html', label: 'Vol.3 ／ 第3章', title: '3-1〜3-3 SELECT 文の基本', desc: 'SELECT 文の主な句、射影・選択・結合、表の定義確認' },
     { id: 'vol.4', file: 'vol.4.html', label: 'Vol.4 ／ 第3章', title: '3-3 SELECT句とFROM句（後半）／ 3-4 WHERE句', desc: '演算子、q演算子、DISTINCT、比較演算子、LIKE、BETWEEN、IN、論理演算子' },
     { id: 'vol.5', file: 'vol.5.html', label: 'Vol.5 ／ 第3章', title: '3-5 ORDER BY 句 & Top-N', desc: 'ソートキー、ASC/DESC、NULLS FIRST/LAST、FETCH FIRST / WITH TIES / OFFSET' },
+    { id: 'vol.6-1', file: 'vol.6-1.html', label: 'Vol.6-1 ／ 第3章', title: '3-6〜3-11 SQL 関数（文字・数値・変換・日付）', desc: '文字関数、数値関数、変換関数、数値書式、日付書式、日付関数' },
+    { id: 'vol.6-2', file: 'vol.6-2.html', label: 'Vol.6-2 ／ 第3章', title: '3-12〜3-15 タイムゾーン・一般関数・グループ関数', desc: 'タイムゾーン関数、NVL/NVL2/COALESCE/NULLIF/CASE、グループ関数、GROUP BY/HAVING' },
     { id: 'vol.7', file: 'vol.7.html', label: 'Vol.7 ／ 第3章', title: '3-16〜3-19 結合', desc: '等価結合、自然結合(NATURAL/USING)、非等価結合、デカルト積、表の別名、3表結合' }
   ];
 
   var CHAPTER_TITLES = {
     '1': '第1章 データベースと SQL',
-    '3': '第3章 SELECT 文',
-    '4': '第4章 単一行関数',
-    '5': '第5章 グループ関数',
-    '6': '第6章 結合・副問合せ'
+    '3': '第3章 SELECT 文'
   };
-  
+
   var GROUP_TITLES = {
+    '1-1': 'データとデータベース',
+    '1-2': 'SQL とは',
+    '1-3': '主な RDBMS 製品',
+    '3-1': 'SELECT 文の主な句',
+    '3-2': '表のすべてのデータを取り出す',
     '3-3': 'SELECT 句と FROM 句',
     '3-4': 'WHERE 句',
     '3-5': 'ORDER BY 句',
+    '3-6': 'SQL 関数',
+    '3-7': '文字関数',
+    '3-8': '数値関数',
+    '3-9': '変換関数と数値書式',
+    '3-10': '変換関数と日付書式',
+    '3-11': '日付の計算と日付関数',
+    '3-12': 'タイムゾーンでのデータ管理',
+    '3-13': '一般関数',
+    '3-14': 'グループ関数',
+    '3-15': 'GROUP BY 句、HAVING 句',
     '3-16': '結合とは？',
     '3-17': '等価結合と自然結合',
     '3-18': '非等価結合、デカルト積',
@@ -411,7 +427,7 @@
       if (!tocData[v.id]) return;
       
       tocData[v.id].forEach(function(sec) {
-        var match = sec.title.match(/^(\d+)\.(\d+)/);
+        var match = sec.title.match(/^(\d+)[.\-](\d+)/);
         if (match) {
           var chNo = match[1];
           var grpNo = match[1] + '-' + match[2];
