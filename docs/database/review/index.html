@@ -426,6 +426,7 @@
   var mobileChapters = [];
   var activeCh = null;
   var activeGrp = null;
+  var lastActiveItem = null;
 
   function jumpToItem(item) {
     var iframe = document.getElementById('iframe-' + item.vol);
@@ -469,12 +470,23 @@
     });
   }
 
+  function scrollChipIntoView(row, chip) {
+    if (!chip) return;
+    var rowRect = row.getBoundingClientRect();
+    var chipRect = chip.getBoundingClientRect();
+    if (chipRect.left < rowRect.left || chipRect.right > rowRect.right) {
+      chip.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+    }
+  }
+
   function setActiveChapter(chNo) {
     if (!chNo || chNo === activeCh) return;
     activeCh = chNo;
     renderBigNav();
     Array.prototype.forEach.call(mnavCh.querySelectorAll('.mnav-chip'), function (c) {
-      c.classList.toggle('active', c.dataset.ch === chNo);
+      var isMatch = c.dataset.ch === chNo;
+      c.classList.toggle('active', isMatch);
+      if (isMatch) scrollChipIntoView(mnavCh, c);
     });
   }
 
@@ -501,7 +513,9 @@
     activeGrp = grpNo;
     renderSmallNav(grpNo);
     Array.prototype.forEach.call(mnavBig.querySelectorAll('.mnav-chip'), function (c) {
-      c.classList.toggle('active', c.dataset.grp === grpNo);
+      var isMatch = c.dataset.grp === grpNo;
+      c.classList.toggle('active', isMatch);
+      if (isMatch) scrollChipIntoView(mnavBig, c);
     });
   }
 
@@ -691,6 +705,7 @@
       var tocItems = railToc.querySelectorAll('.rail-toc-item');
       var matchedGroupDetail = null;
       var matchedChDetail = null;
+      var matchedItem = null;
 
       tocItems.forEach(function (item) {
         var isMatch = item.dataset.vol === e.data.vol && item.dataset.secId === e.data.id;
@@ -698,15 +713,27 @@
         if (isMatch) {
           matchedGroupDetail = item.closest('.rail-toc-grp-det');
           matchedChDetail = item.closest('.rail-toc-ch');
+          matchedItem = item;
         }
       });
 
       if (matchedGroupDetail && !matchedGroupDetail.open) matchedGroupDetail.open = true;
 
+      if (matchedItem && matchedItem !== lastActiveItem) {
+        lastActiveItem = matchedItem;
+        var railRect = rail.getBoundingClientRect();
+        var itemRect = matchedItem.getBoundingClientRect();
+        if (itemRect.top < railRect.top || itemRect.bottom > railRect.bottom) {
+          matchedItem.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        }
+      }
+
       if (matchedChDetail) setActiveChapter(matchedChDetail.dataset.ch);
       if (matchedGroupDetail) setActiveGroup(matchedGroupDetail.dataset.grp);
       Array.prototype.forEach.call(mnavSmall.querySelectorAll('.mnav-chip'), function (c) {
-        c.classList.toggle('active', c.dataset.vol === e.data.vol && c.dataset.secId === e.data.id);
+        var isMatch = c.dataset.vol === e.data.vol && c.dataset.secId === e.data.id;
+        c.classList.toggle('active', isMatch);
+        if (isMatch) scrollChipIntoView(mnavSmall, c);
       });
     }
   });
