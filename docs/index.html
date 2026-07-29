@@ -31,6 +31,9 @@ a{display:flex;justify-content:space-between;align-items:baseline;gap:.5rem;padd
 a:hover,a:focus-visible{background:#eef2f7}
 a:hover .t,a:focus-visible .t{text-decoration:underline}
 .t{flex:1 1 auto;word-break:break-word}
+li.sub{margin-left:1.1rem}
+li.sub a{font-size:.86rem;color:#5c6672;padding:.3rem .6rem}
+li.sub .t::before{content:"‣ ";color:#9aa4b0}
 time{flex:0 0 auto;font-size:.74rem;color:#8a94a0;
   font-variant-numeric:tabular-nums;white-space:nowrap}
 footer{margin-top:2.5rem;color:#8a94a0;font-size:.8rem;line-height:1.6}
@@ -42,6 +45,7 @@ footer{margin-top:2.5rem;color:#8a94a0;font-size:.8rem;line-height:1.6}
   .group h3{color:#8b96a4}
   a{color:#8fbcf5}
   a:hover,a:focus-visible{background:#262c34}
+  li.sub a{color:#98a2ae}
 }
 </style>
 </head>
@@ -61,11 +65,18 @@ footer{margin-top:2.5rem;color:#8a94a0;font-size:.8rem;line-height:1.6}
       </div>
     </section>
     <section class="card">
-      <h2>データベースⅠ<span class="count">1 ページ</span></h2>
+      <h2>データベースⅠ<span class="count">8 ページ</span></h2>
       <div class="group">
         <h3>復習まとめ</h3>
         <ul>
         <li><a href="database/review/"><span class="t">要点復習版 — データベースⅠ 全 Vol 統合ポータル</span><time>最終更新 2026-07-29 16:34</time></a></li>
+        <li class="sub"><a href="database/review/vol.1.html"><span class="t">Vol.1 要点 — 第1章 データベースとSQL</span></a></li>
+        <li class="sub"><a href="database/review/vol.3.html"><span class="t">Vol.3 要点 — 第3章 SELECT 文</span></a></li>
+        <li class="sub"><a href="database/review/vol.4.html"><span class="t">Vol.4 要点 — 第3章 SELECT 文</span></a></li>
+        <li class="sub"><a href="database/review/vol.5.html"><span class="t">Vol.5 要点 — 3-5 ORDER BY 句</span></a></li>
+        <li class="sub"><a href="database/review/vol.6-1.html"><span class="t">Vol.6-1 要点 — 3-6〜3-11 SQL関数</span></a></li>
+        <li class="sub"><a href="database/review/vol.6-2.html"><span class="t">Vol.6-2 要点 — 3-12〜3-15 タイムゾーン・一般関数・グループ関数・GROUP BY</span></a></li>
+        <li class="sub"><a href="database/review/vol.7.html"><span class="t">Vol.7 要点 — 3-16〜3-19 結合</span></a></li>
         </ul>
       </div>
     </section>
