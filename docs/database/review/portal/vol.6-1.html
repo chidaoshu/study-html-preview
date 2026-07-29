@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vol.6-1 要点 — 3-6〜3-11 SQL関数</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/review.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <div class="kick"><a href="index.html" style="color:var(--blue);text-decoration:none;margin-right:8px">← 全 Vol ポータル</a> Vol.6-1 ／ 要点</div>
+  <h1>3-6〜3-11 SQL関数</h1>
+</header>
+
+<nav class="toc">
+  <a href="#s3-6">3-6 SQL関数</a>
+  <a href="#s3-7">3-7 文字関数</a>
+  <a href="#s3-8">3-8 数値関数</a>
+  <a href="#s3-9">3-9 変換関数（数値）</a>
+  <a href="#s3-10">3-10 変換関数（日付）</a>
+  <a href="#s3-11">3-11 日付の計算・関数</a>
+</nav>
+
+
+<!-- ══════════════════════════════════ 3-6 -->
+
+  <section class="sec" id="s3-6-1">
+<h2><span class="n">3.6.1</span>関数とは?</h2>
+  <div class="h">SQL 関数の引数は 列名やリテラル値 ／ 戻り値として結果をひとつ返す</div>
+  <div class="tw" style="margin-bottom:18px">
+    <table class="gt">
+      <thead><tr><th>関数概念</th><th>引数（入力）</th><th>処理・働き</th><th>戻り値（出力）</th></tr></thead>
+      <tbody>
+        <tr><td>multiply(a, b)</td><td>a, b（例：2, 50）</td><td>2 値を掛け合わせる（内部処理は隠蔽）</td><td>z（例：100）</td></tr>
+        <tr><td>SQL 関数</td><td>列名 や リテラル値（() 内に カンマ区切り）</td><td>各行またはグループごとの処理</td><td>計算・変換結果</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="sec" id="s3-6-2">
+<h2><span class="n">3.6.2</span>SQL 関数の種類<span class="lv">必修</span></h2>
+  <div class="h">単一行関数は 1 行ごとに処理し 1 行ごとに結果を返す ／ グループ関数はグループごとに集計</div>
+  <div class="tw" style="margin-bottom:18px">
+    <table class="gt">
+      <thead><tr><th>関数の種類</th><th>処理単位</th><th>戻り値の行数</th><th>主な用途・例</th></tr></thead>
+      <tbody>
+        <tr><td>単一行関数</td><td>SQL により戻される行の 1 行ごと</td><td>各行に対して 1 行ずつ</td><td>LOWER, UPPER, SUBSTR, ROUND 等</td></tr>
+        <tr><td>グループ関数</td><td>表全体 または 小グループごと</td><td>グループごとに 1 行（集計）</td><td>SUM, AVG, COUNT, MAX, MIN 等</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="h">単一行関数はリテラルを直接引数に指定でき dual 表で確認できる</div>
+  <div class="demo">
+    <div class="dh">
+      <span class="title">dual 表のデータ構造確認 <em>／ 1 行 1 列のダミー表</em></span>
+    </div>
+    <div class="vars">
+      <div class="var">
+<pre class="code">SELECT * FROM ⟦dual⟧;</pre>
+        <div class="diffbar">DUMMY 列に 1 行のダミーデータ（'X'）を保持するシステム表</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>DUMMY</th></tr></thead>
+        <tbody>
+        <tr><td>X</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="s3-6-3">
+<h2><span class="n">3.6.3</span>単一行関数の特徴<span class="lv">必修</span></h2>
+  <div class="h">SELECT 句・WHERE 句・ORDER BY 句で使用可能 ／ 大文字小文字混在時は 大文字 ＜ 小文字</div>
+  <div class="demo">
+    <div class="dh">
+      <span class="title">ORDER BY / WHERE 句での単一行関数 <em>／ 列値を変換して比較・整列</em></span>
+      <div class="sw">
+        <button data-v="ord" class="on">ORDER BY 句</button>
+        <button data-v="whr">WHERE 句</button>
+      </div>
+    </div>
+    <div class="vars">
+      <div class="var" data-v="ord">
+<pre class="code">SELECT ename FROM emp ORDER BY ⟦lower(ename)⟧; SELECT ⟦lower(ename)⟧ FROM emp ORDER BY ⟦lower(ename)⟧;</pre>
+        <div class="diffbar">ORDER BY 句で関数適用 ／ 大文字（SMITH）＜ 小文字（smith）の順</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>ENAME</th><th>LOWER(ENAME)</th></tr></thead>
+        <tbody>
+        <tr><td>ALLEN</td><td>allen</td></tr>
+        <tr><td>BLAKE</td><td>blake</td></tr>
+        <tr><td>CLARK</td><td>clark</td></tr>
+        <tr><td>JONES</td><td>jones</td></tr>
+        <tr><td>MARTIN</td><td>martin</td></tr>
+        <tr><td>SCOTT</td><td>scott</td></tr>
+        <tr><td>SMITH</td><td>smith</td></tr>
+        <tr><td>WARD</td><td>ward</td></tr>
+        <tr><td>adams</td><td>adams</td></tr>
+        <tr><td>ford</td><td>ford</td></tr>
+        <tr><td>james</td><td>james</td></tr>
+        <tr><td>king</td><td>king</td></tr>
+        <tr><td>miller</td><td>miller</td></tr>
+        <tr><td>turner</td><td>turner</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+      <div class="var" data-v="whr" hidden>
+<pre class="code">SELECT empno, ename FROM emp WHERE ⟦lower(ename) = 'scott'⟧;</pre>
+        <div class="diffbar">WHERE 句で列値を強制的に小文字に変換してリテラルと比較</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>EMPNO</th><th>ENAME</th></tr></thead>
+        <tbody>
+        <tr><td class="num">7788</td><td><mark>SCOTT</mark></td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="h">入れ子（ネスト）の深さに制限はなく 内側の関数から先に実行される</div>
+  <div class="cmp" style="margin-bottom:18px">
+    <div class="ok">
+      <b>正しい入れ子構造（カッコの対応が一致）</b>
+      <div class="note">lower ( upper ( initcap ('abc') ) )<br>← 内側 (initcap) → 次 (upper) → 外側 (lower) の順に実行</div>
+    </div>
+    <div class="ng">
+      <b>誤った入れ子構造（カッコが不一致）</b>
+      <div class="note">lower ( upper ( initcap ) ('abc') )<br>閉じた後に引数を渡すと文法エラーが発生する</div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="s3-6-4">
+<h2><span class="n">3.6.4</span>単一行関数の種類</h2>
+  <div class="h">単一行関数には 文字・数値・日付・変換・一般関数の 5 種類がある</div>
+  <div class="tw" style="margin-bottom:18px">
+    <table class="gt">
+      <thead><tr><th>分類</th><th>引数のデータ型</th><th>主な役割</th></tr></thead>
+      <tbody>
+        <tr><td>文字関数</td><td>文字データ</td><td>大文字小文字変換、切り出し、埋め込み、置換等</td></tr>
+        <tr><td>数値関数</td><td>数値データ</td><td>四捨五入、切り捨て、四則演算・余り算出等</td></tr>
+        <tr><td>日付関数</td><td>日付データ</td><td>加算・減算、月数計算、月末日算出等</td></tr>
+        <tr><td>変換関数</td><td>文字 ⇄ 日付 / 数値</td><td>データ型の明示的相互変換</td></tr>
+        <tr><td>一般関数</td><td>任意データ</td><td>NULL 値の処理（NVL 等）</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+
+
+<!-- ══════════════════════════════════ 3-7 -->
+</section>
+
+<section class="sec" id="s3-7-1">
+<h2><span class="n">3.7.1</span>文字関数の種類<span class="lv">必修</span></h2>
+  <div class="h">文字関数は文字を引数に受け取り 文字や数値を戻す</div>
+  <div class="tw" style="margin-bottom:18px">
+    <table class="gt">
+      <thead><tr><th>関数</th><th>説明</th><th>戻り値の型</th></tr></thead>
+      <tbody>
+        <tr><td>LOWER(s)</td><td>すべて小文字に変換する</td><td>文字</td></tr>
+        <tr><td>UPPER(s)</td><td>すべて大文字に変換する</td><td>文字</td></tr>
+        <tr><td>INITCAP(s)</td><td>単語ごとに先頭を大文字、残りを小文字に変換する（記号区切り）</td><td>文字</td></tr>
+        <tr><td>LPAD(s, n, c)</td><td>指定桁数に満たない場合、左側に指定文字を埋める</td><td>文字</td></tr>
+        <tr><td>RPAD(s, n, c)</td><td>指定桁数に満たない場合、右側に指定文字を埋める</td><td>文字</td></tr>
+        <tr><td>TRIM(c FROM s)</td><td>文字列の前後から指定文字（1字のみ）を取り除く</td><td>文字</td></tr>
+        <tr><td>REPLACE(s, o, n)</td><td>文字列中の旧字 o を新字 n に置き換える（省略で削除）</td><td>文字</td></tr>
+        <tr><td>CONCAT(s1, s2)</td><td>文字列1と文字列2を結合する（s1 || s2 と同じ）</td><td>文字</td></tr>
+        <tr><td>SUBSTR(s, m, n)</td><td>s の m 文字目から n 文字分を抽出する（n 省略で最後まで）</td><td>文字</td></tr>
+        <tr><td>INSTR(s, f, m, n)</td><td>s 中で検索文字 f が現れる位置を返す（m:開始位置, n:出現回数）</td><td>数値</td></tr>
+        <tr><td>LENGTH(s)</td><td>文字列の文字数を返す（2バイト文字も1文字）</td><td>数値</td></tr>
+        <tr><td>LENGTHB(s)</td><td>文字列のバイト数を返す（2バイト文字は2字）</td><td>数値</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="sec" id="s3-7-2">
+<h2><span class="n">3.7.2</span>LOWER、UPPER、INITCAP</h2>
+  <div class="h">LOWER は小文字・UPPER は大文字へ変換 ／ INITCAP は各単語の頭文字を大文字にする</div>
+  <div class="tw" style="margin-bottom:18px">
+    <table class="gt">
+      <thead><tr><th>関数</th><th>使用例</th><th>実行結果</th></tr></thead>
+      <tbody>
+        <tr><td>LOWER</td><td>SELECT LOWER('SCOTT') FROM dual;</td><td>scott</td></tr>
+        <tr><td>UPPER</td><td>SELECT UPPER('scott') FROM dual;</td><td>SCOTT</td></tr>
+        <tr><td>INITCAP</td><td>SELECT INITCAP('oracle_master@orcl.com') FROM dual;</td><td>Oracle_Master@Orcl.Com</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="sec" id="s3-7-3">
+<h2><span class="n">3.7.3</span>LPAD、RPAD</h2>
+  <div class="h">LPAD・RPAD は指定桁数に満たない場合に文字を埋め込む ／ 指定桁数を超えた場合は左から切り取る</div>
+  <div class="exlist">
+    <div><code>SELECT LPAD('SCOTT',10,'-') FROM dual;</code><span>-----SCOTT</span></div>
+    <div><code>SELECT LPAD('阿部',10,'-') FROM dual;</code><span>------阿部</span></div>
+    <div><code>SELECT RPAD('SCOTT',10,'-') FROM dual;</code><span>SCOTT-----</span></div>
+    <div><code>SELECT LPAD('SCOTT',4,'-') FROM dual;</code><span>SCOT</span></div>
+    <div><code>SELECT RPAD('SCOTT',4,'-') FROM dual;</code><span>SCOT</span></div>
+    <div><code>SELECT LPAD('阿部',3,'-') FROM dual;</code><span>　阿</span></div>
+    <div><code>SELECT RPAD('阿部',3,'-') FROM dual;</code><span>　阿</span></div>
+  </div>
+</section>
+
+<section class="sec" id="s3-7-4">
+<h2><span class="n">3.7.4</span>TRIM 関数</h2>
+  <div class="h">TRIM は文字列の前後から指定文字を取り除く ／ 指定文字に文字列は使用不可（1字のみ）</div>
+  <div class="exlist">
+    <div><code>SELECT TRIM('-' FROM '---SCOTT---') FROM dual;</code><span>SCOTT</span></div>
+    <div><code>SELECT TRIM('-' FROM '---SC--OTT---') FROM dual;</code><span>SC--OTT</span></div>
+    <div><code>SELECT TRIM(LEADING '-' FROM '---SCOTT---') FROM dual;</code><span>SCOTT---</span></div>
+    <div><code>SELECT TRIM(TRAILING '-' FROM '---SCOTT---') FROM dual;</code><span>---SCOTT</span></div>
+    <div><code>SELECT TRIM(BOTH '-' FROM '---SCOTT---') FROM dual;</code><span>SCOTT</span></div>
+    <div><code>SELECT TRIM('　SCOTT　') FROM dual;</code><span>SCOTT</span></div>
+  </div>
+</section>
+
+<section class="sec" id="s3-7-5">
+<h2><span class="n">3.7.5</span>REPLACE</h2>
+  <div class="h">REPLACE は文字列中の文字を置換する ／ 新字を省略すると旧字を取り除く</div>
+  <div class="exlist">
+    <div><code>SELECT REPLACE('ANZAI','A','O') FROM dual;</code><span>ONZOI</span></div>
+    <div><code>SELECT REPLACE('ANZAI','ZA','ZO') FROM dual;</code><span>ANZOI</span></div>
+    <div><code>SELECT REPLACE('ANZAI','A') FROM dual;</code><span>NZI</span></div>
+  </div>
+</section>
+
+<section class="sec" id="s3-7-6">
+<h2><span class="n">3.7.6</span>CONCAT</h2>
+  <div class="h">CONCAT は 2 つの文字列を結合する ／ || 演算子と同じ働き</div>
+  <div class="exlist">
+    <div><code>SELECT CONCAT(first_name,last_name) FROM person;</code><span>ElizabethBates</span></div>
+    <div><code>SELECT CONCAT( CONCAT(first_name,' '),last_name) FROM person;</code><span>Elizabeth Bates</span></div>
+  </div>
+</section>
+
+<section class="sec" id="s3-7-7">
+<h2><span class="n">3.7.7</span>LENGTH、LENGTHB</h2>
+  <div class="h">LENGTH は文字数（全角も1文字）を返し LENGTHB はバイト数を返す ／ NULL は NULL</div>
+  <div class="exlist">
+    <div><code>SELECT LENGTH('SCOTT') FROM dual;</code><span>5</span></div>
+    <div><code>SELECT LENGTH('阿部太郎') FROM dual;</code><span>4</span></div>
+    <div><code>SELECT LENGTHB('SCOTT') FROM dual;</code><span>5</span></div>
+    <div><code>SELECT LENGTHB('阿部太郎') FROM dual;</code><span>8</span></div>
+    <div><code>SELECT LENGTH(LPAD(ename,10,'*')) FROM emp;</code><span>10</span></div>
+    <div><code>SELECT LENGTH(ename) FROM emp;</code><span>4</span></div>
+  </div>
+</section>
+
+<section class="sec" id="s3-7-8">
+<h2><span class="n">3.7.8</span>INSTR、INSTRB</h2>
+  <div class="h">INSTR は指定文字が現れる位置を文字数で返し INSTRB はバイト数で返す</div>
+  <div class="exlist">
+    <div><code>SELECT INSTR('SCOTT','O') FROM dual;</code><span>3</span></div>
+    <div><code>SELECT INSTR('阿部一郎','一') FROM dual;</code><span>3</span></div>
+    <div><code>SELECT INSTRB('阿部一郎','一') FROM dual;</code><span>5</span></div>
+    <div><code>SELECT INSTR('Oracle Master', 'a', 5) FROM dual;</code><span>9</span></div>
+    <div><code>SELECT INSTR('Oracle Master', 'a', 2, 2) FROM dual;</code><span>9</span></div>
+  </div>
+</section>
+
+<section class="sec" id="s3-7-9">
+<h2><span class="n">3.7.9</span>SUBSTR、SUBSTRB<span class="lv">必修</span></h2>
+  <div class="h">SUBSTR は m 文字目から n 文字分を切り出し 負の数は末尾から数える</div>
+  <div class="exlist">
+    <div><code>SELECT SUBSTR('Oracle Taro', 3, 6) FROM dual;</code><span>acle T</span></div>
+    <div><code>SELECT SUBSTR('阿部一郎', 2, 2) FROM dual;</code><span>部一</span></div>
+    <div><code>SELECT SUBSTRB('阿部一郎', 3, 2) FROM dual;</code><span>部</span></div>
+    <div><code>SELECT SUBSTR('Oracle Taro', 3) FROM dual;</code><span>acle Taro</span></div>
+    <div><code>SELECT SUBSTR('Oracle Taro', -4, 3) FROM dual;</code><span>Tar</span></div>
+    <div><code>SELECT SUBSTR('Oracle Taro', -4) FROM dual;</code><span>Taro</span></div>
+  </div>
+
+  <div class="demo">
+    <div class="dh">
+      <span class="title">SUBSTR・INSTR・LENGTH の組み合わせ例 <em>／ 氏名から苗字を抽出</em></span>
+    </div>
+    <div class="vars">
+      <div class="var">
+<pre class="code">SELECT personname, ⟦SUBSTR( personname, INSTR(personname,' ') + 1, LENGTH(personname) - INSTR(personname,' ') )⟧ AS lastname FROM personVW;</pre>
+        <div class="diffbar">スペース位置を INSTR で探し LENGTH で残り長さを計算して切り出し</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>PERSONNAME</th><th>LASTNAME</th></tr></thead>
+        <tbody>
+        <tr><td>Donald OConnell</td><td>OConnell</td></tr>
+        <tr><td>Douglas Grant</td><td>Grant</td></tr>
+        <tr><td>Jennifer Whalen</td><td>Whalen</td></tr>
+        <tr><td>Michael Hartstein</td><td>Hartstein</td></tr>
+        <tr><td>Pat Fay</td><td>Fay</td></tr>
+        <tr class="elip"><td>〈以下省略〉</td><td></td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+
+
+<!-- ══════════════════════════════════ 3-8 -->
+</section>
+
+<section class="sec" id="s3-8-1">
+<h2><span class="n">3.8.1</span>数値関数の種類</h2>
+  <div class="h">数値関数は数値を受け取り数値を戻す（ROUND・TRUNC・POWER・MOD）</div>
+  <div class="tw" style="margin-bottom:18px">
+    <table class="gt">
+      <thead><tr><th>関数</th><th>説明</th><th>戻り値の型</th></tr></thead>
+      <tbody>
+        <tr><td>ROUND(数値, n)</td><td>数値を四捨五入する（n 位まで表示。n&lt;0 は整数部、n=0 または省略で整数）</td><td>数値</td></tr>
+        <tr><td>TRUNC(数値, n)</td><td>数値を切り捨てる（n 位まで表示。n&lt;0 は整数部以下切捨て、n=0 または省略で整数）</td><td>数値</td></tr>
+        <tr><td>POWER(m, n)</td><td>m の n 乗を戻す</td><td>数値</td></tr>
+        <tr><td>MOD(m, n)</td><td>m を n で除算した余りを戻す（n=0 の場合は m を返す）</td><td>数値</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="sec" id="s3-8-2">
+<h2><span class="n">3.8.2</span>ROUND、TRUNC<span class="lv">必修</span></h2>
+  <div class="h">ROUND は四捨五入・TRUNC は切り捨て ／ 第 2 引数 0 で整数部を返す（負の数を指定した場合は、整数部の n けたまで 0 になるように四捨五入）</div>
+  
+  <div class="bar" style="margin-bottom:14px">
+    <div class="axis"><span class="a-l">百の位 (n = -2)</span><span class="a-r">小数第 4 位 (n = 4)</span></div>
+    <div class="cell">2</div><div class="cell">4</div><div class="cell mark">5</div><div class="cell">.</div><div class="cell mark">6</div><div class="cell">2</div><div class="cell">7</div><div class="cell">8</div>
+  </div>
+  <div class="lg" style="margin-bottom:18px"><span><mark>ROUND(245.6278, 0)</mark> → 小数第 1 位 (6) を四捨五入し 246 ／ n=-1 で 1 の位を四捨五入し 250</span></div>
+
+  <div class="exlist">
+    <div><code>SELECT ROUND(245.6278, 0) FROM dual;</code><span>246</span></div>
+    <div><code>SELECT ROUND(245.6278) FROM dual;</code><span>246</span></div>
+    <div><code>SELECT ROUND(245.6278, 1) FROM dual;</code><span>245.6</span></div>
+    <div><code>SELECT ROUND(245.6278, -1) FROM dual;</code><span>250</span></div>
+    <div><code>SELECT ROUND(245.6278, -2) FROM dual;</code><span>200</span></div>
+    <div><code>SELECT TRUNC(245.6278, 0) FROM dual;</code><span>245</span></div>
+    <div><code>SELECT TRUNC(245.6278) FROM dual;</code><span>245</span></div>
+    <div><code>SELECT TRUNC(245.6278, 2) FROM dual;</code><span>245.62</span></div>
+    <div><code>SELECT TRUNC(245.6278, -1) FROM dual;</code><span>240</span></div>
+  </div>
+</section>
+
+<section class="sec" id="s3-8-3">
+<h2><span class="n">3.8.3</span>POWER、MOD</h2>
+  <div class="h">POWER(m,n) は m を n 乗した結果を返します ／ MOD(m,n) は 剰余（割った余り）を意味する</div>
+  <div class="exlist">
+    <div><code>SELECT POWER(2,3) FROM dual;</code><span>8</span></div>
+    <div><code>SELECT MOD(10,3) FROM dual;</code><span>1</span></div>
+  </div>
+
+
+
+<!-- ══════════════════════════════════ 3-9 -->
+</section>
+
+<section class="sec" id="s3-9-1">
+<h2><span class="n">3.9.1</span>変換関数の種類<span class="lv">必修</span></h2>
+  <div class="h">変換関数（conversion function）はデータ型（data type）を変換する関数です</div>
+  <div class="tw" style="margin-bottom:18px">
+    <table class="gt">
+      <thead><tr><th>関数</th><th>説明</th><th>戻り値の型</th></tr></thead>
+      <tbody>
+        <tr><td>TO_CHAR(数値, 書式)</td><td>数値を書式文字列に従って VARCHAR2 に変換する</td><td>文字</td></tr>
+        <tr><td>TO_CHAR(日付, 書式)</td><td>日付データを書式文字列に従って VARCHAR2 に変換する</td><td>文字</td></tr>
+        <tr><td>TO_NUMBER(文字, 書式)</td><td>文字データを書式文字列に従って数値に変換する</td><td>数値</td></tr>
+        <tr><td>TO_DATE(文字, 書式)</td><td>文字データを書式文字列に従って日付に変換する</td><td>日付</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="sec" id="s3-9-2">
+<h2><span class="n">3.9.2</span>数値書式</h2>
+  <div class="h">数値 ←→ 文字の変換では 数値書式（number format）を使用して変換します</div>
+  <div class="tw" style="margin-bottom:18px">
+    <table class="gt">
+      <thead><tr><th>数値書式</th><th>例</th><th>説明</th></tr></thead>
+      <tbody>
+        <tr><td>9</td><td>999</td><td>先行ゼロをつけず、9 の数が有効桁数を表す。あふれると #### 表示</td></tr>
+        <tr><td>0</td><td>099 / 000</td><td>先行ゼロをつけて表示する</td></tr>
+        <tr><td>$</td><td></td><td>$ 記号をつける</td></tr>
+        <tr><td>L</td><td>L999</td><td>地域の通貨記号（日本は ¥）をつける</td></tr>
+        <tr><td>C</td><td>C999</td><td>ISO 通貨記号（日本は JPY）をつける</td></tr>
+        <tr><td>,</td><td>999,999</td><td>指定した位置にカンマをつける</td></tr>
+        <tr><td>G</td><td>999G999</td><td>グループ区切り記号をつける（日本はカンマ）</td></tr>
+        <tr><td>.</td><td>999.99</td><td>指定した位置にピリオドをつける</td></tr>
+        <tr><td>D</td><td>999D99</td><td>小数点をつける（日本はピリオド）</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="sec" id="s3-9-3">
+<h2><span class="n">3.9.3</span>数値書式の使用例</h2>
+  <div class="h">整数部が桁あふれをした場合、エラー表示 ／ あふれた位置で四捨五入 ／ 書式 0 では先行 0</div>
+  <div class="demo">
+    <div class="dh">
+      <span class="title">TO_CHAR 数値書式：通貨記号例 <em>／ $, L, C 書式</em></span>
+    </div>
+    <div class="vars">
+      <div class="var">
+<pre class="code">SELECT TO_CHAR(1234,'$9G999') AS ドル記号, TO_CHAR(1234,'L9G999') AS 円マーク, TO_CHAR(1234,'C9G999') AS ISO通貨記号 FROM dual;</pre>
+        <div class="diffbar">$ 記号、L (地域通貨 ¥)、C (ISO 通貨 JPY) の表示比較</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>ドル記号</th><th>円マーク</th><th>ISO通貨記号</th></tr></thead>
+        <tbody>
+        <tr><td>,234</td><td>¥1,234</td><td>JPY1,234</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exlist">
+    <div><code>SELECT TO_CHAR(1234,'9999'), TO_CHAR(-1234,'9999') from dual</code><span>1234  -1234</span></div>
+    <div><code>SELECT TO_CHAR(1234,'999') FROM dual;</code><span>####</span></div>
+    <div><code>SELECT TO_CHAR(1234.56,'999D99') FROM dual;</code><span>#######</span></div>
+    <div><code>SELECT TO_CHAR(12.345,'99.99') FROM dual;</code><span>12.35</span></div>
+    <div><code>SELECT TO_CHAR(123,'9999') FROM dual;</code><span> 123</span></div>
+    <div><code>SELECT TO_CHAR(123,'0999') FROM dual;</code><span>0123</span></div>
+    <div><code>SELECT TO_CHAR(123,'999.99') FROM dual;</code><span>123.00</span></div>
+    <div><code>SELECT TO_CHAR(123,'000.00') FROM dual;</code><span>123.00</span></div>
+    <div><code>SELECT TO_CHAR(0.123,'9.99') FROM dual;</code><span> .12</span></div>
+    <div><code>SELECT TO_CHAR(0.123,'0.99') FROM dual;</code><span>0.12</span></div>
+  </div>
+</section>
+
+<section class="sec" id="s3-9-4">
+<h2><span class="n">3.9.4</span>変換関数 TO_NUMBER（文字を数値に変換）</h2>
+  <div class="h">TO_NUMBER は文字データから書式部分を取り除いて 文字 を 数値に変換する関数です除いて 計算できます</div>
+  <div class="demo">
+    <div class="dh">
+      <span class="title">TO_NUMBER による型変換と計算 <em>／ 文字列の通貨書式を除去</em></span>
+      <div class="sw">
+        <button data-v="err" class="on" data-tone="warn">エラー発生</button>
+        <button data-v="num">TO_NUMBER</button>
+        <button data-v="chr" data-tone="alt">+ TO_CHAR</button>
+      </div>
+    </div>
+    <div class="vars">
+      <div class="var" data-v="err">
+<pre class="code">SELECT '¥123,456' / 2 AS 計算 FROM DUAL;</pre>
+        <div class="diffbar">通貨記号付き文字列を直接割算するとエラー</div>
+        <div class="res"><div class="rbody">
+        <div class="rmsg err">行 1 でエラーが発生しました：
+ORA-01722: 数値が無効です。</div>
+        </div></div>
+      </div>
+      <div class="var" data-v="num" hidden>
+<pre class="code">SELECT TO_NUMBER('¥123,456', 'L999G999') / 2 AS 計算 FROM DUAL;</pre>
+        <div class="diffbar">TO_NUMBER で書式を除去して数値化し計算</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>計算</th></tr></thead>
+        <tbody>
+        <tr><td class="num">61728</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+      <div class="var" data-v="chr" hidden>
+<pre class="code">SELECT TO_CHAR(TO_NUMBER('¥123,456','L999G999') / 2 ,'L999G999') AS 計算 FROM DUAL;</pre>
+        <div class="diffbar">計算結果を再度 TO_CHAR で通貨形式に整形</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>計算</th></tr></thead>
+        <tbody>
+        <tr><td>¥61,728</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+
+
+<!-- ══════════════════════════════════ 3-10 -->
+</section>
+
+<section class="sec" id="s3-10-1">
+<h2><span class="n">3.10.1</span>SYSDATE 関数、SYSTIMESTAMP 関数<span class="lv">必修</span></h2>
+  <div class="h">SYSDATE は現在の日付と時刻を表示する ／ オラクルには最小でナノ秒まで表現できる TIMESTAMP 型があります</div>
+  <div class="demo">
+    <div class="dh">
+      <span class="title">システム日時関数の表示形式 <em>／ DATE 型 vs TIMESTAMP 型</em></span>
+      <div class="sw">
+        <button data-v="sys" class="on">SYSDATE</button>
+        <button data-v="fmt">TO_CHAR(SYSDATE)</button>
+        <button data-v="tsp">SYSTIMESTAMP</button>
+        <button data-v="tfm">TO_CHAR(TIMESTAMP)</button>
+      </div>
+    </div>
+    <div class="vars">
+      <div class="var" data-v="sys">
+<pre class="code">SELECT SYSDATE FROM dual;</pre>
+        <div class="diffbar">デフォルト書式（RR-MM-DD）で表示される（引数の () は不要）</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>SYSDATE</th></tr></thead>
+        <tbody>
+        <tr><td>11-07-06</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+      <div class="var" data-v="fmt" hidden>
+<pre class="code">SELECT TO_CHAR(SYSDATE, 'YYYY/MM/DD HH:MI:SS') AS 日付と時刻 FROM dual;</pre>
+        <div class="diffbar">TO_CHAR で時刻部分まで明示的にフォーマット表示</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>日付と時刻</th></tr></thead>
+        <tbody>
+        <tr><td>2011/07/06 10:04:40</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+      <div class="var" data-v="tsp" hidden>
+<pre class="code">SELECT SYSTIMESTAMP FROM dual;</pre>
+        <div class="diffbar">TIMESTAMP 型（デフォルトで小数秒 6 桁 + 時差）</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>SYSTIMESTAMP</th></tr></thead>
+        <tbody>
+        <tr><td>11-07-06 10:06:04.832000 +09:00</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+      <div class="var" data-v="tfm" hidden>
+<pre class="code">SELECT TO_CHAR(SYSTIMESTAMP, 'YYYY/MM/DD HH:MI:SS.FF9 TZR') AS 小数秒 FROM dual;</pre>
+        <div class="diffbar">FF9 書式でナノ秒（9 桁）まで表示</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>小数秒</th></tr></thead>
+        <tbody>
+        <tr><td>2011-07-06 10:08:05.260000000 +09:00</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="s3-10-2">
+<h2><span class="n">3.10.2</span>RR 日付書式</h2>
+  <div class="h">RR 書式は 2000 年問題に対応するために生まれた書式 ／ 年の下2桁をもとに上2桁を補う書式です</div>
+  <div class="tw" style="margin-bottom:14px">
+    <table class="gt">
+      <thead><tr><th>現在の年の下2桁 ＼ 指定したデータの下2桁</th><th>0〜49</th><th>50〜99</th></tr></thead>
+      <tbody>
+        <tr><td>0〜49（例：2022年）</td><td>同じ世紀（上2桁が同じ）</td><td>前の世紀（100 年前）</td></tr>
+        <tr><td>50〜99（例：1999年）</td><td>次の世紀（100 年後）</td><td>同じ世紀（上2桁が同じ）</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="demo">
+    <div class="dh">
+      <span class="title">RR 書式による世紀の補完 <em>／ 2000 年問題対応書式</em></span>
+    </div>
+    <div class="vars">
+      <div class="var">
+<pre class="code">SELECT TO_CHAR(('78-12-31','rr-mm-dd'),'yyyy-mm-dd'), TO_CHAR(TO_DATE('49-12-31','rr-mm-dd'),'yyyy-mm-dd') FROM dual;</pre>
+        <div class="diffbar">指定年 78 → 1978 年、指定年 49 → 2049 年に補完</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>TO_CHAR(('78-12-31'...</th><th>TO_CHAR(TO_DATE('49-12-31'...</th></tr></thead>
+        <tbody>
+        <tr><td>1978-12-31</td><td>2049-12-31</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="s3-10-3">
+<h2><span class="n">3.10.3</span>変換関数の種類</h2>
+  <div class="h">日付関数の学習に先立って 日付の明示的な変換処理を学習します</div>
+  <div class="tw" style="margin-bottom:18px">
+    <table class="gt">
+      <thead><tr><th>変換方向</th><th>使用する関数</th><th>説明</th></tr></thead>
+      <tbody>
+        <tr><td>日付 → 文字</td><td>TO_CHAR(date, 'format')</td><td>日付を任意の文字列形式に変換</td></tr>
+        <tr><td>文字 → 日付</td><td>TO_DATE(string, 'format')</td><td>文字列を日付データに変換</td></tr>
+        <tr><td>数値 → 文字</td><td>TO_CHAR(number, 'format')</td><td>数値を指定書式の文字列に変換</td></tr>
+        <tr><td>文字 → 数値</td><td>TO_NUMBER(string, 'format')</td><td>文字列から数値を取り出して変換</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="sec" id="s3-10-4">
+<h2><span class="n">3.10.4</span>日付書式<span class="lv">必修</span></h2>
+  <div class="h">日付 → 文字の TO_CHAR 関数および文字 → 日付の TO_DATE 関数 ／ 日付書式（date format）を使用して変換</div>
+  <div class="tw" style="margin-bottom:18px">
+    <table class="gt">
+      <thead><tr><th>分類</th><th>書式</th><th>説明・例</th></tr></thead>
+      <tbody>
+        <tr><td>年</td><td>YYYY / RR / YY</td><td>4桁西暦（YYYY）、2000年問題対応（RR）、2桁西暦（YY）</td></tr>
+        <tr><td>月</td><td>MM / MON / MONTH</td><td>2桁月（MM）、省略月名（MON: 6月 / JUN）、フル月名（MONTH）</td></tr>
+        <tr><td>日・曜日</td><td>DD / DY / DAY</td><td>2桁日（DD）、省略曜日（DY: 火 / TUE）、フル曜日名（DAY: 火曜日）</td></tr>
+        <tr><td>時刻</td><td>HH24 / HH / MI / SS</td><td>24時間表記（HH24）、12時間表記（HH）、分（MI）、秒（SS）</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="exlist">
+    <div><code>SELECT SYSDATE FROM dual;</code><span>22-06-14</span></div>
+    <div><code>SELECT TO_CHAR(SYSDATE, 'YYYY/MM/DD HH24:MI:SS') 日時 FROM dual;</code><span>2022/06/14 12:04:49</span></div>
+    <div><code>SELECT TO_CHAR(SYSDATE, 'DD-MON-YYYY') 日本形式 FROM dual;</code><span>14-6 月-2022</span></div>
+  </div>
+</section>
+
+<section class="sec" id="s3-10-5">
+<h2><span class="n">3.10.5</span>nls 関連パラメータと地域の設定の変更</h2>
+  <div class="h">国や地域、言語、それに応じた日付書式や通貨書式などを設定するパラメータを nls 関連パラメータと呼びます</div>
+  <div class="demo">
+    <div class="dh">
+      <span class="title">NLS 言語・地域の設定変更 <em>／ 米国表記・日本語表記の切替</em></span>
+      <div class="sw">
+        <button data-v="arg" class="on">TO_CHAR 引数指定</button>
+        <button data-v="ter">NLS_TERRITORY</button>
+        <button data-v="lan">NLS_LANGUAGE</button>
+      </div>
+    </div>
+    <div class="vars">
+      <div class="var" data-v="arg">
+<pre class="code">SELECT TO_CHAR(SYSDATE, 'DD-MON-YYYY', 'NLS_DATE_LANGUAGE = american') 米国形式 FROM dual;</pre>
+        <div class="diffbar">関数レベルで第三引数に NLS_DATE_LANGUAGE を指定</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>米国形式</th></tr></thead>
+        <tbody>
+        <tr><td>14-JUN-2022</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+      <div class="var" data-v="ter" hidden>
+<pre class="code">ALTER SESSION SET NLS_TERRITORY = america;</pre>
+<pre class="code">ALTER SESSION SET NLS_TERRITORY = japan;</pre>
+<pre class="code">SELECT sysdate from dual;</pre>
+        <div class="diffbar">地域をアメリカに設定すると、デフォルトの日付書式が dd-mon-rr となる</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>SYSDATE</th></tr></thead>
+        <tbody>
+        <tr><td>22-7 月-22</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+      <div class="var" data-v="lan" hidden>
+<pre class="code">ALTER SESSION SET NLS_LANGUAGE = american;</pre>
+<pre class="code">ALTER SESSION SET NLS_LANGUAGE = japanese;</pre>
+<pre class="code">SELECT sysdate from dual;</pre>
+        <div class="diffbar">さらに言語を英語に設定すると、mon の表示が英語表示になる</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>SYSDATE</th></tr></thead>
+        <tbody>
+        <tr><td>21-JUL-22</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+
+
+<!-- ══════════════════════════════════ 3-11 -->
+</section>
+
+<section class="sec" id="s3-11-1">
+<h2><span class="n">3.11.1</span>日付データと計算<span class="lv">必修</span></h2>
+  <div class="h">数値を日数として計算する ／ 2つの日付の差を日数で返す ／ 日付＋日付 計算できない（ORA-00975）</div>
+  <div class="tw" style="margin-bottom:18px">
+    <table class="gt">
+      <thead><tr><th>日付データと計算</th><th>説明</th><th>戻り値のデータ型</th></tr></thead>
+      <tbody>
+        <tr><td>日付＋数値</td><td>数値を日数として計算する。n 日後の日付を返す。</td><td>日付</td></tr>
+        <tr><td>日付－数値</td><td>数値を日数として計算する。n 日前の日付を返す。</td><td>日付</td></tr>
+        <tr><td>日付－日付</td><td>2つの日付の差を日数で返す。</td><td>数値</td></tr>
+        <tr><td>日付＋日付</td><td>計算できない。</td><td>エラー（ORA-00975）</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="demo">
+    <div class="dh">
+      <span class="title">日付の加算・減算とエラー例 <em>／ 日数計算と足し算禁止ルール</em></span>
+      <div class="sw">
+        <button data-v="add" class="on">日付 ± 数値</button>
+        <button data-v="sub">日付 − 日付</button>
+        <button data-v="err" data-tone="warn">日付 ＋ 日付(エラー)</button>
+      </div>
+    </div>
+    <div class="vars">
+      <div class="var" data-v="add">
+<pre class="code">SELECT SYSDATE TODAY, SYSDATE + 100 "100 日後", SYSDATE − 100 "100 日前" FROM dual;</pre>
+        <div class="diffbar">数値を日数として加算・減算</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>TODAY</th><th>100 日後</th><th>100 日前</th></tr></thead>
+        <tbody>
+        <tr><td>11-07-06</td><td>11-10-14</td><td>11-03-28</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+      <div class="var" data-v="sub" hidden>
+<pre class="code">SELECT SYSDATE − TO_DATE('11-01-01') 年初からの日数 FROM dual;</pre>
+        <div class="diffbar">日付引き算で経過日数を算出</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>年初からの日数</th></tr></thead>
+        <tbody>
+        <tr><td class="num">186</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+      <div class="var" data-v="err" hidden>
+<pre class="code">SELECT SYSDATE + TO_DATE('11-01-01') 日付同士の足し算 FROM dual;</pre>
+        <div class="diffbar">日付同士の足し算はエラーとなる</div>
+        <div class="res"><div class="rbody">
+        <div class="rmsg err">ORA-00975: 日付と日付の加算はできません。</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="s3-11-2">
+<h2><span class="n">3.11.2</span>n 時間後、n 分後を求める計算</h2>
+  <div class="h">n 時間後、n 分後、n 秒後の時間を計算できます</div>
+  <div class="demo">
+    <div class="dh">
+      <span class="title">時間・分・秒単位の加算 <em>／ 1日に対する割合で指定</em></span>
+      <div class="sw">
+        <button data-v="hrs" class="on">3時間後 (/24)</button>
+        <button data-v="min">3分後 (/1440)</button>
+        <button data-v="sec">3秒後 (/86400)</button>
+      </div>
+    </div>
+    <div class="vars">
+      <div class="var" data-v="hrs">
+<pre class="code">SELECT TO_CHAR(SYSDATE, 'yyyy-mm-dd hh24:mi:ss') 現在時刻, TO_CHAR(SYSDATE + 3/24, 'yyyy-mm-dd hh24:mi:ss') "3 時間後" FROM dual;</pre>
+        <div class="diffbar">3 / 24 で 3 時間後を加算</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>現在時刻</th><th>3 時間後</th></tr></thead>
+        <tbody>
+        <tr><td>2011-07-06 10:00:00</td><td>2011-07-06 13:00:00</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+      <div class="var" data-v="min" hidden>
+<pre class="code">SELECT TO_CHAR(SYSDATE, 'yyyy-mm-dd hh24:mi:ss') 現在時刻, TO_CHAR(SYSDATE + 3/1440, 'yyyy-mm-dd hh24:mi:ss') "3 分後" FROM dual;</pre>
+        <div class="diffbar">3 / 1440 （24×60）で 3 分後を加算</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>現在時刻</th><th>3 分後</th></tr></thead>
+        <tbody>
+        <tr><td>2011-07-06 10:00:00</td><td>2011-07-06 10:03:00</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+      <div class="var" data-v="sec" hidden>
+<pre class="code">SELECT TO_CHAR(SYSDATE, 'yyyy-mm-dd hh24:mi:ss') 現在時刻, TO_CHAR(SYSDATE + 3/86400, 'yyyy-mm-dd hh24:mi:ss') "3 秒後" FROM dual;</pre>
+        <div class="diffbar">3 / 86400 （24×60×60）で 3 秒後を加算</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>現在時刻</th><th>3 秒後</th></tr></thead>
+        <tbody>
+        <tr><td>2011-07-06 10:00:00</td><td>2011-07-06 10:00:03</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="s3-11-3">
+<h2><span class="n">3.11.3</span>日付関数の種類<span class="lv">必修</span></h2>
+  <div class="h">日付関数（date function）は日付データを受け取り、日付や数値を戻します。</div>
+  <div class="tw" style="margin-bottom:18px">
+    <table class="gt">
+      <thead><tr><th>関数</th><th>説明</th><th>戻り値のデータ型</th></tr></thead>
+      <tbody>
+        <tr><td>MONTHS_BETWEEN(日付, 日付)</td><td>2つの日付の差を月数で戻す。</td><td>数値</td></tr>
+        <tr><td>ADD_MONTHS(日付, 数値)</td><td>n ヶ月後の日付を戻す。</td><td>日付</td></tr>
+        <tr><td>NEXT_DAY(日付,'曜日')</td><td>次に訪れる指定曜日の日付を返す。</td><td>日付</td></tr>
+        <tr><td>LAST_DAY(日付)</td><td>月末日を返す。</td><td>日付</td></tr>
+        <tr><td>ROUND(日付,'日付書式')</td><td>日付データを書式で指定した単位に四捨五入する。</td><td>日付</td></tr>
+        <tr><td>TRUNC(日付,'日付書式')</td><td>日付データを書式で指定した単位に切り捨てる。</td><td>日付</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="sec" id="s3-11-4">
+<h2><span class="n">3.11.4</span>MONTHS_BETWEEN</h2>
+  <div class="h">MONTHS_BETWEEN は2つの日付の差を月数で戻します ／ 2つの日にちが同じ場合 ／ 2つとも月末日の場合</div>
+  <div class="demo">
+    <div class="dh">
+      <span class="title">MONTHS_BETWEEN 月数差計算 <em>／ 端数は小数（30日/月計算）</em></span>
+      <div class="sw">
+        <button data-v="m1" class="on">経過月数（端数あり）</button>
+        <button data-v="m2">同日（整数）</button>
+        <button data-v="m3">両者月末日（整数）</button>
+      </div>
+    </div>
+    <div class="vars">
+      <div class="var" data-v="m1">
+<pre class="code">SELECT MONTHS_BETWEEN(SYSDATE, TO_DATE('11-01-01')) 年初からの経過月 FROM dual;</pre>
+        <div class="diffbar">割り切れない場合は、ひと月を 30 日として計算し、端数を小数で返します</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>年初からの経過月</th></tr></thead>
+        <tbody>
+        <tr><td class="num">6.16129032</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+      <div class="var" data-v="m2" hidden>
+<pre class="code">SELECT MONTHS_BETWEEN(TO_DATE('11-07-01'), TO_DATE('11-01-01')) 月数 FROM dual;</pre>
+        <div class="diffbar">2つの日にちが同じ場合は整数が返る</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>月数</th></tr></thead>
+        <tbody>
+        <tr><td class="num">6</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+      <div class="var" data-v="m3" hidden>
+<pre class="code">SELECT MONTHS_BETWEEN(TO_DATE('11-06-30'), TO_DATE('11-02-28')) 月数 FROM dual;</pre>
+        <div class="diffbar">2つとも月末日の場合も整数が返る</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>月数</th></tr></thead>
+        <tbody>
+        <tr><td class="num">4</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="s3-11-5">
+<h2><span class="n">3.11.5</span>ADD_MONTHS</h2>
+  <div class="h">ADD_MONTHS は日付に、数値で指定した月数を足して、日付を返します ／ 月末日の場合</div>
+  <div class="demo">
+    <div class="dh">
+      <span class="title">ADD_MONTHS 月数加算・減算 <em>／ 月末日の特殊処理</em></span>
+      <div class="sw">
+        <button data-v="a1" class="on">3 ヶ月後</button>
+        <button data-v="a2">3 ヶ月前</button>
+        <button data-v="a3">月末日加算</button>
+      </div>
+    </div>
+    <div class="vars">
+      <div class="var" data-v="a1">
+<pre class="code">SELECT ADD_MONTHS (SYSDATE,3) "3 ヶ月後" FROM dual;</pre>
+        <div class="diffbar">第 2 引数に正の数を指定して月数を加算</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>3 ヶ月後</th></tr></thead>
+        <tbody>
+        <tr><td>11-10-06</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+      <div class="var" data-v="a2" hidden>
+<pre class="code">SELECT ADD_MONTHS (SYSDATE,-3) "3 ヶ月前" FROM dual;</pre>
+        <div class="diffbar">第 2 引数に負の数を指定すると、月数を減算した日付を戻します</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>3 ヶ月前</th></tr></thead>
+        <tbody>
+        <tr><td>11-04-06</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+      <div class="var" data-v="a3" hidden>
+<pre class="code">SELECT ADD_MONTHS(TO_DATE('11-07-31'), 2) 月末日の例 FROM dual;</pre>
+        <div class="diffbar">第1引数の日付が月末日だった場合は、n ヶ月後の月末日を返します</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>月末日の例</th></tr></thead>
+        <tbody>
+        <tr><td>11-09-30</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="s3-11-6">
+<h2><span class="n">3.11.6</span>NEXT_DAY、LAST_DAY</h2>
+  <div class="h">NEXT_DAY は次に訪れる指定曜日の日付を返す関数です ／ LAST_DAY は月末日を求める関数です</div>
+  <div class="demo">
+    <div class="dh">
+      <span class="title">NEXT_DAY / LAST_DAY 日付算出 <em>／ 曜日指定と月末算出</em></span>
+      <div class="sw">
+        <button data-v="nxt" class="on">NEXT_DAY</button>
+        <button data-v="lst">LAST_DAY</button>
+      </div>
+    </div>
+    <div class="vars">
+      <div class="var" data-v="nxt">
+<pre class="code">SELECT NEXT_DAY(SYSDATE,'月') 次の月曜 FROM dual;</pre>
+        <div class="diffbar">第1引数に指定した日付よりも後で、第2引数の曜日の日付を返します</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>次の月曜</th></tr></thead>
+        <tbody>
+        <tr><td>11-07-11</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+      <div class="var" data-v="lst" hidden>
+<pre class="code">SELECT LAST_DAY(SYSDATE) 月末日 FROM dual;</pre>
+        <div class="diffbar">第１引数と同じ月の月末日が返ります</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>月末日</th></tr></thead>
+        <tbody>
+        <tr><td>11-07-31</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="s3-11-7">
+<h2><span class="n">3.11.7</span>ROUND、TRUNC</h2>
+  <div class="h">ROUND 関数、TRUNC 関数によって、日付データの四捨五入、切り捨てができます</div>
+
+  <div class="bar" style="margin-bottom:14px">
+    <div class="axis"><span class="a-l">11:59:59 (午前捨)</span><span class="a-r">12:00:00 (午後入)</span></div>
+    <div class="cell">11-07-06 11:59:59 → 06 00:00:00</div>
+    <div class="cell null mark">11-07-06 12:00:00 → 07 00:00:00</div>
+  </div>
+  <div class="lg" style="margin-bottom:18px"><span><mark>ROUND(d, 'DD')</mark> → 正午（午後 12 時）を基準に翌日 00:00:00 へ繰り上がり</span></div>
+
+  <div class="demo">
+    <div class="dh">
+      <span class="title">日付の ROUND（四捨五入） <em>／ DD, AM/PM, MM, YY 単位</em></span>
+      <div class="sw">
+        <button data-v="rdd" class="on">DD（時間で四捨五入）</button>
+        <button data-v="ram">AM/PM 表記</button>
+        <button data-v="rmm">MM / YY 単位</button>
+      </div>
+    </div>
+    <div class="vars">
+      <div class="var" data-v="rdd">
+<pre class="code">ALTER SESSION SET nls_date_format = 'RR-MM-DD HH24:MI:SS';</pre>
+<pre class="code">-- 例 1) SELECT ROUND(TO_DATE('11-07-06 11:59:59'), 'DD') DD FROM dual;</pre>
+<pre class="code">-- 例 2) SELECT ROUND(TO_DATE('11-07-06 12:00:00'), 'DD') DD FROM dual;</pre>
+<pre class="code">-- 例 3) SELECT ROUND(TO_DATE('11-07-06 15:00:00')) 省略 FROM dual;</pre>
+        <div class="diffbar">時間は正午を基準に四捨五入（午前捨午後入）</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>DD</th></tr></thead>
+        <tbody>
+        <tr><td>11-07-06 00:00:00</td></tr>
+        <tr><td>11-07-07 00:00:00</td></tr>
+        <tr><td>11-07-07 00:00:00</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+      <div class="var" data-v="ram" hidden>
+<pre class="code">ALTER SESSION SET nls_date_format = 'RR-MM-DD AMHH12:MI:SS';</pre>
+<pre class="code">-- 例 4) SELECT ROUND(TO_DATE('11-07-06 午前 12:00:00'), 'DD') 午前 FROM dual;</pre>
+<pre class="code">-- 例 5) SELECT ROUND(TO_DATE('11-07-06 午後 12:00:00'), 'DD') 午後 FROM dual;</pre>
+        <div class="diffbar">12 時間表記：午前 12 時＝深夜 0 時、午後 12 時＝正午</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>午前 / 午後</th></tr></thead>
+        <tbody>
+        <tr><td>11-07-06 午前 12:00:00</td></tr>
+        <tr><td>11-07-07 午前 12:00:00</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+      <div class="var" data-v="rmm" hidden>
+<pre class="code">ALTER SESSION SET nls_date_format = 'RR-MM-DD HH24:MI:SS';</pre>
+<pre class="code">-- 例 6) SELECT ROUND(TO_DATE('11-07-15 23:59:59'), 'MM') MM FROM dual;</pre>
+<pre class="code">-- 例 7) SELECT ROUND(TO_DATE('11-07-16 00:00:00'), 'MM') MM FROM dual;</pre>
+<pre class="code">-- 例 8) SELECT ROUND(TO_DATE('11-06-30 23:59:59'), 'YY') YY FROM dual;</pre>
+<pre class="code">-- 例 9) SELECT ROUND(TO_DATE('11-07-01 00:00:00'), 'YY') Y FROM dual;</pre>
+        <div class="diffbar">MM は 15 捨 16 入、YY は 6 月捨 7 月入</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>MM / YY</th></tr></thead>
+        <tbody>
+        <tr><td>11-07-01 00:00:00</td></tr>
+        <tr><td>11-08-01 00:00:00</td></tr>
+        <tr><td>11-01-01 00:00:00</td></tr>
+        <tr><td>12-01-01 00:00:00</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="demo">
+    <div class="dh">
+      <span class="title">日付の TRUNC（切り捨て） <em>／ DD（時間切捨て）, MM（日切捨て）, YY（月切捨て）</em></span>
+      <div class="sw">
+        <button data-v="tdd" class="on">DD での切り捨て</button>
+        <button data-v="tmm">MM での切り捨て</button>
+        <button data-v="tyy">YY での切り捨て</button>
+      </div>
+    </div>
+    <div class="vars">
+      <div class="var" data-v="tdd">
+<pre class="code">-- 例 1) SELECT TRUNC(TO_DATE('11-07-06 20:00:00'), 'DD') 午後 FROM dual;</pre>
+        <div class="diffbar">DD での切り捨て ／ 時間部分を切り捨て年月日（00:00:00）を返す</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>午後</th></tr></thead>
+        <tbody>
+        <tr><td>11-07-06 00:00:00</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+      <div class="var" data-v="tmm" hidden>
+<pre class="code">-- 例 2) SELECT TRUNC(TO_DATE('11-07-20 20:00:00'), 'MM') 月 FROM dual;</pre>
+        <div class="diffbar">MM での切り捨て ／ 日以下を切り捨て当月 1 日（00:00:00）を返す</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>月</th></tr></thead>
+        <tbody>
+        <tr><td>11-07-01 00:00:00</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+      <div class="var" data-v="tyy" hidden>
+<pre class="code">-- 例 3) SELECT TRUNC(TO_DATE('11-10-06 20:00:00'), 'YY') 年 FROM dual;</pre>
+        <div class="diffbar">YY での切り捨て ／ 月以下を切り捨て当年 1 月 1 日（00:00:00）を返す</div>
+        <div class="res"><div class="rbody">
+        <div class="tw"><table class="dt">
+        <thead><tr><th>年</th></tr></thead>
+        <tbody>
+        <tr><td>11-01-01 00:00:00</td></tr>
+        </tbody>
+        </table></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+
+</section>
+</div>
+<script src="assets/review-hl.js"></script>
+</body>
+</html>
