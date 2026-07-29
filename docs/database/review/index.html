@@ -255,6 +255,14 @@
     white-space: nowrap;
     cursor: pointer;
   }
+  .mnav-row.chapters .mnav-chip {
+    font-family: var(--sans);
+    font-weight: 800;
+    font-size: 12.5px;
+    color: var(--fg);
+    background: transparent;
+    border-color: var(--line-2);
+  }
   .mnav-row.big .mnav-chip { color: var(--yellow); }
   .mnav-row.small .mnav-chip {
     font-family: var(--sans);
@@ -343,6 +351,7 @@
 
   <main class="main">
     <div class="mnav" id="mnav">
+      <div class="mnav-row chapters" id="mnavCh"></div>
       <div class="mnav-row big" id="mnavBig"></div>
       <div class="mnav-row small" id="mnavSmall"></div>
     </div>
@@ -410,9 +419,11 @@
   var railToggle = document.getElementById('railToggle');
   var tocData = {};
   var mnav = document.getElementById('mnav');
+  var mnavCh = document.getElementById('mnavCh');
   var mnavBig = document.getElementById('mnavBig');
   var mnavSmall = document.getElementById('mnavSmall');
   var mobileGroups = [];
+  var mobileChapters = [];
   var activeCh = null;
   var activeGrp = null;
 
@@ -439,10 +450,32 @@
     });
   }
 
+  function renderChapterNav() {
+    mnavCh.innerHTML = '';
+    mobileChapters.forEach(function (c) {
+      var chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = 'mnav-chip';
+      chip.textContent = '第' + c.chNo + '章';
+      chip.title = c.title;
+      chip.dataset.ch = c.chNo;
+      chip.classList.toggle('active', c.chNo === activeCh);
+      chip.addEventListener('click', function () {
+        var g = mobileGroups.filter(function (x) { return x.chNo === c.chNo; })[0];
+        setActiveChapter(c.chNo);
+        if (g && g.items[0]) jumpToItem(g.items[0]);
+      });
+      mnavCh.appendChild(chip);
+    });
+  }
+
   function setActiveChapter(chNo) {
     if (!chNo || chNo === activeCh) return;
     activeCh = chNo;
     renderBigNav();
+    Array.prototype.forEach.call(mnavCh.querySelectorAll('.mnav-chip'), function (c) {
+      c.classList.toggle('active', c.dataset.ch === chNo);
+    });
   }
 
   function renderSmallNav(grpNo) {
@@ -561,9 +594,11 @@
       });
     });
 
+    var chapterList = [];
     Object.keys(chapters).sort().forEach(function (chNo) {
       var ch = chapters[chNo];
-      
+      chapterList.push({ chNo: chNo, title: ch.title });
+
       var chDet = document.createElement('div');
       chDet.className = 'rail-toc-ch';
       chDet.dataset.ch = chNo;
@@ -617,10 +652,12 @@
     });
 
     mobileGroups = flatGroups;
+    mobileChapters = chapterList;
     activeCh = null;
     activeGrp = null;
     if (mobileGroups[0]) {
       activeCh = mobileGroups[0].chNo;
+      renderChapterNav();
       renderBigNav();
       setActiveGroup(mobileGroups[0].grpNo);
     }
