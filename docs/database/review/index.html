@@ -470,13 +470,17 @@
     });
   }
 
+  // rail.scrollTop / row.scrollLeft を直接動かす:scrollIntoView は状況によって
+  // 祖先(ウィンドウ含む)まで巻き込んでスクロールすることがあり、iframe 間ジャンプの
+  // window.scrollTo(smooth) と競合して目的地に届かなくなる不具合があったため使わない。
   function scrollChipIntoView(row, chip) {
     if (!chip) return;
     var rowRect = row.getBoundingClientRect();
     var chipRect = chip.getBoundingClientRect();
-    if (chipRect.left < rowRect.left || chipRect.right > rowRect.right) {
-      chip.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
-    }
+    var delta = (chipRect.left + chipRect.width / 2) - (rowRect.left + rowRect.width / 2);
+    var maxScroll = row.scrollWidth - row.clientWidth;
+    var newLeft = Math.max(0, Math.min(maxScroll, row.scrollLeft + delta));
+    row.scrollTo({ left: newLeft, behavior: 'smooth' });
   }
 
   function setActiveChapter(chNo) {
@@ -699,7 +703,10 @@
     else if (e.data.type === 'offset') {
       var mnavH = (window.innerWidth <= 900 && mnav.offsetHeight) ? mnav.offsetHeight : 0;
       var targetY = iframe.offsetTop + e.data.top - 20 - mnavH;
-      window.scrollTo({ top: targetY, behavior: 'smooth' });
+      // 全 vol を1ページに連結しているため総高が数万pxに達し、smooth スクロールは
+      // 長距離だと途中で停止することがある(実測)。近距離のみ smooth、遠距離は instant。
+      var longJump = Math.abs(targetY - window.scrollY) > 4000;
+      window.scrollTo({ top: targetY, behavior: longJump ? 'instant' : 'smooth' });
     }
     else if (e.data.type === 'intersect') {
       var tocItems = railToc.querySelectorAll('.rail-toc-item');
@@ -723,9 +730,10 @@
         lastActiveItem = matchedItem;
         var railRect = rail.getBoundingClientRect();
         var itemRect = matchedItem.getBoundingClientRect();
-        if (itemRect.top < railRect.top || itemRect.bottom > railRect.bottom) {
-          matchedItem.scrollIntoView({ block: 'center', behavior: 'smooth' });
-        }
+        var delta = (itemRect.top + itemRect.height / 2) - (railRect.top + railRect.height / 2);
+        var maxScroll = rail.scrollHeight - rail.clientHeight;
+        var newTop = Math.max(0, Math.min(maxScroll, rail.scrollTop + delta));
+        rail.scrollTo({ top: newTop, behavior: 'smooth' });
       }
 
       if (matchedChDetail) setActiveChapter(matchedChDetail.dataset.ch);
