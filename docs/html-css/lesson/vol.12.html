@@ -1,0 +1,1656 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML &amp; CSS vol.12 要素の配置の指定 — インタラクティブ解説</title>
+<link rel="stylesheet" href="assets/lab-engine.css">
+<style>
+  /* ---- vol.12 専用（ページ固有。d- 接頭辞クラスのみ） ---- */
+  .d-source-pair { margin: 16px 0; }
+  .d-source-effect { border: 1px solid #d8d2c6; border-radius: 8px; background: #fffefc; padding: 14px; min-height: 100%; }
+  .d-syntax-line { border: 1px dashed #b9b2a5; border-radius: 6px; padding: 14px; text-align: center; background: #faf8f4; font-family: var(--font-mono); }
+  .d-syntax-box { position: relative; height: 82px; border: 1px dashed #b9b2a5; border-radius: 6px; background: #faf8f4; }
+  .d-syntax-box::before { content: "対象"; position: absolute; top: 18px; left: 22px; padding: 7px 18px; background: #b2452c; color: #fffefc; border-radius: 4px; font-family: var(--font-mono); font-size: 0.75rem; }
+  .d-appendix-code { max-height: 440px; overflow: auto; }
+  .d-a1-source .code-static, .d-a2-source .code-static, .d-a3-source .code-static, .d-a4-source .code-static { max-height: 420px; overflow: auto; }
+  .d-a1-live { border: 1px solid #d8d2c6; background: #fffefc; padding: 12px; }
+  .d-a2-live, .d-a3-live, .d-a4-live { border: 1px solid #d8d2c6; background: #fffefc; padding: 12px; }
+  @media (max-width: 880px) {
+    .d-source-pair { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="narrow-warn">このページはパソコンの画面幅（880px 以上）で見ることを前提にしています。</div>
+
+<header class="masthead">
+  <div class="kicker">HTML &amp; CSS — VOL.12</div>
+  <h1>要素の配置の指定</h1>
+  <p class="lede"><strong>text-align・position・float・z-index・opacity</strong> の値を、コードと実際の描画を同時に切り替えて確認します。</p>
+</header>
+
+<nav class="rail" aria-label="ステージ一覧">
+  <div class="rail-inner">
+    <a href="#s-3-1" class="major"><span class="no">3.1</span>コンテンツの配置の指定</a>
+    <a href="#s-3-1-1"><span class="no">3.1.1</span>text-align 🔴</a>
+    <a href="#s-3-1-2"><span class="no">3.1.2</span>vertical-align 🟡</a>
+    <a href="#s-3-2" class="major"><span class="no">3.2</span>要素の位置を指定する</a>
+    <a href="#s-3-2-1"><span class="no">3.2.1</span>position 🔴</a>
+    <a href="#s-3-2-2"><span class="no">3.2.2</span>top・right・bottom・left 🔴</a>
+    <a href="#s-3-3" class="major"><span class="no">3.3</span>要素の回り込みを行うプロパティ</a>
+    <a href="#s-3-3-1"><span class="no">3.3.1</span>float 🟡</a>
+    <a href="#s-3-3-2"><span class="no">3.3.2</span>clear 🟡</a>
+    <a href="#s-3-4" class="major"><span class="no">3.4</span>その他のプロパティ</a>
+    <a href="#s-3-4-1"><span class="no">3.4.1</span>z-index 🟡</a>
+    <a href="#s-3-4-2"><span class="no">3.4.2</span>opacity ⚪</a>
+    <a href="#s-a-1"><span class="no">A.1</span>absolute・relative ⚪</a>
+    <a href="#s-a-2"><span class="no">A.2</span>fixed ⚪</a>
+    <a href="#s-a-3"><span class="no">A.3</span>sticky ⚪</a>
+    <a href="#s-a-4"><span class="no">A.4</span>dropdown ⚪</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============ 3.1 大節 ============ -->
+<section class="stage major" id="s-3-1">
+  <div class="stage-head">
+    <span class="stage-no">3.1</span><h2>コンテンツの配置の指定</h2>
+  </div>
+</section>
+
+<!-- ============ 3.1.1 横方向の配置 ============ -->
+<section class="stage" id="s-3-1-1">
+  <div class="stage-head">
+    <span class="stage-no">3.1.1</span><h2>横方向の配置を指定する（text-align）</h2><span class="tag red">🔴 重要</span>
+  </div>
+  <p class="stage-def"><strong>text-align</strong>（Text Align）は、コンテンツの横方向の配置を指定するプロパティです。</p>
+  <dl class="facts">
+    <div><dt>プロパティ値</dt><dd>キーワード</dd></div>
+    <div><dt>初期値</dt><dd>start</dd></div>
+    <div><dt>適用要素</dt><dd>主に display プロパティが block・inline-block の要素、他</dd></div>
+    <div><dt>継承</dt><dd>継承される</dd></div>
+  </dl>
+
+  <div class="lab" data-selector=".d-ta-target" data-focus="css" data-minh="190">
+    <script type="text/plain" class="lab-css">
+body {
+  font-family: sans-serif;
+  font-size: 15px;
+  padding: 14px;
+}
+.d-ta-frame {
+  width: 330px;
+  margin: 0 auto;
+  border: 1px solid #d8d2c6;
+  background: #fffefc;
+  padding: 12px;
+}
+.d-ta-target {
+  margin: 0;
+  min-height: 92px;
+  line-height: 1.9;
+}
+    </script>
+    <script type="text/plain" class="lab-html">
+<div class="d-ta-frame">
+  <p class="d-ta-target">I am not lazy, I am on energy saving mode. 吾輩は猫である。名前はまだ無い。どこで生れたかとんと見当がつかぬ。</p>
+</div>
+    </script>
+    <div class="lab-ctl">
+      <div class="vsel-row">
+        <span class="ctl-label">text-align</span>
+        <select class="vsel">
+          <option selected data-css="text-align: start" data-note="書字方向の先頭に揃えます。横書きでは左詰めです。">start（初期値）</option>
+          <option data-css="text-align: end" data-note="書字方向の末尾に揃えます。横書きでは右詰めです。">end</option>
+          <option data-ctx-same data-css="text-align: left" data-note="常に左詰め。横書きでは start と同じです。書字方向を変えると差が出ます。">left</option>
+          <option data-ctx-same data-css="text-align: right" data-note="常に右詰め。横書きでは end と同じです。書字方向を変えると差が出ます。">right</option>
+          <option data-css="text-align: center" data-note="行を中央に揃えます。枠の中央を見てください。">center</option>
+          <option data-css="text-align: justify" data-note="最終行以外を両端揃えにします。最終行は別指定です。">justify</option>
+          <option data-ctx-same data-css="text-align: match-parent" data-note="親の書字方向に合わせます。横書きでは start と同じです。親の方向を変えると差が出ます。">match-parent</option>
+        </select>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+
+  <div class="lab" data-selector=".d-talast" data-focus="css" data-minh="180">
+    <script type="text/plain" class="lab-css">
+body {
+  font-family: sans-serif;
+  font-size: 15px;
+  padding: 14px;
+}
+.d-talast {
+  width: 330px;
+  margin: 0 auto;
+  border: 1px solid #d8d2c6;
+  background: #fffefc;
+  padding: 10px;
+  line-height: 1.9;
+}
+    </script>
+    <script type="text/plain" class="lab-html">
+<p class="d-talast">吾輩は猫である。名前はまだ無い。どこで生れたかとんと見当がつかぬ。最終行も両端揃えにします。</p>
+    </script>
+    <div class="lab-ctl">
+      <div class="vbtns">
+        <span class="ctl-label">text-align-last</span>
+        <button class="vbtn active" data-rule=".d-talast { text-align: justify; text-align-last: auto; }" data-note="最終行は既定の配置です。前の行だけが両端揃えになります。">auto（初期値）</button>
+        <button class="vbtn" data-rule=".d-talast { text-align: justify; text-align-last: justify; }" data-note="最終行も両端揃えにします。👀 最後の行の間隔を見てください。">justify</button>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+
+  <div class="lab" data-selector=".d-h1" data-focus="css" data-minh="150">
+    <script type="text/plain" class="lab-css">
+body {
+  font-family: sans-serif;
+  padding: 14px;
+}
+.d-h1 {
+  margin: 0;
+  padding: 0 12px 6px;
+  font-size: 28px;
+}
+    </script>
+    <script type="text/plain" class="lab-html">
+<h1 class="d-h1">見出し</h1>
+    </script>
+    <div class="lab-ctl">
+      <div class="vbtns">
+        <span class="ctl-label">h1 の例</span>
+        <button class="vbtn active" data-rule=".d-h1 { text-align: center; border-bottom: 2px pink solid; }" data-note="見出しを中央揃えにし、下辺へ 2px の pink 線を付けます。">中央揃え（原文例）</button>
+        <button class="vbtn" data-rule=".d-h1 { text-align: left; border-bottom: 2px pink solid; }" data-note="同じ下線のまま、見出しだけ左詰めにします。">左詰め</button>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+
+  <div class="duo d-source-pair">
+    <div>
+      <div class="duo-label">基本書式</div>
+      <pre class="code-static">text-align : プロパティ値;</pre>
+    </div>
+    <div class="d-source-effect">
+      <div class="duo-label">実際の表示</div>
+      <div class="d-syntax-line">横方向の位置は上の LAB で変化します。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3.1.2 縦方向の配置 ============ -->
+<section class="stage" id="s-3-1-2">
+  <div class="stage-head">
+    <span class="stage-no">3.1.2</span><h2>縦方向の配置を指定する（vertical-align）</h2><span class="tag yellow">🟡 理解</span>
+  </div>
+  <p class="stage-def"><strong>vertical-align</strong>（Vertical Align）は、インライン要素やテーブルセルの縦方向の位置を指定するプロパティです。</p>
+  <dl class="facts">
+    <div><dt>プロパティ値</dt><dd>長さ、パーセンテージ、キーワード</dd></div>
+    <div><dt>初期値</dt><dd>baseline</dd></div>
+    <div><dt>適用要素</dt><dd>インライン要素、インラインブロック要素、テーブルのセル要素</dd></div>
+    <div><dt>継承</dt><dd>継承されない</dd></div>
+  </dl>
+
+  <div class="lab" data-selector=".d-va-cell" data-fixed="height: 120px" data-focus="css" data-minh="190">
+    <script type="text/plain" class="lab-css">
+body {
+  font-family: sans-serif;
+  font-size: 14px;
+  padding: 14px;
+}
+.d-va-table {
+  border-collapse: collapse;
+  margin: 0 auto;
+}
+.d-va-table td {
+  width: 150px;
+  border: 1px solid #d8d2c6;
+  padding: 8px;
+  background: #fffefc;
+}
+.d-va-cell { font-size: 28px; }
+.d-va-reference {
+  font-size: 14px;
+  color: #6e675d;
+  line-height: 1.7;
+}
+    </script>
+    <script type="text/plain" class="lab-html">
+<table class="d-va-table">
+  <tr><td class="d-va-cell">100円</td><td class="d-va-reference">行の上端<br>行の中央<br>行の下端</td></tr>
+</table>
+    </script>
+    <div class="lab-ctl">
+      <div class="vbtns">
+        <span class="ctl-label">セル</span>
+        <button class="vbtn active" data-css="vertical-align: baseline" data-note="セルのベースラインを行のベースラインに揃えます。行の内容を変えると top との差が出ます。">baseline（初期値）</button>
+        <button class="vbtn" data-ctx-same data-css="vertical-align: top" data-note="セルの上側を行の上端に揃えます。この行では baseline と同じ位置です。内容を変えると差が出ます。">top</button>
+        <button class="vbtn" data-css="vertical-align: middle" data-note="セルの内容を行の中央に配置します。">middle</button>
+        <button class="vbtn" data-css="vertical-align: bottom" data-note="セルの下側を行の下端に揃えます。">bottom</button>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+
+  <div class="lab" data-selector=".d-va-inline-target" data-focus="css" data-minh="190">
+    <script type="text/plain" class="lab-css">
+body {
+  font-family: sans-serif;
+  font-size: 18px;
+  padding: 14px;
+}
+.d-va-inline-line {
+  min-height: 110px;
+  padding: 42px 12px;
+  border-bottom: 1px solid #d8d2c6;
+  background: #fffefc;
+  line-height: 1.2;
+}
+.d-va-inline-base {
+  font-size: 34px;
+  color: #6e675d;
+}
+.d-va-inline-target {
+  display: inline-block;
+  padding: 7px 12px;
+  border: 2px solid #b2452c;
+  background: #f7e8e3;
+  color: #8f3520;
+  font-size: 14px;
+}
+    </script>
+    <script type="text/plain" class="lab-html">
+<div class="d-va-inline-line"><span class="d-va-inline-base">基準文字 x</span> <span class="d-va-inline-target">対象</span> <span class="d-va-inline-base">基準文字</span></div>
+    </script>
+    <div class="lab-ctl">
+      <div class="vbtns">
+        <span class="ctl-label">インライン・親との相対</span>
+        <button class="vbtn active" data-css="vertical-align: baseline" data-note="対象のベースラインを親のベースラインに揃えます。">baseline（初期値）</button>
+        <button class="vbtn" data-css="vertical-align: sub" data-note="対象のベースラインを親の下付き文字側へ移します。">sub</button>
+        <button class="vbtn" data-css="vertical-align: super" data-note="対象のベースラインを親の上付き文字側へ移します。">super</button>
+        <button class="vbtn" data-css="vertical-align: text-top" data-note="対象の上端を親のコンテンツ領域の上端に揃えます。">text-top</button>
+        <button class="vbtn" data-css="vertical-align: text-bottom" data-note="対象の下端を親のコンテンツ領域の下端に揃えます。">text-bottom</button>
+        <button class="vbtn" data-css="vertical-align: middle" data-note="対象の中央を親のベースライン付近へ揃えます。">middle</button>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+
+  <div class="lab" data-selector=".d-va-row-target" data-focus="css" data-minh="190">
+    <script type="text/plain" class="lab-css">
+body {
+  font-family: sans-serif;
+  font-size: 18px;
+  padding: 14px;
+}
+.d-va-row-line {
+  height: 116px;
+  padding: 8px 12px;
+  border: 1px solid #d8d2c6;
+  background: #fffefc;
+  line-height: 1.2;
+}
+.d-va-row-target {
+  display: inline-block;
+  padding: 7px 12px;
+  border: 2px solid #b2452c;
+  background: #f7e8e3;
+  font-size: 14px;
+}
+    </script>
+    <script type="text/plain" class="lab-html">
+<div class="d-va-row-line"><span class="d-va-row-target">対象</span> 行全体の高さを確認</div>
+    </script>
+    <div class="lab-ctl">
+      <div class="vbtns">
+        <span class="ctl-label">インライン・行との相対</span>
+        <button class="vbtn active" data-css="vertical-align: top" data-note="対象を行全体の上端に揃えます。">top（初期値）</button>
+        <button class="vbtn" data-css="vertical-align: bottom" data-note="対象を行全体の下端に揃えます。">bottom</button>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+
+  <div class="lab" data-selector=".d-va-length-target" data-focus="css" data-minh="180">
+    <script type="text/plain" class="lab-css">
+body {
+  font-family: sans-serif;
+  font-size: 18px;
+  padding: 14px;
+}
+.d-va-length-line {
+  min-height: 100px;
+  padding: 36px 12px;
+  border-bottom: 1px solid #d8d2c6;
+  background: #fffefc;
+  line-height: 1.2;
+}
+.d-va-length-target {
+  display: inline-block;
+  padding: 7px 12px;
+  border: 2px solid #b2452c;
+  background: #f7e8e3;
+  font-size: 14px;
+}
+    </script>
+    <script type="text/plain" class="lab-html">
+<div class="d-va-length-line">親文字 <span class="d-va-length-target">対象</span> 親文字</div>
+    </script>
+    <div class="lab-ctl">
+      <div class="vbtns">
+        <span class="ctl-label">長さ・割合</span>
+        <button class="vbtn active" data-css="vertical-align: baseline" data-note="親のベースラインを基準にします。">baseline</button>
+        <button class="vbtn" data-css="vertical-align: 10px" data-note="親の基準から 10px 上へずらします。長さは親に対する相対値です。">10px</button>
+        <button class="vbtn" data-css="vertical-align: 50%" data-note="親の行の高さを基準に 50% ずらします。">50%</button>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+
+  <div class="duo d-source-pair">
+    <div>
+      <div class="duo-label">基本書式</div>
+      <pre class="code-static">vertical-align : プロパティ値;</pre>
+    </div>
+    <div class="d-source-effect">
+      <div class="duo-label">3つの基準</div>
+      <div class="d-syntax-line">セル／親のベースライン／行全体</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3.2 大節 ============ -->
+<section class="stage major" id="s-3-2">
+  <div class="stage-head">
+    <span class="stage-no">3.2</span><h2>要素の位置を指定する</h2>
+  </div>
+</section>
+
+<!-- ============ 3.2.1 position ============ -->
+<section class="stage" id="s-3-2-1">
+  <div class="stage-head">
+    <span class="stage-no">3.2.1</span><h2>要素の配置方法を指定する（position）</h2><span class="tag red">🔴 重要</span>
+  </div>
+  <p class="stage-def"><strong>position</strong>（Position）は、要素を通常のフロー・相対位置・絶対位置・固定位置・吸着位置のどれで配置するかを指定します。</p>
+  <dl class="facts">
+    <div><dt>プロパティ値</dt><dd>キーワード</dd></div>
+    <div><dt>初期値</dt><dd>static</dd></div>
+    <div><dt>適用要素</dt><dd>全要素</dd></div>
+    <div><dt>継承</dt><dd>継承されない</dd></div>
+  </dl>
+
+  <div class="lab" data-selector=".d-position-target" data-fixed="top: 20px; left: 24px" data-focus="css" data-minh="250">
+    <script type="text/plain" class="lab-css">
+body {
+  margin: 0;
+  padding: 12px;
+  font-family: sans-serif;
+  font-size: 14px;
+}
+.d-position-scroller {
+  position: relative;
+  height: 190px;
+  overflow: auto;
+  border: 1px dashed #b9b2a5;
+  background: #ece8df;
+  padding: 8px 12px 24px;
+}
+.d-position-target {
+  width: 150px;
+  height: 42px;
+  line-height: 42px;
+  margin: 10px 0;
+  background: #b2452c;
+  color: #fffefc;
+  text-align: center;
+}
+.d-position-scroller p {
+  margin: 8px 0;
+}
+    </script>
+    <script type="text/plain" class="lab-html">
+<div class="d-position-scroller">
+  <p>枠内を下にスクロールして position の差を見てください。</p>
+  <div class="d-position-target">対象要素</div>
+  <p>吾輩は猫である。名前はまだ無い。どこで生れたかとんと見当がつかぬ。</p>
+  <p>何でも薄暗いじめじめした所でニャーニャー泣いていた事だけは記憶している。</p>
+  <p>吾輩はここで始めて人間というものを見た。</p>
+  <p>しかもあとで聞くとそれは書生という人間中で一番獰悪な種族であったそうだ。</p>
+</div>
+    </script>
+    <div class="lab-ctl">
+      <div class="vbtns">
+        <span class="ctl-label">position</span>
+        <button class="vbtn active" data-css="position: static" data-note="通常のフロー。top と left は効かず、枠内のスクロールで流れます。">static（初期値）</button>
+        <button class="vbtn" data-css="position: relative" data-note="元の場所を残したまま、top と left の分だけ移動します。">relative</button>
+        <button class="vbtn" data-css="position: absolute" data-note="フローから外れます。position 付きの親枠を基準に配置します。">absolute</button>
+        <button class="vbtn" data-css="position: fixed" data-note="iframe の表示領域を基準にし、枠内をスクロールしても残ります。">fixed</button>
+        <button class="vbtn data-context" data-ctx-same data-css="position: sticky" data-note="初期は relative と同じです。枠内を下へスクロールすると上端に吸着します。">sticky</button>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+
+  <div class="duo d-source-pair">
+    <div>
+      <div class="duo-label">基本書式</div>
+      <pre class="code-static">position : プロパティ値;</pre>
+    </div>
+    <div class="d-source-effect">
+      <div class="duo-label">スクロール領域</div>
+      <div class="d-syntax-line">fixed と sticky は上の iframe 内で操作します。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3.2.2 位置 ============ -->
+<section class="stage" id="s-3-2-2">
+  <div class="stage-head">
+    <span class="stage-no">3.2.2</span><h2>要素の配置位置を指定する（top・right・bottom・left）</h2><span class="tag red">🔴 重要</span>
+  </div>
+  <p class="stage-def"><strong>top・right・bottom・left</strong>（Offset Properties）は、position とともに基準辺からの配置位置を指定します。</p>
+  <dl class="facts">
+    <div><dt>プロパティ値</dt><dd>長さ、パーセンテージ、キーワード（auto）</dd></div>
+    <div><dt>初期値</dt><dd>auto</dd></div>
+    <div><dt>適用要素</dt><dd>位置指定要素（position が static 以外の要素）</dd></div>
+    <div><dt>継承</dt><dd>継承されない</dd></div>
+  </dl>
+
+  <div class="lab" data-selector=".d-offset-target" data-fixed="position: relative" data-focus="css" data-minh="250">
+    <script type="text/plain" class="lab-css">
+body {
+  margin: 0;
+  padding: 12px;
+  font-family: sans-serif;
+  font-size: 14px;
+}
+.d-offset-frame {
+  position: relative;
+  width: 380px;
+  height: 190px;
+  border: 1px dashed #b9b2a5;
+  background: #ece8df;
+  padding: 18px;
+}
+.d-offset-origin {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  width: 112px;
+  height: 48px;
+  border: 2px dashed #b2452c;
+  color: #8f3520;
+  font-size: 12px;
+  line-height: 44px;
+  text-align: center;
+}
+.d-offset-target {
+  width: 112px;
+  height: 48px;
+  line-height: 48px;
+  background: #7f9a8e;
+  color: #fffefc;
+  text-align: center;
+}
+    </script>
+    <script type="text/plain" class="lab-html">
+<div class="d-offset-frame">
+  <div class="d-offset-origin">元の位置</div>
+  <div class="d-offset-target">対象要素</div>
+</div>
+    </script>
+    <div class="lab-ctl">
+      <div class="vsel-row">
+        <span class="ctl-label">top（上辺）</span>
+        <select class="vsel">
+          <option selected data-css="top: auto; bottom: auto" data-note="上方向の移動なし。元の配置位置を基準にします。">auto（初期値）</option>
+          <option data-css="top: 10px; bottom: auto" data-note="元の位置から上辺方向へ 10px ずらします。">10px</option>
+          <option data-css="top: 40%; bottom: auto" data-note="親枠の高さを基準に上方向へ 40% ずらします。">40%</option>
+        </select>
+      </div>
+      <div class="vsel-row">
+        <span class="ctl-label">right（右辺）</span>
+        <select class="vsel">
+          <option selected data-css="right: auto; left: auto" data-note="右辺からの移動なし。元の配置位置のままです。">auto（初期値）</option>
+          <option data-css="right: 10px; left: auto" data-note="右辺から 10px を指定し、対象を左へずらします。">10px</option>
+          <option data-css="right: 40%; left: auto" data-note="親枠の幅を基準に右辺から 40% ずらします。">40%</option>
+        </select>
+      </div>
+      <div class="vsel-row">
+        <span class="ctl-label">bottom（下辺）</span>
+        <select class="vsel">
+          <option selected data-css="bottom: auto; top: auto" data-note="下方向の移動なし。元の配置位置を基準にします。">auto（初期値）</option>
+          <option data-css="bottom: 10px; top: auto" data-note="元の位置から下辺方向へ 10px ずらします。">10px</option>
+          <option data-css="bottom: 40%; top: auto" data-note="親枠の高さを基準に下辺から 40% ずらします。">40%</option>
+        </select>
+      </div>
+      <div class="vsel-row">
+        <span class="ctl-label">left（左辺）</span>
+        <select class="vsel">
+          <option selected data-css="left: auto; right: auto" data-note="左辺からの移動なし。元の配置位置のままです。">auto（初期値）</option>
+          <option data-css="left: 10px; right: auto" data-note="元の位置から左辺方向へ 10px ずらします。">10px</option>
+          <option data-css="left: 40%; right: auto" data-note="親枠の幅を基準に左辺から 40% ずらします。">40%</option>
+        </select>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+
+  <div class="lab" data-selector=".d-priority-target" data-focus="css" data-minh="190">
+    <script type="text/plain" class="lab-css">
+body {
+  margin: 0;
+  padding: 12px;
+  font-family: sans-serif;
+  font-size: 14px;
+}
+.d-priority-frame {
+  position: relative;
+  width: 300px;
+  height: 130px;
+  border: 1px dashed #b9b2a5;
+  background: #ece8df;
+}
+.d-priority-target {
+  display: inline-block;
+  background: #b2452c;
+  color: #fffefc;
+  padding: 8px 14px;
+}
+    </script>
+    <script type="text/plain" class="lab-html">
+<div class="d-priority-frame"><div class="d-priority-target">relative の要素</div></div>
+    </script>
+    <div class="lab-ctl">
+      <div class="vbtns">
+        <span class="ctl-label">同時指定の例</span>
+        <button class="vbtn active" data-rule=".d-priority-target { position: relative; top: 10px; bottom: 20px; left: 20px; right: 30px; }" data-note="top と left が優先され、対象は下へ 10px、右へ 20px 移動します。">4方向同時（原文例）</button>
+        <button class="vbtn data-context" data-same-ok data-rule=".d-priority-target { position: relative; top: 10px; left: 20px; }" data-note="top と left だけでも同じ位置です。top・left が優先されるためです。">top・leftのみ</button>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+
+  <div class="duo d-source-pair">
+    <div>
+      <div class="duo-label">基本書式</div>
+      <pre class="code-static">top : プロパティ値 ;
+left : プロパティ値 ;
+right : プロパティ値 ;</pre>
+    </div>
+    <div class="d-source-effect">
+      <div class="duo-label">基準辺</div>
+      <div class="d-syntax-box"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3.3 大節 ============ -->
+<section class="stage major" id="s-3-3">
+  <div class="stage-head">
+    <span class="stage-no">3.3</span><h2>要素の回り込みを行うプロパティ</h2>
+  </div>
+</section>
+
+<!-- ============ 3.3.1 float ============ -->
+<section class="stage" id="s-3-3-1">
+  <div class="stage-head">
+    <span class="stage-no">3.3.1</span><h2>要素の回り込みを行う（float）</h2><span class="tag yellow">🟡 理解</span>
+  </div>
+  <p class="stage-def"><strong>float</strong>（Float）は、ボックスを左右へ寄せ、続くコンテンツを反対側へ回り込ませるプロパティです。</p>
+  <dl class="facts">
+    <div><dt>プロパティ値</dt><dd>キーワード（auto）</dd></div>
+    <div><dt>初期値</dt><dd>none</dd></div>
+    <div><dt>適用要素</dt><dd>全要素（全ブラウザ対応の値は left・right・none のみ）</dd></div>
+    <div><dt>継承</dt><dd>継承されない</dd></div>
+  </dl>
+
+  <div class="lab" data-selector=".d-float-image" data-fixed="margin-right: 10px; margin-bottom: 10px" data-focus="css" data-minh="220">
+    <script type="text/plain" class="lab-css">
+body {
+  margin: 0;
+  padding: 12px;
+  font-family: sans-serif;
+  font-size: 14px;
+  line-height: 1.9;
+}
+.d-float-demo {
+  border: 1px solid #d8d2c6;
+  background: #fffefc;
+  padding: 12px;
+}
+.d-float-image {
+  width: 76px;
+  height: 76px;
+}
+    </script>
+    <script type="text/plain" class="lab-html">
+<div class="d-float-demo">
+  <img class="d-float-image" src="images/cat.png" alt="ねこ">
+  <span>吾輩は猫である。名前はまだ無い。どこで生れたかとんと見当がつかぬ。何でも薄暗いじめじめした所でニャーニャー泣いていた事だけは記憶している。</span>
+</div>
+    </script>
+    <div class="lab-ctl">
+      <div class="vbtns">
+        <span class="ctl-label">float</span>
+        <button class="vbtn active" data-css="float: none" data-note="画像は通常の位置に置かれ、続く文字は画像の横だけに限定されません。">none（初期値）</button>
+        <button class="vbtn" data-css="float: left" data-note="画像を左へ寄せ、続く文字を右側へ回り込ませます。">left</button>
+        <button class="vbtn" data-css="float: right" data-note="画像を右へ寄せ、続く文字を左側へ回り込ませます。">right</button>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+
+  <div class="duo d-source-pair">
+    <div>
+      <div class="duo-label">基本書式</div>
+      <pre class="code-static">float : プロパティ値;</pre>
+    </div>
+    <div class="d-source-effect">
+      <div class="duo-label">回り込み</div>
+      <div class="d-syntax-line">画像の左右と文字の流れを LAB で確認します。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3.3.2 clear ============ -->
+<section class="stage" id="s-3-3-2">
+  <div class="stage-head">
+    <span class="stage-no">3.3.2</span><h2>要素の回り込みを解除する（clear）</h2><span class="tag yellow">🟡 理解</span>
+  </div>
+  <p class="stage-def"><strong>clear</strong>（Clear）は、指定した方向の float による回り込みを解除するプロパティです。</p>
+  <dl class="facts">
+    <div><dt>プロパティ値</dt><dd>キーワード</dd></div>
+    <div><dt>初期値</dt><dd>none</dd></div>
+    <div><dt>適用要素</dt><dd>全要素</dd></div>
+    <div><dt>継承</dt><dd>継承されない</dd></div>
+  </dl>
+
+  <div class="lab" data-selector=".d-clear-target" data-focus="css" data-minh="220">
+    <script type="text/plain" class="lab-css">
+body {
+  margin: 0;
+  padding: 12px;
+  font-family: sans-serif;
+  font-size: 14px;
+}
+.d-clear-demo {
+  min-height: 150px;
+  border: 1px solid #d8d2c6;
+  background: #fffefc;
+  padding: 10px;
+}
+.d-clear-left {
+  float: left;
+  width: 86px;
+  height: 92px;
+  background: #7f9a8e;
+  color: #fffefc;
+  padding: 8px;
+}
+.d-clear-right {
+  float: right;
+  width: 86px;
+  height: 120px;
+  background: #b0885a;
+  color: #fffefc;
+  padding: 8px;
+}
+.d-clear-target {
+  width: 180px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  background: #b2452c;
+  color: #fffefc;
+}
+.d-clear-demo::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+    </script>
+    <script type="text/plain" class="lab-html">
+<div class="d-clear-demo">
+  <div class="d-clear-left">float: left</div>
+  <div class="d-clear-right">float: right</div>
+  <div class="d-clear-target">次の要素</div>
+</div>
+    </script>
+    <div class="lab-ctl">
+      <div class="vbtns">
+        <span class="ctl-label">clear</span>
+        <button class="vbtn active" data-css="clear: none" data-note="解除しません。対象は左右の float の間から始まります。">none（初期値）</button>
+        <button class="vbtn" data-css="clear: left" data-note="左寄せされた float の下まで対象を移動します。">left</button>
+        <button class="vbtn" data-css="clear: right" data-note="右寄せされた float の下まで対象を移動します。">right</button>
+        <button class="vbtn" data-ctx-same data-css="clear: both" data-note="左右両方の float の下へ移動します。右が低いこの配置では right と同じ位置です。">both</button>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+
+  <div class="duo d-source-pair">
+    <div>
+      <div class="duo-label">基本書式・例1</div>
+      <pre class="code-static">clear : プロパティ値;
+
+div {
+    clear : both;
+}</pre>
+    </div>
+    <div class="d-source-effect">
+      <div class="duo-label">解除結果</div>
+      <div class="d-syntax-line">both を選ぶと「次の要素」が両方の下へ移ります。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3.4 大節 ============ -->
+<section class="stage major" id="s-3-4">
+  <div class="stage-head">
+    <span class="stage-no">3.4</span><h2>その他のプロパティ</h2>
+  </div>
+</section>
+
+<!-- ============ 3.4.1 z-index ============ -->
+<section class="stage" id="s-3-4-1">
+  <div class="stage-head">
+    <span class="stage-no">3.4.1</span><h2>要素の重なり順を指定する（z-index）</h2><span class="tag yellow">🟡 理解</span>
+  </div>
+  <p class="stage-def"><strong>z-index</strong>（Stacking Order）は、位置指定要素どうしが重なるときの前後関係を指定します。</p>
+  <dl class="facts">
+    <div><dt>プロパティ値</dt><dd>整数値、キーワード（auto）</dd></div>
+    <div><dt>初期値</dt><dd>auto</dd></div>
+    <div><dt>適用要素</dt><dd>位置指定要素（position が static 以外）</dd></div>
+    <div><dt>継承</dt><dd>継承されない</dd></div>
+  </dl>
+
+  <div class="lab" data-selector=".d-zparent" data-fixed="position: relative" data-focus="css" data-minh="210">
+    <script type="text/plain" class="lab-css">
+body {
+  margin: 0;
+  padding: 14px;
+  font-family: sans-serif;
+  font-size: 14px;
+}
+.d-zstage {
+  position: relative;
+  width: 340px;
+  height: 150px;
+  border: 1px dashed #b9b2a5;
+  background: repeating-linear-gradient(45deg, #ece8df 0 12px, #fffefc 12px 24px);
+  padding: 14px;
+}
+.d-zparent {
+  width: 210px;
+  height: 96px;
+  background: #7f9a8e;
+  color: #fffefc;
+  padding: 10px;
+}
+.d-zchild {
+  position: absolute;
+  top: 48px;
+  left: 128px;
+  width: 156px;
+  height: 52px;
+  line-height: 52px;
+  background: #b2452c;
+  color: #fffefc;
+  text-align: center;
+  z-index: -1;
+}
+    </script>
+    <script type="text/plain" class="lab-html">
+<div class="d-zstage">
+  <div class="d-zparent">親要素<div class="d-zchild">子 z-index: -1</div></div>
+</div>
+    </script>
+    <div class="lab-ctl">
+      <div class="vbtns">
+        <span class="ctl-label">親の z-index</span>
+        <button class="vbtn active" data-css="z-index: auto" data-note="親は階層を作りません。子の -1 は親の背景の下へ隠れます。">auto（初期値）</button>
+        <button class="vbtn" data-css="z-index: 0" data-note="親が階層を作ります。子の -1 は親より上に表示されます。">0</button>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+
+  <div class="duo d-source-pair">
+    <div>
+      <div class="duo-label">基本書式・例1</div>
+      <pre class="code-static">z-index : プロパティ値;
+
+div {
+    position: absolute;
+    top : 40px ;
+    left : 50px ;
+    background-color: lightcoral;
+    z-index: -1 ;
+}</pre>
+    </div>
+    <div class="d-source-effect">
+      <div class="duo-label">親の階層</div>
+      <div class="d-syntax-line">親 auto と親 0 の子の位置を LAB で切り替えます。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3.4.2 opacity ============ -->
+<section class="stage" id="s-3-4-2">
+  <div class="stage-head">
+    <span class="stage-no">3.4.2</span><h2>要素を透過する（opacity）</h2><span class="tag gray">⚪ 参考</span>
+  </div>
+  <p class="stage-def"><strong>opacity</strong>（Opacity）は、要素の不透明度を 0.0 から 1.0 の範囲で指定します。</p>
+  <dl class="facts">
+    <div><dt>プロパティ値</dt><dd>0.0 以上〜1.0 以下</dd></div>
+    <div><dt>初期値</dt><dd>1.0</dd></div>
+    <div><dt>適用要素</dt><dd>全要素</dd></div>
+    <div><dt>継承</dt><dd>継承されない</dd></div>
+  </dl>
+
+  <div class="lab" data-selector=".d-opacity-target" data-fixed="position: relative; top: 50px; left: 100px" data-focus="css" data-minh="220" data-good-note="スライダーを 0.0〜1.0 で動かし、背後の模様の透け方を確認します。">
+    <script type="text/plain" class="lab-css">
+body {
+  margin: 0;
+  padding: 12px;
+  font-family: sans-serif;
+  font-size: 14px;
+}
+.d-opacity-backdrop {
+  width: 330px;
+  height: 150px;
+  border: 1px dashed #b9b2a5;
+  background: repeating-linear-gradient(45deg, #ddd6c8 0 14px, #fffefc 14px 28px);
+}
+.d-opacity-target {
+  width: 130px;
+  height: 70px;
+  line-height: 70px;
+  background: #b2452c;
+  color: #fffefc;
+  text-align: center;
+  font-weight: 600;
+}
+    </script>
+    <script type="text/plain" class="lab-html">
+<div class="d-opacity-backdrop"><div class="d-opacity-target">opacity</div></div>
+    </script>
+    <div class="lab-ctl">
+      <div class="vbtns">
+        <div class="vrange-row"><span class="ctl-label">opacity</span><input type="range" class="vrange" aria-label="opacity" data-prop="opacity" data-unit="" min="0" max="1" step="0.1" value="1"><span class="vval"></span></div>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+
+  <div class="duo d-source-pair">
+    <div>
+      <div class="duo-label">基本書式・例1</div>
+      <pre class="code-static">opacity : プロパティ値;
+
+div {
+    position : relative ;
+    top : 50px ;
+    left : 100px ;
+    opacity : 0.5 ;
+}</pre>
+    </div>
+    <div class="d-source-effect">
+      <div class="duo-label">透過結果</div>
+      <div class="d-syntax-line">背後の模様は上のスライダーで見え方が変わります。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ A.1 absolute・relative ============ -->
+<section class="stage" id="s-a-1">
+  <div class="stage-head">
+    <span class="stage-no">A.1</span><h2>「position:absolute、position:relative」のサンプル</h2><span class="tag gray">⚪ 参考</span>
+  </div>
+  <p class="stage-def"><strong>absolute</strong>（Absolute）は、<strong>relative</strong>（Relative）を指定した親要素を基準に配置できます。</p>
+
+  <div class="duo d-source-pair d-a1-source">
+    <div>
+      <div class="duo-label">absolute-sample.html（原文コード）</div>
+      <pre class="code-static d-appendix-code">&lt;!DOCTYPE html&gt;
+&lt;html lang="ja"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;absolute sample&lt;/title&gt;
+  &lt;link rel="stylesheet" href="absolute-sample.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;header&gt;
+    &lt;video src="videos/sky.mp4" autoplay muted loop&gt;&lt;/video&gt;
+    &lt;div class="header"&gt;
+      &lt;h1&gt;夜景を見に行こう！&lt;/h1&gt;
+      &lt;div class="box"&gt;
+        &lt;p class="explain"&gt;
+          日本各地には素敵な夜景を見られるスポットがたくさんあります。&lt;br&gt;
+          このサイトではそんな場所を紹介しています。
+        &lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class="link"&gt;
+        &lt;a href="#"&gt;Go!&lt;/a&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/header&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+    </div>
+    <div>
+      <div class="duo-label">absolute-sample.css（原文コード）</div>
+      <pre class="code-static d-appendix-code">@import
+url('https://fonts.googleapis.com/css2?family=Murecho&amp;display=swap');
+
+body {
+    margin: 0px ;
+}
+
+/* 見出し */
+header {
+    position: relative;
+    width: 100vw;
+    height: 100vh ;
+    overflow: hidden;  /* スクロールバーを非表示にします */
+}
+.header {
+    position: absolute ;
+    width: fit-content ;
+    top: 15% ;
+    left: 50% ;
+    transform: translateX(-50%) ;  /* 要素の位置をX方向に50%動かします */
+    color: rgb(251, 251, 106) ;
+}
+.header &gt; h1 {
+    font-size: 5em ;
+    border-bottom: 10px solid yellow ;
+    padding : 0px 40px ;
+    font-family: 'Murecho', sans-serif;
+}
+.header &gt; h1::before, .header &gt; h1::after {
+    content: "★" ;
+}
+/* 説明文。鍵かっこ風 */
+.box {
+    position: relative;
+    padding: 1em ;
+}
+.box::before, .box::after {
+    content:'';
+    position: absolute;
+    width: 20px;
+    height: 30px;
+}
+.box::before{
+    border-left: solid 2px white;
+    border-top: solid 2px white;
+    top:0;
+    left: 0;
+}
+.box::after{
+    border-right: solid 2px white;
+    border-bottom: solid 2px white;
+    bottom:0;
+    right: 0;
+}
+.explain {
+    color:white ;
+    font-size: 1.5em ;
+    text-align: center ;
+    margin: 0 ;
+    padding: 0 ;
+}
+/* リンクをボタンぽくする */
+.link {
+    text-align: center ;
+    margin-top : 10% ;
+}
+.link &gt; a {
+    font-size : 4em ;
+    text-decoration: none ;
+    color: rgb(60, 23, 243) ;
+    background-color:rgb(251, 251, 106) ;
+    padding: 10px 60px;
+    border-radius : 50%;
+    box-shadow: 0px 10px rgb(195, 195, 82);
+    font-weight: 900 ;
+}</pre>
+    </div>
+  </div>
+
+  <div class="lab" data-focus="html" data-minh="360" data-good-note="元コードの動画と Google Fonts はソースとして残し、実演はローカル画像で動かします。">
+    <script type="text/plain" class="lab-css">
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
+.d-a1-stage {
+  position: relative;
+  height: 320px;
+  overflow: hidden;
+  background: #29251f;
+}
+.d-a1-scene {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.42;
+}
+.d-a1-header {
+  position: absolute;
+  width: fit-content;
+  top: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fbfb6a;
+  text-align: center;
+  z-index: 1;
+}
+.d-a1-header h1 {
+  font-size: clamp(1.5rem, 5vw, 3.4rem);
+  border-bottom: 6px solid yellow;
+  padding: 0 20px 8px;
+  white-space: nowrap;
+}
+.d-a1-header h1::before, .d-a1-header h1::after {
+  content: "★";
+}
+.d-a1-box {
+  position: relative;
+  padding: 1em;
+  color: #fffefc;
+}
+.d-a1-box::before, .d-a1-box::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 26px;
+}
+.d-a1-box::before { border-left: 2px solid white; border-top: 2px solid white; top: 0; left: 0; }
+.d-a1-box::after { border-right: 2px solid white; border-bottom: 2px solid white; bottom: 0; right: 0; }
+.d-a1-box p { margin: 0; font-size: 0.92rem; }
+.d-a1-link { margin-top: 18px; }
+.d-a1-link a { color: #3c17f3; background: #fbfb6a; padding: 6px 28px; border-radius: 50%; text-decoration: none; font-weight: 900; }
+    </script>
+    <script type="text/plain" class="lab-html">
+<header class="d-a1-stage">
+  <img class="d-a1-scene" src="images/cat.png" alt="ローカル素材">
+  <div class="d-a1-header">
+    <h1>夜景を見に行こう！</h1>
+    <div class="d-a1-box"><p>日本各地には素敵な夜景を見られるスポットがたくさんあります。<br>このサイトではそんな場所を紹介しています。</p></div>
+    <div class="d-a1-link"><a href="#">Go!</a></div>
+  </div>
+</header>
+    </script>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ============ A.2 fixed ============ -->
+<section class="stage" id="s-a-2">
+  <div class="stage-head">
+    <span class="stage-no">A.2</span><h2>「position: fixed」のサンプル</h2><span class="tag gray">⚪ 参考</span>
+  </div>
+  <p class="stage-def"><strong>fixed</strong>（Fixed）は、ウィンドウの左上を基準にし、スクロールしても同じ位置に残ります。</p>
+
+  <div class="duo d-source-pair d-a2-source">
+    <div>
+      <div class="duo-label">fixed-sample.html（原文コード）</div>
+      <pre class="code-static d-appendix-code">&lt;!DOCTYPE html&gt;
+&lt;html lang="ja"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;fixed sample&lt;/title&gt;
+  &lt;link rel="stylesheet" href="fixed-sample.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;header&gt;
+    &lt;h1&gt;注文の多い料理店&lt;/h1&gt;
+    &lt;nav&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;a href="#"&gt;ドリンク&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#"&gt;麺類&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#"&gt;ごはん&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#"&gt;サービス&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/nav&gt;
+  &lt;/header&gt;
+  &lt;main&gt;
+    ここにコンテンツを表示します。
+  &lt;/main&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+    </div>
+    <div>
+      <div class="duo-label">fixed-sample.css（原文コード）</div>
+      <pre class="code-static d-appendix-code">/* ヘッダー全体の設定 */
+header {
+    box-sizing: border-box ;
+    position: fixed ;
+    top: 0 ;
+    width: calc(100% - 40px);
+    height: 200px ;
+    padding-bottom: 20px ;
+    margin : 0px 20px ;
+    text-align: center ;
+    background-color: white ;
+}
+/* 見出し要素 */
+h1 {
+    position: relative ;
+    display: inline-block;
+    padding: 0 125px ;
+}
+h1::before, h1::after {
+    display: inline-block ;
+    position: absolute ;
+    content: "" ;
+    border : 3px solid lightskyblue ;
+    background-color: lightskyblue ;
+    width: 100px ;
+    height: 1px ;
+    top: 40%;
+}
+h1::before {
+    margin-right: 20px ;
+    left: 0px ;
+}
+h1::after {
+    margin-left: 20px ;
+    right: 0px ;
+}
+/* メニュー */
+ul {
+    margin : 0 ;
+    padding: 0 ;
+    text-align: center ;
+}
+li {
+    width: calc(24% - 20px);
+    display: inline-block ;
+    border-bottom: 2px solid black ;
+    margin-right: 20px ;
+}
+li:last-child {
+    margin-right: 0px ;
+}
+li:hover {
+    font-weight: 700 ;
+    font-size: 1.2em ;
+    border-bottom: 4px solid red ;
+}
+a {
+    box-sizing: border-box ;
+    display: block ;
+    width: 100% ;
+    padding: 20px ;
+    text-decoration: none ;
+}</pre>
+    </div>
+  </div>
+
+  <div class="lab" data-focus="html" data-minh="360" data-good-note="iframe 内の本文をスクロールしても、fixed のヘッダーは上端に残ります。">
+    <script type="text/plain" class="lab-css">
+body {
+  margin: 0;
+  font-family: sans-serif;
+  font-size: 14px;
+}
+.d-a2-header {
+  box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 78px;
+  padding: 10px 14px;
+  text-align: center;
+  background: #fffefc;
+  border-bottom: 2px solid #b2452c;
+  z-index: 2;
+}
+.d-a2-header h1 {
+  margin: 0 0 4px;
+  font-size: 21px;
+}
+.d-a2-menu {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  list-style: none;
+}
+.d-a2-menu a {
+  color: #29251f;
+  text-decoration: none;
+}
+.d-a2-main {
+  height: 300px;
+  overflow: auto;
+  padding: 94px 16px 24px;
+  line-height: 2.1;
+  background: #f4f2ee;
+}
+.d-a2-main p { margin: 0 0 34px; }
+    </script>
+    <script type="text/plain" class="lab-html">
+<header class="d-a2-header">
+  <h1>注文の多い料理店</h1>
+  <nav><ul class="d-a2-menu"><li><a href="#">ドリンク</a></li><li><a href="#">麺類</a></li><li><a href="#">ごはん</a></li><li><a href="#">サービス</a></li></ul></nav>
+</header>
+<main class="d-a2-main">
+  <p>ここにコンテンツを表示します。</p>
+  <p>吾輩は猫である。名前はまだ無い。どこで生れたかとんと見当がつかぬ。</p>
+  <p>何でも薄暗いじめじめした所でニャーニャー泣いていた事だけは記憶している。</p>
+  <p>吾輩はここで始めて人間というものを見た。</p>
+</main>
+    </script>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ============ A.3 sticky ============ -->
+<section class="stage" id="s-a-3">
+  <div class="stage-head">
+    <span class="stage-no">A.3</span><h2>「position: sticky」のサンプル</h2><span class="tag gray">⚪ 参考</span>
+  </div>
+  <p class="stage-def"><strong>sticky</strong>（Sticky）は、通常の位置から始まり、スクロールで指定したしきい値に達すると吸着します。</p>
+
+  <div class="duo d-source-pair d-a3-source">
+    <div>
+      <div class="duo-label">sticky-sample.html（原文コード）</div>
+      <pre class="code-static d-appendix-code">&lt;!DOCTYPE html&gt;
+&lt;html lang="ja"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;sticky sample&lt;/title&gt;
+  &lt;link rel="stylesheet" href="sticky-sample.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;header&gt;
+    &lt;h1&gt;予定表&lt;/h1&gt;
+  &lt;/header&gt;
+  &lt;main&gt;
+    &lt;h2&gt;1月&lt;/h2&gt;
+    &lt;table&gt;
+      &lt;tr&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;月&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;火&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;水&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;4&lt;/td&gt;&lt;td&gt;木&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;5&lt;/td&gt;&lt;td&gt;金&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;6&lt;/td&gt;&lt;td&gt;土&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;7&lt;/td&gt;&lt;td&gt;日&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;8&lt;/td&gt;&lt;td&gt;月&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;9&lt;/td&gt;&lt;td&gt;火&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;10&lt;/td&gt;&lt;td&gt;水&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+    &lt;/table&gt;
+    &lt;h2&gt;2月&lt;/h2&gt;
+    &lt;table&gt;
+      &lt;tr&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;月&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;火&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;水&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;4&lt;/td&gt;&lt;td&gt;木&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;5&lt;/td&gt;&lt;td&gt;金&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;6&lt;/td&gt;&lt;td&gt;土&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;7&lt;/td&gt;&lt;td&gt;日&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;8&lt;/td&gt;&lt;td&gt;月&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;9&lt;/td&gt;&lt;td&gt;火&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;10&lt;/td&gt;&lt;td&gt;水&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+    &lt;/table&gt;
+    &lt;h2&gt;3月&lt;/h2&gt;
+    &lt;table&gt;
+      &lt;tr&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;月&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;火&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;水&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;4&lt;/td&gt;&lt;td&gt;木&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;5&lt;/td&gt;&lt;td&gt;金&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;6&lt;/td&gt;&lt;td&gt;土&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;7&lt;/td&gt;&lt;td&gt;日&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;8&lt;/td&gt;&lt;td&gt;月&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;9&lt;/td&gt;&lt;td&gt;火&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td&gt;10&lt;/td&gt;&lt;td&gt;水&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;
+    &lt;/table&gt;
+  &lt;/main&gt;
+  &lt;footer&gt;
+    &lt;small&gt;Copyright &amp;copy; 20xx Denshi Taro, All Reserved.&lt;/small&gt;
+  &lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+    </div>
+    <div>
+      <div class="duo-label">sticky-sample.css（原文コード）</div>
+      <pre class="code-static d-appendix-code">/* 蛍光マーカー風見出し */
+h1 {
+    background: linear-gradient(transparent 70%, #a7d6ff 70%);
+    padding-left: 20px ;
+}
+/* 表 */
+table, th, td {
+    border: 1px solid black ;
+    border-collapse: collapse ;
+    padding: 10px ;
+}
+table {
+    margin: -10px 0px 0px 20px ;
+    width : 90% ;
+    font-size : 1.5em ;
+}
+td:nth-child(1), td:nth-child(2) {
+    width: 60px ;
+    text-align: center;
+}
+/* 月の表示部分。ここがsticky */
+h2 {
+    position: sticky ;
+    padding : 20px 30px ;
+    background-color: aliceblue ;
+    top: 0 ;
+    left: 0 ;
+    border-radius: 20px ;
+}
+/* 吹き出しのような▼を表示 */
+h2::after {
+    position: absolute;
+    content: '';
+    top: 100%;
+    left: 30px;
+    border: 15px solid transparent;
+    border-top: 15px solid aliceblue;
+    width: 0;
+    height: 0;
+}
+/* フッター */
+footer {
+    background-color: lightgray ;
+    margin-top: 30px ;
+    padding: 20px 0px ;
+    text-align: center ;
+}</pre>
+    </div>
+  </div>
+
+  <div class="lab" data-selector=".d-a3-month" data-fixed="top: 0" data-focus="css" data-minh="330" data-good-note="iframe 内のスクロール枠を下へ動かし、月見出しが吸着することを確認します。">
+    <script type="text/plain" class="lab-css">
+body {
+  margin: 0;
+  padding: 12px;
+  font-family: sans-serif;
+  font-size: 14px;
+}
+.d-a3-scroll {
+  height: 280px;
+  overflow: auto;
+  border: 1px dashed #b9b2a5;
+  background: #fffefc;
+  padding: 0 12px 20px;
+}
+.d-a3-scroll h1 {
+  padding-left: 10px;
+  background: linear-gradient(transparent 70%, #a7d6ff 70%);
+}
+.d-a3-month {
+  padding: 12px 18px;
+  background: aliceblue;
+  border-radius: 8px;
+  z-index: 1;
+}
+.d-a3-scroll table {
+  width: 90%;
+  border-collapse: collapse;
+  margin: 0 0 16px 18px;
+}
+.d-a3-scroll td {
+  border: 1px solid black;
+  padding: 8px;
+}
+.d-a3-scroll td:nth-child(1), .d-a3-scroll td:nth-child(2) {
+  width: 54px;
+  text-align: center;
+}
+.d-a3-footer {
+  background: lightgray;
+  padding: 14px 0;
+  text-align: center;
+}
+    </script>
+    <script type="text/plain" class="lab-html">
+<header><h1>予定表</h1></header>
+<main class="d-a3-scroll">
+  <h2 class="d-a3-month">1月</h2>
+  <table>
+    <tr><td>1</td><td>月</td><td></td></tr>
+    <tr><td>2</td><td>火</td><td></td></tr>
+    <tr><td>3</td><td>水</td><td></td></tr>
+    <tr><td>4</td><td>木</td><td></td></tr>
+    <tr><td>5</td><td>金</td><td></td></tr>
+    <tr><td>6</td><td>土</td><td></td></tr>
+    <tr><td>7</td><td>日</td><td></td></tr>
+    <tr><td>8</td><td>月</td><td></td></tr>
+    <tr><td>9</td><td>火</td><td></td></tr>
+    <tr><td>10</td><td>水</td><td></td></tr>
+  </table>
+  <h2 class="d-a3-month">2月</h2>
+  <table>
+    <tr><td>1</td><td>月</td><td></td></tr>
+    <tr><td>2</td><td>火</td><td></td></tr>
+    <tr><td>3</td><td>水</td><td></td></tr>
+    <tr><td>4</td><td>木</td><td></td></tr>
+    <tr><td>5</td><td>金</td><td></td></tr>
+    <tr><td>6</td><td>土</td><td></td></tr>
+    <tr><td>7</td><td>日</td><td></td></tr>
+    <tr><td>8</td><td>月</td><td></td></tr>
+    <tr><td>9</td><td>火</td><td></td></tr>
+    <tr><td>10</td><td>水</td><td></td></tr>
+  </table>
+  <h2 class="d-a3-month">3月</h2>
+  <table>
+    <tr><td>1</td><td>月</td><td></td></tr>
+    <tr><td>2</td><td>火</td><td></td></tr>
+    <tr><td>3</td><td>水</td><td></td></tr>
+    <tr><td>4</td><td>木</td><td></td></tr>
+    <tr><td>5</td><td>金</td><td></td></tr>
+    <tr><td>6</td><td>土</td><td></td></tr>
+    <tr><td>7</td><td>日</td><td></td></tr>
+    <tr><td>8</td><td>月</td><td></td></tr>
+    <tr><td>9</td><td>火</td><td></td></tr>
+    <tr><td>10</td><td>水</td><td></td></tr>
+  </table>
+</main>
+<footer class="d-a3-footer"><small>Copyright &amp;copy; 20xx Denshi Taro, All Reserved.</small></footer>
+    </script>
+    <div class="lab-ctl">
+      <div class="vbtns">
+        <span class="ctl-label">月見出し</span>
+        <button class="vbtn active" data-css="position: sticky" data-note="指定したしきい値で月見出しが吸着します。枠内を下へスクロールしてください。">sticky</button>
+        <button class="vbtn" data-ctx-same data-css="position: static" data-note="通常の見出しです。枠内を下へスクロールすると一緒に流れて消えます。">static</button>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ============ A.4 z-index / opacity ============ -->
+<section class="stage" id="s-a-4">
+  <div class="stage-head">
+    <span class="stage-no">A.4</span><h2>「z-index」「opacity」のサンプル</h2><span class="tag gray">⚪ 参考</span>
+  </div>
+  <p class="stage-def"><strong>relative・absolute・z-index・opacity</strong>を組み合わせ、ホバーでドロップダウンを表示します。</p>
+
+  <div class="duo d-source-pair d-a4-source">
+    <div>
+      <div class="duo-label">dropdown-sample.html（原文コード）</div>
+      <pre class="code-static d-appendix-code">&lt;body&gt;
+  &lt;nav class="main-nav"&gt;
+    &lt;ul&gt;
+      &lt;li class="dropdown"&gt;
+        &lt;a href="#"&gt;メニュー&lt;/a&gt;
+        &lt;ul class="dropdown-menu"&gt;
+          &lt;a href="#"&gt;ご飯もの&lt;/a&gt;
+          &lt;a href="#"&gt;麺類&lt;/a&gt;
+          &lt;a href="#"&gt;サラダ&lt;/a&gt;
+          &lt;a href="#"&gt;デザート&lt;/a&gt;
+          &lt;a href="#"&gt;ドリンク&lt;/a&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/nav&gt;
+&lt;/body&gt;</pre>
+    </div>
+    <div>
+      <div class="duo-label">dropdown-sample.css（原文コード）</div>
+      <pre class="code-static d-appendix-code">.main-nav {
+    padding: 10px 0;
+    position: relative;
+    z-index: 10;
+}
+.main-nav ul {
+    list-style: none;  /* リストのデフォルトスタイルを削除 */
+    margin: 0;
+    padding: 0;
+    display: inline-block; /* 横並び */
+}
+.main-nav li {
+    position: relative; /* ドロップダウンメニューの基準点 */
+}
+.main-nav a {
+    display: block; /* a要素をブロック要素にする */
+    padding: 10px 20px;
+    color: white;
+    background-color: #444;
+    text-decoration: none; /* リンクの下線を削除 */
+}
+.main-nav a:hover {
+    background-color: #555;
+}
+.dropdown-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: absolute; /* 親要素（li）を基準に配置 */
+    top: 100%;
+    left: 0;
+    background-color: #444;
+    min-width: 160px;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 20;
+}
+.dropdown-menu li {
+    width: 100%;
+}
+.dropdown-menu a {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+.dropdown-menu a:hover {
+    background-color: #666;
+}
+.dropdown:hover .dropdown-menu {
+    opacity: 1.0;
+    visibility: visible;
+}</pre>
+    </div>
+  </div>
+
+  <div class="lab" data-focus="html" data-minh="270" data-good-note="メニューにマウスを合わせると、absolute・z-index・opacity の実際の効果が表示されます。">
+    <script type="text/plain" class="lab-css">
+body {
+  margin: 0;
+  padding: 12px;
+  font-family: sans-serif;
+  font-size: 14px;
+}
+.d-a4-nav {
+  position: relative;
+  z-index: 10;
+  padding: 10px 0 170px;
+}
+.d-a4-dropdown {
+  position: relative;
+  display: inline-block;
+}
+.d-a4-dropdown > a {
+  display: block;
+  padding: 10px 22px;
+  color: #fffefc;
+  background: #444;
+  text-decoration: none;
+}
+.d-a4-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 160px;
+  background: #444;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 20;
+}
+.d-a4-menu a {
+  display: block;
+  padding: 10px 16px;
+  color: #fffefc;
+  text-decoration: none;
+}
+.d-a4-menu a:hover { background: #666; }
+.d-a4-dropdown:hover .d-a4-menu {
+  opacity: 1;
+  visibility: visible;
+}
+    </script>
+    <script type="text/plain" class="lab-html">
+<nav class="d-a4-nav">
+  <div class="d-a4-dropdown">
+    <a href="#">メニュー</a>
+    <ul class="d-a4-menu">
+      <li><a href="#">ご飯もの</a></li>
+      <li><a href="#">麺類</a></li>
+      <li><a href="#">サラダ</a></li>
+      <li><a href="#">デザート</a></li>
+      <li><a href="#">ドリンク</a></li>
+    </ul>
+  </div>
+</nav>
+    </script>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+
+<div class="footer">作成日 2026-08-01｜対応教材 HTML &amp; CSS vol.12</div>
+
+</main>
+
+<script src="assets/lab-engine.js"></script>
+</body>
+</html>

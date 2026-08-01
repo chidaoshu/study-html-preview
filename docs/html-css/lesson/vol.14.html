@@ -1,0 +1,1478 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      HTML &amp; CSS vol.14 グリッドレイアウト — インタラクティブ解説
+    </title>
+    <link rel="stylesheet" href="assets/lab-engine.css" />
+    <style>
+      /* vol.14 専用。d- 接頭辞クラスのみ */
+    </style>
+  </head>
+  <body>
+    <div class="narrow-warn">
+      このページはパソコンの画面幅（880px 以上）で見ることを前提にしています。
+    </div>
+    <header class="masthead">
+      <div class="kicker">HTML &amp; CSS — VOL.14</div>
+      <h1>グリッドレイアウト</h1>
+      <p class="lede">
+        水平と垂直の2方向を同時に区切るグリッドレイアウトを、実際の格子とコードで確かめます。
+      </p>
+    </header>
+    <nav class="rail" aria-label="ステージ一覧">
+      <div class="rail-inner">
+        <a href="#s-1-1"><span class="no">1.1</span>グリッドレイアウトとは 🟡</a
+        ><a href="#s-1-2"><span class="no">1.2</span>構成物 🟡</a>
+        <a href="#s-1-3" class="major"><span class="no">1.3</span>利用の基本</a
+        ><a href="#s-1-3-1"><span class="no">1.3.1</span>設定 🔴</a
+        ><a href="#s-1-3-2"><span class="no">1.3.2</span>サンプル 🔴</a
+        ><a href="#s-1-3-3"><span class="no">1.3.3</span>指定位置 🔴</a>
+        <a href="#s-1-4" class="major"><span class="no">1.4</span>エリア指定</a
+        ><a href="#s-1-4-1"><span class="no">1.4.1</span>エリア作成 🔴</a
+        ><a href="#s-1-4-2"><span class="no">1.4.2</span>エリア配置 🔴</a>
+        <a href="#s-1-5" class="major"><span class="no">1.5</span>関連設定</a
+        ><a href="#s-1-5-1"><span class="no">1.5.1</span>方向 🟡</a
+        ><a href="#s-1-5-2"><span class="no">1.5.2</span>自動トラック 🟡</a>
+        <a href="#s-1-6" class="major"><span class="no">1.6</span>セル配置</a
+        ><a href="#s-1-6-1"><span class="no">1.6.1</span>整列 🟡</a
+        ><a href="#s-1-6-2"><span class="no">1.6.2</span>間隔 🟡</a>
+        <a href="#s-1-7" class="major"
+          ><span class="no">1.7</span>アイテム調整</a
+        ><a href="#s-1-7-1"><span class="no">1.7.1</span>順番 🟡</a
+        ><a href="#s-1-7-2"><span class="no">1.7.2</span>重なり 🟡</a
+        ><a href="#s-1-7-3"><span class="no">1.7.3</span>横位置 🟡</a
+        ><a href="#s-1-7-4"><span class="no">1.7.4</span>縦位置 🟡</a
+        ><a href="#s-1-7-5"><span class="no">1.7.5</span>サンプル 🟡</a>
+        <a href="#s-1-8" class="major"><span class="no">1.8</span>その他</a
+        ><a href="#s-1-8-1"><span class="no">1.8.1</span>grid-template ⚪</a
+        ><a href="#s-1-8-2"><span class="no">1.8.2</span>grid ⚪</a>
+      </div>
+    </nav>
+    <main>
+      <section class="stage" id="s-1-1">
+        <div class="stage-head">
+          <span class="stage-no">1.1</span>
+          <h2>グリッドレイアウトとは</h2>
+          <span class="tag yellow">🟡 理解</span>
+        </div>
+        <p class="stage-def">
+          <strong>グリッドレイアウト（grid layout）</strong
+          >は、水平と垂直の2次元で区切り、部品を指定位置に配置する方式です。
+        </p>
+        <div class="lab" data-selector=".grid" data-minh="170">
+          <script type="text/plain" class="lab-css">
+            body { font-family: sans-serif; padding: 12px; } .grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 45px); gap: 6px; border: 2px dashed gray; } .item { background: lightsteelblue; padding: 10px; text-align: center; }
+          </script>
+          <script type="text/plain" class="lab-html">
+            <div class="grid"><div class="item">水平 1</div><div class="item">水平 2</div><div class="item">水平 3</div><div class="item">垂直 1</div><div class="item">垂直 2</div><div class="item">垂直 3</div></div>
+          </script>
+          <div class="lab-ctl">
+            <div class="vbtns">
+              <span class="ctl-label">display</span
+              ><button
+                class="vbtn active"
+                data-css="display: grid"
+                data-note="水平と垂直の格子に並びます。"
+              >
+                grid</button
+              ><button
+                class="vbtn"
+                data-css="display: flex"
+                data-note="1方向だけに並ぶ flex と比べてください。"
+              >
+                flex
+              </button>
+            </div>
+          </div>
+          <div class="lab-body"></div>
+          <div class="lab-note" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section class="stage" id="s-1-2">
+        <div class="stage-head">
+          <span class="stage-no">1.2</span>
+          <h2>グリッドレイアウトの構成物</h2>
+          <span class="tag yellow">🟡 理解</span>
+        </div>
+        <p class="stage-def">
+          <strong>構成物（grid parts）</strong
+          >は、コンテナ、アイテム、ライン、セル、エリア、トラック、ギャップです。
+        </p>
+        <div
+          class="lab"
+          data-focus="css"
+          data-flash=".container"
+          data-minh="230"
+        >
+          <script type="text/plain" class="lab-css">
+            body { font-family: sans-serif; padding: 12px; } .container { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 48px); gap: 10px; padding: 8px; border: 3px dashed gray; } .item { background: lightsteelblue; border: 1px solid steelblue; text-align: center; padding: 12px; } .line { color: #b2452c; font-weight: bold; }
+          </script>
+          <script type="text/plain" class="lab-html">
+            <div class="container"><div class="item">1</div><div class="item">2</div><div class="item">3</div><div class="item">4</div><div class="item">5</div><div class="item">6</div></div>
+          </script>
+          <div class="lab-ctl">
+            <div class="vsel-row">
+              <span class="ctl-label">構成物</span
+              ><select class="vsel">
+                <option
+                  selected
+                  data-rule=".container { outline: 4px solid tomato; }"
+                  data-note="外側の親要素がグリッドコンテナです。"
+                >
+                  グリッドコンテナ
+                </option>
+                <option
+                  data-rule=".item { outline: 3px solid tomato; }"
+                  data-note="直接の子要素がグリッドアイテムです。"
+                >
+                  グリッドアイテム
+                </option>
+                <option
+                  data-rule=".container { gap: 0; } .item { border: 2px solid tomato; }"
+                  data-note="縦横の境界がグリッドラインです。左上から1番です。"
+                >
+                  グリッドライン
+                </option>
+                <option
+                  data-rule=".item { background: lightpink; outline: 3px solid tomato; }"
+                  data-note="ライン間の最小単位がグリッドセルです。"
+                >
+                  グリッドセル
+                </option>
+                <option
+                  data-rule=".item:first-child { grid-column: 1 / 3; background: lightpink; }"
+                  data-note="複数セルをまとめた領域がグリッドエリアです。"
+                >
+                  グリッドエリア
+                </option>
+                <option
+                  data-rule=".item:nth-child(3n+1) { background: lightgreen; }"
+                  data-note="行または列の帯がグリッドトラックです。"
+                >
+                  グリッドトラック
+                </option>
+                <option
+                  data-rule=".container { gap: 24px; background: lightyellow; }"
+                  data-note="セル間の間隔がグリッドギャップです。"
+                >
+                  グリッドギャップ
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="lab-body"></div>
+          <div class="lab-note" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section class="stage major" id="s-1-3">
+        <div class="stage-head">
+          <span class="stage-no">1.3</span>
+          <h2>グリッドレイアウト利用の基本</h2>
+        </div>
+      </section>
+      <section class="stage" id="s-1-3-1">
+        <div class="stage-head">
+          <span class="stage-no">1.3.1</span>
+          <h2>グリッドレイアウトの設定</h2>
+          <span class="tag red">🔴 重要</span>
+        </div>
+        <p class="stage-def">
+          <strong>display・grid-template-rows・grid-template-columns</strong
+          >で、コンテナと行列のトラックを作ります。
+        </p>
+        <dl class="facts">
+          <div>
+            <dt>プロパティ値</dt>
+            <dd>グリッドラインの名前、グリッドトラックのサイズ</dd>
+          </div>
+          <div>
+            <dt>初期値</dt>
+            <dd>なし</dd>
+          </div>
+          <div>
+            <dt>適用要素</dt>
+            <dd>グリッドコンテナ</dd>
+          </div>
+          <div>
+            <dt>継承</dt>
+            <dd>継承されない</dd>
+          </div>
+        </dl>
+        <div class="lab" data-selector=".box" data-minh="170">
+          <script type="text/plain" class="lab-css">
+            body { font-family: sans-serif; padding: 12px; } .box { grid-template-columns: repeat(3, 70px); gap: 5px; border: 1px dashed gray; } .i { background: lightpink; padding: 8px; }
+          </script>
+          <script type="text/plain" class="lab-html">
+            前の文字 <div class="box"><span class="i">1</span><span class="i">2</span><span class="i">3</span></div> 後の文字
+          </script>
+          <div class="lab-ctl">
+            <div class="vbtns">
+              <span class="ctl-label">display</span
+              ><button
+                class="vbtn active"
+                data-css="display: grid"
+                data-note="grid はブロックレベル要素として振る舞います。"
+              >
+                grid</button
+              ><button
+                class="vbtn"
+                data-css="display: inline-grid"
+                data-note="inline-grid は前後の文字と同じ行に並びます。"
+              >
+                inline-grid
+              </button>
+            </div>
+          </div>
+          <div class="lab-body"></div>
+          <div class="lab-note" aria-live="polite"></div>
+        </div>
+        <div class="lab" data-selector=".grid" data-minh="200">
+          <script type="text/plain" class="lab-css">
+            body { font-family: sans-serif; padding: 12px; } .grid { display: grid; height: 180px; grid-template-columns: repeat(3, 1fr); gap: 5px; border: 1px dashed gray; } .i { background: lightcyan; padding: 6px; }
+          </script>
+          <script type="text/plain" class="lab-html">
+            <div class="grid"><div class="i">1</div><div class="i">2</div><div class="i">3</div></div>
+          </script>
+          <div class="lab-ctl">
+            <div class="vbtns">
+              <span class="ctl-label">grid-template-rows</span
+              ><button
+                class="vbtn active"
+                data-css="grid-template-rows: [line1] 60px [line2] 1fr [line3] 2fr [line4]"
+                data-note="line-name と 60px、1fr、2fr の行指定です。"
+              >
+                line-name / fr</button
+              ><button
+                class="vbtn"
+                data-css="grid-template-rows: repeat(3, 50px)"
+                data-note="repeat() で同じ高さの3行を作ります。"
+              >
+                repeat()
+              </button>
+            </div>
+            <div class="vbtns">
+              <span class="ctl-label">grid-template-columns</span
+              ><button
+                class="vbtn active"
+                data-css="grid-template-columns: 100px 2fr 1fr"
+                data-note="100px と 2fr、1fr の3列です。"
+              >
+                100px 2fr 1fr</button
+              ><button
+                class="vbtn"
+                data-css="grid-template-columns: repeat(3, 1fr)"
+                data-note="repeat(3, 1fr) は均等な3列です。"
+              >
+                repeat(3, 1fr)</button
+              ><button
+                class="vbtn"
+                data-css="grid-template-columns: repeat(auto-fill, minmax(80px, 1fr))"
+                data-note="auto-fill は空のトラックも確保します。"
+              >
+                auto-fill / minmax</button
+              ><button
+                class="vbtn"
+                data-css="grid-template-columns: repeat(auto-fit, minmax(80px, 1fr))"
+                data-note="auto-fit は空のトラックを折り畳み、項目が広がります。"
+              >
+                auto-fit / minmax
+              </button>
+            </div>
+          </div>
+          <div class="lab-body"></div>
+          <div class="lab-note" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section class="stage" id="s-1-3-2">
+        <div class="stage-head">
+          <span class="stage-no">1.3.2</span>
+          <h2>サンプルプログラム</h2>
+          <span class="tag red">🔴 重要</span>
+        </div>
+        <p class="stage-def">
+          <strong>800px サンプル</strong
+          >は、行を60px・1fr・2fr、列を100px・2fr・1frで区切ります。
+        </p>
+        <div class="lab" data-focus="css" data-minh="360">
+          <script type="text/plain" class="lab-css">
+            body { font-family: sans-serif; padding: 12px; } div { border: 2px dashed gray; width: 800px; height: 300px; margin-bottom: 20px; display: grid; grid-template-rows: [line1] 60px [line2] 1fr [line3] 2fr [line4]; grid-template-columns: 100px 2fr 1fr; } p { margin: 0; padding: 5px; } p:nth-child(5n) { background-color: lightcyan; } p:nth-child(5n+1) { background-color: lightpink; } p:nth-child(5n+2) { background-color: lightsteelblue; } p:nth-child(5n+3) { background-color: lightyellow; } p:nth-child(5n+4) { background-color: lightgreen; }
+          </script>
+          <script type="text/plain" class="lab-html">
+            <h1>グリッドレイアウト</h1><div class="area1"><p>アイテム1</p><p>アイテム2</p><p>アイテム3</p><p>アイテム4</p><p>アイテム5</p><p>アイテム6</p><p>アイテム7</p><p>アイテム8</p></div><div class="area2"><p>アイテム9</p><p>アイテム10</p><p>アイテム11</p><p>アイテム12</p><p>アイテム13</p><p>アイテム14</p><p>アイテム15</p><p>アイテム16</p></div>
+          </script>
+          <div class="lab-ctl">
+            <div class="vbtns">
+              <span class="ctl-label">area1 / area2</span
+              ><button
+                class="vbtn active"
+                data-rule=""
+                data-note="800px の2つの格子に5色のアイテムが配置されます。"
+              >
+                基本の rows / columns</button
+              ><button
+                class="vbtn"
+                data-rule="div.area1 { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); grid-template-rows: 150px 150px; } div.area2 { grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); grid-template-rows: 150px 150px; }"
+                data-note="area1 は auto-fill、area2 は auto-fit です。空トラックの有無を比べます。"
+              >
+                auto-fill / auto-fit
+              </button>
+            </div>
+          </div>
+          <div class="lab-body"></div>
+          <div class="lab-note" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section class="stage" id="s-1-3-3">
+        <div class="stage-head">
+          <span class="stage-no">1.3.3</span>
+          <h2>グリッドアイテムを指定位置に配置する</h2>
+          <span class="tag red">🔴 重要</span>
+        </div>
+        <p class="stage-def">
+          <strong>grid-row-start / end と grid-column-start / end</strong
+          >は、グリッドラインを基準に開始と終了を決めます。
+        </p>
+        <dl class="facts">
+          <div>
+            <dt>プロパティ値</dt>
+            <dd>auto、グリッドライン、グリッドスパン</dd>
+          </div>
+          <div>
+            <dt>初期値</dt>
+            <dd>auto</dd>
+          </div>
+          <div>
+            <dt>適用要素</dt>
+            <dd>グリッドアイテム</dd>
+          </div>
+          <div>
+            <dt>継承</dt>
+            <dd>継承されない</dd>
+          </div>
+        </dl>
+        <div class="lab" data-selector=".item" data-minh="260">
+          <script type="text/plain" class="lab-css">
+            body { font-family: sans-serif; padding: 12px; } .container { display: grid; width: 500px; grid-template-columns: repeat(auto-fill, 100px); grid-template-rows: repeat(5, 50px); border: dashed; } .item { background: lightpink; padding: 12px; }
+          </script>
+          <script type="text/plain" class="lab-html">
+            <div class="container"><div class="item">item</div></div>
+          </script>
+          <div class="lab-ctl">
+            <div class="vbtns">
+              <span class="ctl-label">start / end</span
+              ><button
+                class="vbtn active"
+                data-css="grid-row-start: 2; grid-row-end: 4; grid-column-start: 2; grid-column-end: 5"
+                data-note="2行目から4行目、2列目から5列目の手前までです。"
+              >
+                数字で4値指定</button
+              ><button
+                class="vbtn"
+                  data-css="grid-row-start: 2; grid-row-end: span 2; grid-column-start: 2; grid-column-end: span 3"
+                  data-same-ok
+                  data-note="span 2 と span 3 は数字での終了位置指定と同じ範囲です。"
+              >
+                span で4値指定
+              </button>
+            </div>
+            <div class="vbtns">
+              <span class="ctl-label">grid-row / column</span
+              ><button
+                class="vbtn"
+                data-css="grid-row: 2 / 4; grid-column: 2 / span 3"
+                data-note="開始と終了を / で一括指定します。"
+              >
+                2 / 4・2 / span 3</button
+              ><button
+                class="vbtn"
+                data-css="grid-row: 1 / span 3; grid-column: 1 / -1"
+                data-note="span と最後のライン -1 を使う配置です。"
+              >
+                span / -1
+              </button>
+            </div>
+          </div>
+          <div class="lab-body"></div>
+          <div class="lab-note" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section class="stage major" id="s-1-4">
+        <div class="stage-head">
+          <span class="stage-no">1.4</span>
+          <h2>グリッドエリアを利用したレイアウトの指定</h2>
+        </div>
+      </section>
+      <section class="stage" id="s-1-4-1">
+        <div class="stage-head">
+          <span class="stage-no">1.4.1</span>
+          <h2>グリッドエリアを作成する</h2>
+          <span class="tag red">🔴 重要</span>
+        </div>
+        <p class="stage-def">
+          <strong>grid-template-areas</strong
+          >は、セル名を文字列として並べてグリッドエリアを作ります。
+        </p>
+        <dl class="facts">
+          <div>
+            <dt>プロパティ値</dt>
+            <dd>エリア名または「.」を空白、改行で区切る文字列</dd>
+          </div>
+          <div>
+            <dt>初期値</dt>
+            <dd>なし</dd>
+          </div>
+          <div>
+            <dt>適用要素</dt>
+            <dd>グリッドコンテナ</dd>
+          </div>
+          <div>
+            <dt>継承</dt>
+            <dd>継承されない</dd>
+          </div>
+        </dl>
+        <div class="lab" data-selector=".container" data-minh="190">
+          <script type="text/plain" class="lab-css">
+            body { font-family: sans-serif; padding: 12px; } .container { display: grid; grid-template-columns: 100px 200px 300px; grid-template-rows: 50px 100px; gap: 4px; border: dashed; } .i { padding: 12px; background: lightcyan; } .a1 { grid-area: area1; } .a2 { grid-area: area2; background: lightpink; } .a3 { grid-area: area3; background: lightgreen; }
+          </script>
+          <script type="text/plain" class="lab-html">
+            <div class="container"><div class="i a1">area1</div><div class="i a2">area2</div><div class="i a3">area3</div></div>
+          </script>
+          <div class="lab-ctl">
+            <div class="vbtns">
+              <span class="ctl-label">grid-template-areas</span
+              ><button
+                class="vbtn active"
+                data-css="grid-template-areas: 'area1 area1 area1' 'area2 . area3'"
+                data-note="同名の area1 は3セルにまたがり、. は名前なしのセルです。"
+              >
+                名前・繰返し・.</button
+              ><button
+                class="vbtn"
+                data-css="grid-template-columns: none; grid-template-rows: none; grid-template-areas: 'area1 area1 area1' 'area2 . area3'"
+                data-note="行列を省いても区切りからセルが自動生成されます。"
+              >
+                行列を省略
+              </button>
+            </div>
+          </div>
+          <div class="lab-body"></div>
+          <div class="lab-note" aria-live="polite"></div>
+        </div>
+      </section>
+      <section class="stage" id="s-1-4-2">
+        <div class="stage-head">
+          <span class="stage-no">1.4.2</span>
+          <h2>グリッドエリアを指定してグリッドアイテムを配置する</h2>
+          <span class="tag red">🔴 重要</span>
+        </div>
+        <p class="stage-def">
+          <strong>grid-area</strong
+          >は、エリア名または行列の開始・終了4値でアイテムを配置します。
+        </p>
+        <dl class="facts">
+          <div>
+            <dt>プロパティ値</dt>
+            <dd>グリッドエリア名、開始位置、終了位置</dd>
+          </div>
+          <div>
+            <dt>初期値</dt>
+            <dd>auto</dd>
+          </div>
+          <div>
+            <dt>適用要素</dt>
+            <dd>グリッドアイテム</dd>
+          </div>
+          <div>
+            <dt>継承</dt>
+            <dd>継承されない</dd>
+          </div>
+        </dl>
+        <div class="lab" data-selector=".item" data-minh="200">
+          <script type="text/plain" class="lab-css">
+            body { font-family: sans-serif; padding: 12px; } .container { display: grid; height: 200px; grid-template-columns: repeat(4, 100px); grid-template-rows: repeat(4, 50px); grid-template-areas: 'area1 area1 area1 area1' 'area2 area2 area3 area3'; gap: 4px; border: dashed; } .item { background-color: aliceblue; padding: 10px; }
+          </script>
+          <script type="text/plain" class="lab-html">
+            <div class="container"><div class="item">item</div></div>
+          </script>
+          <div class="lab-ctl">
+            <div class="vbtns">
+              <span class="ctl-label">grid-area</span
+              ><button
+                class="vbtn active"
+                data-css="grid-area: area1"
+                data-note="area1 の1行目すべてが aliceblue で塗られます。"
+              >
+                area1</button
+              ><button
+                class="vbtn"
+                data-css="grid-area: 2 / 2 / 4 / 4"
+                data-note="2行2列から4行4列の手前までを指定します。"
+              >
+                2 / 2 / 4 / 4
+              </button>
+            </div>
+          </div>
+          <div class="lab-body"></div>
+          <div class="lab-note" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section class="stage major" id="s-1-5">
+        <div class="stage-head">
+          <span class="stage-no">1.5</span>
+          <h2>グリッドレイアウトに関する設定</h2>
+        </div>
+      </section>
+      <section class="stage" id="s-1-5-1">
+        <div class="stage-head">
+          <span class="stage-no">1.5.1</span>
+          <h2>グリッドレイアウトの方向を指定する</h2>
+          <span class="tag yellow">🟡 理解</span>
+        </div>
+        <p class="stage-def">
+          <strong>grid-auto-flow</strong
+          >は、位置未指定アイテムを行または列のどちらへ自動配置するかを決めます。
+        </p>
+        <dl class="facts">
+          <div>
+            <dt>プロパティ値</dt>
+            <dd>キーワード</dd>
+          </div>
+          <div>
+            <dt>初期値</dt>
+            <dd>row</dd>
+          </div>
+          <div>
+            <dt>適用要素</dt>
+            <dd>グリッドコンテナ</dd>
+          </div>
+          <div>
+            <dt>継承</dt>
+            <dd>継承されない</dd>
+          </div>
+        </dl>
+        <div class="lab" data-selector=".container" data-minh="220">
+          <script type="text/plain" class="lab-css">
+            body { font-family: sans-serif; padding: 12px; } .container { display: grid; grid-template-columns: repeat(3, 90px); grid-template-rows: repeat(3, 45px); gap: 5px; border: dashed; } .item { background: lightsteelblue; padding: 10px; } .big { grid-column: span 2; background: lightpink; }
+          </script>
+          <script type="text/plain" class="lab-html">
+            <div class="container"><div class="item">1</div><div class="item big">2</div><div class="item big">3</div><div class="item big">4</div><div class="item">5</div></div>
+          </script>
+          <div class="lab-ctl">
+            <div class="vbtns">
+              <span class="ctl-label">grid-auto-flow</span
+              ><button
+                class="vbtn active"
+                data-css="grid-auto-flow: row"
+                data-note="行方向に順に置くため、空きが残ります。"
+              >
+                row</button
+              ><button
+                class="vbtn"
+                data-css="grid-auto-flow: column"
+                data-note="上から下へ、次に右列へ配置します。"
+              >
+                column</button
+              ><button
+                class="vbtn"
+                data-css="grid-auto-flow: row dense"
+                data-note="後続の5を先の空きへできるだけ埋めます。"
+              >
+                row dense
+              </button>
+            </div>
+          </div>
+          <div class="lab-body"></div>
+          <div class="lab-note" aria-live="polite"></div>
+        </div>
+      </section>
+      <section class="stage" id="s-1-5-2">
+        <div class="stage-head">
+          <span class="stage-no">1.5.2</span>
+          <h2>グリッドトラックのデフォルトのサイズを指定する</h2>
+          <span class="tag yellow">🟡 理解</span>
+        </div>
+        <p class="stage-def">
+          <strong>grid-auto-rows・grid-auto-columns</strong
+          >は、明示しなかった自動生成トラックのサイズを決めます。
+        </p>
+        <dl class="facts">
+          <div>
+            <dt>プロパティ値</dt>
+            <dd>長さ、パーセンテージ、キーワード、他</dd>
+          </div>
+          <div>
+            <dt>初期値</dt>
+            <dd>auto</dd>
+          </div>
+          <div>
+            <dt>適用要素</dt>
+            <dd>グリッドコンテナ</dd>
+          </div>
+          <div>
+            <dt>継承</dt>
+            <dd>継承されない</dd>
+          </div>
+        </dl>
+        <div class="lab" data-selector=".container" data-minh="190">
+          <script type="text/plain" class="lab-css">
+            body { font-family: sans-serif; padding: 12px; } .container { display: grid; grid-template-columns: repeat(3, 100px); grid-template-rows: repeat(2, 50px); gap: 5px; border: dashed; } .item { background: lightgreen; padding: 8px; }
+          </script>
+          <script type="text/plain" class="lab-html">
+            <div class="container"><div class="item">1</div><div class="item">2</div><div class="item">3</div><div class="item">4</div><div class="item">5</div><div class="item">6</div><div class="item">7</div><div class="item">8</div></div>
+          </script>
+          <div class="lab-ctl">
+            <div class="vbtns">
+              <span class="ctl-label">grid-auto-rows</span
+              ><button
+                class="vbtn active"
+                data-css="grid-auto-rows: fit-content"
+                data-note="7〜8番目の自動行は内容に合う高さです。"
+              >
+                fit-content</button
+              ><button
+                class="vbtn"
+                data-css="grid-auto-rows: 80px"
+                data-note="自動生成された行を80pxにします。"
+              >
+                80px
+              </button>
+            </div>
+            <div class="vbtns">
+              <span class="ctl-label">grid-auto-columns</span
+              ><button
+                class="vbtn"
+                data-css="grid-auto-flow: column; grid-auto-columns: 50px"
+                data-note="3列を超える自動生成列の幅は50pxです。"
+              >
+                column / 50px</button
+              ><button
+                class="vbtn"
+                data-css="grid-auto-flow: column; grid-auto-columns: 100px"
+                data-note="自動生成列の幅を100pxにします。"
+              >
+                column / 100px
+              </button>
+            </div>
+          </div>
+          <div class="lab-body"></div>
+          <div class="lab-note" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section class="stage major" id="s-1-6">
+        <div class="stage-head">
+          <span class="stage-no">1.6</span>
+          <h2>グリッドセルの配置位置の指定</h2>
+        </div>
+      </section>
+      <section class="stage" id="s-1-6-1">
+        <div class="stage-head">
+          <span class="stage-no">1.6.1</span>
+          <h2>グリッドセルを縦横に整列させる</h2>
+          <span class="tag yellow">🟡 理解</span>
+        </div>
+        <p class="stage-def">
+          <strong>justify-content・align-content</strong
+          >は、余った空間でトラック全体を横・縦に整列させます。
+        </p>
+        <dl class="facts">
+          <div>
+            <dt>プロパティ値</dt>
+            <dd>キーワード</dd>
+          </div>
+          <div>
+            <dt>初期値</dt>
+            <dd>normal</dd>
+          </div>
+          <div>
+            <dt>適用要素</dt>
+            <dd>グリッドコンテナ</dd>
+          </div>
+          <div>
+            <dt>継承</dt>
+            <dd>継承されない</dd>
+          </div>
+        </dl>
+        <div class="lab" data-selector=".container" data-minh="260">
+          <script type="text/plain" class="lab-css">
+            body { font-family: sans-serif; padding: 12px; } .container { display: grid; width: 400px; height: 200px; grid-template-columns: repeat(3, 70px); grid-template-rows: repeat(2, 45px); border: dashed; } .item { background: lightcyan; border: 1px solid steelblue; padding: 8px; }
+          </script>
+          <script type="text/plain" class="lab-html">
+            <div class="container"><div class="item">1</div><div class="item">2</div><div class="item">3</div><div class="item">4</div><div class="item">5</div><div class="item">6</div></div>
+          </script>
+          <div class="lab-ctl">
+            <div class="vsel-row">
+              <span class="ctl-label">justify-content</span
+              ><select class="vsel">
+                <option
+                  selected
+                  data-css="justify-content: normal"
+                  data-note="normal は既定の位置です。"
+                >
+                  normal
+                </option>
+                <option
+                  data-css="justify-content: start"
+                  data-note="横の開始側に寄せます。"
+                >
+                  start
+                </option>
+                <option
+                  data-css="justify-content: center"
+                  data-note="横の中央に寄せます。"
+                >
+                  center
+                </option>
+                <option
+                  data-css="justify-content: end"
+                  data-note="横の終了側に寄せます。"
+                >
+                  end
+                </option>
+                <option
+                  data-css="justify-content: space-between"
+                  data-note="両端を端へ置き、間隔を均等にします。"
+                >
+                  space-between
+                </option>
+                <option
+                  data-css="justify-content: space-around"
+                  data-note="端は間隔の半分になります。"
+                >
+                  space-around
+                </option>
+                <option
+                  data-css="justify-content: space-evenly"
+                  data-note="端も間も同じ間隔です。"
+                >
+                  space-evenly
+                </option>
+              </select>
+            </div>
+            <div class="vsel-row">
+              <span class="ctl-label">align-content</span
+              ><select class="vsel">
+                <option
+                  selected
+                  data-css="align-content: normal"
+                  data-note="normal は既定の位置です。"
+                >
+                  normal
+                </option>
+                <option
+                  data-css="align-content: start"
+                  data-note="縦の開始側に寄せます。"
+                >
+                  start
+                </option>
+                <option
+                  data-css="align-content: center"
+                  data-note="縦の中央に寄せます。"
+                >
+                  center
+                </option>
+                <option
+                  data-css="align-content: end"
+                  data-note="縦の終了側に寄せます。"
+                >
+                  end
+                </option>
+                <option
+                  data-css="align-content: space-between"
+                  data-note="縦の両端を端へ置きます。"
+                >
+                  space-between
+                </option>
+                <option
+                  data-css="align-content: space-around"
+                  data-note="縦の端は半分の間隔です。"
+                >
+                  space-around
+                </option>
+                <option
+                  data-css="align-content: space-evenly"
+                  data-note="縦の端も間も同じ間隔です。"
+                >
+                  space-evenly
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="lab-body"></div>
+          <div class="lab-note" aria-live="polite"></div>
+        </div>
+      </section>
+      <section class="stage" id="s-1-6-2">
+        <div class="stage-head">
+          <span class="stage-no">1.6.2</span>
+          <h2>グリッドセルの間隔を調整する</h2>
+          <span class="tag yellow">🟡 理解</span>
+        </div>
+        <p class="stage-def">
+          <strong>row-gap・column-gap・gap</strong
+          >は、行間と列間のグリッドギャップを設定します。
+        </p>
+        <dl class="facts">
+          <div>
+            <dt>プロパティ値</dt>
+            <dd>長さ、パーセンテージ、auto</dd>
+          </div>
+          <div>
+            <dt>初期値</dt>
+            <dd>auto</dd>
+          </div>
+          <div>
+            <dt>適用要素</dt>
+            <dd>グリッドコンテナ</dd>
+          </div>
+          <div>
+            <dt>継承</dt>
+            <dd>継承されない</dd>
+          </div>
+        </dl>
+        <div class="lab" data-selector=".container" data-minh="190">
+          <script type="text/plain" class="lab-css">
+            body { font-family: sans-serif; padding: 12px; } .container { display: grid; grid-template-columns: repeat(4, 70px); grid-template-rows: repeat(2, 45px); border: dashed; } .item { background: lightpink; padding: 10px; }
+          </script>
+          <script type="text/plain" class="lab-html">
+            <div class="container"><div class="item">1</div><div class="item">2</div><div class="item">3</div><div class="item">4</div><div class="item">5</div><div class="item">6</div><div class="item">7</div><div class="item">8</div></div>
+          </script>
+          <div class="lab-ctl">
+            <div class="vbtns">
+              <span class="ctl-label">row-gap</span
+              ><button
+                class="vbtn active"
+                data-css="row-gap: 10px"
+                data-note="行間を10pxにします。"
+              >
+                10px</button
+              ><button
+                class="vbtn"
+                data-css="row-gap: 25px"
+                data-note="行間を25pxに広げます。"
+              >
+                25px
+              </button>
+            </div>
+            <div class="vbtns">
+              <span class="ctl-label">column-gap</span
+              ><button
+                class="vbtn active"
+                data-css="column-gap: 20px"
+                data-note="列間を20pxにします。"
+              >
+                20px</button
+              ><button
+                class="vbtn"
+                data-css="column-gap: 5px"
+                data-note="列間を5pxにします。"
+              >
+                5px
+              </button>
+            </div>
+            <div class="vbtns">
+              <span class="ctl-label">gap</span
+              ><button
+                class="vbtn"
+                data-css="gap: 15px"
+                data-note="1値は行間・列間とも15pxです。"
+              >
+                15px</button
+              ><button
+                class="vbtn"
+                data-css="gap: 10px 20px"
+                data-note="2値は行間10px、列間20pxです。"
+              >
+                10px 20px
+              </button>
+            </div>
+          </div>
+          <div class="lab-body"></div>
+          <div class="lab-note" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section class="stage major" id="s-1-7">
+        <div class="stage-head">
+          <span class="stage-no">1.7</span>
+          <h2>グリッドアイテムに対する調整</h2>
+        </div>
+      </section>
+      <section class="stage" id="s-1-7-1">
+        <div class="stage-head">
+          <span class="stage-no">1.7.1</span>
+          <h2>グリッドアイテムの並び順を指定する</h2>
+          <span class="tag yellow">🟡 理解</span>
+        </div>
+        <p class="stage-def">
+          <strong>order</strong
+          >は、HTMLの記述順ではなく整数値の小さい順でアイテムを並べます。
+        </p>
+        <dl class="facts">
+          <div>
+            <dt>プロパティ値</dt>
+            <dd>整数値</dd>
+          </div>
+          <div>
+            <dt>初期値</dt>
+            <dd>0</dd>
+          </div>
+          <div>
+            <dt>適用要素</dt>
+            <dd>グリッドアイテム</dd>
+          </div>
+          <div>
+            <dt>継承</dt>
+            <dd>継承されない</dd>
+          </div>
+        </dl>
+        <div class="lab" data-selector="#item2" data-minh="160">
+          <script type="text/plain" class="lab-css">
+            body { font-family: sans-serif; padding: 12px; } .container { display: grid; grid-template-columns: repeat(4, 80px); gap: 5px; } .item { background: lightcyan; padding: 10px; } #item2 { background: tomato; color: white; }
+          </script>
+          <script type="text/plain" class="lab-html">
+            <div class="container"><div class="item">1</div><div class="item" id="item2">2</div><div class="item">3</div><div class="item">4</div><div class="item" id="item5">5</div></div>
+          </script>
+          <div class="lab-ctl">
+            <div class="vbtns">
+              <span class="ctl-label">order</span
+              ><button
+                class="vbtn active"
+                data-css="order: 0"
+                data-note="0ではHTML順の2番目です。"
+              >
+                0</button
+              ><button
+                class="vbtn"
+                data-css="order: 4"
+                data-note="4は他の0より後ろへ移動します。"
+              >
+                4</button
+              ><button
+                class="vbtn"
+                data-css="order: -1"
+                data-note="-1は他の0より前へ移動します。"
+              >
+                -1
+              </button>
+            </div>
+          </div>
+          <div class="lab-body"></div>
+          <div class="lab-note" aria-live="polite"></div>
+        </div>
+      </section>
+      <section class="stage" id="s-1-7-2">
+        <div class="stage-head">
+          <span class="stage-no">1.7.2</span>
+          <h2>グリッドアイテムの重なり順を指定する</h2>
+          <span class="tag yellow">🟡 理解</span>
+        </div>
+        <p class="stage-def">
+          <strong>z-index</strong
+          >は、同じセル上に重なったアイテムの前後関係を整数で決めます。
+        </p>
+        <dl class="facts">
+          <div>
+            <dt>プロパティ値</dt>
+            <dd>整数値</dd>
+          </div>
+          <div>
+            <dt>初期値</dt>
+            <dd>auto</dd>
+          </div>
+          <div>
+            <dt>適用要素</dt>
+            <dd>グリッドアイテム</dd>
+          </div>
+          <div>
+            <dt>継承</dt>
+            <dd>継承されない</dd>
+          </div>
+        </dl>
+        <div class="lab" data-selector="#item2" data-minh="210">
+          <script type="text/plain" class="lab-css">
+            body { font-family: sans-serif; padding: 12px; } .ex152 { display: grid; grid-template-columns: repeat(4, 100px); grid-template-rows: repeat(4, 50px); } .item { padding: 12px; } #item2 { grid-row: 1 / 4; grid-column: 2 / 4; background: lightpink; } #item5 { grid-row: 2 / 5; grid-column: 3 / 5; background: lightsteelblue; }
+          </script>
+          <script type="text/plain" class="lab-html">
+            <div class="ex152"><div class="item" id="item2">item2</div><div class="item" id="item5">item5</div></div>
+          </script>
+          <div class="lab-ctl">
+            <div class="vbtns">
+              <span class="ctl-label">#item2 z-index</span
+              ><button
+                class="vbtn active"
+                data-css="z-index: auto"
+                data-note="autoでは後にあるitem5が前面です。"
+              >
+                auto</button
+              ><button
+                class="vbtn"
+                data-css="z-index: 1"
+                data-note="1を持つitem2が前面に出ます。"
+              >
+                1
+              </button>
+            </div>
+          </div>
+          <div class="lab-body"></div>
+          <div class="lab-note" aria-live="polite"></div>
+        </div>
+      </section>
+      <section class="stage" id="s-1-7-3">
+        <div class="stage-head">
+          <span class="stage-no">1.7.3</span>
+          <h2>グリッドアイテムの横方向の位置を指定する</h2>
+          <span class="tag yellow">🟡 理解</span>
+        </div>
+        <p class="stage-def">
+          <strong>justify-items・justify-self</strong
+          >は、セル内のアイテムを横方向に一括または個別で配置します。
+        </p>
+        <dl class="facts">
+          <div>
+            <dt>justify-items 初期値</dt>
+            <dd>legacy</dd>
+          </div>
+          <div>
+            <dt>justify-self 初期値</dt>
+            <dd>auto</dd>
+          </div>
+          <div>
+            <dt>適用要素</dt>
+            <dd>コンテナ / グリッドアイテム</dd>
+          </div>
+          <div>
+            <dt>継承</dt>
+            <dd>継承されない</dd>
+          </div>
+        </dl>
+        <div class="lab" data-minh="180">
+          <script type="text/plain" class="lab-css">
+            body { font-family: sans-serif; padding: 12px; } .container { display: grid; grid-template-columns: repeat(3, 120px); grid-template-rows: 55px; gap: 5px; border: dashed; } .item { background: lightcyan; padding: 10px; }
+          </script>
+          <script type="text/plain" class="lab-html">
+            <div class="container"><div class="item">1</div><div class="item">2</div><div class="item">3</div></div>
+          </script>
+          <div class="lab-ctl">
+            <div class="vsel-row">
+              <span class="ctl-label">justify-items</span
+              ><select class="vsel">
+                <option
+                  selected
+                  data-same-ok
+                  data-rule=".container { justify-items: legacy; }"
+                  data-note="legacy は単独では normal と同じ見た目です。"
+                >
+                  legacy
+                </option>
+                <option
+                  data-same-ok
+                  data-rule=".container { justify-items: normal; }"
+                  data-note="グリッドでは normal は stretch と同じ見た目です。"
+                >
+                  normal
+                </option>
+                <option
+                  data-rule=".container { justify-items: stretch; }"
+                  data-note="各アイテムがセル幅いっぱいに伸びます。"
+                >
+                  stretch
+                </option>
+                <option
+                  data-rule=".container { justify-items: start; }"
+                  data-note="各アイテムを左側へ置きます。"
+                >
+                  start
+                </option>
+                <option
+                  data-rule=".container { justify-items: center; }"
+                  data-note="各アイテムを中央に置きます。"
+                >
+                  center
+                </option>
+                <option
+                  data-rule=".container { justify-items: end; }"
+                  data-note="各アイテムを右側へ置きます。"
+                >
+                  end
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="lab-body"></div>
+          <div class="lab-note" aria-live="polite"></div>
+        </div>
+        <div class="lab" data-selector=".self" data-minh="180">
+          <script type="text/plain" class="lab-css">
+            body { font-family: sans-serif; padding: 12px; } .container { display: grid; grid-template-columns: repeat(3, 120px); grid-template-rows: 55px; gap: 5px; border: dashed; justify-items: start; } .item { background: lightcyan; padding: 10px; } .self { background: lightpink; }
+          </script>
+          <script type="text/plain" class="lab-html">
+            <div class="container"><div class="item">1</div><div class="item self">2</div><div class="item">3</div></div>
+          </script>
+          <div class="lab-ctl">
+            <div class="vsel-row">
+              <span class="ctl-label">justify-self</span
+              ><select class="vsel">
+                <option
+                  selected
+                  data-same-ok
+                  data-css="justify-self: auto"
+                  data-note="auto はコンテナの justify-items: start と同じ見た目です。"
+                >
+                  auto
+                </option>
+                <option
+                  data-same-ok
+                  data-css="justify-self: normal"
+                  data-note="グリッドでは normal は stretch と同じ見た目です。"
+                >
+                  normal
+                </option>
+                <option
+                  data-css="justify-self: stretch"
+                  data-note="対象だけセル幅いっぱいに伸びます。"
+                >
+                  stretch
+                </option>
+                <option
+                  data-css="justify-self: start"
+                  data-note="対象だけ左側です。"
+                >
+                  start
+                </option>
+                <option
+                  data-css="justify-self: center"
+                  data-note="対象だけ中央です。"
+                >
+                  center
+                </option>
+                <option
+                  data-css="justify-self: end"
+                  data-note="対象だけ右側です。"
+                >
+                  end
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="lab-body"></div>
+          <div class="lab-note" aria-live="polite"></div>
+        </div>
+      </section>
+      <section class="stage" id="s-1-7-4">
+        <div class="stage-head">
+          <span class="stage-no">1.7.4</span>
+          <h2>グリッドアイテムの縦方向の位置を指定する</h2>
+          <span class="tag yellow">🟡 理解</span>
+        </div>
+        <p class="stage-def">
+          <strong>align-items・align-self</strong
+          >は、セル内のアイテムを縦方向に一括または個別で配置します。
+        </p>
+        <dl class="facts">
+          <div>
+            <dt>align-items 初期値</dt>
+            <dd>normal</dd>
+          </div>
+          <div>
+            <dt>align-self 初期値</dt>
+            <dd>auto</dd>
+          </div>
+          <div>
+            <dt>適用要素</dt>
+            <dd>コンテナ / グリッドアイテム</dd>
+          </div>
+          <div>
+            <dt>継承</dt>
+            <dd>継承されない</dd>
+          </div>
+        </dl>
+        <div class="lab" data-minh="210">
+          <script type="text/plain" class="lab-css">
+            body { font-family: sans-serif; padding: 12px; } .container { display: grid; grid-template-columns: repeat(3, 100px); grid-template-rows: 100px; gap: 5px; border: dashed; } .item { background: lightgreen; padding: 7px; }
+          </script>
+          <script type="text/plain" class="lab-html">
+            <div class="container"><div class="item">1</div><div class="item">2</div><div class="item">3</div></div>
+          </script>
+          <div class="lab-ctl">
+            <div class="vsel-row">
+              <span class="ctl-label">align-items</span
+              ><select class="vsel">
+                <option
+                  selected
+                  data-same-ok
+                  data-rule=".container { align-items: normal; }"
+                  data-note="グリッドでは normal は stretch と同じ見た目です。"
+                >
+                  normal
+                </option>
+                <option
+                  data-rule=".container { align-items: stretch; }"
+                  data-note="各アイテムがセル高さまで伸びます。"
+                >
+                  stretch
+                </option>
+                <option
+                  data-rule=".container { align-items: start; }"
+                  data-note="各アイテムを上側へ置きます。"
+                >
+                  start
+                </option>
+                <option
+                  data-rule=".container { align-items: center; }"
+                  data-note="各アイテムを縦中央に置きます。"
+                >
+                  center
+                </option>
+                <option
+                  data-rule=".container { align-items: end; }"
+                  data-note="各アイテムを下側へ置きます。"
+                >
+                  end
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="lab-body"></div>
+          <div class="lab-note" aria-live="polite"></div>
+        </div>
+        <div class="lab" data-selector=".self" data-minh="210">
+          <script type="text/plain" class="lab-css">
+            body { font-family: sans-serif; padding: 12px; } .container { display: grid; grid-template-columns: repeat(3, 100px); grid-template-rows: 100px; gap: 5px; border: dashed; align-items: start; } .item { background: lightgreen; padding: 7px; } .self { background: lightpink; }
+          </script>
+          <script type="text/plain" class="lab-html">
+            <div class="container"><div class="item">1</div><div class="item self">2</div><div class="item">3</div></div>
+          </script>
+          <div class="lab-ctl">
+            <div class="vsel-row">
+              <span class="ctl-label">align-self</span
+              ><select class="vsel">
+                <option
+                  selected
+                  data-same-ok
+                  data-css="align-self: auto"
+                  data-note="auto はコンテナの align-items: start と同じ見た目です。"
+                >
+                  auto
+                </option>
+                <option
+                  data-same-ok
+                  data-css="align-self: normal"
+                  data-note="グリッドでは normal は stretch と同じ見た目です。"
+                >
+                  normal
+                </option>
+                <option
+                  data-css="align-self: stretch"
+                  data-note="対象だけセル高さまで伸びます。"
+                >
+                  stretch
+                </option>
+                <option
+                  data-css="align-self: start"
+                  data-note="対象だけ上側です。"
+                >
+                  start
+                </option>
+                <option
+                  data-css="align-self: center"
+                  data-note="対象だけ縦中央です。"
+                >
+                  center
+                </option>
+                <option
+                  data-css="align-self: end"
+                  data-note="対象だけ下側です。"
+                >
+                  end
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="lab-body"></div>
+          <div class="lab-note" aria-live="polite"></div>
+        </div>
+      </section>
+      <section class="stage" id="s-1-7-5">
+        <div class="stage-head">
+          <span class="stage-no">1.7.5</span>
+          <h2>サンプルプログラム</h2>
+          <span class="tag yellow">🟡 理解</span>
+        </div>
+        <p class="stage-def">
+          <strong>横並びメニュー</strong
+          >は、4列、column-gap、中央寄せ、セル内中央寄せを組み合わせます。
+        </p>
+        <div class="lab" data-focus="css" data-minh="180">
+          <script type="text/plain" class="lab-css">
+            body { font-family: sans-serif; padding: 12px; } .container { display: grid; width: 460px; grid-template-columns: repeat(4, 90px); column-gap: 20px; justify-content: center; } .item { width: 100%; height: 50px; background-color: oldlace; border-radius: 10px; display: grid; } .item > a { text-decoration: none; justify-self: center; align-self: center; font-size: 1.2em; font-weight: 700; }
+          </script>
+          <script type="text/plain" class="lab-html">
+            <header><nav><div class="container"><div class="item"><a href="#">リンク1</a></div><div class="item"><a href="#">リンク2</a></div><div class="item"><a href="#">リンク3</a></div><div class="item"><a href="#">リンク4</a></div></div></nav></header>
+          </script>
+          <div class="lab-ctl">
+            <div class="vbtns">
+              <span class="ctl-label">justify-content</span
+              ><button
+                class="vbtn active"
+                data-css="justify-content: center"
+                data-note="4つのメニューを中央に寄せます。"
+              >
+                center</button
+              ><button
+                class="vbtn"
+                data-css="justify-content: start"
+                data-note="メニューを左側から始めます。"
+              >
+                start
+              </button>
+            </div>
+          </div>
+          <div class="lab-body"></div>
+          <div class="lab-note" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section class="stage major" id="s-1-8">
+        <div class="stage-head">
+          <span class="stage-no">1.8</span>
+          <h2>その他のプロパティ</h2>
+        </div>
+      </section>
+      <section class="stage" id="s-1-8-1">
+        <div class="stage-head">
+          <span class="stage-no">1.8.1</span>
+          <h2>グリッドトラック、グリッドエリアの一括作成</h2>
+          <span class="tag gray">⚪ 参考</span>
+        </div>
+        <p class="stage-def">
+          <strong>grid-template</strong
+          >は、rows、columns、areasを一括で指定します。
+        </p>
+        <dl class="facts">
+          <div>
+            <dt>プロパティ値</dt>
+            <dd>以下参照</dd>
+          </div>
+          <div>
+            <dt>初期値</dt>
+            <dd>なし</dd>
+          </div>
+          <div>
+            <dt>適用要素</dt>
+            <dd>グリッドコンテナ</dd>
+          </div>
+          <div>
+            <dt>継承</dt>
+            <dd>継承されない</dd>
+          </div>
+        </dl>
+        <div class="lab" data-selector=".container" data-minh="240">
+          <script type="text/plain" class="lab-css">
+            body { font-family: sans-serif; padding: 12px; } .container { display: grid; border: dotted; gap: 4px; } .item { background: lightcyan; padding: 8px; } .h1 { grid-area: hoge1; } .h2 { grid-area: hoge2; background: lightpink; } .h3 { grid-area: hoge3; background: lightgreen; }
+          </script>
+          <script type="text/plain" class="lab-html">
+            <div class="container"><div class="item h1">hoge1</div><div class="item h2">hoge2</div><div class="item h3">hoge3</div><div class="item">4</div><div class="item">5</div><div class="item">6</div></div>
+          </script>
+          <div class="lab-ctl">
+            <div class="vbtns">
+              <span class="ctl-label">grid-template</span
+              ><button
+                class="vbtn active"
+                data-css="grid-template: repeat(2, 50px) / repeat(4, 100px)"
+                data-note="2行50pxと4列100pxを一括指定します。"
+              >
+                rows / columns</button
+              ><button
+                class="vbtn"
+                data-css="grid-template: [line1] 'hoge1 hoge1 hoge1' 1fr [line2] [line3] 'hoge2 hoge3 hoge3' 1fr [line4] [line5] 'hoge2 hoge3 hoge3' 2fr [line6] / 50px 100px 150px"
+                data-note="line-name、area-name、track-sizeを同時に指定します。"
+              >
+                line / area / size
+              </button>
+            </div>
+          </div>
+          <div class="lab-body"></div>
+          <div class="lab-note" aria-live="polite"></div>
+        </div>
+      </section>
+      <section class="stage" id="s-1-8-2">
+        <div class="stage-head">
+          <span class="stage-no">1.8.2</span>
+          <h2>グリッドコンテナの一括設定</h2>
+          <span class="tag gray">⚪ 参考</span>
+        </div>
+        <p class="stage-def">
+          <strong>grid</strong
+          >は、grid-templateまたは自動配置トラックを一括指定します。
+        </p>
+        <dl class="facts">
+          <div>
+            <dt>プロパティ値</dt>
+            <dd>以下参照</dd>
+          </div>
+          <div>
+            <dt>初期値</dt>
+            <dd>なし</dd>
+          </div>
+          <div>
+            <dt>適用要素</dt>
+            <dd>グリッドコンテナ</dd>
+          </div>
+          <div>
+            <dt>継承</dt>
+            <dd>継承されない</dd>
+          </div>
+        </dl>
+        <div class="lab" data-selector=".container" data-minh="240">
+          <script type="text/plain" class="lab-css">
+            body { font-family: sans-serif; padding: 12px; } .container { display: grid; border: dotted; gap: 4px; } .item { background: lightsteelblue; padding: 9px; }
+          </script>
+          <script type="text/plain" class="lab-html">
+            <div class="container"><div class="item">1</div><div class="item">2</div><div class="item">3</div><div class="item">4</div><div class="item">5</div><div class="item">6</div><div class="item">7</div><div class="item">8</div></div>
+          </script>
+          <div class="lab-ctl">
+            <div class="vbtns">
+              <span class="ctl-label">grid</span
+              ><button
+                class="vbtn active"
+                data-css="grid: repeat(2, 50px) / repeat(4, 100px)"
+                data-note="構文1は grid-template をそのまま指定します。"
+              >
+                &lt;grid-template&gt;</button
+              ><button
+                class="vbtn"
+                data-css="grid: repeat(2, 60px) / auto-flow 80px"
+                data-note="構文2は行と自動生成80px列を指定します。"
+              >
+                rows / auto-flow columns</button
+              ><button
+                class="vbtn"
+                data-css="grid: auto-flow 40px / repeat(4, 100px)"
+                data-note="構文3は自動生成40px行と固定4列です。"
+              >
+                auto-flow rows / columns
+              </button>
+            </div>
+          </div>
+          <div class="lab-body"></div>
+          <div class="lab-note" aria-live="polite"></div>
+        </div>
+      </section>
+    </main>
+    <footer class="footer">
+      HTML &amp; CSS 教材 vol.14 グリッドレイアウト 互動講解ページ<br />対応教材:
+      ノート HTML&amp;CSS_vol.14.md 第1章 全体
+    </footer>
+    <script src="assets/lab-engine.js"></script>
+  </body>
+</html>

@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML とその関連技術 — HTML&amp;CSS VOL.1 互動講解</title>
+<meta name="description" content="マークアップ言語の歴史・Web サイトの表示の仕組み・HTTP 通信・Web ブラウザを SVG 図解で学ぶ互動講解ページ（HTML&CSS VOL.1）。">
+<link rel="stylesheet" href="assets/lab-engine.css">
+<style>
+/* vol.1 専用。d- 前缀クラスのみ */
+.d-fig { border: 1px solid #d8d2c6; background: #fffefc; border-radius: 8px; padding: 14px; margin: 10px 0; }
+.d-fig svg { display: block; width: 100%; height: auto; }
+</style>
+</head>
+<body>
+
+<div class="narrow-warn">このページはパソコンの画面幅（880px 以上）で見ることを前提にしています。</div>
+
+<header class="masthead">
+  <div class="kicker">HTML &amp; CSS — VOL.1</div>
+  <h1>HTML とその関連技術</h1>
+  <p class="lede"><strong>マークアップ言語の歴史・Web サイトの表示の仕組み・HTTP 通信・Web ブラウザ</strong>を、SVG 図解と対照表で整理します。vol.1 はブラウザ描画で見せられない概念型の知識が中心です。</p>
+  <div class="hint">▶ 図とその下の一文だけで伝わるかを基準に見てください</div>
+  <div class="legend"><span>🔴 試験重要</span><span>🟡 理解でOK</span><span>⚪ 参考</span></div>
+</header>
+
+<nav class="rail" aria-label="節一覧">
+  <div class="rail-inner">
+    <a href="#s-1-1-1"><span class="no">1.1.1</span>代表的なマークアップ言語 🟡</a>
+    <a href="#s-1-1-2"><span class="no">1.1.2</span>HTML のバージョン 🔴</a>
+    <a href="#s-1-1-3"><span class="no">1.1.3</span>CSS 🔴</a>
+    <a href="#s-1-2-1"><span class="no">1.2.1</span>Web サイトが表示されるまでの流れ 🔴</a>
+    <a href="#s-1-2-2"><span class="no">1.2.2</span>URL の構成 🔴</a>
+    <a href="#s-1-2-3"><span class="no">1.2.3</span>IP アドレス 🟡</a>
+    <a href="#s-1-3-1"><span class="no">1.3.1</span>HTTP 通信の仕組み 🔴</a>
+    <a href="#s-1-3-2"><span class="no">1.3.2</span>リクエストメッセージの構造 🔴</a>
+    <a href="#s-1-3-3"><span class="no">1.3.3</span>レスポンスメッセージの構造 🔴</a>
+    <a href="#s-1-3-4"><span class="no">1.3.4</span>HTTP クッキー 🔴</a>
+    <a href="#s-1-3-5"><span class="no">1.3.5</span>HTTPS 通信 🔴</a>
+    <a href="#s-1-3-6"><span class="no">1.3.6</span>認証 🟡</a>
+    <a href="#s-1-4-1"><span class="no">1.4.1</span>Web ブラウザ 🟡</a>
+    <a href="#s-1-4-2"><span class="no">1.4.2</span>JavaScript 🟡</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============ 1.1.1 代表的なマークアップ言語 ============ -->
+<section class="stage" id="s-1-1-1">
+  <div class="stage-head">
+    <span class="stage-no">1.1.1</span><h2>代表的なマークアップ言語</h2>
+    <span class="tag yellow">🟡 理解でOK</span>
+  </div>
+  <p class="stage-def"><strong>マークアップ言語（markup language）</strong>は、コンテンツにタグでマークを付け意味づけを行う形式言語です。</p>
+  <div class="d-fig">
+    <svg viewBox="0 0 720 300" role="img" aria-label="マークアップ言語の歴史と関係。1986年のSGMLからHTMLとXMLが派生し、さらにXHTMLへ繋がる">
+      <defs>
+        <marker id="arr-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b2452c"/></marker>
+        <marker id="arr-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7f9a8e"/></marker>
+      </defs>
+      <rect x="270" y="20" width="180" height="52" rx="8" fill="#f4ede2" stroke="#b0885a" stroke-width="1.5"/>
+      <text x="360" y="44" text-anchor="middle" font-size="13" font-weight="bold" fill="#29251f">SGML</text>
+      <text x="360" y="62" text-anchor="middle" font-size="11" fill="#6e675d">1986年 — メタ言語（metalanguage）</text>
+      <line x1="300" y1="72" x2="180" y2="120" stroke="#b2452c" stroke-width="1.8" marker-end="url(#arr-a)"/>
+      <line x1="420" y1="72" x2="540" y2="120" stroke="#7f9a8e" stroke-width="1.8" marker-end="url(#arr-b)"/>
+      <rect x="70" y="120" width="210" height="52" rx="8" fill="#f7e8e3" stroke="#b2452c" stroke-width="1.5"/>
+      <text x="175" y="144" text-anchor="middle" font-size="13" font-weight="bold" fill="#29251f">HTML</text>
+      <text x="175" y="162" text-anchor="middle" font-size="11" fill="#6e675d">1989年 — HyperText Markup Language</text>
+      <rect x="440" y="120" width="210" height="52" rx="8" fill="#eef3f0" stroke="#7f9a8e" stroke-width="1.5"/>
+      <text x="545" y="144" text-anchor="middle" font-size="13" font-weight="bold" fill="#29251f">XML</text>
+      <text x="545" y="162" text-anchor="middle" font-size="11" fill="#6e675d">1998年 — Extensible Markup Language</text>
+      <line x1="175" y1="172" x2="175" y2="218" stroke="#b2452c" stroke-width="1.8" marker-end="url(#arr-a)"/>
+      <rect x="70" y="218" width="210" height="52" rx="8" fill="#f7e8e3" stroke="#b2452c" stroke-width="1.5"/>
+      <text x="175" y="242" text-anchor="middle" font-size="12" font-weight="bold" fill="#29251f">HTML5 → Living Standard</text>
+      <text x="175" y="260" text-anchor="middle" font-size="11" fill="#6e675d">2014年 / 2019年 — WHATWG 管理</text>
+      <line x1="545" y1="172" x2="545" y2="218" stroke="#7f9a8e" stroke-width="1.8" marker-end="url(#arr-b)"/>
+      <rect x="440" y="218" width="210" height="52" rx="8" fill="#eef3f0" stroke="#7f9a8e" stroke-width="1.5"/>
+      <text x="545" y="242" text-anchor="middle" font-size="12" font-weight="bold" fill="#29251f">XHTML</text>
+      <text x="545" y="260" text-anchor="middle" font-size="11" fill="#6e675d">2000年 — HTML を XML に適合させた言語</text>
+    </svg>
+  </div>
+</section>
+
+<!-- ============ 1.1.2 HTML のバージョン ============ -->
+<section class="stage" id="s-1-1-2">
+  <div class="stage-head">
+    <span class="stage-no">1.1.2</span><h2>HTML のバージョン</h2>
+    <span class="tag red">🔴 試験重要</span>
+  </div>
+  <p class="stage-def"><strong>W3C（World Wide Web Consortium）</strong>が HTML 5.2 まで勧告し、以後は<strong>WHATWG（Web Hypertext Application Technology Working Group）</strong>が HTML Living Standard を管理しています。</p>
+  <div class="d-fig">
+    <svg viewBox="0 0 720 220" role="img" aria-label="HTMLのバージョン変遷。1993年のHTML 1.0から2019年のHTML Living Standardまでの時系列">
+      <defs>
+        <marker id="arr-tl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b2452c"/></marker>
+      </defs>
+      <line x1="40" y1="110" x2="680" y2="110" stroke="#d8d2c6" stroke-width="2" marker-end="url(#arr-tl)"/>
+      <line x1="60" y1="100" x2="60" y2="75" stroke="#b2452c" stroke-width="1.5"/>
+      <circle cx="60" cy="110" r="5" fill="#b2452c"/>
+      <text x="60" y="68" text-anchor="middle" font-size="10" fill="#b2452c">HTML 1.0</text>
+      <text x="60" y="130" text-anchor="middle" font-size="9" fill="#6e675d">1993</text>
+      <line x1="140" y1="110" x2="140" y2="125" stroke="#6e675d" stroke-width="1.2"/>
+      <circle cx="140" cy="110" r="4" fill="#6e675d"/>
+      <text x="140" y="145" text-anchor="middle" font-size="10" fill="#6e675d">HTML 2.0</text>
+      <text x="140" y="157" text-anchor="middle" font-size="9" fill="#6e675d">1995</text>
+      <line x1="220" y1="100" x2="220" y2="75" stroke="#6e675d" stroke-width="1.2"/>
+      <circle cx="220" cy="110" r="4" fill="#6e675d"/>
+      <text x="220" y="68" text-anchor="middle" font-size="10" fill="#6e675d">HTML 3.2</text>
+      <text x="220" y="130" text-anchor="middle" font-size="9" fill="#6e675d">1997.1</text>
+      <line x1="300" y1="110" x2="300" y2="125" stroke="#6e675d" stroke-width="1.2"/>
+      <circle cx="300" cy="110" r="4" fill="#6e675d"/>
+      <text x="300" y="145" text-anchor="middle" font-size="10" fill="#6e675d">HTML 4.0</text>
+      <text x="300" y="157" text-anchor="middle" font-size="9" fill="#6e675d">1997.12</text>
+      <line x1="380" y1="100" x2="380" y2="75" stroke="#b2452c" stroke-width="1.5"/>
+      <circle cx="380" cy="110" r="5" fill="#b2452c"/>
+      <text x="380" y="68" text-anchor="middle" font-size="10" fill="#b2452c">HTML 4.01</text>
+      <text x="380" y="130" text-anchor="middle" font-size="9" fill="#6e675d">1999</text>
+      <line x1="470" y1="110" x2="470" y2="125" stroke="#b2452c" stroke-width="1.5"/>
+      <circle cx="470" cy="110" r="5" fill="#b2452c"/>
+      <text x="470" y="145" text-anchor="middle" font-size="10" fill="#b2452c">HTML 5</text>
+      <text x="470" y="157" text-anchor="middle" font-size="9" fill="#6e675d">2014</text>
+      <circle cx="520" cy="110" r="3" fill="#6e675d"/>
+      <text x="520" y="130" text-anchor="middle" font-size="9" fill="#6e675d">5.1/5.2</text>
+      <text x="520" y="141" text-anchor="middle" font-size="9" fill="#6e675d">2016-17</text>
+      <line x1="610" y1="100" x2="610" y2="68" stroke="#b2452c" stroke-width="2"/>
+      <circle cx="610" cy="110" r="6" fill="#b2452c"/>
+      <text x="610" y="60" text-anchor="middle" font-size="11" font-weight="bold" fill="#b2452c">Living Standard</text>
+      <text x="610" y="130" text-anchor="middle" font-size="9" fill="#6e675d">2019〜</text>
+      <rect x="36" y="175" width="530" height="24" rx="4" fill="#ece8df"/>
+      <text x="301" y="191" text-anchor="middle" font-size="11" fill="#6e675d">W3C（1994年設立）が勧告</text>
+      <rect x="576" y="175" width="120" height="24" rx="4" fill="#f7e8e3"/>
+      <text x="636" y="191" text-anchor="middle" font-size="11" fill="#b2452c">WHATWG 管理</text>
+    </svg>
+  </div>
+  <table class="doc">
+    <tr><th>年・月</th><th>名称</th></tr>
+    <tr><td>1993年 6月</td><td>HTML 1.0</td></tr>
+    <tr><td>1995年 11月</td><td>HTML 2.0</td></tr>
+    <tr><td>1997年 1月</td><td>HTML 3.2</td></tr>
+    <tr><td>1997年 12月</td><td>HTML 4.0</td></tr>
+    <tr><td>1999年 12月</td><td>HTML 4.01</td></tr>
+    <tr><td>2014年 10月</td><td>HTML 5</td></tr>
+    <tr><td>2016年 11月</td><td>HTML 5.1</td></tr>
+    <tr><td>2017年 12月</td><td>HTML 5.2</td></tr>
+    <tr><td>2019年 6月</td><td>HTML Living Standard</td></tr>
+  </table>
+</section>
+
+<!-- ============ 1.1.3 CSS ============ -->
+<section class="stage" id="s-1-1-3">
+  <div class="stage-head">
+    <span class="stage-no">1.1.3</span><h2>CSS</h2>
+    <span class="tag red">🔴 試験重要</span>
+  </div>
+  <p class="stage-def"><strong>CSS（Cascading Style Sheets）</strong>は Web ページのレイアウトと装飾を定義する言語で、コンテンツ（HTML）から見た目の情報を切り離します。</p>
+  <div class="d-fig">
+    <svg viewBox="0 0 720 200" role="img" aria-label="CSSによるコンテンツとレイアウトの分離。混在したHTML文書がHTMLとCSSに分かれる">
+      <defs>
+        <marker id="arr-sep" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6e675d"/></marker>
+      </defs>
+      <rect x="30" y="20" width="220" height="140" rx="8" fill="#f7e8e3" stroke="#b2452c" stroke-width="1.5"/>
+      <text x="140" y="42" text-anchor="middle" font-size="12" font-weight="bold" fill="#b2452c">CSS 登場以前の HTML 文書</text>
+      <rect x="46" y="54" width="188" height="22" rx="3" fill="#ece8df"/>
+      <text x="140" y="69" text-anchor="middle" font-size="11" fill="#29251f">コンテンツに関するコード</text>
+      <rect x="46" y="82" width="188" height="22" rx="3" fill="#f4d5cb"/>
+      <text x="140" y="97" text-anchor="middle" font-size="11" fill="#b2452c">レイアウト・装飾コードが混在</text>
+      <rect x="46" y="110" width="188" height="22" rx="3" fill="#ece8df"/>
+      <text x="140" y="125" text-anchor="middle" font-size="11" fill="#29251f">コンテンツに関するコード</text>
+      <rect x="46" y="138" width="188" height="14" rx="3" fill="#f4d5cb"/>
+      <text x="140" y="149" text-anchor="middle" font-size="10" fill="#b2452c">装飾コード</text>
+      <line x1="258" y1="90" x2="308" y2="90" stroke="#6e675d" stroke-width="2" marker-end="url(#arr-sep)"/>
+      <text x="283" y="83" text-anchor="middle" font-size="10" fill="#6e675d">分離</text>
+      <rect x="316" y="20" width="180" height="140" rx="8" fill="#eef3f0" stroke="#7f9a8e" stroke-width="1.5"/>
+      <text x="406" y="42" text-anchor="middle" font-size="12" font-weight="bold" fill="#7f9a8e">HTML 文書</text>
+      <rect x="332" y="54" width="148" height="68" rx="3" fill="#ece8df"/>
+      <text x="406" y="92" text-anchor="middle" font-size="11" fill="#29251f">コンテンツのみ</text>
+      <line x1="504" y1="90" x2="536" y2="90" stroke="#b0885a" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <text x="520" y="83" text-anchor="middle" font-size="10" fill="#b0885a">link</text>
+      <rect x="544" y="20" width="152" height="140" rx="8" fill="#f4ede2" stroke="#b0885a" stroke-width="1.5"/>
+      <text x="620" y="42" text-anchor="middle" font-size="12" font-weight="bold" fill="#b0885a">CSS ファイル</text>
+      <rect x="560" y="54" width="120" height="96" rx="3" fill="#ede4d5"/>
+      <text x="620" y="100" text-anchor="middle" font-size="11" fill="#6e675d">レイアウト・</text>
+      <text x="620" y="116" text-anchor="middle" font-size="11" fill="#6e675d">装飾を定義</text>
+    </svg>
+  </div>
+  <table class="doc">
+    <tr><th>年・月</th><th>名称</th></tr>
+    <tr><td>1996年 12月</td><td>CSS1</td></tr>
+    <tr><td>1998年 5月</td><td>CSS2</td></tr>
+    <tr><td>2011年 6月</td><td>CSS2.1</td></tr>
+    <tr><td>2013年 4月</td><td>CSS Conditional Rules Module Level 3</td></tr>
+    <tr><td>〜</td><td>〜（モジュール毎に更新）</td></tr>
+    <tr><td>2017年 4月</td><td>CSS Image Values and Replaced Content Module Level 4</td></tr>
+  </table>
+</section>
+
+<!-- ============ 1.2.1 Web サイトが表示されるまでの流れ ============ -->
+<section class="stage" id="s-1-2-1">
+  <div class="stage-head">
+    <span class="stage-no">1.2.1</span><h2>Web サイトが表示されるまでの流れ</h2>
+    <span class="tag red">🔴 試験重要</span>
+  </div>
+  <p class="stage-def"><strong>URL（Uniform Resource Locator）</strong>をアドレスバーに入力すると、クライアントが Web サーバーへリソースを要求し、受け取った HTML を解析して表示します。</p>
+  <div class="d-fig">
+    <svg viewBox="0 0 720 210" role="img" aria-label="Webサイトが表示されるまでの流れ。クライアントがURLを入力し、サーバーへリクエストを送り、HTMLを受け取って表示する">
+      <defs>
+        <marker id="arr-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b2452c"/></marker>
+        <marker id="arr-l" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7f9a8e"/></marker>
+      </defs>
+      <rect x="40" y="60" width="160" height="90" rx="10" fill="#fffefc" stroke="#29251f" stroke-width="1.5"/>
+      <text x="120" y="98" text-anchor="middle" font-size="14" font-weight="bold" fill="#29251f">クライアント</text>
+      <text x="120" y="116" text-anchor="middle" font-size="11" fill="#6e675d">ブラウザ（client）</text>
+      <text x="120" y="134" text-anchor="middle" font-size="10" fill="#b2452c">URL を入力 → HTML を表示</text>
+      <rect x="520" y="60" width="160" height="90" rx="10" fill="#fffefc" stroke="#29251f" stroke-width="1.5"/>
+      <text x="600" y="98" text-anchor="middle" font-size="14" font-weight="bold" fill="#29251f">Web サーバー</text>
+      <text x="600" y="116" text-anchor="middle" font-size="11" fill="#6e675d">server</text>
+      <text x="600" y="134" text-anchor="middle" font-size="10" fill="#7f9a8e">index.html を送信</text>
+      <line x1="210" y1="88" x2="508" y2="88" stroke="#b2452c" stroke-width="2.5" marker-end="url(#arr-r)"/>
+      <text x="360" y="76" text-anchor="middle" font-size="12" fill="#b2452c">① リクエスト　GET /index.html HTTP/1.1</text>
+      <line x1="510" y1="130" x2="212" y2="130" stroke="#7f9a8e" stroke-width="2.5" marker-end="url(#arr-l)"/>
+      <text x="360" y="158" text-anchor="middle" font-size="12" fill="#7f9a8e">② レスポンス　200 OK ＋ HTML データ</text>
+      <rect x="220" y="178" width="280" height="22" rx="4" fill="#ece8df"/>
+      <text x="360" y="193" text-anchor="middle" font-size="11" fill="#6e675d">URI ＝ URL（場所）＋ URN（名前）の総称</text>
+    </svg>
+  </div>
+</section>
+
+<!-- ============ 1.2.2 URL の構成 ============ -->
+<section class="stage" id="s-1-2-2">
+  <div class="stage-head">
+    <span class="stage-no">1.2.2</span><h2>URL の構成</h2>
+    <span class="tag red">🔴 試験重要</span>
+  </div>
+  <p class="stage-def">URL は<strong>スキーム（scheme）</strong>・<strong>ドメイン名（domain name）</strong>・<strong>ポート番号（port number）</strong>・<strong>ファイルパス（file path）</strong>・<strong>クエリ文字列（query string）</strong>・<strong>フラグメント（fragment）</strong>の 6 要素で構成されます。</p>
+  <div class="d-fig">
+    <svg viewBox="0 0 720 150" role="img" aria-label="URLの構成要素。https://www.metro.tokyo.lg.jp:443/index.html?x=1#tmp_faddress を6つのパーツに色分け">
+      <rect x="20"  y="20" width="78"  height="36" fill="#f7e8e3" stroke="#b2452c"/>
+      <text x="59"  y="43" text-anchor="middle" font-size="12" font-family="monospace" fill="#29251f">https://</text>
+      <rect x="98"  y="20" width="230" height="36" fill="#eef3f0" stroke="#7f9a8e"/>
+      <text x="213" y="43" text-anchor="middle" font-size="12" font-family="monospace" fill="#29251f">www.metro.tokyo.lg.jp</text>
+      <rect x="328" y="20" width="48"  height="36" fill="#f4ede2" stroke="#b0885a"/>
+      <text x="352" y="43" text-anchor="middle" font-size="12" font-family="monospace" fill="#29251f">:443</text>
+      <rect x="376" y="20" width="126" height="36" fill="#eef3f0" stroke="#7f9a8e"/>
+      <text x="439" y="43" text-anchor="middle" font-size="12" font-family="monospace" fill="#29251f">/index.html</text>
+      <rect x="502" y="20" width="60"  height="36" fill="#f7e8e3" stroke="#b2452c"/>
+      <text x="532" y="43" text-anchor="middle" font-size="12" font-family="monospace" fill="#29251f">?x=1</text>
+      <rect x="562" y="20" width="138" height="36" fill="#ece8df" stroke="#d8d2c6"/>
+      <text x="631" y="43" text-anchor="middle" font-size="12" font-family="monospace" fill="#29251f">#tmp_faddress</text>
+      <text x="59"  y="80" text-anchor="middle" font-size="10" fill="#b2452c">① スキーム</text>
+      <text x="213" y="80" text-anchor="middle" font-size="10" fill="#7f9a8e">② ドメイン名</text>
+      <text x="352" y="80" text-anchor="middle" font-size="10" fill="#b0885a">③ ポート番号</text>
+      <text x="439" y="80" text-anchor="middle" font-size="10" fill="#7f9a8e">④ ファイルパス</text>
+      <text x="532" y="80" text-anchor="middle" font-size="10" fill="#b2452c">⑤ クエリ文字列</text>
+      <text x="631" y="80" text-anchor="middle" font-size="10" fill="#6e675d">⑥ フラグメント</text>
+      <text x="20"  y="110" font-size="10" fill="#6e675d">ポート番号：https=443 / http=80 / FTP=20・21 / SMTP=25 / POP3=110 / DNS=53（ウェルノウンポート 0〜1023）</text>
+    </svg>
+  </div>
+</section>
+
+<!-- ============ 1.2.3 IP アドレス ============ -->
+<section class="stage" id="s-1-2-3">
+  <div class="stage-head">
+    <span class="stage-no">1.2.3</span><h2>IP アドレス</h2>
+    <span class="tag yellow">🟡 理解でOK</span>
+  </div>
+  <p class="stage-def"><strong>IP アドレス（Internet Protocol address）</strong>は通信先のコンピュータを識別する番号で、IPv4 は 32 ビットを 8 ビットごとにドットで区切り 10 進数で表します。</p>
+  <div class="d-fig">
+    <svg viewBox="0 0 720 140" role="img" aria-label="IPアドレスの仕組み。2進数8ビット×4グループが10進数のドット区切りに変換される">
+      <rect x="30"  y="20" width="150" height="36" rx="4" fill="#f7e8e3" stroke="#b2452c"/>
+      <text x="105" y="43" text-anchor="middle" font-size="12" font-family="monospace" fill="#29251f">00011011</text>
+      <rect x="188" y="20" width="150" height="36" rx="4" fill="#eef3f0" stroke="#7f9a8e"/>
+      <text x="263" y="43" text-anchor="middle" font-size="12" font-family="monospace" fill="#29251f">01101110</text>
+      <rect x="346" y="20" width="150" height="36" rx="4" fill="#f4ede2" stroke="#b0885a"/>
+      <text x="421" y="43" text-anchor="middle" font-size="12" font-family="monospace" fill="#29251f">00101010</text>
+      <rect x="504" y="20" width="150" height="36" rx="4" fill="#f7e8e3" stroke="#b2452c"/>
+      <text x="579" y="43" text-anchor="middle" font-size="12" font-family="monospace" fill="#29251f">01001110</text>
+      <text x="178" y="38" text-anchor="middle" font-size="14" fill="#6e675d">.</text>
+      <text x="336" y="38" text-anchor="middle" font-size="14" fill="#6e675d">.</text>
+      <text x="494" y="38" text-anchor="middle" font-size="14" fill="#6e675d">.</text>
+      <text x="360" y="74" text-anchor="middle" font-size="13" fill="#6e675d">↓　10 進数に変換</text>
+      <rect x="30"  y="88" width="150" height="36" rx="4" fill="#f7e8e3" stroke="#b2452c"/>
+      <text x="105" y="111" text-anchor="middle" font-size="14" font-family="monospace" font-weight="bold" fill="#b2452c">27</text>
+      <rect x="188" y="88" width="150" height="36" rx="4" fill="#eef3f0" stroke="#7f9a8e"/>
+      <text x="263" y="111" text-anchor="middle" font-size="14" font-family="monospace" font-weight="bold" fill="#7f9a8e">110</text>
+      <rect x="346" y="88" width="150" height="36" rx="4" fill="#f4ede2" stroke="#b0885a"/>
+      <text x="421" y="111" text-anchor="middle" font-size="14" font-family="monospace" font-weight="bold" fill="#b0885a">42</text>
+      <rect x="504" y="88" width="150" height="36" rx="4" fill="#f7e8e3" stroke="#b2452c"/>
+      <text x="579" y="111" text-anchor="middle" font-size="14" font-family="monospace" font-weight="bold" fill="#b2452c">78</text>
+      <text x="178" y="108" text-anchor="middle" font-size="14" fill="#6e675d">.</text>
+      <text x="336" y="108" text-anchor="middle" font-size="14" fill="#6e675d">.</text>
+      <text x="494" y="108" text-anchor="middle" font-size="14" fill="#6e675d">.</text>
+      <text x="360" y="140" text-anchor="middle" font-size="10" fill="#6e675d">IPv4：32ビット（約43億アドレス）→ 不足のため 1999年より IPv6（128ビット）も利用</text>
+    </svg>
+  </div>
+</section>
+
+<!-- ============ 1.3.1 HTTP 通信の仕組み ============ -->
+<section class="stage" id="s-1-3-1">
+  <div class="stage-head">
+    <span class="stage-no">1.3.1</span><h2>HTTP 通信の仕組み</h2>
+    <span class="tag red">🔴 試験重要</span>
+  </div>
+  <p class="stage-def"><strong>HTTP（HyperText Transfer Protocol）</strong>はクライアントとサーバーがテキスト・バイナリデータをやりとりするための通信プロトコルで、前の通信状態を考慮しない<strong>ステートレス通信（stateless communication）</strong>です。</p>
+  <div class="d-fig">
+    <svg viewBox="0 0 720 190" role="img" aria-label="HTTP通信の概念図。クライアントとWebサーバーの間でリクエストとレスポンスがやり取りされる">
+      <defs>
+        <marker id="arr-req" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b2452c"/></marker>
+        <marker id="arr-res" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7f9a8e"/></marker>
+      </defs>
+      <rect x="30" y="50" width="160" height="90" rx="10" fill="#fffefc" stroke="#29251f" stroke-width="1.5"/>
+      <text x="110" y="88" text-anchor="middle" font-size="14" font-weight="bold" fill="#29251f">ブラウザ</text>
+      <text x="110" y="106" text-anchor="middle" font-size="11" fill="#6e675d">クライアント（client）</text>
+      <rect x="530" y="50" width="160" height="90" rx="10" fill="#fffefc" stroke="#29251f" stroke-width="1.5"/>
+      <text x="610" y="88" text-anchor="middle" font-size="14" font-weight="bold" fill="#29251f">Web サーバー</text>
+      <text x="610" y="106" text-anchor="middle" font-size="11" fill="#6e675d">server</text>
+      <line x1="200" y1="78" x2="518" y2="78" stroke="#b2452c" stroke-width="2.5" marker-end="url(#arr-req)"/>
+      <text x="360" y="66" text-anchor="middle" font-size="13" fill="#b2452c">① リクエスト（request）</text>
+      <line x1="520" y1="118" x2="202" y2="118" stroke="#7f9a8e" stroke-width="2.5" marker-end="url(#arr-res)"/>
+      <text x="360" y="146" text-anchor="middle" font-size="13" fill="#7f9a8e">② レスポンス（response）</text>
+      <rect x="200" y="164" width="320" height="20" rx="4" fill="#ece8df"/>
+      <text x="360" y="178" text-anchor="middle" font-size="11" fill="#6e675d">ステートレス：同じリクエスト → 必ず同じレスポンス（状態を保持しない）</text>
+    </svg>
+  </div>
+</section>
+
+<!-- ============ 1.3.2 リクエストメッセージの構造 ============ -->
+<section class="stage" id="s-1-3-2">
+  <div class="stage-head">
+    <span class="stage-no">1.3.2</span><h2>リクエストメッセージの構造</h2>
+    <span class="tag red">🔴 試験重要</span>
+  </div>
+  <p class="stage-def">リクエストメッセージは<strong>リクエストライン（request-line）</strong>・<strong>ヘッダー（header）</strong>・<strong>空白行（CR+LF）</strong>・<strong>メッセージボディ（message body）</strong>の 4 段で構成されます。</p>
+  <div class="d-fig">
+    <svg viewBox="0 0 720 240" role="img" aria-label="リクエストメッセージの4段構造とリクエストラインの構成要素">
+      <rect x="30" y="20" width="300" height="36" fill="#f7e8e3" stroke="#b2452c" stroke-width="1.5"/>
+      <text x="180" y="43" text-anchor="middle" font-size="12" font-family="monospace" fill="#29251f">POST /test/index.html HTTP/1.1</text>
+      <text x="345" y="43" font-size="11" fill="#b2452c" font-weight="bold">リクエストライン</text>
+      <rect x="30" y="56" width="300" height="46" fill="#fffefc" stroke="#d8d2c6"/>
+      <text x="180" y="76" text-anchor="middle" font-size="11" font-family="monospace" fill="#29251f">Host: localhost:8080</text>
+      <text x="180" y="94" text-anchor="middle" font-size="11" font-family="monospace" fill="#29251f">Content-Type: text/html ...</text>
+      <text x="345" y="76" font-size="11" fill="#6e675d">ヘッダー</text>
+      <rect x="30" y="102" width="300" height="24" fill="#ece8df" stroke="#d8d2c6"/>
+      <text x="180" y="118" text-anchor="middle" font-size="11" fill="#6e675d">（空白行 CR+LF）</text>
+      <text x="345" y="118" font-size="11" fill="#6e675d">空白行</text>
+      <rect x="30" y="126" width="300" height="36" fill="#fffefc" stroke="#d8d2c6" stroke-dasharray="5 3"/>
+      <text x="180" y="149" text-anchor="middle" font-size="11" font-family="monospace" fill="#6e675d">num=10（POST 時のみ）</text>
+      <text x="345" y="149" font-size="11" fill="#6e675d">メッセージボディ</text>
+      <text x="30" y="188" font-size="11" fill="#6e675d">リクエストライン＝</text>
+      <rect x="30" y="196" width="70" height="28" rx="4" fill="#f7e8e3" stroke="#b2452c"/>
+      <text x="65" y="214" text-anchor="middle" font-size="12" font-family="monospace" fill="#b2452c">POST</text>
+      <text x="104" y="214" text-anchor="middle" font-size="13" fill="#6e675d">＋</text>
+      <rect x="115" y="196" width="200" height="28" rx="4" fill="#eef3f0" stroke="#7f9a8e"/>
+      <text x="215" y="214" text-anchor="middle" font-size="12" font-family="monospace" fill="#29251f">/test/index.html</text>
+      <text x="319" y="214" text-anchor="middle" font-size="13" fill="#6e675d">＋</text>
+      <rect x="330" y="196" width="100" height="28" rx="4" fill="#f4ede2" stroke="#b0885a"/>
+      <text x="380" y="214" text-anchor="middle" font-size="12" font-family="monospace" fill="#29251f">HTTP/1.1</text>
+      <text x="65"  y="238" text-anchor="middle" font-size="10" fill="#b2452c">メソッド名</text>
+      <text x="215" y="238" text-anchor="middle" font-size="10" fill="#7f9a8e">リソース URL</text>
+      <text x="380" y="238" text-anchor="middle" font-size="10" fill="#b0885a">HTTP バージョン</text>
+    </svg>
+  </div>
+  <table class="doc">
+    <tr><th>メソッド</th><th>HTTP/1.0</th><th>HTTP/1.1</th><th>説明</th></tr>
+    <tr><td>HEAD</td><td>○</td><td>○</td><td>URL で指定されたファイルのヘッダーのみを要求します。</td></tr>
+    <tr><td>GET</td><td>○</td><td>○</td><td>指定した Web サーバー上のファイルの内容を要求します。</td></tr>
+    <tr><td>POST</td><td>○</td><td>○</td><td>指定した Web サーバーにデータを送信します。送信データはメッセージボディに記述されます。</td></tr>
+    <tr><td>PUT</td><td>○</td><td>○</td><td>Web サーバー上にファイルをアップロードします。</td></tr>
+    <tr><td>DELETE</td><td>○</td><td>○</td><td>URL で指定したファイルを Web サーバー上から削除します。</td></tr>
+    <tr><td>TRACE</td><td>×</td><td>○</td><td>HTTP の動作をトレースする際に使用します。</td></tr>
+    <tr><td>OPTIONS</td><td>×</td><td>○</td><td>サポートされる通信オプションを調べる際に使用します。</td></tr>
+    <tr><td>CONNECT</td><td>×</td><td>○</td><td>プロキシにトンネリングを要求する際に使用します。</td></tr>
+    <tr><td>LINK</td><td>○</td><td>×</td><td>他の Web ページなどに関連付けます。</td></tr>
+    <tr><td>UNLINK</td><td>○</td><td>×</td><td>関連付けを切り離します。</td></tr>
+  </table>
+  <table class="doc">
+    <tr><th>主なリクエストヘッダー</th><th>説明</th></tr>
+    <tr><td>Host</td><td>リクエスト先の Web サーバー名を表します。</td></tr>
+    <tr><td>User-Agent</td><td>クライアントが使用している Web ブラウザの名称やバージョンを表します。</td></tr>
+    <tr><td>Accept</td><td>クライアントが使用している Web ブラウザの受信可能なデータ形式を表します。</td></tr>
+    <tr><td>Accept-Language</td><td>クライアントが使用している Web ブラウザが優先する言語を表します。</td></tr>
+    <tr><td>Content-Length</td><td>POST メソッドによるリクエストのみ適用され、POST のデータサイズを表します。</td></tr>
+    <tr><td>Connection</td><td>クライアントが持続性のある HTTP 接続を扱えるか否かを表します。</td></tr>
+    <tr><td>Origin</td><td>リクエスト元になります。</td></tr>
+  </table>
+</section>
+
+<!-- ============ 1.3.3 レスポンスメッセージの構造 ============ -->
+<section class="stage" id="s-1-3-3">
+  <div class="stage-head">
+    <span class="stage-no">1.3.3</span><h2>レスポンスメッセージの構造</h2>
+    <span class="tag red">🔴 試験重要</span>
+  </div>
+  <p class="stage-def">レスポンスメッセージはリクエストと同じ 4 段構成ですが、開始行が<strong>ステータスライン（status-line）</strong>になり、HTTP バージョン・<strong>ステータスコード（status code）</strong>・<strong>リーズンフレーズ（reason phrase）</strong>を含みます。</p>
+  <div class="d-fig">
+    <svg viewBox="0 0 720 240" role="img" aria-label="レスポンスメッセージの4段構造とステータスラインの構成要素。リクエストと対比">
+      <text x="170" y="18" text-anchor="middle" font-size="12" font-weight="bold" fill="#29251f">リクエストメッセージ</text>
+      <rect x="30"  y="26" width="280" height="32" fill="#f7e8e3" stroke="#b2452c" stroke-width="1.5"/>
+      <text x="170" y="47" text-anchor="middle" font-size="11" font-family="monospace" fill="#29251f">GET /index.html HTTP/1.1</text>
+      <rect x="30"  y="58" width="280" height="32" fill="#fffefc" stroke="#d8d2c6"/>
+      <text x="170" y="79" text-anchor="middle" font-size="11" font-family="monospace" fill="#29251f">Host: example.com ...</text>
+      <rect x="30"  y="90" width="280" height="22" fill="#ece8df" stroke="#d8d2c6"/>
+      <text x="170" y="105" text-anchor="middle" font-size="11" fill="#6e675d">（空白行）</text>
+      <rect x="30"  y="112" width="280" height="32" fill="#fffefc" stroke="#d8d2c6" stroke-dasharray="5 3"/>
+      <text x="170" y="133" text-anchor="middle" font-size="11" fill="#6e675d">ボディ（GET では通常なし）</text>
+      <text x="560" y="18" text-anchor="middle" font-size="12" font-weight="bold" fill="#29251f">レスポンスメッセージ</text>
+      <rect x="420" y="26" width="280" height="32" fill="#eef3f0" stroke="#7f9a8e" stroke-width="1.5"/>
+      <text x="560" y="47" text-anchor="middle" font-size="11" font-family="monospace" fill="#29251f">HTTP/1.x 200 OK</text>
+      <rect x="420" y="58" width="280" height="32" fill="#fffefc" stroke="#d8d2c6"/>
+      <text x="560" y="79" text-anchor="middle" font-size="11" font-family="monospace" fill="#29251f">Content-Type: text/html ...</text>
+      <rect x="420" y="90" width="280" height="22" fill="#ece8df" stroke="#d8d2c6"/>
+      <text x="560" y="105" text-anchor="middle" font-size="11" fill="#6e675d">（空白行）</text>
+      <rect x="420" y="112" width="280" height="32" fill="#fffefc" stroke="#d8d2c6"/>
+      <text x="560" y="133" text-anchor="middle" font-size="11" font-family="monospace" fill="#29251f">&lt;!DOCTYPE html&gt; ...</text>
+      <text x="170" y="166" text-anchor="middle" font-size="12" fill="#b2452c">開始行だけ違う</text>
+      <text x="560" y="166" text-anchor="middle" font-size="12" fill="#7f9a8e">組み立ては同じ4段</text>
+      <text x="30" y="192" font-size="11" fill="#6e675d">ステータスライン＝</text>
+      <rect x="30" y="200" width="90"  height="28" rx="4" fill="#f4ede2" stroke="#b0885a"/>
+      <text x="75"  y="218" text-anchor="middle" font-size="12" font-family="monospace" fill="#29251f">HTTP/1.x</text>
+      <text x="124" y="218" text-anchor="middle" font-size="13" fill="#6e675d">＋</text>
+      <rect x="135" y="200" width="70"  height="28" rx="4" fill="#eef3f0" stroke="#7f9a8e"/>
+      <text x="170" y="218" text-anchor="middle" font-size="12" font-family="monospace" fill="#7f9a8e">200</text>
+      <text x="209" y="218" text-anchor="middle" font-size="13" fill="#6e675d">＋</text>
+      <rect x="220" y="200" width="60"  height="28" rx="4" fill="#f7e8e3" stroke="#b2452c"/>
+      <text x="250" y="218" text-anchor="middle" font-size="12" font-family="monospace" fill="#b2452c">OK</text>
+      <text x="75"  y="238" text-anchor="middle" font-size="10" fill="#b0885a">HTTP バージョン</text>
+      <text x="170" y="238" text-anchor="middle" font-size="10" fill="#7f9a8e">ステータスコード</text>
+      <text x="250" y="238" text-anchor="middle" font-size="10" fill="#b2452c">リーズンフレーズ</text>
+    </svg>
+  </div>
+  <table class="doc">
+    <tr><th>範囲</th><th>意味</th><th>説明</th></tr>
+    <tr><td>100〜199</td><td>お知らせ</td><td>リクエストが受け付けられて処理中であることを表します。</td></tr>
+    <tr><td>200〜299</td><td>リクエスト成功</td><td>リクエストに対して正常に処理が完了したことを表します。</td></tr>
+    <tr><td>300〜399</td><td>移転通知</td><td>リクエストが完了するには、追加の動作が必要であることを表します。</td></tr>
+    <tr><td>400〜499</td><td>クライアントエラー</td><td>リクエストに誤りがあることを表します。</td></tr>
+    <tr><td>500〜599</td><td>サーバーエラー</td><td>サーバーが処理に失敗したことを表します。</td></tr>
+  </table>
+  <table class="doc">
+    <tr><th>コード</th><th>リーズンフレーズ</th><th>説明</th></tr>
+    <tr><td>100</td><td>Continue</td><td>リクエストを継続して送信すべき状態であることを表します。</td></tr>
+    <tr><td>101</td><td>Switching Protocols</td><td>プロトコルを変更しようとしている状態を表します。</td></tr>
+    <tr><td>200</td><td>OK</td><td>リクエストが正常に処理されたことを表します。</td></tr>
+    <tr><td>201</td><td>Created</td><td>PUT メソッドによって正常にファイルがアップロードされた事を表します。</td></tr>
+    <tr><td>300</td><td>Multiple Choice</td><td>クライアントの選択を待っている状態を表します。</td></tr>
+    <tr><td>301</td><td>Moved Permanently</td><td>リクエストされたリソースに新しい URL が割り当てられています。新しい URL に自動的に転送されます。</td></tr>
+    <tr><td>302</td><td>Found</td><td>リクエストされたリソースに一時的に新しい URL が割り当てられています。新しい URL に自動的に転送されます。</td></tr>
+    <tr><td>303</td><td>See Other</td><td>リクエストに対する情報が他の URL に存在しています。自動的にその URL ページを表示させます。</td></tr>
+    <tr><td>304</td><td>Not Modified</td><td>リソースが更新されていないことを表します。この場合はキャッシュ済みのレスポンスを使用します。</td></tr>
+    <tr><td>307</td><td>Temporary Redirect</td><td>別の URL にリダイレクトが必要であることを表します。リクエストメソッドをそのまま用いて別の URL にアクセスします。</td></tr>
+    <tr><td>400</td><td>Bad Request</td><td>リクエストの構文が間違えていることを表します。</td></tr>
+    <tr><td>401</td><td>Unauthorized</td><td>正しい識別情報のないクライアントが、パスワードで保護されたページにアクセスしようとしたことを表します。</td></tr>
+    <tr><td>403</td><td>Forbidden</td><td>アクセスできないクライアントが、パスワードで保護されたページにアクセスしようとしたことを表します。</td></tr>
+    <tr><td>404</td><td>Not Found</td><td>指定したリソースが存在しないことを表します。</td></tr>
+    <tr><td>500</td><td>Internal Server Error</td><td>不特定のサーバーエラーを表します。</td></tr>
+  </table>
+  <table class="doc">
+    <tr><th>主なレスポンスヘッダー</th><th>説明</th></tr>
+    <tr><td>Date</td><td>レスポンスが作成された日付/時刻を表します。</td></tr>
+    <tr><td>Server</td><td>Web サーバーの名称やバージョンを表します。</td></tr>
+    <tr><td>Content-Language</td><td>レスポンスに含まれるドキュメントが書かれている言語を en・ja などで表します。</td></tr>
+    <tr><td>Content-Length</td><td>レスポンスのデータサイズを何バイトかを表します。</td></tr>
+    <tr><td>Content-Type（コンテントタイプ）</td><td>レスポンスに含まれるドキュメントの<strong>MIME タイプ（MIME type）</strong>を表します。</td></tr>
+  </table>
+  <table class="doc">
+    <tr><th>ファイル形式</th><th>一般的な拡張子</th><th>MIME タイプ</th></tr>
+    <tr><td>テキスト</td><td>txt</td><td>text/plain</td></tr>
+    <tr><td>HTML 文書</td><td>htm, html</td><td>text/html</td></tr>
+    <tr><td>XML 文書</td><td>xml</td><td>text/xml</td></tr>
+    <tr><td>CSS</td><td>css</td><td>text/css</td></tr>
+    <tr><td>GIF 画像</td><td>gif</td><td>image/gif</td></tr>
+    <tr><td>JPEG 画像</td><td>jpg または jpeg</td><td>image/jpeg</td></tr>
+    <tr><td>PNG 画像</td><td>png</td><td>image/png</td></tr>
+    <tr><td>Word 文書</td><td>doc</td><td>application/msword</td></tr>
+    <tr><td>Excel 文書</td><td>xls</td><td>application/vnd.ms-excel</td></tr>
+    <tr><td>PDF 文書</td><td>pdf</td><td>application/pdf</td></tr>
+    <tr><td>mpeg 音声</td><td>mpeg</td><td>audio/mpeg</td></tr>
+    <tr><td>mp4 動画</td><td>mp4</td><td>video/mp4</td></tr>
+  </table>
+</section>
+
+<!-- ============ 1.3.4 HTTP クッキー ============ -->
+<section class="stage" id="s-1-3-4">
+  <div class="stage-head">
+    <span class="stage-no">1.3.4</span><h2>HTTP クッキー</h2>
+    <span class="tag red">🔴 試験重要</span>
+  </div>
+  <p class="stage-def"><strong>HTTP クッキー（HTTP Cookie）</strong>はサーバーがブラウザに送信する小さなデータで、次のリクエスト時に返送することでクライアントを識別し、<strong>セッション管理（session management）</strong>を実現します。</p>
+  <div class="d-fig">
+    <svg viewBox="0 0 720 230" role="img" aria-label="HTTPクッキーを使ったセッション管理の流れ。初回リクエスト→Cookie発行→次回リクエストにCookie付与">
+      <defs>
+        <marker id="arr-cr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b2452c"/></marker>
+        <marker id="arr-cl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7f9a8e"/></marker>
+      </defs>
+      <rect x="30" y="30" width="140" height="170" rx="10" fill="#fffefc" stroke="#29251f" stroke-width="1.5"/>
+      <text x="100" y="58" text-anchor="middle" font-size="13" font-weight="bold" fill="#29251f">ブラウザ</text>
+      <text x="100" y="76" text-anchor="middle" font-size="10" fill="#6e675d">クライアント</text>
+      <rect x="46" y="140" width="108" height="42" rx="4" fill="#f7e8e3" stroke="#b2452c"/>
+      <text x="100" y="158" text-anchor="middle" font-size="10" fill="#b2452c">Cookie 保存</text>
+      <text x="100" y="173" text-anchor="middle" font-size="10" fill="#6e675d">session_id=abc</text>
+      <rect x="550" y="30" width="140" height="170" rx="10" fill="#fffefc" stroke="#29251f" stroke-width="1.5"/>
+      <text x="620" y="58" text-anchor="middle" font-size="13" font-weight="bold" fill="#29251f">サーバー</text>
+      <text x="620" y="76" text-anchor="middle" font-size="10" fill="#6e675d">Web server</text>
+      <rect x="566" y="140" width="108" height="42" rx="4" fill="#eef3f0" stroke="#7f9a8e"/>
+      <text x="620" y="158" text-anchor="middle" font-size="10" fill="#7f9a8e">ユーザー識別</text>
+      <text x="620" y="173" text-anchor="middle" font-size="10" fill="#6e675d">ログイン状態管理</text>
+      <line x1="180" y1="80" x2="538" y2="80" stroke="#b2452c" stroke-width="2" marker-end="url(#arr-cr)"/>
+      <text x="360" y="70" text-anchor="middle" font-size="12" fill="#b2452c">① 初回リクエスト</text>
+      <line x1="540" y1="108" x2="182" y2="108" stroke="#7f9a8e" stroke-width="2" marker-end="url(#arr-cl)"/>
+      <text x="360" y="125" text-anchor="middle" font-size="12" fill="#7f9a8e">② レスポンス ＋ Set-Cookie ヘッダー</text>
+      <line x1="180" y1="160" x2="538" y2="160" stroke="#b2452c" stroke-width="2" marker-end="url(#arr-cr)"/>
+      <text x="360" y="150" text-anchor="middle" font-size="12" fill="#b2452c">③ 次回リクエスト ＋ Cookie を自動付与</text>
+      <rect x="200" y="196" width="320" height="22" rx="4" fill="#ece8df"/>
+      <text x="360" y="211" text-anchor="middle" font-size="11" fill="#6e675d">用途：ログイン状態・ショッピングカート・セッション管理</text>
+    </svg>
+  </div>
+</section>
+
+<!-- ============ 1.3.5 HTTPS 通信 ============ -->
+<section class="stage" id="s-1-3-5">
+  <div class="stage-head">
+    <span class="stage-no">1.3.5</span><h2>HTTPS 通信</h2>
+    <span class="tag red">🔴 試験重要</span>
+  </div>
+  <p class="stage-def"><strong>HTTPS（Hyper Text Transfer Protocol Secure）</strong>は HTTP に<strong>SSL（Secure Sockets Layer）</strong>による暗号化（encryption）を加えた通信プロトコルです。</p>
+  <div class="d-fig">
+    <svg viewBox="0 0 720 160" role="img" aria-label="HTTPとHTTPSの比較。HTTPは平文通信、HTTPSはSSLによる暗号化通信">
+      <defs>
+        <marker id="arr-h2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b2452c"/></marker>
+        <marker id="arr-hs" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7f9a8e"/></marker>
+      </defs>
+      <rect x="30" y="20" width="100" height="50" rx="6" fill="#fffefc" stroke="#d8d2c6"/>
+      <text x="80" y="49" text-anchor="middle" font-size="12" font-weight="bold" fill="#29251f">ブラウザ</text>
+      <line x1="138" y1="45" x2="242" y2="45" stroke="#b2452c" stroke-width="2" marker-end="url(#arr-h2)"/>
+      <text x="190" y="33" text-anchor="middle" font-size="11" fill="#b2452c">HTTP（平文）</text>
+      <text x="190" y="62" text-anchor="middle" font-size="10" fill="#6e675d">盗聴・改ざんのリスク</text>
+      <rect x="250" y="20" width="100" height="50" rx="6" fill="#fffefc" stroke="#d8d2c6"/>
+      <text x="300" y="49" text-anchor="middle" font-size="12" font-weight="bold" fill="#29251f">サーバー</text>
+      <rect x="30" y="100" width="100" height="50" rx="6" fill="#eef3f0" stroke="#7f9a8e"/>
+      <text x="80" y="129" text-anchor="middle" font-size="12" font-weight="bold" fill="#7f9a8e">ブラウザ</text>
+      <rect x="142" y="108" width="118" height="34" rx="6" fill="#eef3f0" stroke="#7f9a8e"/>
+      <text x="201" y="130" text-anchor="middle" font-size="11" fill="#7f9a8e">SSL 暗号化</text>
+      <line x1="268" y1="125" x2="342" y2="125" stroke="#7f9a8e" stroke-width="2" marker-end="url(#arr-hs)"/>
+      <rect x="350" y="100" width="100" height="50" rx="6" fill="#eef3f0" stroke="#7f9a8e"/>
+      <text x="400" y="129" text-anchor="middle" font-size="12" font-weight="bold" fill="#7f9a8e">サーバー</text>
+      <text x="201" y="152" text-anchor="middle" font-size="10" fill="#6e675d">暗号化によりデータを保護</text>
+    </svg>
+  </div>
+</section>
+
+<!-- ============ 1.3.6 認証 ============ -->
+<section class="stage" id="s-1-3-6">
+  <div class="stage-head">
+    <span class="stage-no">1.3.6</span><h2>認証</h2>
+    <span class="tag yellow">🟡 理解でOK</span>
+  </div>
+  <p class="stage-def">HTTP 通信で定義されている<strong>Basic 認証（Basic Authentication）</strong>と<strong>ダイジェスト認証（Digest Authentication）</strong>は、パスワードで保護されたリソースへのアクセス制御を行います。</p>
+  <div class="d-fig">
+    <svg viewBox="0 0 720 220" role="img" aria-label="Basic認証とダイジェスト認証の比較。Basic認証はBase64エンコード、ダイジェスト認証はMD5ハッシュ化で送信">
+      <text x="180" y="22" text-anchor="middle" font-size="13" font-weight="bold" fill="#29251f">Basic 認証（Basic Authentication）</text>
+      <rect x="30"  y="32" width="140" height="34" rx="6" fill="#fffefc" stroke="#d8d2c6"/>
+      <text x="100" y="53" text-anchor="middle" font-size="11" fill="#29251f">ユーザー名＋PW</text>
+      <line x1="178" y1="49" x2="228" y2="49" stroke="#6e675d" stroke-width="1.5"/>
+      <rect x="228" y="32" width="140" height="34" rx="6" fill="#f7e8e3" stroke="#b2452c"/>
+      <text x="298" y="47" text-anchor="middle" font-size="11" fill="#b2452c">Base64 エンコード</text>
+      <text x="298" y="62" text-anchor="middle" font-size="10" fill="#6e675d">（可逆・復元可能）</text>
+      <line x1="376" y1="49" x2="426" y2="49" stroke="#b2452c" stroke-width="1.5"/>
+      <text x="450" y="49" text-anchor="middle" font-size="11" fill="#b2452c">→ サーバーへ送信</text>
+      <rect x="30" y="74" width="660" height="22" rx="4" fill="#f7e8e3"/>
+      <text x="360" y="89" text-anchor="middle" font-size="11" fill="#b2452c">ほぼ全サーバー・ブラウザで対応。盗聴・改ざんが容易というデメリットあり。</text>
+      <text x="30" y="114" font-size="11" fill="#6e675d">401 → PW 入力 → Base64 エンコード → サーバー照合 → 成功なら表示、失敗なら再 401</text>
+      <text x="180" y="144" text-anchor="middle" font-size="13" font-weight="bold" fill="#29251f">ダイジェスト認証（Digest Authentication）</text>
+      <rect x="30"  y="154" width="140" height="34" rx="6" fill="#fffefc" stroke="#d8d2c6"/>
+      <text x="100" y="175" text-anchor="middle" font-size="11" fill="#29251f">ユーザー名＋PW</text>
+      <line x1="178" y1="171" x2="228" y2="171" stroke="#6e675d" stroke-width="1.5"/>
+      <rect x="228" y="154" width="180" height="34" rx="6" fill="#eef3f0" stroke="#7f9a8e"/>
+      <text x="318" y="169" text-anchor="middle" font-size="11" fill="#7f9a8e">MD5 ハッシュ関数</text>
+      <text x="318" y="184" text-anchor="middle" font-size="10" fill="#6e675d">128ビット（不可逆）</text>
+      <line x1="416" y1="171" x2="466" y2="171" stroke="#7f9a8e" stroke-width="1.5"/>
+      <text x="490" y="171" text-anchor="middle" font-size="11" fill="#7f9a8e">→ ハッシュ値を送信</text>
+      <rect x="30" y="196" width="660" height="20" rx="4" fill="#eef3f0"/>
+      <text x="360" y="210" text-anchor="middle" font-size="11" fill="#6e675d">ハッシュ関数：任意のビット列→固定長ビット列（同入力=同出力 / 逆変換不可 / 異入力=基本異出力）</text>
+    </svg>
+  </div>
+</section>
+
+<!-- ============ 1.4.1 Web ブラウザ ============ -->
+<section class="stage" id="s-1-4-1">
+  <div class="stage-head">
+    <span class="stage-no">1.4.1</span><h2>Web ブラウザ</h2>
+    <span class="tag yellow">🟡 理解でOK</span>
+  </div>
+  <p class="stage-def"><strong>Web ブラウザ（Web browser）</strong>は URL で指定したリソースをサーバーに要求し、受け取ったデータを表示するアプリケーションで、複数の構成要素が連携して動作します。</p>
+  <div class="d-fig">
+    <svg viewBox="0 0 720 260" role="img" aria-label="Webブラウザの代表的な構成要素6つを積層図で示す">
+      <text x="360" y="20" text-anchor="middle" font-size="13" font-weight="bold" fill="#29251f">Web ブラウザの代表的な構成</text>
+      <rect x="30" y="30" width="660" height="34" rx="4" fill="#f7e8e3" stroke="#b2452c" stroke-width="1.5"/>
+      <text x="200" y="52" text-anchor="middle" font-size="12" font-weight="bold" fill="#b2452c">ユーザーインターフェイス（User Interface）</text>
+      <text x="490" y="52" text-anchor="middle" font-size="11" fill="#6e675d">アドレスバー / 戻る・進むボタン / ブックマーク</text>
+      <rect x="30" y="68" width="660" height="34" rx="4" fill="#f4ede2" stroke="#b0885a"/>
+      <text x="200" y="90" text-anchor="middle" font-size="12" font-weight="bold" fill="#b0885a">ブラウザエンジン（Browser Engine）</text>
+      <text x="490" y="90" text-anchor="middle" font-size="11" fill="#6e675d">UI とレンダリングエンジンの間の処理を整理</text>
+      <rect x="30" y="106" width="660" height="34" rx="4" fill="#eef3f0" stroke="#7f9a8e" stroke-width="1.5"/>
+      <text x="200" y="128" text-anchor="middle" font-size="12" font-weight="bold" fill="#7f9a8e">レンダリングエンジン（Rendering Engine）</text>
+      <text x="490" y="128" text-anchor="middle" font-size="11" fill="#6e675d">HTML と CSS を解析し、コンテンツを画面に表示</text>
+      <rect x="30" y="144" width="660" height="34" rx="4" fill="#f4ede2" stroke="#b0885a"/>
+      <text x="200" y="166" text-anchor="middle" font-size="12" font-weight="bold" fill="#b0885a">ネットワーキング（Networking）</text>
+      <text x="490" y="166" text-anchor="middle" font-size="11" fill="#6e675d">HTTP リクエストなどのネットワーク呼び出しに使用</text>
+      <rect x="30" y="182" width="660" height="34" rx="4" fill="#f7e8e3" stroke="#b2452c"/>
+      <text x="200" y="204" text-anchor="middle" font-size="12" font-weight="bold" fill="#b2452c">JavaScript インタープリタ（JavaScript Interpreter）</text>
+      <text x="490" y="204" text-anchor="middle" font-size="11" fill="#6e675d">JavaScript コードの解析と実行に使用</text>
+      <rect x="30" y="220" width="660" height="34" rx="4" fill="#ece8df" stroke="#d8d2c6"/>
+      <text x="200" y="242" text-anchor="middle" font-size="12" font-weight="bold" fill="#6e675d">データストレージ（Data Storage）</text>
+      <text x="490" y="242" text-anchor="middle" font-size="11" fill="#6e675d">Cookie などさまざまなデータをハードディスクに保存</text>
+    </svg>
+  </div>
+</section>
+
+<!-- ============ 1.4.2 JavaScript ============ -->
+<section class="stage" id="s-1-4-2">
+  <div class="stage-head">
+    <span class="stage-no">1.4.2</span><h2>JavaScript</h2>
+    <span class="tag yellow">🟡 理解でOK</span>
+  </div>
+  <p class="stage-def">1995 年に Netscape Communications 社により開発されたブラウザ上で実行できるスクリプト言語（scripting language）で、プログラミング言語の Java とは無関係です。</p>
+  <div class="d-fig">
+    <svg viewBox="0 0 720 130" role="img" aria-label="JavaScriptの位置づけ。HTML・CSS・JavaScriptの3要素がWebページを構成する">
+      <rect x="40"  y="20" width="180" height="70" rx="8" fill="#eef3f0" stroke="#7f9a8e" stroke-width="1.5"/>
+      <text x="130" y="52" text-anchor="middle" font-size="13" font-weight="bold" fill="#7f9a8e">HTML</text>
+      <text x="130" y="72" text-anchor="middle" font-size="11" fill="#6e675d">文書の構造・意味</text>
+      <rect x="270" y="20" width="180" height="70" rx="8" fill="#f4ede2" stroke="#b0885a" stroke-width="1.5"/>
+      <text x="360" y="52" text-anchor="middle" font-size="13" font-weight="bold" fill="#b0885a">CSS</text>
+      <text x="360" y="72" text-anchor="middle" font-size="11" fill="#6e675d">見た目・レイアウト</text>
+      <rect x="500" y="20" width="180" height="70" rx="8" fill="#f7e8e3" stroke="#b2452c" stroke-width="1.5"/>
+      <text x="590" y="52" text-anchor="middle" font-size="13" font-weight="bold" fill="#b2452c">JavaScript</text>
+      <text x="590" y="72" text-anchor="middle" font-size="11" fill="#6e675d">動的な振る舞い</text>
+      <text x="360" y="110" text-anchor="middle" font-size="11" fill="#6e675d">Java とは名前が似ているが別の言語（1995年 Netscape Communications 社が開発）</text>
+    </svg>
+  </div>
+</section>
+
+<div class="footer">作成日 2026-08-01｜対応教材 HTML&amp;CSS vol.1「HTML とその関連技術」</div>
+
+</main>
+
+<script src="assets/lab-engine.js"></script>
+</body>
+</html>

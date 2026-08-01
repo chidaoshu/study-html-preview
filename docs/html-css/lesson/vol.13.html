@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML &amp; CSS vol.13 フレックスボックス — インタラクティブ解説</title>
+<link rel="stylesheet" href="assets/lab-engine.css">
+<style>
+.d-duo-box { border: 1px dashed #d8d2c6; background: #faf8f4; padding: 8px; }
+.d-duo-row { display: flex; gap: 8px; }
+.d-duo-item { flex: 1; background: aliceblue; padding: 8px; }
+.d-duo-row .d-duo-item:nth-child(2) { background: antiquewhite; }
+.d-duo-row .d-duo-item:nth-child(3) { background: #dfeee8; }
+.d-duo-order { display: flex; gap: 8px; }
+.d-duo-order span { flex: 1; background: #f7e8e3; border: 1px solid #b2452c; padding: 7px; text-align: center; }
+.d-duo-order span:nth-child(2) { background: #eef3f0; border-color: #7f9a8e; }
+.d-duo-order span:nth-child(3) { background: #f4ede2; border-color: #b0885a; }
+.d-duo-order span:nth-child(4) { background: #ece8df; }
+</style>
+</head>
+<body>
+<div class="narrow-warn">このページはパソコンの画面幅（880px 以上）で見ることを前提にしています。</div>
+<header class="masthead">
+  <div class="kicker">HTML &amp; CSS — VOL.13</div>
+  <h1>フレックスボックス</h1>
+  <p class="lede">値を切り替え、フレックスコンテナとフレックスアイテムの配置・大きさ・順序を実際の描画で確認します。</p>
+</header>
+<nav class="rail" aria-label="ステージ一覧"><div class="rail-inner">
+  <a href="#s-1-1"><span class="no">1.1</span>フレックスボックスとは 🔴</a>
+  <a href="#s-1-2" class="major"><span class="no">1.2</span>フレックスボックス利用の基本</a>
+  <a href="#s-1-2-1"><span class="no">1.2.1</span>フレックスボックスの設定 🔴</a>
+  <a href="#s-1-2-2"><span class="no">1.2.2</span>方向と折り返し 🔴</a>
+  <a href="#s-1-3" class="major"><span class="no">1.3</span>フレックスアイテムの配置位置の指定</a>
+  <a href="#s-1-3-1"><span class="no">1.3.1</span>主軸の配置位置 🔴</a>
+  <a href="#s-1-3-2"><span class="no">1.3.2</span>交差軸の配置位置 🔴</a>
+  <a href="#s-1-3-3"><span class="no">1.3.3</span>フレックスアイテムの間隔 🟡</a>
+  <a href="#s-1-4" class="major"><span class="no">1.4</span>フレックスアイテムに対する調整</a>
+  <a href="#s-1-4-1"><span class="no">1.4.1</span>並び順 🔴</a>
+  <a href="#s-1-4-2"><span class="no">1.4.2</span>大きさの指定 🔴</a>
+  <a href="#s-1-4-3"><span class="no">1.4.3</span>アイテム内の配置 🟡</a>
+  <a href="#s-sample"><span class="no">—</span>サンプルプログラム ⚪</a>
+</div></nav>
+<main>
+
+<section class="stage" id="s-1-1">
+  <div class="stage-head"><span class="stage-no">1.1</span><h2>フレックスボックスとは</h2><span class="tag red">🔴 重要</span></div>
+  <p class="stage-def"><strong>フレックスボックス（Flexible Box Layout Module）</strong>は、フレックスコンテナ（Flex Container）とフレックスアイテム（Flex Item）で構成する横並びレイアウトです。</p>
+  <div class="duo">
+    <div><div class="duo-label">インラインブロック</div><div class="d-duo-box"><span class="d-duo-item">短い内容</span><span class="d-duo-item">少し長い<br>内容です</span><span class="d-duo-item">さらに長い<br>内容が三行</span></div></div>
+    <div><div class="duo-label">flex（高さを揃える）</div><div class="d-duo-box d-duo-row"><div class="d-duo-item">短い内容</div><div class="d-duo-item">少し長い<br>内容です</div><div class="d-duo-item">さらに長い<br>内容が三行</div></div></div>
+  </div>
+  <div class="lab" data-focus="css" data-flash=".flex" data-minh="180">
+    <script type="text/plain" class="lab-css">
+body { font-family: sans-serif; font-size: 13px; padding: 10px; }
+.flex { display: flex; gap: 8px; border: 1px dashed #b9b2a5; padding: 8px; }
+.item { flex: 1; background: #b2452c; color: #fff; padding: 8px; text-align: center; }
+.item:nth-child(2) { background: #7f9a8e; }
+.item:nth-child(3) { background: #b0885a; }
+.item:nth-child(4) { background: #8f8275; }
+    </script>
+    <script type="text/plain" class="lab-html">
+<div class="flex">
+  <div class="item" id="i1">1つ目</div>
+  <div class="item" id="i2">2つ目</div>
+  <div class="item" id="i3">3つ目</div>
+  <div class="item" id="i4">4つ目</div>
+</div>
+    </script>
+    <div class="lab-ctl"><div class="vbtns"><span class="ctl-label">order</span><button class="vbtn active" data-rule="" data-note="HTML の記述順に並びます。">記述順</button><button class="vbtn" data-rule="#i1 { order: 2; }&#10;#i2 { order: 3; }&#10;#i3 { order: 4; }&#10;#i4 { order: 1; }" data-note="4つ目、1つ目、2つ目、3つ目の順へ変わります。">order: 1 / 2 / 3 / 4</button></div></div><div class="lab-body"></div><div class="lab-note" aria-live="polite"></div>
+  </div>
+  <div class="lab" data-selector=".flex" data-fixed="display: flex; flex-wrap: wrap; width: 300px" data-minh="190">
+    <script type="text/plain" class="lab-css">
+body { font-family: sans-serif; font-size: 13px; padding: 10px; }
+.flex { border: 1px dashed #b9b2a5; padding: 8px; }
+.item { width: 52px; padding: 10px 0; background: #b2452c; color: #fff; text-align: center; }
+.item:nth-child(even) { background: #7f9a8e; }
+    </script>
+    <script type="text/plain" class="lab-html">
+<div class="flex"><div class="item">1</div><div class="item">2</div><div class="item">3</div><div class="item">4</div></div>
+    </script>
+    <div class="lab-ctl"><div class="vbtns"><span class="ctl-label">justify-content</span><button class="vbtn active" data-css="justify-content: flex-start" data-note="余白は右側に残ります。">flex-start</button><button class="vbtn" data-css="justify-content: space-around" data-note="各アイテムの周囲へ余白を配ります。">space-around</button></div></div><div class="lab-body"></div><div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="stage major" id="s-1-2"><div class="stage-head"><span class="stage-no">1.2</span><h2>フレックスボックス利用の基本</h2></div></section>
+<section class="stage" id="s-1-2-1">
+  <div class="stage-head"><span class="stage-no">1.2.1</span><h2>フレックスボックスの設定</h2><span class="tag red">🔴 重要</span></div>
+  <p class="stage-def"><strong>display</strong>（Display）に flex または inline-flex を指定した親の子要素だけがフレックスアイテムになります。</p>
+  <div class="lab" data-selector=".container" data-minh="250">
+    <script type="text/plain" class="lab-css">
+body { font-family: sans-serif; font-size: 13px; padding: 10px; }
+h1 { font-size: 20px; }
+.line { width: 800px; border: 1px dashed #d8d2c6; padding: 8px; }
+.item { width: 80px; background-color: aliceblue; padding: 2em; margin-right: 20px; }
+.other { background-color: antiquewhite; }
+    </script>
+    <script type="text/plain" class="lab-html">
+<h1>フレックスボックスサンプル1</h1>
+<div class="line">直前の文字 <div class="container">
+  <div class="item">アイテム1</div>
+  <div class="item">アイテム2</div>
+  <div class="item">アイテム3</div>
+  <div class="item">
+    <div class="other">このdivはフレックスアイテムではありません。</div>
+  </div>
+</div> 直後の文字</div>
+    </script>
+    <div class="lab-ctl"><div class="vbtns"><span class="ctl-label">display</span><button class="vbtn active" data-css="display: flex" data-note="ブロックとして前後の文字を別行へ押し出します。">flex</button><button class="vbtn" data-css="display: inline-flex" data-note="前後の文字と同じ行に並びます。">inline-flex</button></div></div><div class="lab-body"></div><div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+<section class="stage" id="s-1-2-2">
+  <div class="stage-head"><span class="stage-no">1.2.2</span><h2>フレックスアイテムの方向と折り返しの指定</h2><span class="tag red">🔴 重要</span></div>
+  <p class="stage-def"><strong>flex-direction</strong>は主軸、<strong>flex-wrap</strong>は折り返し、<strong>flex-flow</strong>は両方を指定します。</p>
+  <dl class="facts"><div><dt>プロパティ値</dt><dd>キーワード</dd></div><div><dt>初期値</dt><dd>row</dd></div><div><dt>適用要素</dt><dd>フレックスコンテナ</dd></div><div><dt>継承</dt><dd>継承されない</dd></div></dl>
+  <div class="lab" data-selector=".flex" data-fixed="display: flex; width: 250px; height: 220px" data-minh="270">
+    <script type="text/plain" class="lab-css">
+body { font-family: sans-serif; font-size: 13px; padding: 10px; }
+.flex { border: 1px dashed #b9b2a5; }
+.item { width: 48px; height: 42px; margin: 4px; background: #b2452c; color: #fff; text-align: center; padding-top: 12px; flex-shrink: 0; }
+.item:nth-child(even) { background: #7f9a8e; }
+    </script>
+    <script type="text/plain" class="lab-html">
+<div class="flex"><div class="item">1</div><div class="item">2</div><div class="item">3</div><div class="item">4</div></div>
+    </script>
+    <div class="lab-ctl"><div class="vbtns"><span class="ctl-label">flex-direction</span><button class="vbtn active" data-css="flex-direction: row" data-note="1から4が左から右へ並びます。">row</button><button class="vbtn" data-css="flex-direction: row-reverse" data-note="4から1が右から左へ並びます。">row-reverse</button><button class="vbtn" data-css="flex-direction: column" data-note="1から4が上から下へ並びます。">column</button><button class="vbtn" data-css="flex-direction: column-reverse" data-note="4から1が下から上へ並びます。">column-reverse</button></div></div><div class="lab-body"></div><div class="lab-note" aria-live="polite"></div>
+  </div>
+  <div class="lab" data-selector=".flex" data-fixed="display: flex; width: 260px; height: 150px" data-minh="230">
+    <script type="text/plain" class="lab-css">
+body { font-family: sans-serif; font-size: 13px; padding: 10px; }
+.flex { border: 1px dashed #b9b2a5; }
+.item { width: 56px; height: 32px; margin: 4px; background: #b2452c; color: #fff; text-align: center; padding-top: 8px; flex-shrink: 0; }
+.item:nth-child(even) { background: #7f9a8e; }
+    </script>
+    <script type="text/plain" class="lab-html">
+<div class="flex"><div class="item">1</div><div class="item">2</div><div class="item">3</div><div class="item">4</div><div class="item">5</div><div class="item">6</div><div class="item">7</div><div class="item">8</div></div>
+    </script>
+    <div class="lab-ctl"><div class="vbtns"><span class="ctl-label">flex-wrap</span><button class="vbtn active" data-css="flex-wrap: nowrap" data-note="折り返さず、右へはみ出します。">nowrap</button><button class="vbtn" data-css="flex-wrap: wrap" data-note="次の段は下に続きます。">wrap</button><button class="vbtn" data-css="flex-wrap: wrap-reverse" data-note="次の段は上に続きます。">wrap-reverse</button></div></div><div class="lab-body"></div><div class="lab-note" aria-live="polite"></div>
+  </div>
+  <div class="lab" data-focus="css" data-flash=".flex" data-minh="220">
+    <script type="text/plain" class="lab-css">
+body { font-family: sans-serif; font-size: 13px; padding: 10px; }
+.flex { display: flex; width: 260px; height: 140px; border: 1px dashed #b9b2a5; }
+.item { width: 56px; height: 32px; margin: 4px; background: #b2452c; color: #fff; text-align: center; padding-top: 8px; flex-shrink: 0; }
+.item:nth-child(even) { background: #7f9a8e; }
+    </script>
+    <script type="text/plain" class="lab-html">
+<div class="flex"><div class="item">1</div><div class="item">2</div><div class="item">3</div><div class="item">4</div><div class="item">5</div><div class="item">6</div><div class="item">7</div><div class="item">8</div></div>
+    </script>
+    <div class="lab-ctl"><div class="vbtns"><span class="ctl-label">flex-flow</span><button class="vbtn active" data-rule=".flex { flex-direction: row; flex-wrap: wrap; }" data-note="direction と wrap を個別に指定します。">row + wrap</button><button class="vbtn" data-same-ok data-rule=".flex { flex-flow: row wrap; }" data-note="row + wrap と同じ見た目になる一括指定です。">row wrap</button><button class="vbtn" data-rule=".flex { flex-flow: column wrap; }" data-note="縦方向から右の列へ折り返します。">column wrap</button></div></div><div class="lab-body"></div><div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="stage major" id="s-1-3"><div class="stage-head"><span class="stage-no">1.3</span><h2>フレックスアイテムの配置位置の指定</h2></div></section>
+<section class="stage" id="s-1-3-1">
+  <div class="stage-head"><span class="stage-no">1.3.1</span><h2>主軸の配置位置の指定</h2><span class="tag red">🔴 重要</span></div>
+  <p class="stage-def"><strong>justify-content</strong>（Justify Content）は、主軸方向のフレックスアイテムの配置を調整します。</p>
+  <dl class="facts"><div><dt>プロパティ値</dt><dd>キーワード</dd></div><div><dt>初期値</dt><dd>flex-start</dd></div><div><dt>適用要素</dt><dd>フレックスコンテナ、グリッドコンテナ</dd></div><div><dt>継承</dt><dd>継承されない</dd></div></dl>
+  <div class="lab" data-selector=".flex" data-fixed="display: flex; flex-wrap: wrap; width: 320px" data-minh="220">
+    <script type="text/plain" class="lab-css">
+body { font-family: sans-serif; font-size: 13px; padding: 10px; }
+.flex { border: 1px dashed #b9b2a5; }
+.item { width: 50px; height: 34px; background: #b2452c; color: #fff; text-align: center; padding-top: 10px; flex-shrink: 0; }
+.item:nth-child(even) { background: #7f9a8e; }
+    </script>
+    <script type="text/plain" class="lab-html">
+<div class="flex"><div class="item">1</div><div class="item">2</div><div class="item">3</div><div class="item">4</div><div class="item">5</div><div class="item">6</div><div class="item">7</div><div class="item">8</div></div>
+    </script>
+    <div class="lab-ctl"><div class="vbtns"><span class="ctl-label">justify-content</span><button class="vbtn active" data-css="justify-content: flex-start" data-note="各行を左詰めにします。">flex-start</button><button class="vbtn" data-css="justify-content: flex-end" data-note="各行を右詰めにします。">flex-end</button><button class="vbtn" data-css="justify-content: center" data-note="各行を中央にまとめます。">center</button><button class="vbtn" data-css="justify-content: space-between" data-note="両端を端に置き、間隔を配ります。">space-between</button><button class="vbtn" data-css="justify-content: space-around" data-note="端は間隔の半分の余白になります。">space-around</button><button class="vbtn" data-css="justify-content: space-evenly" data-note="端と間隔をすべて同じ幅にします。">space-evenly</button></div></div><div class="lab-body"></div><div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+<section class="stage" id="s-1-3-2">
+  <div class="stage-head"><span class="stage-no">1.3.2</span><h2>交差軸の配置位置の指定</h2><span class="tag red">🔴 重要</span></div>
+  <p class="stage-def"><strong>align-content</strong>（Align Content）は、交差軸の大きさがあり複数行のとき、行を交差軸方向へ配置します。</p>
+  <dl class="facts"><div><dt>プロパティ値</dt><dd>キーワード</dd></div><div><dt>初期値</dt><dd>normal（stretch）</dd></div><div><dt>適用要素</dt><dd>フレックスコンテナ、グリッドコンテナ</dd></div><div><dt>継承</dt><dd>継承されない</dd></div></dl>
+  <div class="lab" data-selector=".flex" data-fixed="display: flex; flex-wrap: wrap; width: 260px; height: 260px" data-minh="300">
+    <script type="text/plain" class="lab-css">
+body { font-family: sans-serif; font-size: 13px; padding: 10px; }
+.flex { border: 1px dashed #b9b2a5; }
+.item { width: 48px; height: 28px; margin: 2px; background: #b2452c; color: #fff; text-align: center; padding-top: 6px; flex-shrink: 0; }
+.item:nth-child(even) { background: #7f9a8e; }
+    </script>
+    <script type="text/plain" class="lab-html">
+<div class="flex"><div class="item">1</div><div class="item">2</div><div class="item">3</div><div class="item">4</div><div class="item">5</div><div class="item">6</div><div class="item">7</div><div class="item">8</div></div>
+    </script>
+    <div class="lab-ctl"><div class="vsel-row"><span class="ctl-label">align-content</span><select class="vsel"><option selected data-css="align-content: normal" data-note="stretch と同じく、行が高さを分けます。">normal</option><option data-same-ok data-css="align-content: stretch" data-note="normal と同じ見た目で、行を交差軸へ伸ばします。">stretch</option><option data-css="align-content: flex-start" data-note="行を上詰めにします。">flex-start</option><option data-css="align-content: flex-end" data-note="行を下詰めにします。">flex-end</option><option data-css="align-content: center" data-note="行を中央にまとめます。">center</option><option data-css="align-content: space-between" data-note="最初と最後の行を両端に置きます。">space-between</option><option data-css="align-content: space-around" data-note="行の上下にも半分の余白を置きます。">space-around</option><option data-css="align-content: space-evenly" data-note="上下と行間を同じ高さにします。">space-evenly</option></select></div></div><div class="lab-body"></div><div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+<section class="stage" id="s-1-3-3">
+  <div class="stage-head"><span class="stage-no">1.3.3</span><h2>フレックスアイテムの間隔を指定する</h2><span class="tag yellow">🟡 理解</span></div>
+  <p class="stage-def"><strong>gap</strong>（Gap）は、フレックスアイテムの縦と横の間隔を指定するプロパティです。</p>
+  <dl class="facts"><div><dt>プロパティ値</dt><dd>長さ、パーセンテージ</dd></div><div><dt>初期値</dt><dd>auto</dd></div><div><dt>適用要素</dt><dd>フレックスコンテナ、グリッドコンテナ、段組み要素</dd></div><div><dt>継承</dt><dd>継承されない</dd></div></dl>
+  <div class="lab" data-selector=".flex" data-fixed="display: flex; flex-wrap: wrap; width: 250px" data-minh="220">
+    <script type="text/plain" class="lab-css">
+body { font-family: sans-serif; font-size: 13px; padding: 10px; }
+.flex { border: 1px dashed #b9b2a5; }
+.item { width: 50px; height: 30px; background: #b2452c; color: #fff; text-align: center; padding-top: 8px; flex-shrink: 0; }
+.item:nth-child(even) { background: #7f9a8e; }
+    </script>
+    <script type="text/plain" class="lab-html">
+<div class="flex"><div class="item">1</div><div class="item">2</div><div class="item">3</div><div class="item">4</div><div class="item">5</div><div class="item">6</div><div class="item">7</div><div class="item">8</div></div>
+    </script>
+    <div class="lab-ctl"><div class="vbtns"><span class="ctl-label">gap</span><button class="vbtn active" data-css="gap: 10px" data-note="主軸と交差軸の両方が10pxになります。">10px</button><button class="vbtn" data-css="gap: 10px 20px" data-note="1つ目は交差軸、2つ目は主軸の間隔です。">10px 20px</button></div></div><div class="lab-body"></div><div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="stage major" id="s-1-4"><div class="stage-head"><span class="stage-no">1.4</span><h2>フレックスアイテムに対する調整</h2></div></section>
+<section class="stage" id="s-1-4-1">
+  <div class="stage-head"><span class="stage-no">1.4.1</span><h2>フレックスアイテムの並び順を変更する</h2><span class="tag red">🔴 重要</span></div>
+  <p class="stage-def"><strong>order</strong>（Order）は、HTMLの記述順を変えず、値が小さい順にフレックスアイテムを並べ替えます。</p>
+  <dl class="facts"><div><dt>プロパティ値</dt><dd>整数値</dd></div><div><dt>初期値</dt><dd>0</dd></div><div><dt>適用要素</dt><dd>フレックスアイテム</dd></div><div><dt>継承</dt><dd>継承されない</dd></div></dl>
+  <div class="lab" data-focus="css" data-flash=".flex" data-minh="190">
+    <script type="text/plain" class="lab-css">
+body { font-family: sans-serif; font-size: 13px; padding: 10px; }
+.flex { display: flex; gap: 8px; border: 1px dashed #b9b2a5; padding: 8px; }
+.item { flex: 1; background: #b2452c; color: #fff; padding: 10px; text-align: center; }
+.item:nth-child(2) { background: #7f9a8e; }
+.item:nth-child(3) { background: #b0885a; }
+.item:nth-child(4) { background: #8f8275; }
+    </script>
+    <script type="text/plain" class="lab-html">
+<div class="flex"><div class="item" id="n01">1つ目</div><div class="item" id="n02">2つ目</div><div class="item" id="n03">3つ目</div><div class="item" id="n04">4つ目</div></div>
+    </script>
+    <div class="lab-ctl"><div class="vbtns"><span class="ctl-label">order</span><button class="vbtn active" data-rule="" data-note="すべて0で、記述順に表示されます。">0</button><button class="vbtn" data-rule="#n01 { order: 2; }&#10;#n02 { order: 3; }&#10;#n03 { order: 4; }&#10;#n04 { order: 1; }" data-note="order: 1、2、3、4で4つ目が先頭になります。">1 / 2 / 3 / 4</button></div></div><div class="lab-body"></div><div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+<section class="stage" id="s-1-4-2">
+  <div class="stage-head"><span class="stage-no">1.4.2</span><h2>フレックスアイテムの大きさを指定する</h2><span class="tag red">🔴 重要</span></div>
+  <p class="stage-def"><strong>flex-basis</strong>・<strong>flex-grow</strong>・<strong>flex-shrink</strong>・<strong>flex</strong>で主軸方向の大きさを調整します。</p>
+  <dl class="facts"><div><dt>flex-basis 初期値</dt><dd>auto</dd></div><div><dt>適用要素</dt><dd>フレックスアイテム</dd></div><div><dt>継承</dt><dd>継承されない</dd></div></dl>
+  <div class="lab" data-selector=".item" data-minh="210">
+    <script type="text/plain" class="lab-css">
+body { font-family: sans-serif; font-size: 13px; padding: 10px; }
+.flex { display: flex; gap: 8px; width: 340px; border: 1px dashed #b9b2a5; padding: 8px; }
+.item { width: 78px; background: #b2452c; color: #fff; padding: 10px; }
+.item:nth-child(2) { background: #7f9a8e; }
+.item:nth-child(3) { background: #b0885a; }
+    </script>
+    <script type="text/plain" class="lab-html">
+<div class="flex"><div class="item">短い</div><div class="item">やや長い項目</div><div class="item">内容で幅が変わる項目</div></div>
+    </script>
+    <div class="lab-ctl"><div class="vbtns"><span class="ctl-label">flex-basis</span><button class="vbtn active" data-css="flex-basis: auto" data-note="width を基準に初期サイズを決めます。">auto</button><button class="vbtn" data-css="flex-basis: content" data-note="内容の大きさで初期サイズを決めます。">content</button><button class="vbtn" data-css="flex-basis: 60px" data-note="全アイテムの初期サイズを60pxにします。">60px</button></div></div><div class="lab-body"></div><div class="lab-note" aria-live="polite"></div>
+  </div>
+  <div class="lab" data-focus="css" data-flash=".flex" data-minh="210">
+    <script type="text/plain" class="lab-css">
+body { font-family: sans-serif; font-size: 13px; padding: 10px; }
+.flex { display: flex; gap: 10px; width: 350px; border: 1px dashed #b9b2a5; padding: 8px; }
+.item { flex-basis: 60px; height: 42px; background: #b2452c; color: #fff; text-align: center; padding-top: 10px; }
+.item:nth-child(2) { background: #7f9a8e; }
+.item:nth-child(3) { background: #b0885a; }
+    </script>
+    <script type="text/plain" class="lab-html">
+<div class="flex"><div class="item" id="g1">1</div><div class="item" id="g2">2</div><div class="item" id="g3">3</div></div>
+    </script>
+    <div class="lab-ctl"><div class="vbtns"><span class="ctl-label">flex-grow</span><button class="vbtn active" data-rule="#g1 { flex-grow: 0; }&#10;#g2 { flex-grow: 0; }&#10;#g3 { flex-grow: 0; }" data-note="余白は右側に残ります。">0 / 0 / 0</button><button class="vbtn" data-rule="#g1 { flex-grow: 1; }&#10;#g2 { flex-grow: 2; }&#10;#g3 { flex-grow: 3; }" data-note="残りの余白を1:2:3で配分します。">1 / 2 / 3</button></div></div><div class="lab-body"></div><div class="lab-note" aria-live="polite"></div>
+  </div>
+  <div class="lab" data-focus="css" data-flash=".wrap" data-minh="240">
+    <script type="text/plain" class="lab-css">
+body { font-family: sans-serif; font-size: 13px; padding: 10px; }
+.wrap { width: 210px; resize: horizontal; overflow: auto; border: 1px dashed #b9b2a5; padding: 8px; }
+.flex { display: flex; gap: 10px; width: 100%; }
+.item { flex-basis: 100px; height: 42px; background: #b2452c; color: #fff; text-align: center; padding-top: 10px; }
+.item:nth-child(2) { background: #7f9a8e; }
+.item:nth-child(3) { background: #b0885a; }
+    </script>
+    <script type="text/plain" class="lab-html">
+<div class="wrap">親要素 — 右下をドラッグして幅を変えられます
+  <div class="flex"><div class="item" id="s1">A</div><div class="item" id="s2">B</div><div class="item" id="s3">C</div></div>
+</div>
+    </script>
+    <div class="lab-ctl"><div class="vbtns"><span class="ctl-label">flex-shrink</span><button class="vbtn active" data-rule="#s1 { flex-shrink: 0; }&#10;#s2 { flex-shrink: 0; }&#10;#s3 { flex-shrink: 0; }" data-note="縮小せず、親枠からはみ出します。">0 / 0 / 0</button><button class="vbtn" data-rule="#s1 { flex-shrink: 1; }&#10;#s2 { flex-shrink: 1; }&#10;#s3 { flex-shrink: 1; }" data-note="はみ出しを均等に縮めます。親枠も動かしてください。">1 / 1 / 1</button><button class="vbtn" data-rule="#s1 { flex-shrink: 3; }&#10;#s2 { flex-shrink: 2; }&#10;#s3 { flex-shrink: 1; }" data-note="はみ出しを3:2:1で縮めます。親枠も動かしてください。">3 / 2 / 1</button></div></div><div class="lab-body"></div><div class="lab-note" aria-live="polite"></div>
+  </div>
+  <div class="lab" data-focus="css" data-flash=".flex" data-minh="210">
+    <script type="text/plain" class="lab-css">
+body { font-family: sans-serif; font-size: 13px; padding: 10px; }
+.flex { display: flex; gap: 10px; width: 330px; border: 1px dashed #b9b2a5; padding: 8px; }
+.item { height: 42px; background: #b2452c; color: #fff; text-align: center; padding-top: 10px; }
+.item:nth-child(2) { background: #7f9a8e; }
+.item:nth-child(3) { background: #b0885a; }
+    </script>
+    <script type="text/plain" class="lab-html">
+<div class="flex"><div class="item" id="f1">A</div><div class="item" id="f2">B</div><div class="item" id="f3">C</div></div>
+    </script>
+    <div class="lab-ctl"><div class="vbtns"><span class="ctl-label">flex</span><button class="vbtn active" data-rule="#f1 { flex: 1; }&#10;#f2 { flex: 2; }&#10;#f3 { flex: 3; }" data-note="1値の数値は flex-grow として解釈されます。">1値</button><button class="vbtn" data-rule="#f1 { flex: 1 60px; }&#10;#f2 { flex: 1 80px; }&#10;#f3 { flex: 1 100px; }" data-note="2値は grow と basis として解釈されます。">2値</button><button class="vbtn" data-rule="#f1 { flex: 1 1 60px; }&#10;#f2 { flex: 2 1 80px; }&#10;#f3 { flex: 3 1 100px; }" data-note="3値は grow、shrink、basis の順です。">3値</button></div></div><div class="lab-body"></div><div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+<section class="stage" id="s-1-4-3">
+  <div class="stage-head"><span class="stage-no">1.4.3</span><h2>フレックスアイテム内の配置の指定</h2><span class="tag yellow">🟡 理解</span></div>
+  <p class="stage-def"><strong>align-items</strong>は全アイテム、<strong>align-self</strong>は指定したアイテムを交差軸方向に配置します。</p>
+  <dl class="facts"><div><dt>align-items 初期値</dt><dd>stretch</dd></div><div><dt>align-self 初期値</dt><dd>auto</dd></div><div><dt>適用要素</dt><dd>フレックスコンテナ / フレックスアイテム</dd></div><div><dt>継承</dt><dd>継承されない</dd></div></dl>
+  <div class="lab" data-selector=".flex" data-fixed="display: flex; height: 160px" data-minh="210">
+    <script type="text/plain" class="lab-css">
+body { font-family: sans-serif; font-size: 13px; padding: 10px; }
+.flex { border: 1px dashed #b9b2a5; }
+.item { width: 60px; margin: 4px; background: #b2452c; color: #fff; text-align: center; padding-top: 10px; }
+.item:nth-child(2) { background: #7f9a8e; font-size: 24px; }
+.item:nth-child(3) { background: #b0885a; }
+    </script>
+    <script type="text/plain" class="lab-html">
+<div class="flex"><div class="item">A</div><div class="item">B</div><div class="item">C</div></div>
+    </script>
+    <div class="lab-ctl"><div class="vbtns"><span class="ctl-label">align-items</span><button class="vbtn active" data-css="align-items: stretch" data-note="全アイテムを交差軸いっぱいに広げます。">stretch</button><button class="vbtn" data-css="align-items: flex-start" data-note="全アイテムを上詰めにします。">flex-start</button><button class="vbtn" data-css="align-items: flex-end" data-note="全アイテムを下詰めにします。">flex-end</button><button class="vbtn" data-css="align-items: center" data-note="全アイテムを中央に揃えます。">center</button><button class="vbtn" data-css="align-items: baseline" data-note="文字のベースラインで揃えます。">baseline</button></div></div><div class="lab-body"></div><div class="lab-note" aria-live="polite"></div>
+  </div>
+  <div class="lab" data-selector=".item-b" data-minh="220">
+    <script type="text/plain" class="lab-css">
+body { font-family: sans-serif; font-size: 13px; padding: 10px; }
+.flex { display: flex; align-items: center; height: 160px; border: 1px dashed #b9b2a5; }
+.item { width: 60px; margin: 4px; background: #7f9a8e; color: #fff; text-align: center; padding: 12px 0; }
+.item:first-child { align-self: baseline; font-size: 34px; padding-top: 2px; }
+.item-b { background: #b2452c; font-size: 22px; }
+    </script>
+    <script type="text/plain" class="lab-html">
+<div class="flex"><div class="item">A</div><div class="item item-b">B</div><div class="item">C</div></div>
+    </script>
+    <div class="lab-ctl"><div class="vbtns"><span class="ctl-label">align-self</span><button class="vbtn active" data-css="align-self: auto" data-note="親の align-items: center を使います。">auto</button><button class="vbtn" data-css="align-self: stretch" data-note="Bだけを親の高さへ広げます。">stretch</button><button class="vbtn" data-css="align-self: flex-start" data-note="Bだけを上詰めにします。">flex-start</button><button class="vbtn" data-css="align-self: flex-end" data-note="Bだけを下詰めにします。">flex-end</button><button class="vbtn" data-same-ok data-css="align-self: center" data-note="親の center と同じ見た目になります。">center</button><button class="vbtn" data-css="align-self: baseline" data-note="Bだけをベースラインで配置します。">baseline</button></div></div><div class="lab-body"></div><div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="stage" id="s-sample">
+  <div class="stage-head"><span class="stage-no">—</span><h2>サンプルプログラム</h2><span class="tag gray">⚪ 参考</span></div>
+  <p class="stage-def"><strong>flex-grow</strong>（Flex Grow）を使う疑似要素が、見出し文字の左右へ線を伸ばします。</p>
+  <div class="lab" data-focus="css" data-minh="190">
+    <script type="text/plain" class="lab-css">
+body { font-family: sans-serif; padding: 18px; }
+h1 { font-size: 3em; font-family: 'Lucida Calligraphy', sans-serif; display: flex; align-items: center; width: 100%; }
+h1::before, h1::after { content: ""; flex-grow: 1; height: 2px; margin-left: .6em; margin-right: .6em; background-color: #404040; }
+    </script>
+    <script type="text/plain" class="lab-html">
+<h1>Menu</h1>
+    </script>
+    <div class="lab-ctl"><div class="vbtns"><span class="ctl-label">flex-grow</span><button class="vbtn active" data-rule="h1::before, h1::after { flex-grow: 1; }" data-note="左右の疑似要素が残り幅を均等に受け取ります。">1</button><button class="vbtn" data-rule="h1::before { flex-grow: 2; }&#10;h1::after { flex-grow: 1; }" data-note="左の線が右の線より長くなります。">左を2</button></div></div><div class="lab-body"></div><div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+<div class="footer">作成日 2026-08-01｜教材 HTML &amp; CSS vol.13 対応</div>
+</main>
+<script src="assets/lab-engine.js"></script>
+</body>
+</html>

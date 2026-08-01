@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML &amp; CSS vol.9 テキストを装飾するプロパティ — インタラクティブ解説</title>
+<link rel="stylesheet" href="assets/lab-engine.css">
+<style>
+  /* ---- vol.9 専用（ページ固有。共通化しない） ---- */
+  .d-fig { border: 1px solid #d8d2c6; background: #fffefc; border-radius: 8px; padding: 14px; margin: 10px 0; }
+  .d-fig svg { display: block; width: 100%; height: auto; }
+</style>
+</head>
+<body>
+
+<div class="narrow-warn">このページはパソコンの画面幅（880px 以上）で見ることを前提にしています。</div>
+
+<header class="masthead">
+  <div class="kicker">HTML &amp; CSS — VOL.9</div>
+  <h1>テキストを装飾するプロパティ</h1>
+  <p class="lede">文字色・フォント・装飾線・影・縦書きなど、テキストの見た目をコントロールする CSS プロパティの動作をインタラクティブに確認します。</p>
+</header>
+
+<nav class="rail" aria-label="ステージ一覧">
+  <div class="rail-inner">
+    <a href="#s-1-1"><span class="no">1.1</span>color 🔴</a>
+    <a href="#s-1-2"><span class="no">1.2</span>色の指定 🔴</a>
+    <a href="#s-1-2-1"><span class="no">1.2.1</span>数値指定 🔴</a>
+    <a href="#s-1-2-2"><span class="no">1.2.2</span>色関数 🔴</a>
+    <a href="#s-1-2-3"><span class="no">1.2.3</span>キーワード 🟡</a>
+    <a href="#s-2-1"><span class="no">2.1</span>font-family 🔴</a>
+    <a href="#s-2-2"><span class="no">2.2</span>font-size 🔴</a>
+    <a href="#s-2-3"><span class="no">2.3</span>font-style 🟡</a>
+    <a href="#s-2-4"><span class="no">2.4</span>font-weight 🟡</a>
+    <a href="#s-2-5"><span class="no">2.5</span>line-height 🟡</a>
+    <a href="#s-2-6"><span class="no">2.6</span>font 🟡</a>
+    <a href="#s-2-7"><span class="no">2.7</span>長さの指定 🔴</a>
+    <a href="#s-2-7-1"><span class="no">2.7.1</span>絶対長さ 🟡</a>
+    <a href="#s-2-7-2"><span class="no">2.7.2</span>相対長さ 🔴</a>
+    <a href="#s-3-1"><span class="no">3.1</span>text-decoration-line 🔴</a>
+    <a href="#s-3-2"><span class="no">3.2</span>text-decoration-color 🟡</a>
+    <a href="#s-3-3"><span class="no">3.3</span>text-decoration-style 🟡</a>
+    <a href="#s-3-4"><span class="no">3.4</span>text-decoration 🔴</a>
+    <a href="#s-3-5"><span class="no">3.5</span>text-shadow 🟡</a>
+    <a href="#s-4-1"><span class="no">4.1</span>writing-mode 🟡</a>
+    <a href="#s-4-2"><span class="no">4.2</span>content 🟡</a>
+    <a href="#s-a-1"><span class="no">A.1</span>Webフォント ⚪</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============ 1.1 color ============ -->
+<section class="stage" id="s-1-1">
+  <div class="stage-head">
+    <span class="stage-no">1.1</span><h2>文字色を変更する（color）</h2>
+    <span class="tag red">🔴 重要</span>
+  </div>
+  <p class="stage-def"><strong>color</strong>（Color）は、テキストの文字色を設定するプロパティです。</p>
+  <dl class="facts">
+    <div><dt>プロパティ値</dt><dd>色</dd></div>
+    <div><dt>初期値</dt><dd>ブラウザ依存</dd></div>
+    <div><dt>適用要素</dt><dd>全要素</dd></div>
+    <div><dt>継承</dt><dd>継承される</dd></div>
+  </dl>
+  <div class="lab" data-selector=".target" data-focus="css" data-minh="160">
+    <script type="text/plain" class="lab-css">
+    </script>
+    <script type="text/plain" class="lab-html">
+<p class="target">吾輩は猫である。名前はまだ無い。</p>
+    </script>
+    <div class="lab-ctl">
+      <div class="vbtns">
+        <span class="ctl-label">color</span>
+        <button class="vbtn active" data-css="color: black" data-note="初期値の黒色。標準の文字色で表示されます。">black（初期値）</button>
+        <button class="vbtn" data-css="color: #ff7700" data-note="鮮やかなオレンジ色。👀 文字色がオレンジに変わります。">#ff7700</button>
+        <button class="vbtn" data-css="color: rgba(100%, 0%, 100%, 0.5)" data-note="半透明の紫。👀 背景が透ける薄い紫色に変わります。">rgba(100%, 0%, 100%, 0.5)</button>
+        <button class="vbtn" data-css="color: hsl(200, 80%, 50%)" data-note="鮮やかな水色。👀 青系統の文字色に変わります。">hsl(200, 80%, 50%)</button>
+        <button class="vbtn" data-css="color: currentColor" data-note="現在の文字色。👀 親要素から引き継いだ色を適用します。">currentColor</button>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ============ 1.2 色の指定 ============ -->
+<section class="stage" id="s-1-2">
+  <div class="stage-head">
+    <span class="stage-no">1.2</span><h2>色の指定</h2>
+    <span class="tag red">🔴 重要</span>
+  </div>
+  <p class="stage-def"><strong>色の指定</strong>（Color Specification）は、RGB（加法混合）や HSL などのカラーモデルを用いてデジタル上の色を表現する仕組みです。</p>
+  <div class="d-fig">
+    <svg viewBox="0 0 640 200" role="img" aria-label="RGBカラーモデル（加法混合）とHSLカラーモデルの構造比較">
+      <g transform="translate(10, 10)">
+        <rect x="0" y="0" width="290" height="180" rx="8" fill="#fffefc" stroke="#d8d2c6" stroke-width="1.5"/>
+        <text x="145" y="28" text-anchor="middle" font-size="14" font-weight="bold" fill="#29251f">RGB カラーモデル（加法混合）</text>
+        <circle cx="115" cy="85" r="35" fill="rgba(255,0,0,0.5)"/>
+        <circle cx="175" cy="85" r="35" fill="rgba(0,255,0,0.5)"/>
+        <circle cx="145" cy="125" r="35" fill="rgba(0,0,255,0.5)"/>
+        <text x="85" y="75" font-size="11" font-weight="bold" fill="#b2452c">R: 赤</text>
+        <text x="205" y="75" font-size="11" font-weight="bold" fill="#7f9a8e">G: 緑</text>
+        <text x="145" y="172" text-anchor="middle" font-size="11" font-weight="bold" fill="#2b5fa8">B: 青</text>
+      </g>
+      <g transform="translate(340, 10)">
+        <rect x="0" y="0" width="290" height="180" rx="8" fill="#fffefc" stroke="#d8d2c6" stroke-width="1.5"/>
+        <text x="145" y="28" text-anchor="middle" font-size="14" font-weight="bold" fill="#29251f">HSL カラーモデル（3要素）</text>
+        <rect x="25" y="45" width="240" height="32" rx="4" fill="#f7e8e3" stroke="#b2452c"/>
+        <text x="145" y="66" text-anchor="middle" font-size="12" fill="#b2452c">色相 Hue (0°〜360° 色相環)</text>
+        <rect x="25" y="85" width="240" height="32" rx="4" fill="#eef3f0" stroke="#7f9a8e"/>
+        <text x="145" y="106" text-anchor="middle" font-size="12" fill="#7f9a8e">彩度 Saturation (0%〜100% 鮮やかさ)</text>
+        <rect x="25" y="125" width="240" height="32" rx="4" fill="#f4ede2" stroke="#b0885a"/>
+        <text x="145" y="146" text-anchor="middle" font-size="12" fill="#b0885a">輝度 Lightness (0%〜100% 明るさ)</text>
+      </g>
+    </svg>
+  </div>
+  <table class="doc">
+    <thead>
+      <tr>
+        <th>カラーモデル</th>
+        <th>概要と仕組み</th>
+        <th>主な用途</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>RGB カラーモデル</td>
+        <td>赤(Red)・緑(Green)・青(Blue) の三原色を混ぜて表現する加法混合</td>
+        <td>ディスプレイ、デジタルカメラ等</td>
+      </tr>
+      <tr>
+        <td>HSL カラーモデル</td>
+        <td>色相(Hue)・彩度(Saturation)・輝度(Lightness) の3要素で表現</td>
+        <td>直感的な色の調整</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============ 1.2.1 数値による色指定 ============ -->
+<section class="stage" id="s-1-2-1">
+  <div class="stage-head">
+    <span class="stage-no">1.2.1</span><h2>数値による色指定</h2>
+    <span class="tag red">🔴 重要</span>
+  </div>
+  <p class="stage-def"><strong>数値による色指定</strong>（Hexadecimal Color Specification）は、「#」に続けて RGB の各成分を 16 進数（0〜F）で指定する方法です。</p>
+  <div class="lab" data-selector=".target" data-focus="css" data-minh="160">
+    <script type="text/plain" class="lab-css">
+    </script>
+    <script type="text/plain" class="lab-html">
+<h1 class="target">数値による色指定（#RRGGBB / #RGB）</h1>
+    </script>
+    <div class="lab-ctl">
+      <div class="vbtns">
+        <span class="ctl-label">color</span>
+        <button class="vbtn active" data-css="color: #000000" data-note="黒色。RGBの全成分が最小値（00）です。">#000000（初期値）</button>
+        <button class="vbtn" data-css="color: #FF0000" data-note="赤色。R成分のみ最大値（FF）の鮮やかな赤です。">#FF0000</button>
+        <button class="vbtn" data-css="color: #F00" data-same-ok="true" data-note="#FF0000と同じ見た目。3桁への短縮表記です。">#F00（短縮）</button>
+        <button class="vbtn" data-css="color: #00ffff" data-note="シアン（水色）。GとBの成分が最大値です。">#00ffff</button>
+        <button class="vbtn" data-css="color: #0ff" data-same-ok="true" data-note="#00ffffと同じ見た目。3桁への短縮表記です。">#0ff（短縮）</button>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ============ 1.2.2 色関数による色指定 ============ -->
+<section class="stage" id="s-1-2-2">
+  <div class="stage-head">
+    <span class="stage-no">1.2.2</span><h2>色関数による色指定</h2>
+    <span class="tag red">🔴 重要</span>
+  </div>
+  <p class="stage-def"><strong>色関数</strong>（Color Functions）は、rgb() や hsl() などの関数を用いて数値や百分率で色を指定する方法です。</p>
+  <div class="lab" data-selector=".target" data-focus="css" data-minh="160">
+    <script type="text/plain" class="lab-css">
+    </script>
+    <script type="text/plain" class="lab-html">
+<h1 class="target">色関数（RGB / RGBA / HSL / HSLA）</h1>
+    </script>
+    <div class="lab-ctl">
+      <div class="vbtns">
+        <span class="ctl-label">color</span>
+        <button class="vbtn active" data-css="color: rgb(0, 0, 0)" data-note="RGBの初期値。全成分0で黒色になります。">rgb(0, 0, 0)</button>
+        <button class="vbtn" data-css="color: rgb(255, 0, 0)" data-note="10進数で赤色を指定。👀 鮮やかな赤色に変化します。">rgb(255, 0, 0)</button>
+        <button class="vbtn" data-css="color: rgb(100%, 50%, 0%)" data-note="パーセンテージでオレンジ色を指定。👀 濃いオレンジに変化します。">rgb(100%, 50%, 0%)</button>
+        <button class="vbtn" data-css="color: rgba(255, 0, 0, 0.5)" data-note="不透明度0.5を追加。👀 半透明の赤色に変化します。">rgba(255, 0, 0, 0.5)</button>
+        <button class="vbtn" data-css="color: hsl(100, 50%, 80%)" data-note="色相100・彩度50%・輝度80%。👀 明るい黄緑色に変化します。">hsl(100, 50%, 80%)</button>
+        <button class="vbtn" data-css="color: hsla(200, 30%, 40%, 0.5)" data-note="不透明度0.5を追加。👀 半透明の落ち着いた青色に変化します。">hsla(200, 30%, 40%, 0.5)</button>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ============ 1.2.3 キーワードによる色指定 ============ -->
+<section class="stage" id="s-1-2-3">
+  <div class="stage-head">
+    <span class="stage-no">1.2.3</span><h2>キーワードによる色指定</h2>
+    <span class="tag yellow">🟡 理解</span>
+  </div>
+  <p class="stage-def"><strong>カラーキーワード</strong>（Color Keywords）は、red や blue などの定義済みアルファベット名で色を指定する方法です。</p>
+  <div class="lab" data-selector=".target" data-focus="css" data-minh="160">
+    <script type="text/plain" class="lab-css">
+    </script>
+    <script type="text/plain" class="lab-html">
+<h1 class="target">カラーキーワードによる色設定</h1>
+    </script>
+    <div class="lab-ctl">
+      <div class="vsel-row">
+        <span class="ctl-label">color</span>
+        <select class="vsel">
+          <option selected data-css="color: black" data-note="基本色：黒色。文字色が黒になります。">black（初期値）</option>
+          <option data-css="color: red" data-note="基本色：赤色。👀 文字色が赤になります。">red</option>
+          <option data-css="color: blue" data-note="基本色：青色。👀 文字色が青になります。">blue</option>
+          <option data-css="color: green" data-note="基本色：緑色。👀 文字色が緑になります。">green</option>
+          <option data-css="color: yellow" data-note="基本色：黄色。👀 文字色が黄色になります。">yellow</option>
+          <option data-css="color: silver" data-note="基本色：銀色（明るいグレー）。👀 文字色が銀色になります。">silver</option>
+          <option data-css="color: gray" data-note="基本色：灰色。👀 文字色が灰色になります。">gray</option>
+          <option data-css="color: maroon" data-note="基本色：栗色（暗い赤）。👀 文字色が暗い赤色になります。">maroon</option>
+          <option data-css="color: purple" data-note="基本色：紫色。👀 文字色が紫になります。">purple</option>
+          <option data-css="color: fuchsia" data-note="基本色：マゼンタ（鮮やかなピンク）。👀 文字色が明るいピンクになります。">fuchsia</option>
+          <option data-css="color: lime" data-note="基本色：ライム（鮮やかな緑）。👀 文字色が明るい緑色になります。">lime</option>
+          <option data-css="color: olive" data-note="基本色：オリーブ（黄緑がかった褐色）。👀 文字色が暗い黄緑色になります。">olive</option>
+          <option data-css="color: navy" data-note="基本色：紺色。👀 文字色が紺色になります。">navy</option>
+          <option data-css="color: teal" data-note="基本色：鴨の羽色（青緑）。👀 文字色が暗い青緑色になります。">teal</option>
+          <option data-css="color: aqua" data-note="基本色：水色（シアン）。👀 文字色が明るい水色になります。">aqua</option>
+          <option data-css="color: lightblue" data-note="拡張キーワード：淡い青色。👀 薄い水色になります。">lightblue</option>
+          <option data-css="color: coral" data-note="拡張キーワード：コーラル（珊瑚色）。👀 コーラルピンクになります。">coral</option>
+          <option data-css="color: currentColor" data-note="カレントカラー：親の文字色を参照します。">currentColor</option>
+          <option data-css="color: transparent" data-note="完全透明：文字が透明で見えなくなります。">transparent</option>
+        </select>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ============ 2.1 font-family ============ -->
+<section class="stage" id="s-2-1">
+  <div class="stage-head">
+    <span class="stage-no">2.1</span><h2>フォントを設定する（font-family）</h2>
+    <span class="tag red">🔴 重要</span>
+  </div>
+  <p class="stage-def"><strong>font-family</strong>（Font Family）は、テキストを表示する際の書体（フォント）を設定するプロパティです。</p>
+  <dl class="facts">
+    <div><dt>プロパティ値</dt><dd>フォント名</dd></div>
+    <div><dt>初期値</dt><dd>ブラウザ依存</dd></div>
+    <div><dt>適用要素</dt><dd>全要素</dd></div>
+    <div><dt>継承</dt><dd>継承される</dd></div>
+  </dl>
+  <div class="lab" data-selector=".target" data-focus="css" data-minh="160">
+    <script type="text/plain" class="lab-css">
+    </script>
+    <script type="text/plain" class="lab-html">
+<p class="target">吾輩は猫である。名前はまだ無い。ABC abc 123</p>
+    </script>
+    <div class="lab-ctl">
+      <div class="vbtns">
+        <span class="ctl-label">font-family</span>
+        <button class="vbtn active" data-css="font-family: sans-serif" data-note="ゴシック体の総称。読みやすい標準的な角ゴシック書体です。">sans-serif（初期値）</button>
+        <button class="vbtn" data-css="font-family: 'MS Mincho', serif" data-note="明朝体。👀 刷毛の払いのある明朝体（またはserif書体）に変わります。">"MS Mincho", serif</button>
+        <button class="vbtn" data-css="font-family: 'MS Gothic', sans-serif" data-note="ゴシック体。👀 角ばったゴシック体（またはsans-serif書体）に変わります。">"MS Gothic", sans-serif</button>
+        <button class="vbtn" data-css="font-family: 'Hiragino Kaku Gothic Pro', 'Yu Gothic', 'Meiryo', sans-serif" data-note="フォントの優先順位を複数指定。👀 先頭から利用可能な書体が適用されます。">フォントの複数指定</button>
+        <button class="vbtn" data-css="font-family: monospace" data-note="等幅フォント。👀 すべての文字幅が均一なフォントに変わります。">monospace</button>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ============ 2.2 font-size ============ -->
+<section class="stage" id="s-2-2">
+  <div class="stage-head">
+    <span class="stage-no">2.2</span><h2>テキストの大きさを設定する（font-size）</h2>
+    <span class="tag red">🔴 重要</span>
+  </div>
+  <p class="stage-def"><strong>font-size</strong>（Font Size）は、テキストの文字の大きさを設定するプロパティです。</p>
+  <dl class="facts">
+    <div><dt>プロパティ値</dt><dd>長さ、パーセンテージ、キーワード</dd></div>
+    <div><dt>初期値</dt><dd>medium</dd></div>
+    <div><dt>適用要素</dt><dd>全要素</dd></div>
+    <div><dt>継承</dt><dd>継承される</dd></div>
+  </dl>
+  <div class="lab" data-selector=".target" data-focus="css" data-minh="180">
+    <script type="text/plain" class="lab-css">
+    </script>
+    <script type="text/plain" class="lab-html">
+<p class="target">テキストのフォントサイズを変更します。</p>
+    </script>
+    <div class="lab-ctl">
+      <div class="vsel-row">
+        <span class="ctl-label">font-size</span>
+        <select class="vsel">
+          <option selected data-css="font-size: medium" data-note="初期値の標準サイズ（16px相当）。">medium（初期値）</option>
+          <option data-css="font-size: xx-small" data-note="絶対サイズ：最小（h6相当の3/5倍）。👀 文字がとても小さくなります。">xx-small</option>
+          <option data-css="font-size: small" data-note="絶対サイズ：小（h5相当の8/9倍）。👀 文字が少し小さくなります。">small</option>
+          <option data-css="font-size: large" data-note="絶対サイズ：大（h3相当の6/5倍）。👀 文字が大きくなります。">large</option>
+          <option data-css="font-size: xx-large" data-note="絶対サイズ：最大（h1相当の2倍）。👀 文字がかなり大きくなります。">xx-large</option>
+          <option data-css="font-size: 10px" data-note="ピクセル単位指定。👀 10pxの固定サイズになります。">10px</option>
+          <option data-css="font-size: 1.5em" data-note="親要素の1.5倍。👀 1.5倍の大きさに拡大されます。">1.5em</option>
+          <option data-css="font-size: larger" data-note="相対サイズ。👀 親要素より1段階大きな文字になります。">larger</option>
+        </select>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ============ 2.3 font-style ============ -->
+<section class="stage" id="s-2-3">
+  <div class="stage-head">
+    <span class="stage-no">2.3</span><h2>テキストのスタイルを設定する（font-style）</h2>
+    <span class="tag yellow">🟡 理解</span>
+  </div>
+  <p class="stage-def"><strong>font-style</strong>（Font Style）は、テキストをイタリック体や斜体に設定するプロパティです。</p>
+  <dl class="facts">
+    <div><dt>プロパティ値</dt><dd>normal, italic（イタリック体）, oblique（斜体）</dd></div>
+    <div><dt>初期値</dt><dd>normal</dd></div>
+    <div><dt>適用要素</dt><dd>全要素</dd></div>
+    <div><dt>継承</dt><dd>継承される</dd></div>
+  </dl>
+  <div class="lab" data-selector=".target" data-focus="css" data-minh="160">
+    <script type="text/plain" class="lab-css">
+    </script>
+    <script type="text/plain" class="lab-html">
+<p class="target">Hello World! 吾輩は猫である。</p>
+    </script>
+    <div class="lab-ctl">
+      <div class="vbtns">
+        <span class="ctl-label">font-style</span>
+        <button class="vbtn active" data-css="font-style: normal" data-note="初期値の標準スタイル（直立）。">normal（初期値）</button>
+        <button class="vbtn" data-css="font-style: italic" data-note="イタリック体。👀 筆記体用にデザインされた斜体文字に傾きます。">italic</button>
+        <button class="vbtn" data-css="font-style: oblique" data-note="斜体。👀 文字をシンプルに傾けたデザインに変化します。">oblique</button>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ============ 2.4 font-weight ============ -->
+<section class="stage" id="s-2-4">
+  <div class="stage-head">
+    <span class="stage-no">2.4</span><h2>テキストの太さを設定する（font-weight）</h2>
+    <span class="tag yellow">🟡 理解</span>
+  </div>
+  <p class="stage-def"><strong>font-weight</strong>（Font Weight）は、テキストの文字の太さを設定するプロパティです。</p>
+  <dl class="facts">
+    <div><dt>プロパティ値</dt><dd>キーワード、数値</dd></div>
+    <div><dt>初期値</dt><dd>normal</dd></div>
+    <div><dt>適用要素</dt><dd>全要素</dd></div>
+    <div><dt>継承</dt><dd>継承される</dd></div>
+  </dl>
+  <div class="lab" data-selector=".target" data-focus="css" data-minh="160">
+    <script type="text/plain" class="lab-css">
+    </script>
+    <script type="text/plain" class="lab-html">
+<p class="target">文字の太さを変更します。Font Weight Sample</p>
+    </script>
+    <div class="lab-ctl">
+      <div class="vsel-row">
+        <span class="ctl-label">font-weight</span>
+        <select class="vsel">
+          <option selected data-css="font-weight: normal" data-note="初期値の標準太さ（数値400相当）。">normal（400 / 初期値）</option>
+          <option data-css="font-weight: bold" data-note="太字（数値700相当）。👀 文字がくっきりと太くなります。">bold（700）</option>
+          <option data-css="font-weight: 100" data-note="数値指定100。👀 最も細い文字に変わります。">100</option>
+          <option data-css="font-weight: 300" data-note="数値指定300。👀 やや細い文字に変わります。">300</option>
+          <option data-css="font-weight: 500" data-note="数値指定500。👀 標準よりやや太い文字に変わります。">500</option>
+          <option data-css="font-weight: 900" data-note="数値指定900。👀 極太の文字に変わります。">900</option>
+          <option data-css="font-weight: bolder" data-note="相対キーワード。👀 親要素より1段階太くなります。">bolder</option>
+          <option data-css="font-weight: lighter" data-note="相対キーワード。👀 親要素より1段階細くなります。">lighter</option>
+        </select>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ============ 2.5 line-height ============ -->
+<section class="stage" id="s-2-5">
+  <div class="stage-head">
+    <span class="stage-no">2.5</span><h2>行の高さを設定する（line-height）</h2>
+    <span class="tag yellow">🟡 理解</span>
+  </div>
+  <p class="stage-def"><strong>line-height</strong>（Line Height）は、テキストの行の高さ（文字の高さ＋上下余白）を設定するプロパティです。</p>
+  <dl class="facts">
+    <div><dt>プロパティ値</dt><dd>キーワード、長さ、パーセンテージ、数値</dd></div>
+    <div><dt>初期値</dt><dd>normal</dd></div>
+    <div><dt>適用要素</dt><dd>全要素</dd></div>
+    <div><dt>継承</dt><dd>継承される</dd></div>
+  </dl>
+  <div class="lab" data-selector=".target" data-focus="css" data-minh="200">
+    <script type="text/plain" class="lab-css">
+.target {
+  background: #fdf6e2;
+  border-left: 3px solid #b0885a;
+  padding: 8px 12px;
+}
+    </script>
+    <script type="text/plain" class="lab-html">
+<p class="target">吾輩は猫である。名前はまだ無い。どこで生れたかとんと見当がつかぬ。<br>何でも薄暗いじめじめした所でニャーニャー泣いていた事だけは記憶している。</p>
+    </script>
+    <div class="lab-ctl">
+      <div class="vbtns">
+        <span class="ctl-label">line-height</span>
+        <button class="vbtn active" data-css="line-height: normal" data-note="初期値。ブラウザが自動的に適正な行高さを設定します。">normal（初期値）</button>
+        <button class="vbtn" data-css="line-height: 1" data-note="フォントサイズの1倍。👀 上下余白がなくなり、行が詰まります。">1（余白なし）</button>
+        <button class="vbtn" data-css="line-height: 1.6" data-note="推奨される数値指定（1.6倍）。👀 ゆとりのある読みやすい行間になります。">1.6（標準的）</button>
+        <button class="vbtn" data-css="line-height: 3" data-note="フォントサイズの3倍。👀 行と行の間隔が広く開きます。">3（広い行間）</button>
+        <button class="vbtn" data-css="line-height: 200%" data-note="パーセンテージ指定（200%）。👀 フォントサイズの2倍の行高さになります。">200%</button>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ============ 2.6 font ============ -->
+<section class="stage" id="s-2-6">
+  <div class="stage-head">
+    <span class="stage-no">2.6</span><h2>フォントを一括指定する（font）</h2>
+    <span class="tag yellow">🟡 理解</span>
+  </div>
+  <p class="stage-def"><strong>font</strong>（Font Shorthand）は、font-style・font-weight・font-size・line-height・font-family の順序・必填ルールに従い一括設定するプロパティです。</p>
+  <dl class="facts">
+    <div><dt>プロパティ値</dt><dd>個々のプロパティ参照</dd></div>
+    <div><dt>初期値</dt><dd>個々のプロパティ参照</dd></div>
+    <div><dt>適用要素</dt><dd>全要素</dd></div>
+    <div><dt>継承</dt><dd>継承される</dd></div>
+  </dl>
+  <div class="lab" data-selector=".target" data-focus="css" data-minh="180">
+    <script type="text/plain" class="lab-css">
+    </script>
+    <script type="text/plain" class="lab-html">
+<p class="target">吾輩は猫である。名前はまだ無い。font shorthand sample</p>
+    </script>
+    <div class="lab-ctl">
+      <div class="vbtns">
+        <span class="ctl-label">font</span>
+        <button class="vbtn active" data-css="font: 16px serif" data-note="必填の font-size(16px) と font-family(serif) のみ。2要素揃う最小の正構文です。">最小構成（正：size + family）</button>
+        <button class="vbtn" data-css="font: italic bold 20px/1.8 'Times New Roman', serif" data-note="👀 斜体・太字・サイズ・行高(/1.8)・フォント名をすべて正しく指定。全スタイルが反映されます。">フル指定（正：style weight size/line-height family）</button>
+        <button class="vbtn" data-css="font: bold 18px sans-serif" data-note="👀 font-style を省略した形。省略しても font-size の前に font-weight を置けば有効です。">一部省略（正：weight size family）</button>
+        <button class="vbtn" data-css="font: bold serif" data-note="必填の font-size が欠けた書き方。👀 構文エラーで無効化され既定表示に戻ります。">font-size欠け（誤：style/weight無効）</button>
+        <button class="vbtn" data-same-ok="true" data-css="font: 20px serif italic" data-note="font-size欠けと同じ見た目。font-style を最後に置いた順序違反のため無効化されます。">順序違反（誤：familyの後にstyle）</button>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ============ 2.7 長さの指定 ============ -->
+<section class="stage" id="s-2-7">
+  <div class="stage-head">
+    <span class="stage-no">2.7</span><h2>長さの指定</h2>
+    <span class="tag red">🔴 重要</span>
+  </div>
+  <p class="stage-def"><strong>長さの指定</strong>（Length Units）は、CSS でサイズや間隔を定義するための単位であり、「絶対長さ」と「相対長さ」に大別されます。</p>
+  <div class="d-fig">
+    <svg viewBox="0 0 640 180" role="img" aria-label="絶対長さと相対長さの基準の違い">
+      <g transform="translate(10, 10)">
+        <rect x="0" y="0" width="290" height="160" rx="8" fill="#fffefc" stroke="#d8d2c6" stroke-width="1.5"/>
+        <text x="145" y="28" text-anchor="middle" font-size="14" font-weight="bold" fill="#29251f">絶対長さ（Absolute Length）</text>
+        <rect x="30" y="50" width="230" height="40" fill="#f7e8e3" stroke="#b2452c" stroke-dasharray="4"/>
+        <text x="145" y="75" text-anchor="middle" font-size="13" font-weight="bold" fill="#b2452c">固定サイズ (例: 300px)</text>
+        <text x="145" y="115" text-anchor="middle" font-size="11" fill="#6e675d">画面や親要素の大きさに影響されない</text>
+        <text x="145" y="135" text-anchor="middle" font-size="11" fill="#6e675d">常に同じ長さ（px, cm, mm など）</text>
+      </g>
+      <g transform="translate(340, 10)">
+        <rect x="0" y="0" width="290" height="160" rx="8" fill="#fffefc" stroke="#d8d2c6" stroke-width="1.5"/>
+        <text x="145" y="28" text-anchor="middle" font-size="14" font-weight="bold" fill="#29251f">相対長さ（Relative Length）</text>
+        <rect x="30" y="50" width="230" height="40" fill="#eef3f0" stroke="#7f9a8e"/>
+        <text x="145" y="75" text-anchor="middle" font-size="13" font-weight="bold" fill="#7f9a8e">可変サイズ (例: 1.5em, 50vw)</text>
+        <text x="145" y="115" text-anchor="middle" font-size="11" fill="#6e675d">親/ルートフォントサイズや画面幅を基準</text>
+        <text x="145" y="135" text-anchor="middle" font-size="11" fill="#6e675d">状況に応じて長さが変化（em, rem, vw等）</text>
+      </g>
+    </svg>
+  </div>
+  <table class="doc">
+    <thead>
+      <tr>
+        <th>分類</th>
+        <th>特徴</th>
+        <th>主な単位</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>絶対長さ（Absolute Length）</td>
+        <td>他の要素の長さに関係なく常に同じ長さを表現する</td>
+        <td>px, cm, mm, in, pt, pc, Q</td>
+      </tr>
+      <tr>
+        <td>相対長さ（Relative Length）</td>
+        <td>要素のフォントサイズやビューポート（画面領域）に対する比率で表現する</td>
+        <td>em, rem, vw, vh, vmin, vmax, lh, ex, ch</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============ 2.7.1 絶対長さ ============ -->
+<section class="stage" id="s-2-7-1">
+  <div class="stage-head">
+    <span class="stage-no">2.7.1</span><h2>絶対長さ（Absolute Length）</h2>
+    <span class="tag yellow">🟡 理解</span>
+  </div>
+  <p class="stage-def"><strong>絶対長さ</strong>（Absolute Length）は、画面サイズや他要素に関係なく常に固定の長さを表現する単位です。</p>
+  <div class="lab" data-selector=".target" data-focus="css" data-minh="160">
+    <script type="text/plain" class="lab-css">
+.target {
+  border: 2px solid #b2452c;
+  padding: 10px;
+}
+    </script>
+    <script type="text/plain" class="lab-html">
+<div class="target">1px = 1/96 inch を基準とするピクセル（px）指定です。</div>
+    </script>
+    <div class="lab-ctl">
+      <div class="vbtns">
+        <span class="ctl-label">width / font-size</span>
+        <button class="vbtn active" data-css="width: 300px; font-size: 16px;" data-note="幅300px・文字サイズ16pxの固定絶対長さ。">width: 300px（初期値）</button>
+        <button class="vbtn" data-css="width: 450px; font-size: 20px;" data-note="幅450px・文字サイズ20px。👀 固定のpx数で拡大されます。">width: 450px</button>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+  <table class="doc">
+    <thead>
+      <tr>
+        <th>単位</th>
+        <th>説明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>cm</td>
+        <td>センチメートルを表します。</td>
+      </tr>
+      <tr>
+        <td>mm</td>
+        <td>ミリメートルを表します。</td>
+      </tr>
+      <tr>
+        <td>Q</td>
+        <td>quarter-millimeters の略で、1 Q = 0.25 mm を表します。</td>
+      </tr>
+      <tr>
+        <td>in</td>
+        <td>inches の略で、1 in = 25.4 mm を表します。</td>
+      </tr>
+      <tr>
+        <td>pc</td>
+        <td>pica（パイカ）の略で、1 pc = 1/6 in を表します。</td>
+      </tr>
+      <tr>
+        <td>pt</td>
+        <td>point（ポイント）の略で、1 pt = 1/72 in を表します。</td>
+      </tr>
+      <tr>
+        <td>px</td>
+        <td>pixel（ピクセル）の略称です。1 px = 1/96 in を表します。</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============ 2.7.2 相対長さ ============ -->
+<section class="stage" id="s-2-7-2">
+  <div class="stage-head">
+    <span class="stage-no">2.7.2</span><h2>相対長さ（Relative Length）</h2>
+    <span class="tag red">🔴 重要</span>
+  </div>
+  <p class="stage-def"><strong>相対長さ</strong>（Relative Length）は、要素のフォントサイズやビューポート（表示領域）を基準とする可変の単位です。</p>
+  <div class="lab" data-selector=".target" data-focus="css" data-minh="180">
+    <script type="text/plain" class="lab-css">
+.parent {
+  font-size: 14px;
+  background: #f4ede2;
+  padding: 10px;
+}
+.target {
+  background: #fffefc;
+  border: 1px solid #b0885a;
+  padding: 6px;
+}
+    </script>
+    <script type="text/plain" class="lab-html">
+<div class="parent">親要素 (font-size: 14px)
+  <div class="target">相対長さのサンプルテキスト</div>
+</div>
+    </script>
+    <div class="lab-ctl">
+      <div class="vsel-row">
+        <span class="ctl-label">font-size</span>
+        <select class="vsel">
+          <option selected data-css="font-size: 1em" data-note="親要素の14pxと同じサイズ（1.0倍）。">1em（親要素比 / 初期値）</option>
+          <option data-css="font-size: 1.5em" data-note="親要素(14px)の1.5倍(21px)。👀 親要素基準で拡大されます。">1.5em</option>
+          <option data-css="font-size: 1.5rem" data-note="ルート要素(html/16px)の1.5倍(24px)。👀 ルート基準で拡大されます。">1.5rem</option>
+          <option data-css="font-size: 4vw" data-note="ビューポート幅の4%。👀 画面幅に連動して可変します。">4vw</option>
+          <option data-css="font-size: 5vh" data-note="ビューポート高さの5%。👀 画面高さに連動して可変します。">5vh</option>
+          <option data-css="font-size: 4vmin" data-note="ビューポートの幅と高さのうち小さい方の4%。">4vmin</option>
+          <option data-css="font-size: 2ch" data-note="数字「0」の幅の2倍に設定します。">2ch</option>
+        </select>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ============ 3.1 text-decoration-line ============ -->
+<section class="stage" id="s-3-1">
+  <div class="stage-head">
+    <span class="stage-no">3.1</span><h2>テキストに線を装飾する（text-decoration-line）</h2>
+    <span class="tag red">🔴 重要</span>
+  </div>
+  <p class="stage-def"><strong>text-decoration-line</strong>（Text Decoration Line）は、テキストに対して上線・取り消し線・下線を装飾するプロパティです。</p>
+  <dl class="facts">
+    <div><dt>プロパティ値</dt><dd>キーワード</dd></div>
+    <div><dt>初期値</dt><dd>none</dd></div>
+    <div><dt>適用要素</dt><dd>全要素</dd></div>
+    <div><dt>継承</dt><dd>継承されない</dd></div>
+  </dl>
+  <div class="lab" data-selector=".target" data-focus="css" data-minh="160">
+    <script type="text/plain" class="lab-css">
+    </script>
+    <script type="text/plain" class="lab-html">
+<p class="target">テキスト装飾線の位置サンプルです。</p>
+    </script>
+    <div class="lab-ctl">
+      <div class="vbtns">
+        <span class="ctl-label">text-decoration-line</span>
+        <button class="vbtn active" data-css="text-decoration-line: none" data-note="初期値。装飾線を表示しません。">none（初期値）</button>
+        <button class="vbtn" data-css="text-decoration-line: underline" data-note="下線。👀 テキストの足元に直線が引かれます。">underline</button>
+        <button class="vbtn" data-css="text-decoration-line: overline" data-note="上線。👀 テキストの頭上に直線が引かれます。">overline</button>
+        <button class="vbtn" data-css="text-decoration-line: line-through" data-note="取り消し線。👀 テキストの中央を貫く線が引かれます。">line-through</button>
+        <button class="vbtn" data-css="text-decoration-line: underline overline" data-note="複数指定（下線＋上線）。👀 上下に同時に線が引かれます。">underline overline</button>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ============ 3.2 text-decoration-color ============ -->
+<section class="stage" id="s-3-2">
+  <div class="stage-head">
+    <span class="stage-no">3.2</span><h2>線の色を設定する（text-decoration-color）</h2>
+    <span class="tag yellow">🟡 理解</span>
+  </div>
+  <p class="stage-def"><strong>text-decoration-color</strong>（Text Decoration Color）は、text-decoration-line で指定された装飾線の色を設定するプロパティです。</p>
+  <dl class="facts">
+    <div><dt>プロパティ値</dt><dd>色</dd></div>
+    <div><dt>初期値</dt><dd>currentcolor</dd></div>
+    <div><dt>適用要素</dt><dd>全要素</dd></div>
+    <div><dt>継承</dt><dd>継承されない</dd></div>
+  </dl>
+  <div class="lab" data-selector=".target" data-focus="css" data-minh="160">
+    <script type="text/plain" class="lab-css">
+.target {
+  text-decoration-line: underline;
+}
+    </script>
+    <script type="text/plain" class="lab-html">
+<p class="target">装飾線の色変更サンプルテキストです。</p>
+    </script>
+    <div class="lab-ctl">
+      <div class="vbtns">
+        <span class="ctl-label">text-decoration-color</span>
+        <button class="vbtn active" data-css="text-decoration-color: currentcolor" data-note="初期値。文字色と同じ色で装飾線が表示されます。">currentcolor（初期値）</button>
+        <button class="vbtn" data-css="text-decoration-color: red" data-note="赤色の指定。👀 下線が赤い色に変わります。">red</button>
+        <button class="vbtn" data-css="text-decoration-color: #1e88e5" data-note="青色の16進数指定。👀 下線が鮮やかな青色に変わります。">#1e88e5</button>
+        <button class="vbtn" data-css="text-decoration-color: rgba(255, 152, 0, 0.7)" data-note="半透明のオレンジ色。👀 下線が薄いオレンジに変わります。">rgba(255, 152, 0, 0.7)</button>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ============ 3.3 text-decoration-style ============ -->
+<section class="stage" id="s-3-3">
+  <div class="stage-head">
+    <span class="stage-no">3.3</span><h2>線の線種を設定する（text-decoration-style）</h2>
+    <span class="tag yellow">🟡 理解</span>
+  </div>
+  <p class="stage-def"><strong>text-decoration-style</strong>（Text Decoration Style）は、text-decoration-line で指定された装飾線の線種（実線・破線・波線など）を設定するプロパティです。</p>
+  <dl class="facts">
+    <div><dt>プロパティ値</dt><dd>キーワード</dd></div>
+    <div><dt>初期値</dt><dd>solid</dd></div>
+    <div><dt>適用要素</dt><dd>全要素</dd></div>
+    <div><dt>継承</dt><dd>継承されない</dd></div>
+  </dl>
+  <div class="lab" data-selector=".target" data-focus="css" data-minh="160">
+    <script type="text/plain" class="lab-css">
+.target {
+  text-decoration-line: underline;
+}
+    </script>
+    <script type="text/plain" class="lab-html">
+<p class="target">装飾線の種類（スタイル）サンプルテキストです。</p>
+    </script>
+    <div class="lab-ctl">
+      <div class="vbtns">
+        <span class="ctl-label">text-decoration-style</span>
+        <button class="vbtn active" data-css="text-decoration-style: solid" data-note="初期値の実線。標準的な一本の直線です。">solid（実線 / 初期値）</button>
+        <button class="vbtn" data-css="text-decoration-style: double" data-note="二重線。👀 二本平行な線に変わります。">double（二重線）</button>
+        <button class="vbtn" data-css="text-decoration-style: dotted" data-note="点線。👀 丸い点の並びに変わります。">dotted（点線）</button>
+        <button class="vbtn" data-css="text-decoration-style: dashed" data-note="破線。👀 短い線の並びに変わります。">dashed（破線）</button>
+        <button class="vbtn" data-css="text-decoration-style: wavy" data-note="波線。👀 波状の曲線のラインに変わります。">wavy（波線）</button>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ============ 3.4 text-decoration ============ -->
+<section class="stage" id="s-3-4">
+  <div class="stage-head">
+    <span class="stage-no">3.4</span><h2>テキストの装飾の一括指定（text-decoration）</h2>
+    <span class="tag red">🔴 重要</span>
+  </div>
+  <p class="stage-def"><strong>text-decoration</strong>（Text Decoration Shorthand）は、text-decoration-line・color・style を一括設定するプロパティです。</p>
+  <dl class="facts">
+    <div><dt>プロパティ値</dt><dd>個々のプロパティに準ずる</dd></div>
+    <div><dt>初期値</dt><dd>個々のプロパティに準ずる</dd></div>
+    <div><dt>適用要素</dt><dd>全要素</dd></div>
+    <div><dt>継承</dt><dd>継承されない</dd></div>
+  </dl>
+  <div class="lab" data-selector=".target" data-focus="css" data-minh="160">
+    <script type="text/plain" class="lab-css">
+    </script>
+    <script type="text/plain" class="lab-html">
+<p class="target">text-decoration 一括指定のサンプルです。</p>
+    </script>
+    <div class="lab-ctl">
+      <div class="vbtns">
+        <span class="ctl-label">text-decoration</span>
+        <button class="vbtn active" data-css="text-decoration: none" data-note="初期値。装飾線を打ち消します。">none（初期値）</button>
+        <button class="vbtn" data-css="text-decoration: underline wavy blue" data-note="位置・線種・色を一括指定。👀 青い波状の下線が付きます。">underline wavy blue</button>
+        <button class="vbtn" data-css="text-decoration: overline dashed #e53935" data-note="上線・破線・赤色を一括指定。👀 赤い破線の上線が付きます。">overline dashed #e53935</button>
+        <button class="vbtn" data-css="text-decoration: line-through double green" data-note="取り消し線・二重線・緑色を一括指定。👀 緑の二重打ち消し線が付きます。">line-through double green</button>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ============ 3.5 text-shadow ============ -->
+<section class="stage" id="s-3-5">
+  <div class="stage-head">
+    <span class="stage-no">3.5</span><h2>テキストに影をつける（text-shadow）</h2>
+    <span class="tag yellow">🟡 理解</span>
+  </div>
+  <p class="stage-def"><strong>text-shadow</strong>（Text Shadow）は、テキストに影の長さ（水平・垂直）、ぼかし半径、色を指定して影をつけるプロパティです。</p>
+  <dl class="facts">
+    <div><dt>プロパティ値</dt><dd>長さ（影の長さ、ぼかし）、色（影の色）、none</dd></div>
+    <div><dt>初期値</dt><dd>none</dd></div>
+    <div><dt>適用要素</dt><dd>全要素</dd></div>
+    <div><dt>継承</dt><dd>継承される</dd></div>
+  </dl>
+  <div class="lab" data-selector=".target" data-focus="css" data-minh="180">
+    <script type="text/plain" class="lab-css">
+.target {
+  font-size: 24px;
+  font-weight: bold;
+}
+    </script>
+    <script type="text/plain" class="lab-html">
+<h1 class="target">Text Shadow Sample</h1>
+    </script>
+    <div class="lab-ctl">
+      <div class="vbtns">
+        <span class="ctl-label">text-shadow</span>
+        <button class="vbtn active" data-css="text-shadow: none" data-note="初期値。影を表示しません。">none（初期値）</button>
+        <button class="vbtn" data-css="text-shadow: 2px 2px 4px #888888" data-note="右2px・下2px・ぼかし4px・グレー影。👀 くっきりした影が付きます。">2px 2px 4px #888888</button>
+        <button class="vbtn" data-css="text-shadow: 10px 5px 5px lightblue" data-note="右10px・下5px・ぼかし5px・水色影。👀 右下に柔らかい水色の影が伸びます。">10px 5px 5px lightblue</button>
+        <button class="vbtn" data-css="text-shadow: 0 0 8px #ff7700" data-note="位置ずれ0でぼかし8pxのオレンジ影。👀 発光したようなネオン効果になります。">0 0 8px #ff7700</button>
+        <button class="vbtn" data-css="text-shadow: 3px 3px 0 #000, 6px 6px 0 #aaa" data-note="カンマ区切りで複数の影を指定。👀 影が重なって多重立体効果になります。">多重影（カンマ区切り）</button>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ============ 4.1 writing-mode ============ -->
+<section class="stage" id="s-4-1">
+  <div class="stage-head">
+    <span class="stage-no">4.1</span><h2>縦書きにする（writing-mode）</h2>
+    <span class="tag yellow">🟡 理解</span>
+  </div>
+  <p class="stage-def"><strong>writing-mode</strong>（Writing Mode）は、テキストの記述方向を横書きまたは縦書きに設定するプロパティです。</p>
+  <dl class="facts">
+    <div><dt>プロパティ値</dt><dd>キーワード</dd></div>
+    <div><dt>初期値</dt><dd>horizontal-tb</dd></div>
+    <div><dt>適用要素</dt><dd>表の行・列のグループ、表の行・列の要素を除くすべて</dd></div>
+    <div><dt>継承</dt><dd>継承される</dd></div>
+  </dl>
+  <div class="lab" data-selector=".target" data-focus="css" data-minh="220">
+    <script type="text/plain" class="lab-css">
+.target {
+  height: 160px;
+  border: 1px solid #d8d2c6;
+  padding: 10px;
+}
+    </script>
+    <script type="text/plain" class="lab-html">
+<div class="target">国境の長いトンネルを抜けると雪国であった。夜の底が白くなった。信号所に汽車が止まった。</div>
+    </script>
+    <div class="lab-ctl">
+      <div class="vbtns">
+        <span class="ctl-label">writing-mode</span>
+        <button class="vbtn active" data-css="writing-mode: horizontal-tb" data-note="初期値の横書き（上から下へ行が進行）。">horizontal-tb（横書き / 初期値）</button>
+        <button class="vbtn" data-css="writing-mode: vertical-rl" data-note="縦書き（右から左へ行が進行）。👀 日本語の書籍のような縦書きになります。">vertical-rl（縦書き・右→左）</button>
+        <button class="vbtn" data-css="writing-mode: vertical-lr" data-note="縦書き（左から右へ行が進行）。👀 行が左から右へ伸びる縦書きになります。">vertical-lr（縦書き・左→右）</button>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ============ 4.2 content ============ -->
+<section class="stage" id="s-4-2">
+  <div class="stage-head">
+    <span class="stage-no">4.2</span><h2>要素の内容を書き換える（content）</h2>
+    <span class="tag yellow">🟡 理解</span>
+  </div>
+  <p class="stage-def"><strong>content</strong>（Content）は、::before や ::after 疑似要素と組み合わせて要素の前後に文字列や画像を挿入するプロパティです。</p>
+  <dl class="facts">
+    <div><dt>プロパティ値</dt><dd>キーワード、文字列、URL、HTML 属性値、カウンター関数</dd></div>
+    <div><dt>初期値</dt><dd>normal</dd></div>
+    <div><dt>適用要素</dt><dd>全要素</dd></div>
+    <div><dt>継承</dt><dd>継承されない</dd></div>
+  </dl>
+  <div class="lab" data-focus="css" data-minh="180">
+    <script type="text/plain" class="lab-css">
+p { margin: 8px 0; }
+    </script>
+    <script type="text/plain" class="lab-html">
+<p class="target">吾輩は猫である。</p>
+<p class="target">名前はまだ無い。</p>
+    </script>
+    <div class="lab-ctl">
+      <div class="vbtns">
+        <span class="ctl-label">content</span>
+        <button class="vbtn active" data-rule="p::before { content: normal; } p::after { content: normal; }" data-note="初期値の normal。疑似要素の内容は表示されません。">normal（初期値）</button>
+        <button class="vbtn" data-rule="p::before { content: '★ '; color: #b2452c; } p::after { content: ' ♪'; color: #7f9a8e; }" data-note="文字列の挿入。👀 各段落の前に「★」、後ろに「♪」が自動挿入されます。">文字列を挿入</button>
+        <button class="vbtn" data-rule="p::before { content: url('images/cat.png'); display: inline-block; width: 24px; height: 24px; vertical-align: middle; margin-right: 6px; }" data-note="画像の挿入。👀 各段落の前に画像が自動挿入されます。">画像（url）を挿入</button>
+        <button class="vbtn" data-rule="p::after { content: ' [注記]'; color: #888; font-size: 0.8em; }" data-note="段落の後ろに補足テキストを挿入します。">末尾に注記挿入</button>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ============ A.1 Webフォント ============ -->
+<section class="stage" id="s-a-1">
+  <div class="stage-head">
+    <span class="stage-no">A.1</span><h2>Web フォントの利用</h2>
+    <span class="tag gray">⚪ 参考</span>
+  </div>
+  <p class="stage-def"><strong>Web フォント</strong>（Web Font）は、ネットワーク経由でフォントファイルをダウンロードして閲覧者の環境に依存せず指定書体を表示する仕組みです。</p>
+  <div class="lab" data-selector=".target" data-focus="css" data-minh="180">
+    <script type="text/plain" class="lab-css">
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400&display=swap');
+    </script>
+    <script type="text/plain" class="lab-html">
+<p class="target">The quick brown fox jumps over the lazy dog. 1234567890</p>
+    </script>
+    <div class="lab-ctl">
+      <div class="vbtns">
+        <span class="ctl-label">font-family</span>
+        <button class="vbtn active" data-css="font-family: sans-serif" data-note="標準のローカルフォント（sans-serif）。">sans-serif（標準）</button>
+        <button class="vbtn" data-css="font-family: 'Roboto', sans-serif" data-note="Google Fonts の Web フォント Roboto を適用。👀 洗練された英字書体に変わります。">Roboto（Webフォント）</button>
+        <button class="vbtn" data-css="font-family: 'Roboto', sans-serif; font-weight: bold; font-style: italic;" data-note="Roboto の太字＋イタリック体。👀 太字斜体のWebフォントになります。">Roboto（Bold Italic）</button>
+      </div>
+    </div>
+    <div class="lab-body"></div>
+    <div class="lab-note" aria-live="polite"></div>
+  </div>
+</section>
+
+<div class="footer">作成日: 2026-08-01 | 対応教材: HTML &amp; CSS vol.9</div>
+
+</main>
+<script src="assets/lab-engine.js"></script>
+</body>
+</html>

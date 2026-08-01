@@ -1,0 +1,252 @@
+/* ============================================================
+   lab-engine.css — 互動講解ページ 共通スタイル
+   ------------------------------------------------------------
+   対象  : sample/講解ページ/*.html ・ sample/参考実装/*.html
+   参照  : <link rel="stylesheet" href="../assets/lab-engine.css">
+   規約  : 本ファイルは全ページ共通。ページ固有の装飾は各ページの
+           <style> に d- 接頭辞クラスとして書く（ここには足さない）。
+           本ファイルを直すと全ページに影響する → 直したら
+           標準/_ref_lab_検証スクリプト.js を全講解ページに実走させる。
+   来歴  : 2026-07-30 参考実装 _ref_LABエンジン実装.html の <style> から抽出。
+           参考実装専用の .proto 関連は本ファイルに含めない（参考実装のページ内 <style> にある）。
+   ============================================================ */
+  :root {
+    --bg: #f4f2ee; --card: #fffefc; --ink: #29251f; --text2: #6e675d;
+    --accent: #b2452c; --accent-deep: #8f3520; --accent-soft: #f7e8e3;
+    --warn-ink: #8a6410; --warn-bg: #f6eed7; --warn-border: #e6d9b4;
+    --border: #e5e0d6; --hairline: #ece8df;
+    --code-bg: #26232c; --code-text: #d6d2c8; --code-border: #38343f;
+    --demo-border: #d8d2c6; --demo-bg: #faf8f4;
+    --tag-red-bg: #f7e4dd; --tag-red-text: #99351c;
+    --tag-yellow-bg: #f3ead0; --tag-yellow-text: #7d5c0e;
+    --tag-gray-bg: #ebe8e1; --tag-gray-text: #6e675d;
+    /* コードトークン */
+    --t-tag: #8ab4d8; --t-attr: #d9b36c; --t-str: #c98b6b; --t-sel: #d9b36c;
+    --t-prop: #9fc4e0; --t-val: #a3c98a; --t-num: #d1a05f; --t-punc: #8a8694;
+    --t-com: #9a94a5; --t-at: #c58cc0;
+    /* ボックスモデル可視化 */
+    --bm-margin: #e2c49b; --bm-border: #d3b878; --bm-padding: #b3c79c; --bm-content: #9ab2c8;
+    --font-sans: "Hiragino Sans", "PingFang SC", "Noto Sans JP", "Yu Gothic", -apple-system, sans-serif;
+    --font-serif: "Hiragino Mincho ProN", "Songti SC", "Yu Mincho", serif;
+    --font-mono: "SF Mono", Menlo, Consolas, "Cascadia Code", monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--font-sans); background: var(--bg); color: var(--ink); line-height: 1.85; font-size: 15.5px; }
+  ::selection { background: var(--accent-soft); }
+  button:focus-visible, [tabindex]:focus-visible, textarea:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* ---- masthead ---- */
+  .masthead { max-width: 1080px; margin: 0 auto; padding: 52px 32px 26px; }
+  .masthead .kicker { font-family: var(--font-mono); font-size: 0.76rem; letter-spacing: 0.16em; color: var(--accent); text-transform: uppercase; }
+  .masthead h1 { font-family: var(--font-serif); font-weight: 600; font-size: clamp(1.6rem, 3.2vw, 2.4rem); line-height: 1.35; margin-top: 10px; }
+  .masthead .lede { margin-top: 10px; color: var(--text2); font-size: 0.95rem; max-width: 46em; text-wrap: pretty; }
+  .masthead .hint { margin-top: 14px; display: inline-block; font-size: 0.82rem; color: var(--accent-deep); background: var(--accent-soft); border-radius: 999px; padding: 4px 16px; }
+  .masthead .legend { margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .masthead .legend span { font-size: 0.74rem; padding: 3px 12px; border: 1px solid var(--border); border-radius: 999px; background: var(--card); color: var(--text2); }
+
+  /* ---- rail ---- */
+  .rail { position: sticky; top: 0; z-index: 30; margin-top: 22px; background: color-mix(in srgb, var(--bg) 90%, transparent); backdrop-filter: blur(8px); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .rail-inner { max-width: 1080px; margin: 0 auto; display: flex; gap: 5px; overflow-x: auto; padding: 9px 32px; scrollbar-width: none; }
+  .rail-inner::-webkit-scrollbar { display: none; }
+  .rail a { flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; font-size: 0.78rem; color: var(--text2); text-decoration: none; padding: 4px 11px; border-radius: 999px; border: 1px solid transparent; white-space: nowrap; transition: background 0.15s, color 0.15s; }
+  .rail a .no { font-family: var(--font-mono); font-size: 0.66rem; opacity: 0.75; }
+  .rail a:hover { background: var(--hairline); color: var(--ink); }
+  .rail a.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  /* rail 側も大節と小節を描き分ける（stage の階層と一対一。.major は stage 側と同じ判定） */
+  .rail a.major { font-weight: 700; color: var(--ink); }
+  .rail a.major .no { color: var(--accent); opacity: 1; }
+
+  /* ---- stage ---- */
+  main { max-width: 1080px; margin: 0 auto; padding: 24px 32px 80px; }
+  .stage { padding: 50px 0 38px; border-bottom: 1px solid var(--border); scroll-margin-top: 62px; }
+  .stage:last-of-type { border-bottom: none; }
+  .stage-head { display: flex; align-items: baseline; gap: 13px; flex-wrap: wrap; }
+  .stage-no { font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent); letter-spacing: 0.1em; }
+  .stage-head h2 { font-family: var(--font-serif); font-weight: 600; font-size: 1.45rem; }
+  .src { font-family: var(--font-mono); font-size: 0.68rem; color: var(--text2); border: 1px solid var(--border); border-radius: 999px; padding: 2px 10px; }
+  .tag { font-size: 0.7rem; font-weight: 600; padding: 3px 11px; border-radius: 999px; }
+  .tag.red { background: var(--tag-red-bg); color: var(--tag-red-text); }
+  .tag.yellow { background: var(--tag-yellow-bg); color: var(--tag-yellow-text); }
+  .tag.gray { background: var(--tag-gray-bg); color: var(--tag-gray-text); }
+  /* 大節（x.x で、下位に x.x.x を持つ節）＝ 章の入口。
+     小節とまったく同じ体裁で並べると階層が版面から消えるため、番号を実体のバッジにし、
+     見出しを一段大きく、下に太い罫を1本引いて「ここから下が配下の小節」と示す。
+     下位を持たない x.x（vol.9 の 2.2 等）は通常の stage —— このクラスを付けない。 */
+  .stage.major { padding-bottom: 10px; border-bottom: none; }
+  .stage.major .stage-head { align-items: center; padding-bottom: 11px; border-bottom: 2px solid var(--ink); }
+  .stage.major .stage-no { font-size: 0.78rem; font-weight: 700; color: var(--card); background: var(--accent); border-radius: 5px; padding: 3px 9px; letter-spacing: 0.06em; }
+  .stage.major h2 { font-size: 1.72rem; }
+  .stage.major .stage-def { margin-top: 13px; }
+  /* 大節の直後に来る小節は、大節の罫にぶら下がって見えるよう上の余白を詰める */
+  .stage.major + .stage { padding-top: 30px; }
+  .stage-def strong { color: var(--ink); }
+  code { font-family: var(--font-mono); font-size: 0.85em; background: var(--hairline); padding: 1px 6px; border-radius: 4px; }
+  .facts { display: flex; gap: 10px; flex-wrap: wrap; margin: 15px 0 20px; }
+  .facts div { display: flex; align-items: center; gap: 8px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 5px 14px; font-size: 0.8rem; }
+  .facts dt { color: var(--text2); }
+  .facts dt::after { content: ""; display: inline-block; width: 1px; height: 12px; background: var(--border); margin-left: 8px; vertical-align: -1px; }
+  .facts dd { font-weight: 600; }
+
+  /* ---- lab ---- */
+  /* パネル（.ed-wrap）自体が枠を持つようになったので、.lab 側は枠を持たない。
+     二重の白いカードが入れ子になって縁が2本見える状態を避ける。 */
+  .lab { margin-bottom: 18px; }
+  .lab-ctl { display: flex; flex-direction: column; gap: 8px; }
+  .vbtns { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .ctl-label { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text2); min-width: 108px; }
+  .vbtn { font-family: var(--font-mono); font-size: 0.78rem; padding: 5px 13px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--ink); cursor: pointer; transition: border-color 0.15s, background 0.15s; }
+  .vbtn:hover { border-color: var(--accent); }
+  .vbtn.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .vbtn .init-mark { font-size: 0.63rem; color: var(--accent); margin-left: 5px; }
+  .vbtn.active .init-mark { color: var(--accent-soft); }
+  /* 値が多くてボタン行に収まらないプロパティ用のドロップダウン（option 側に data-* を書く） */
+  .vsel-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .vsel { font-family: var(--font-mono); font-size: 0.78rem; padding: 5px 30px 5px 11px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--ink); cursor: pointer; appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--text2) 50%), linear-gradient(135deg, var(--text2) 50%, transparent 50%); background-position: calc(100% - 15px) calc(50% + 1px), calc(100% - 11px) calc(50% + 1px); background-size: 4px 4px, 4px 4px; background-repeat: no-repeat; }
+  .vsel:hover { border-color: var(--accent); }
+  .vsel:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .vrange-row { display: flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 0.78rem; }
+  .vrange-row input[type="range"] { width: 130px; accent-color: var(--accent); }
+  .vrange-row .vval { min-width: 46px; font-weight: 600; }
+  .switch { display: inline-flex; align-items: center; gap: 9px; font-family: var(--font-mono); font-size: 0.76rem; color: var(--text2); cursor: pointer; user-select: none; }
+  .switch .track { width: 38px; height: 21px; border-radius: 999px; background: var(--border); position: relative; transition: background 0.18s; }
+  .switch .knob { position: absolute; top: 3px; left: 3px; width: 15px; height: 15px; border-radius: 50%; background: var(--card); transition: transform 0.18s; box-shadow: 0 1px 3px rgba(41,37,31,0.3); }
+  .switch.on .track { background: var(--accent); }
+  .switch.on .knob { transform: translateX(17px); }
+
+  /* 2欄化は .ed-panes（パネル内部）が担う。.lab-body 自身は単なる入れ物 */
+  .lab-body { margin-top: 14px; }
+  .demo-col { min-width: 0; background: var(--demo-bg); }
+
+  /* エディタ（表示中のコード = iframe の中身そのもの） */
+  /* コード枠＋プレビューは1枚のパネル。外枠・タブ・操作欄は紙面（ページと同じ明度帯）に置き、
+     暗色にするのはコード領域だけ。以前は全体が黒く、ページの上に黒い箱が浮いて見えていた。 */
+  .ed-wrap { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--card); }
+
+  /* HTML/CSS タブ（層1）：紙面の帯。アクティブは下線で示す（塗り分けない） */
+  .ed-tabs { display: flex; background: var(--bg); border-bottom: 1px solid var(--border); }
+  .ed-tab { font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.02em; color: var(--text2); background: transparent; border: 0; padding: 9px 16px; cursor: pointer; position: relative; }
+  .ed-tab:hover { color: var(--ink); }
+  .ed-tab.active { color: var(--ink); }
+  .ed-tab.active::after { content: ""; position: absolute; left: 16px; right: 16px; bottom: -1px; height: 2px; background: var(--accent); }
+
+  /* 層2（値ボタン）：タブの直下、まだ紙面の上。ボタンはページ標準の見た目のまま使う */
+  .ed-wrap .lab-ctl { padding: 10px 14px; border-bottom: 1px solid var(--hairline); }
+  .ed-wrap .ctl-label { text-align: right; }
+
+  /* 説明文：操作欄のすぐ下（押したボタンの直下）。LAB の一番下には置かない */
+  .ed-wrap .lab-note { margin: 0; border-top: 0; border-bottom: 1px solid var(--hairline); padding: 8px 14px; font-size: 0.84rem; }
+
+  /* 値ボタン（層2）と説明文は focusZone 側にしか効かない（値ボタンは focusZone の
+     コードしか動かさない設計。写作指南 §3.2.2）。非講解タブを見ている時に押せてしまうと
+     見えていないコードが裏で変わるだけの無意味な操作になるため、そのタブでは丸ごと隠す
+     （2026-08-01 追加。`on-focus-zone` は既存の JS が切り替え済みだった） */
+  .ed-wrap:not(.on-focus-zone) .lab-ctl, .ed-wrap:not(.on-focus-zone) .lab-note { display: none; }
+
+  /* コードとプレビューの2欄 */
+  .ed-panes { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  @media (max-width: 880px) { .ed-panes { grid-template-columns: 1fr; } }
+
+  /* zone 粗筛：非当前タブの行（.cl）を隠す */
+  .ed-hl [data-zone].zone-hidden { display: none; }
+
+  /* 折りたたみ：IDE と同じ3点セット
+     ① 行番号 gutter のシェブロン（既定は hover 時のみ・VS Code の showFoldingControls: onHover と同じ）
+     ② 畳んだ区画の先頭行はそのまま残し、行末に「⋯」
+     ③ 隠れた行のぶん行番号が飛ぶ（.cl.fold-hidden が display:none なので自動でそうなる） */
+  /* 行番号（left:-4.4em / 幅2.2em）とコード本文の間の溝に置く */
+  .fold-arrow { position: absolute; left: -1.9em; width: 1.2em; text-align: center; color: #6f6879; cursor: pointer; user-select: none; opacity: 0; transition: opacity 0.12s, color 0.12s; }
+  /* 開閉で別々のグリフを使う（2026-08-01 修正：1つのグリフを rotate(-90deg) で回す旧実装は、
+     グリフの外接ボックスが正方形でないため回転後に数px 視覚上ズレ、開閉のたびに矢印が
+     跳ねて見えるバグがあった。回転をやめ、畳み＝▸・展開＝▾の専用グリフに分ける） */
+  .fold-arrow::before { content: "▾"; display: inline-block; }
+  .cl.folded .fold-arrow::before { content: "▸"; }
+  .cl.folded .fold-arrow { opacity: 1; }            /* 畳んでいる間は常に見せる（VS Code と同じ） */
+  .ed-hl:hover .fold-arrow { opacity: 1; }          /* 展開中は hover で現れる */
+  .fold-arrow:hover { color: var(--code-text); }
+  .fold-arrow:focus-visible { opacity: 1; outline: 1px solid var(--accent); border-radius: 2px; }
+  /* 「⋯」はボタンではなく、畳まれた中身を示す印。背景も枠も持たせない */
+  .fold-dots { display: inline; margin-left: 4px; color: #6f6879; user-select: none; }
+  /* 開閉の操作は行そのもの（行全体をクリック）。展開／折畳みで対称にする
+     （2026-08-01 修正：旧実装は折畳み方向のクリックがガターの矢印にしか効かなかった） */
+  .cl.folded, .cl.unfolded { cursor: pointer; }
+  .cl.folded:hover, .cl.unfolded:hover { background: rgba(255,255,255,0.05); }
+  .cl.folded:hover .fold-dots { color: var(--code-text); }
+  .ed-hl .cl.fold-hidden { display: none; }
+
+  /* コード框は読み取り専用（2026-07-31 に編集機能を撤去）。
+     ta は ta.value を iframe.srcdoc の唯一の源として保持するためだけに DOM に残し、常時非表示にする。
+     表示は hl だけが担うので in-flow にして高さを持たせ、hover 判定のため pointer-events も有効にする。 */
+  .ed-ta { display: none; }
+  .ed-hl { position: static; pointer-events: auto; }
+  .ed-wrap.bad { border-color: var(--warn-ink); }
+  /* コピーはコード領域の右上に重ねる（横帯を1本減らすため）。既定は控えめ、hover で立ち上がる */
+  .ibtn { position: absolute; top: 6px; right: 8px; z-index: 2; display: inline-flex; align-items: center; background: rgba(38,35,44,0.72); border: 1px solid rgba(255,255,255,0.10); color: #9d97a8; border-radius: 6px; padding: 4px 6px; cursor: pointer; opacity: 0.55; transition: opacity 0.15s, color 0.15s, background 0.15s; font-family: var(--font-mono); font-size: 0.66rem; }
+  .ed:hover .ibtn { opacity: 1; }
+  .ibtn:hover { background: rgba(255,255,255,0.10); color: var(--code-text); }
+  .ibtn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .ed { position: relative; background: var(--code-bg); border-right: 1px solid var(--border); min-width: 0; }
+  @media (max-width: 880px) { .ed { border-right: 0; border-bottom: 1px solid var(--border); } }
+  .ed-hl, .ed-ta { margin: 0; padding: 12px 14px; font-family: var(--font-mono); font-size: 12.5px; line-height: 21px; white-space: pre; overflow: auto; border: 0; tab-size: 2; }
+  .ed-hl { color: var(--code-text); }
+  .ed-hl:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+  /* 行番号 gutter。番号は選択・コピーの対象にしない（コードだけをコピーできるように） */
+  .ed-hl { padding-left: 4.6em; }
+  .ed-hl .cl { display: block; border-radius: 3px; position: relative; }
+  .ed-hl .cl::before { content: attr(data-ln); position: absolute; left: -4.4em; width: 2.2em; text-align: right; color: #57515f; user-select: none; pointer-events: none; }
+  .ed-hl .cl.mark { background: rgba(178, 69, 44, 0.34); }
+  /* chg＝直前の操作で変わった行。次に値を変えるまで残るので、フラッシュを見逃しても後から追える。
+     色付きの縦線は使わない（枠の左端に色の帯を足す作りはやらない）。淡い背景だけで示す。 */
+  .ed-hl .cl.chg { background: rgba(163, 201, 138, 0.10); }
+  .ed-hl .cl.flash { animation: lineflash 0.9s ease-out 1; }
+  @keyframes lineflash { 0%, 40% { background: rgba(163, 201, 138, 0.34); } 100% { background: rgba(163, 201, 138, 0.10); } }
+  .t-tag { color: var(--t-tag); } .t-attr { color: var(--t-attr); } .t-str { color: var(--t-str); }
+  .t-sel { color: var(--t-sel); } .t-prop { color: var(--t-prop); } .t-val { color: var(--t-val); }
+  .t-num { color: var(--t-num); } .t-punc { color: var(--t-punc); } .t-at { color: var(--t-at); }
+  .t-com { color: var(--t-com); font-style: italic; }
+
+  /* 静的コードブロック（LAB を使わない stage 用） */
+  .code-static { background: var(--code-bg); color: var(--code-text); border: 1px solid var(--code-border); border-radius: 8px; padding: 13px 16px; font-family: var(--font-mono); font-size: 12.5px; line-height: 21px; white-space: pre; overflow-x: auto; }
+  .code-static .k { color: var(--t-tag); }
+  .code-static .v { color: var(--t-val); }
+  .code-static .c { color: var(--t-com); font-style: italic; }
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 880px) { .duo { grid-template-columns: 1fr; } }
+  .duo-label { font-family: var(--font-mono); font-size: 0.68rem; color: var(--text2); margin-bottom: 7px; letter-spacing: 0.08em; }
+
+  /* デモ（iframe） */
+  /* プレビュー領域。パネルの右半分そのものなので、独自の枠・角丸は持たない */
+  .frame-wrap { position: sticky; top: 58px; background: var(--demo-bg); overflow: hidden; }
+  .frame-wrap iframe { display: block; width: 100%; border: 0; background: transparent; }
+  .ovl { position: absolute; pointer-events: none; border-radius: 2px; }
+  .ovl-hl { outline: 2px solid var(--accent); background: rgba(178, 69, 44, 0.16); }
+  .ovl-flash { outline: 2px solid #7f9a8e; animation: boxflash 0.9s ease-out 1; }
+  @keyframes boxflash { 0%, 40% { background: rgba(127, 154, 142, 0.3); } 100% { background: transparent; } }
+  .ovl-m { background: rgba(226, 196, 155, 0.62); }
+  .ovl-b { background: rgba(211, 184, 120, 0.72); }
+  .ovl-p { background: rgba(179, 199, 156, 0.72); }
+  .ovl-c { background: rgba(154, 178, 200, 0.78); }
+  .ovl-tag { position: absolute; font-family: var(--font-mono); font-size: 9.5px; color: rgba(41,37,31,0.75); padding: 0 3px; pointer-events: none; }
+
+  .lab-note { font-size: 0.85rem; color: var(--text2); min-height: 1.6em; }
+  .legend-bm { display: flex; gap: 13px; flex-wrap: wrap; margin-top: 10px; font-family: var(--font-mono); font-size: 0.68rem; color: var(--text2); }
+  .legend-bm span { display: inline-flex; align-items: center; gap: 5px; }
+  .legend-bm i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+  /* 色見本は class で（手書き style= を使わせないため） */
+  .legend-bm i.bm-m { background: var(--bm-margin); }
+  .legend-bm i.bm-b { background: var(--bm-border); }
+  .legend-bm i.bm-p { background: var(--bm-padding); }
+  .legend-bm i.bm-c { background: var(--bm-content); }
+
+  table.doc { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.86rem; }
+  table.doc th, table.doc td { border: 1px solid var(--border); padding: 8px 11px; text-align: left; }
+  table.doc th { background: var(--hairline); font-weight: 600; }
+  .footer { font-family: var(--font-mono); text-align: center; padding: 38px 20px; color: var(--text2); font-size: 0.72rem; letter-spacing: 0.08em; border-top: 1px solid var(--hairline); }
+  @media (max-width: 880px) { .masthead, main { padding-left: 20px; padding-right: 20px; } .rail-inner { padding: 9px 20px; } }
+
+  /* ---- 窄幅サポート外バナー ---- */
+  .narrow-warn { display: none; }
+  @media (max-width: 880px) {
+    .narrow-warn { display: block; background: var(--warn-bg); border-bottom: 1px solid var(--warn-border); color: var(--warn-ink); text-align: center; padding: 10px 16px; font-size: 0.8rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .ed-hl .cl.flash, .ovl-flash { animation: none; } }

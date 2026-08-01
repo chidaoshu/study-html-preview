@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML & CSS 互動講解ページ 一覧</title>
+<link rel="stylesheet" href="assets/lab-engine.css">
+<style>
+  /* ---- 門戸ページ専用（d- 接頭辞） ---- */
+  .d-list { max-width: 1080px; margin: 26px auto 60px; padding: 0 32px; display: grid; gap: 14px; }
+  .d-card { display: block; text-decoration: none; color: inherit; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; transition: border-color .15s, transform .15s; }
+  .d-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .d-card .d-vol { font-family: var(--font-mono); font-size: 0.72rem; color: var(--accent); letter-spacing: .08em; }
+  .d-card h2 { font-family: 'Hiragino Mincho ProN', 'Yu Mincho', serif; font-size: 1.16rem; margin: 4px 0 6px; color: var(--ink); }
+  .d-card p { margin: 0; font-size: 0.84rem; color: var(--text2); line-height: 1.7; }
+  .d-note { max-width: 1080px; margin: 0 auto; padding: 0 32px 40px; font-size: 0.8rem; color: var(--text2); line-height: 1.9; }
+  @media (max-width: 880px) { .d-list, .d-note { padding-left: 20px; padding-right: 20px; } }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="kicker">HTML &amp; CSS — 互動講解ページ</div>
+  <h1>HTML &amp; CSS 講解ページ</h1>
+  <p class="lede">値を変えると、コードと表示が同時に変わります。表示されているコードはそのまま動く HTML 文書です。</p>
+  <div class="hint">▶ パソコンの画面幅（880px 以上）で見てください</div>
+</header>
+
+<nav class="d-list" aria-label="講解ページ一覧">
+  <a class="d-card" href="vol.14.html">
+    <span class="d-vol">VOL.14</span>
+    <h2>HTML &amp; CSS vol.14 グリッドレイアウト 互動講解</h2>
+    <p>レイアウトを2次元（水平と垂直）で区切り、要素を自由自在に配置するグリッドレイアウト（grid layout）をインタラクティブに体験学習します。</p>
+  </a>
+  <a class="d-card" href="vol.13.html">
+    <span class="d-vol">VOL.13</span>
+    <h2>HTML&amp;CSS vol.13 フレックスボックス — インタラクティブ解説</h2>
+    <p>display: flex を指定した親（フレックスコンテナ / flex container）の子要素が、フレックスアイテム（flex item）として並びます。値を切り替えると、右側のコードと表示が同時に変わります。表示中のコードは iframe の中身そのものなので、両者は常に一致します。</p>
+  </a>
+  <a class="d-card" href="vol.12.html">
+    <span class="d-vol">VOL.12</span>
+    <h2>HTML&amp;CSS vol.12 要素の配置の指定 — インタラクティブ解説</h2>
+    <p>text-align・position・float・z-index・opacity。値を切り替えると、CSS コードと実際の表示が同時に変わります。コードは表示中のスタイルそのものから生成されるため、両者は常に一致します。</p>
+  </a>
+  <a class="d-card" href="vol.11.html">
+    <span class="d-vol">VOL.11</span>
+    <h2>HTML&amp;CSS vol.11 背景の設定 — インタラクティブ解説</h2>
+    <p>background-color・background-image・background-repeat・background-position・background-size。値を切り替えると、CSS コードと実際の表示が同時に変わります。</p>
+  </a>
+  <a class="d-card" href="vol.10.html">
+    <span class="d-vol">VOL.10</span>
+    <h2>HTML &amp; CSS — VOL.10 ボックスモデルの基本</h2>
+    <p>すべての要素は margin・border・padding・content の4層のボックスを持ちます。本ページでは各プロパティの値をブラウザの実描画で確かめながら学びます。</p>
+  </a>
+  <a class="d-card" href="vol.9.html">
+    <span class="d-vol">VOL.9</span>
+    <h2>HTML &amp; CSS vol.9 テキストを装飾するプロパティ — インタラクティブ解説</h2>
+    <p>文字色・フォント・装飾線・影・縦書きなど、テキストの見た目をコントロールする CSS プロパティの動作をインタラクティブに確認します。</p>
+  </a>
+  <a class="d-card" href="vol.8.html">
+    <span class="d-vol">VOL.8</span>
+    <h2>HTML&amp;CSS vol.8 CSS の基礎 — インタラクティブ解説</h2>
+    <p>CSS の書式・セレクター・優先順位を、コードと実際の描画を往復しながら確認します。値を切り替えると、表示中のコードと iframe の結果が同時に変わります。</p>
+  </a>
+  <a class="d-card" href="vol.1.html">
+    <span class="d-vol">VOL.1</span>
+    <h2>HTML とその関連技術 — HTML&amp;CSS VOL.1 互動講解</h2>
+    <p>マークアップ言語の歴史・Web サイトの表示の仕組み・HTTP 通信・Web ブラウザを、SVG 図解と対照表で整理します。vol.1 はブラウザ描画で見せられない概念型の知識が中心です。</p>
+  </a>
+</nav>
+
+<div class="d-note">
+  ※ 学生が自分の復習用に作った非公式のまとめです。授業のノートと教科書を優先してください。
+</div>
+
+</body>
+</html>
