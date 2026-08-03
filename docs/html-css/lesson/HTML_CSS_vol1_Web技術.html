@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HTML とその関連技術 — HTML&amp;CSS VOL.1</title>
 <meta name="description" content="マークアップ言語の歴史・Web サイトの表示の仕組み・HTTP 通信・Web ブラウザを SVG 図解で学ぶ解説ページ（HTML&CSS VOL.1）。">
-<link rel="stylesheet" href="assets/lab-engine.css">
+<link rel="stylesheet" href="../assets/lab-engine.css">
 <style>
 /* vol.1 専用。d- 接頭辞クラスのみ */
 .d-fig { border: 1px solid #d8d2c6; background: #fffefc; border-radius: 8px; padding: 14px; margin: 10px 0; }
@@ -26,24 +26,36 @@
 
 <nav class="rail" aria-label="節一覧">
   <div class="rail-inner">
+    <a href="#s-1-1" class="major"><span class="no">1.1</span>マークアップ言語の歴史と発展</a>
     <a href="#s-1-1-1"><span class="no">1.1.1</span>代表的なマークアップ言語 🟡</a>
     <a href="#s-1-1-2"><span class="no">1.1.2</span>HTML のバージョン 🔴</a>
     <a href="#s-1-1-3"><span class="no">1.1.3</span>CSS 🔴</a>
+    <a href="#s-1-2" class="major"><span class="no">1.2</span>Web サイトが表示される仕組み</a>
     <a href="#s-1-2-1"><span class="no">1.2.1</span>Web サイトが表示されるまでの流れ 🔴</a>
     <a href="#s-1-2-2"><span class="no">1.2.2</span>URL の構成 🔴</a>
     <a href="#s-1-2-3"><span class="no">1.2.3</span>IP アドレス 🟡</a>
+    <a href="#s-1-3" class="major"><span class="no">1.3</span>HTTP 通信</a>
     <a href="#s-1-3-1"><span class="no">1.3.1</span>HTTP 通信の仕組み 🔴</a>
     <a href="#s-1-3-2"><span class="no">1.3.2</span>リクエストメッセージの構造 🔴</a>
     <a href="#s-1-3-3"><span class="no">1.3.3</span>レスポンスメッセージの構造 🔴</a>
     <a href="#s-1-3-4"><span class="no">1.3.4</span>HTTP クッキー 🔴</a>
     <a href="#s-1-3-5"><span class="no">1.3.5</span>HTTPS 通信 🔴</a>
     <a href="#s-1-3-6"><span class="no">1.3.6</span>認証 🟡</a>
+    <a href="#s-1-4" class="major"><span class="no">1.4</span>Web ブラウザ</a>
     <a href="#s-1-4-1"><span class="no">1.4.1</span>Web ブラウザ 🟡</a>
     <a href="#s-1-4-2"><span class="no">1.4.2</span>JavaScript 🟡</a>
   </div>
 </nav>
 
 <main>
+
+<!-- ============ 1.1 マークアップ言語の歴史と発展 ============ -->
+<section class="stage major" id="s-1-1">
+  <div class="stage-head">
+    <span class="stage-no">1.1</span><h2>マークアップ言語の歴史と発展</h2>
+  </div>
+  <p class="stage-def"><strong>マークアップ言語</strong>（markup language）は、コンテンツにタグでマークを付け意味づけを行う形式言語です。</p>
+</section>
 
 <!-- ============ 1.1.1 代表的なマークアップ言語 ============ -->
 <section class="stage" id="s-1-1-1">
@@ -193,6 +205,13 @@
   </table>
 </section>
 
+<!-- ============ 1.2 Web サイトが表示される仕組み ============ -->
+<section class="stage major" id="s-1-2">
+  <div class="stage-head">
+    <span class="stage-no">1.2</span><h2>Web サイトが表示される仕組み</h2>
+  </div>
+</section>
+
 <!-- ============ 1.2.1 Web サイトが表示されるまでの流れ ============ -->
 <section class="stage" id="s-1-2-1">
   <div class="stage-head">
@@ -291,6 +310,14 @@
       <text x="360" y="140" text-anchor="middle" font-size="10" fill="#6e675d">IPv4：32ビット（約43億アドレス）→ 不足のため 1999年より IPv6（128ビット）も利用</text>
     </svg>
   </div>
+</section>
+
+<!-- ============ 1.3 HTTP 通信 ============ -->
+<section class="stage major" id="s-1-3">
+  <div class="stage-head">
+    <span class="stage-no">1.3</span><h2>HTTP 通信</h2>
+  </div>
+  <p class="stage-def"><strong>HTTP</strong>（HyperText Transfer Protocol）は、クライアントと Web サーバー間でデータをやりとりするための通信プロトコルです。</p>
 </section>
 
 <!-- ============ 1.3.1 HTTP 通信の仕組み ============ -->
@@ -582,6 +609,13 @@
   </div>
 </section>
 
+<!-- ============ 1.4 Web ブラウザ ============ -->
+<section class="stage major" id="s-1-4">
+  <div class="stage-head">
+    <span class="stage-no">1.4</span><h2>Web ブラウザ</h2>
+  </div>
+</section>
+
 <!-- ============ 1.4.1 Web ブラウザ ============ -->
 <section class="stage" id="s-1-4-1">
   <div class="stage-head">
@@ -641,6 +675,6 @@
 
 </main>
 
-<script src="assets/lab-engine.js"></script>
+<script src="../assets/lab-engine.js"></script>
 </body>
 </html>

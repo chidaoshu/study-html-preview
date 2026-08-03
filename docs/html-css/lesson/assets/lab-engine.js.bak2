@@ -92,31 +92,20 @@
     return { html: out, depth: depth };
   }
   function highlight(src) {
-    var lines = src.split('\n'), inStyle = false, depth = 0, out = [];
-    // zone は3状態の状態機で決める（2026-08-01 修正）。
-    // 旧実装は </style> の**次の行**から body 区に切り替えていたため、ちょうどその位置にある
-    // </head> が body 区に混ざり、HTML タブに「開きタグの無い </head>」だけが浮いて見えていた
-    // （head 区の折りたたみ範囲は 1〜4 行目なので、この行だけ畳まれずに残る）。
-    // <body> 行に到達するまでは head 区に戻す、が正しい。
-    // なお <body> 以降の <style> は data-slot が body 内へ持ち込んだ演示対象そのもの
-    // （例：vol.8 の style 要素）なので CSS 区に吸わせず、body 区のまま HTML タブ側に残す。
-    var state = 'head'; // 'head' | 'style' | 'body'
+    var lines = src.split('\n'), inStyle = false, depth = 0, out = [], zone = 'head', closeStyle = false;
     lines.forEach(function (line) {
-      var html, zone;
+      var html;
       if (inStyle && !/<\/style>/.test(line)) {
         var r = hlCssLine(line, depth); html = r.html; depth = r.depth;
-        zone = 'style';
       } else {
         html = hlHtmlLine(line);
-        if (state !== 'body' && /<style[^>]*>/.test(line)) { inStyle = true; depth = 0; state = 'style'; zone = 'style'; }
-        // </style> 行自体は style 区の一部として出す（CSS タブで閉じタグが消えるのを防ぐ）
-        else if (state === 'style' && /<\/style>/.test(line)) { inStyle = false; state = 'head'; zone = 'style'; }
-        else if (/<body[^>]*>/.test(line)) { state = 'body'; zone = 'body'; }
-        else zone = (state === 'body') ? 'body' : 'head';
+        if (/<style[^>]*>/.test(line)) { inStyle = true; depth = 0; zone = 'style'; }
+        // </style> 行自体は style 区の一部として出す（CSS タブで閉じタグが消えるのを防ぐ）。
+        // body 区へ移るのは次の行から。
+        if (/<\/style>/.test(line)) { inStyle = false; zone = 'style'; closeStyle = true; }
       }
-      // data-ln＝行番号。折りたたまれた行は display:none になるので、番号は自然に飛ぶ
-      //（IDE で「ここが畳まれている」と分かる一番の手がかりが、この番号の飛びである）
-      out.push('<span class="cl" data-zone="' + zone + '" data-ln="' + (out.length + 1) + '">' + (html === '' ? '&#8203;' : html) + '</span>');
+      out.push('<span class="cl" data-zone="' + zone + '">' + (html === '' ? '&#8203;' : html) + '</span>');
+      if (closeStyle) { zone = 'body'; closeStyle = false; }
     });
     return out.join('');
   }
@@ -135,29 +124,6 @@
         depth--;
         if (depth === 0 && curStart >= 0) { blocks.push({ start: curStart, end: i, selector: curSel }); curStart = -1; }
       }
-    });
-    return blocks;
-  }
-
-  // doc 内 <body> 区のトップレベル要素を列挙： [{start, end}] （行インデックス、endを含む）
-  // CSS の findCssBlocks と対の役割。生成 HTML は基本 1 行 1 タグ（dedent 済み）を前提にした簡易パーサ。
-  var VOID_TAGS = { area: 1, base: 1, br: 1, col: 1, embed: 1, hr: 1, img: 1, input: 1, link: 1, meta: 1, source: 1, track: 1, wbr: 1 };
-  function findHtmlBodyBlocks(doc) {
-    var lines = doc.split('\n'), blocks = [], depth = 0, curStart = -1, inBody = false;
-    var tagRe = /<(\/?)([a-zA-Z][\w-]*)([^>]*?)(\/?)>/g;
-    lines.forEach(function (line, i) {
-      if (/<body[^>]*>/.test(line)) { inBody = true; return; }
-      if (/<\/body>/.test(line)) { inBody = false; return; }
-      if (!inBody) return;
-      var opens = 0, closes = 0, m;
-      tagRe.lastIndex = 0;
-      while ((m = tagRe.exec(line))) {
-        var closing = m[1] === '/', tag = m[2].toLowerCase(), selfClose = m[4] === '/' || VOID_TAGS[tag];
-        if (closing) closes++; else if (!selfClose) opens++;
-      }
-      if (depth === 0 && curStart < 0 && opens > 0) curStart = i;
-      depth += opens - closes;
-      if (curStart >= 0 && depth <= 0) { blocks.push({ start: curStart, end: i }); curStart = -1; depth = 0; }
     });
     return blocks;
   }
@@ -208,10 +174,6 @@
     var curFrameH = 0; // この LAB に現在適用中の iframe 高さ（ヒステリシスで小さな増減を吸収する）
     var SHRINK_THRESHOLD = 24; // 新しい実測値がこれ以上小さい時だけ縮める（px）
 
-    // 【2026-07-31 改装】コード枠とプレビューを1枚のパネルに同居させる。
-    // 外枠・タブ・操作欄は紙面（ページと同じ明度帯）、コード領域だけを暗色にする。
-    // 以前は「黒いカード」と「白いカード」が2枚離れて浮いており、左のソースと右の結果が
-    // 同じ1つの装置だと読めなかった。横帯もタブ / ファイル名 / 操作の3本あって重かった。
     var body = lab.querySelector('.lab-body');
     body.innerHTML =
       '<div class="ed-wrap">' +
@@ -219,58 +181,42 @@
           '<button class="ed-tab" data-zone="html">HTML</button>' +
           '<button class="ed-tab" data-zone="css">CSS</button>' +
         '</div>' +
-        '<div class="ed-panes">' +
-          '<div class="ed">' +
-            '<button class="ibtn" data-act="copy" aria-label="コードをコピー"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button>' +
-            '<pre class="ed-hl" tabindex="0" aria-label="デモのソースコード"></pre>' +
-            '<textarea class="ed-ta" spellcheck="false" readonly aria-hidden="true" tabindex="-1"></textarea>' +
-          '</div>' +
-          '<div class="demo-col"><div class="frame-wrap"><iframe class="lab-frame" aria-label="デモの表示"></iframe></div></div>' +
+        '<div class="ed-bar">' +
+          '<span class="fname">demo.html</span>' +
+          '<button class="ibtn" data-act="copy" title="コードをコピー"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>コピー</button>' +
         '</div>' +
-      '</div>';
+        '<div class="ed"><pre class="ed-hl" tabindex="0" aria-label="デモのソースコード"></pre><textarea class="ed-ta" spellcheck="false" readonly aria-hidden="true" tabindex="-1"></textarea></div>' +
+      '</div>' +
+      '<div class="demo-col"><div class="frame-wrap"><iframe class="lab-frame" title="デモの表示"></iframe></div></div>';
 
     var edWrap = body.querySelector('.ed-wrap');
     var hl = body.querySelector('.ed-hl');
     var ta = body.querySelector('.ed-ta');
 
-    // 折りたたみの開閉は hl に1本だけ委任リスナーを張る（LAB の生存期間中ずっと同じ1本のまま）。
-    // foldRange() 側は行に data-fold-key を書くだけで、要素ごとに addEventListener しない
-    // （個別に付けるとトグルのたびに増殖するバグがあったため。上の foldRange 内コメント参照）。
-    function handleFoldToggle(e) {
-      var head = e.target.closest ? e.target.closest('.cl.foldable') : null;
-      if (!head) return;
-      var key = head.dataset.foldKey;
-      if (!key) return;
-      foldState[key] = !foldState[key];
-      applyFold(lastDoc);
-    }
-    hl.addEventListener('click', handleFoldToggle);
-    hl.addEventListener('keydown', function (e) {
-      if (e.key !== 'Enter' && e.key !== ' ') return;
-      var head = e.target.closest ? e.target.closest('.cl.foldable') : null;
-      if (!head) return;
-      e.preventDefault();
-      handleFoldToggle(e);
-    });
-
-    // 操作欄（層2）をパネルの中・タブの直下に入れる。
+    // 層1（HTML/CSS タブ）の中に層2（属性の値ボタン＝どのコード/効果を切り替えるか）を物理的に入れ子にする。
+    // 元は .lab-ctl が .lab-body と並列で外に浮いていて、階層が視覚化されていなかった。
     var labCtl = lab.querySelector('.lab-ctl');
     if (labCtl) {
-      edWrap.insertBefore(labCtl, edWrap.querySelector('.ed-panes'));
-      // ラベルはプロパティ名のみ。「◯◯ の値を切り替える」のような説明文は付けない
-      //（同じ言い回しが4行続くとノイズにしかならない。操作方法はページ冒頭で一度言う）。
+      edWrap.insertBefore(labCtl, edWrap.querySelector('.ed-bar'));
+      // ctl-label はページ側に裸のプロパティ名（例:「display」）だけが書かれていることが多く、
+      // タブ階層が2層になった今、それ単体では「これが何なのか」が読み取れない。
+      // 引擎側で「◯◯ を切り替える」の形に統一し、プロパティ名は等幅で強調する。
       labCtl.querySelectorAll('.ctl-label').forEach(function (lbl) {
         var t = lbl.textContent.trim();
-        // 「HTML」「CSS」＝直上のタブと完全重複するため隠す
-        if (t === 'HTML' || t === 'CSS') lbl.style.display = 'none';
+        // 「HTML」「CSS」＝直上のタブと完全重複するため隠す（従来どおり）
+        if (t === 'HTML' || t === 'CSS') { lbl.style.display = 'none'; return; }
+        if (!t || lbl.dataset.built) return;
+        lbl.dataset.built = '1';
+        // 既に文章になっているもの（「padding 調整」等、空白や日本語を含む）はプロパティ名扱いしない
+        var isProp = /^[-a-z]+$/.test(t);
+        lbl.innerHTML = isProp
+          ? '<span class="ctl-prop">' + t + '</span><span class="ctl-suffix">の値を切り替える</span>'
+          : '<span class="ctl-suffix">' + t.replace(/[&<>]/g, '') + '</span>';
       });
     }
-    // 説明文（.lab-note）は LAB の一番下ではなく、操作欄のすぐ下＝押したボタンの直下に置く。
-    // 一番下だと「押した所」と「その説明」が離れ、視線が往復する。
-    var noteEl = lab.querySelector('.lab-note');
-    if (noteEl) edWrap.insertBefore(noteEl, edWrap.querySelector('.ed-panes'));
     var frameWrap = body.querySelector('.frame-wrap');
     var frame = body.querySelector('.lab-frame');
+    var noteEl = lab.querySelector('.lab-note');
 
     // 説明文の高さぶんだけ min-height を実測して確保する（固定 em ではなく LAB ごとの実測値）
     // .vbtn の data-note 全部＋ data-good-note を候補として、実幅で1つずつ流し込み最大の offsetHeight を取る
@@ -296,14 +242,6 @@
     var taPadTop = parseFloat(taCs.paddingTop) || 12;
     var taLineH = parseFloat(taCs.lineHeight) || 21;
 
-    // buildDoc() が**引擎自身で生成した行**の範囲（0基点・end 含む）。
-    //   ・CSS 側＝値ボタン / スライダー / data-rule が作る規則ブロック
-    //   ・HTML 側＝ data-slot が {{SLOT}} に流し込んだ断片
-    // ＝この stage の主役。折りたたみ判定と初期ハイライトの両方がここを見る（2026-08-01 追加）。
-    // 旧実装は主役を `data-selector` の文字列一致で判定していたため、data-rule / data-slot 型
-    // （指南 §3.3 が data-selector 省略を認めている）では一致するはずが無く、主役ブロックが
-    // 既定で畳まれていた（参考実装 #s-v16 で実測）。生成域から求めれば LAB の型に依存しない。
-    var liveRanges = [];
     function buildDoc() {
       var css = baseCss, rule = '';
       if (ruleSlots.main || ruleSlots.extra) {
@@ -323,52 +261,17 @@
       if (rule) css += '\n' + rule;
       var frag = slot;
       var html = frag ? injectSlot(baseHtml, frag) : baseHtml;
-
-      // 生成域の行番号を確定する。定型の前置きは 5 行
-      //（<!DOCTYPE> / <html> / <head> / <meta> / <style>）、
-      // css の後ろに </style> </head> <body> の 3 行が入ってから html 区が始まる。
-      var HEAD_LINES = 5;
-      var cssLines = css.split('\n').length;
-      var htmlStart = HEAD_LINES + cssLines + 3;
-      liveRanges = [];
-      if (rule) {
-        var ruleLines = rule.split('\n').length;
-        liveRanges.push({ start: HEAD_LINES + cssLines - ruleLines, end: HEAD_LINES + cssLines - 1 });
-      }
-      if (frag) {
-        var slotIdx = -1, baseLines = baseHtml.split('\n');
-        for (var i = 0; i < baseLines.length; i++) {
-          if (/^[ \t]*\{\{SLOT\}\}[ \t]*$/.test(baseLines[i])) { slotIdx = i; break; }
-        }
-        if (slotIdx >= 0) {
-          liveRanges.push({ start: htmlStart + slotIdx, end: htmlStart + slotIdx + frag.split('\n').length - 1 });
-        }
-      }
       return '<!DOCTYPE html>\n<html lang="ja">\n<head>\n<meta charset="UTF-8">\n<style>\n'
         + css + '\n</style>\n</head>\n<body>\n' + html + '\n</body>\n</html>';
     }
-    // [start, end] が生成域と1行でも重なるか
-    function overlapsLive(start, end) {
-      return liveRanges.some(function (r) { return start <= r.end && end >= r.start; });
-    }
-    function liveLines() {
-      var out = [];
-      liveRanges.forEach(function (r) { for (var i = r.start; i <= r.end; i++) out.push(i); });
-      return out;
-    }
 
-    function paint(doc, changedLines, noFlash) {
+    function paint(doc, changedLines) {
       hl.innerHTML = highlight(doc);
       if (changedLines && changedLines.length) {
         var cls = hl.querySelectorAll('.cl');
         // flash＝切り替えた瞬間の一過性のフラッシュ。chg＝次に値を変えるまで残る左端のマーカー。
         // 一過性だけだと「どこが変わったのか」を見逃した時に取り返せないため、印を残す。
-        // noFlash＝初回描画。ページを開いた瞬間に LAB 全部が一斉に光るのは煩いので chg だけ付ける。
-        changedLines.forEach(function (i) {
-          if (!cls[i]) return;
-          cls[i].classList.add('chg');
-          if (!noFlash) cls[i].classList.add('flash');
-        });
+        changedLines.forEach(function (i) { if (cls[i]) cls[i].classList.add('flash', 'chg'); });
       }
       // ta は常時非表示（scrollHeight=0）なので、高さは hl の自然高に任せる
       hl.style.height = 'auto';
@@ -378,7 +281,7 @@
 
     function applyZone() {
       var showZone = activeZone === 'html' ? ['head', 'body'] : ['style'];
-      hl.querySelectorAll('[data-zone]').forEach(function (el) { // .cl 行が対象
+      hl.querySelectorAll('[data-zone]').forEach(function (el) { // .cl 行と fold-row 占位行の両方が対象
         el.classList.toggle('zone-hidden', showZone.indexOf(el.dataset.zone) < 0);
       });
       // 講解対象（focusZone）側のタブを見ている時は、値ボタンの操作でこのコードが動くことを示す
@@ -391,101 +294,44 @@
     // head 区は「行数に関わらず常に定型＝畳む」、CSS 補助ブロックだけ短さの閾値を見る、と役割を分ける。
     var FOLD_MIN_CSS_LINES = 3; // CSS 規則ブロックがこの行数以下なら畳まない（畳む方が読みにくい）
 
-    // 折りたたみは VS Code と同じ作法：区画の先頭行はそのまま残し、その行末に「⋯」を付けて
-    // 残りを隠す。「定型部分（DOCTYPE / head）4 行」のような説明文の行は挿入しない
-    //（説明を読ませるためのものではなく、そこが畳まれていると分かればよいため）。
     function applyFold(doc) {
+      body.querySelectorAll('.fold-row').forEach(function (n) { n.remove(); });
       var cls = hl.querySelectorAll('.cl');
-      cls.forEach(function (cl) { cl.classList.remove('fold-hidden', 'folded', 'unfolded', 'foldable'); });
-      hl.querySelectorAll('.fold-dots, .fold-arrow').forEach(function (n) { n.remove(); });
+      cls.forEach(function (cl) { cl.classList.remove('fold-hidden'); });
 
-      // --- HTML tab: head 区（DOCTYPE / html / head / meta / </head>）は常に定型なので既定で畳む ---
-      // </head> は <style>〜</style> の後ろにあり先頭4行と連続しない。行リストで畳む（区間だと
-      // 間の CSS 行を巻き込む）。1行目だけ残し、</head> を含む残り全部を隠す。
+      // --- HTML tab: head 区（DOCTYPE / html / head / meta）は常に定型なので既定で畳む ---
       var headLines = [];
       cls.forEach(function (cl, i) { if (cl.dataset.zone === 'head') headLines.push(i); });
-      if (headLines.length >= 2) foldLines(cls, headLines[0], headLines.slice(1), 'head');
+      if (headLines.length >= 2) {
+        var key = 'head';
+        var expanded = !!foldState[key];
+        if (!expanded) headLines.forEach(function (i) { cls[i].classList.add('fold-hidden'); });
+        insertFoldRow(cls[headLines[0]], key, expanded, '定型部分（DOCTYPE / head）' + headLines.length + ' 行');
+      }
 
-      // --- CSS tab: 主役でない規則ブロックは既定折叠（短い場合は畳まない） ---
+      // --- CSS tab: selector と一致しない規則ブロックは既定折叠（短い場合は畳まない） ---
       findCssBlocks(doc).forEach(function (b) {
-        if (overlapsLive(b.start, b.end)) return; // 主役＝引擎の生成域を含むブロックは常に展開のまま
+        if (b.selector === selector) return; // 本 stage の主役ブロックは常に展開のまま
         if (b.end - b.start + 1 <= FOLD_MIN_CSS_LINES) return; // 短いブロックはそのまま表示
-        // 規則ブロックは閉じ括弧 } の行を残す（IDE の折りたたみは閉じ行を消さない）
-        foldRange(cls, b.start, b.end, 'css-' + b.start, true);
+        var key = 'css-' + b.start;
+        var expanded = !!foldState[key];
+        for (var i = b.start; i <= b.end; i++) { if (!expanded && cls[i]) cls[i].classList.add('fold-hidden'); }
+        insertFoldRow(cls[b.start], key, expanded, '補助スタイル（' + b.selector + '）' + (b.end - b.start + 1) + ' 行');
       });
-
-      // --- HTML tab: body 区のうち、この stage が講解している対象を含まないトップレベル要素は
-      //     まるごと折り畳む（CSS 側と違い階層構造のため、行数のしきい値は見ない。
-      //     2026-08-01 追加。対象＝ data-flash（無ければ data-selector）が示す要素）。
-      var foldTargetSel = lab.dataset.flash || selector;
-      if (foldTargetSel) {
-        findHtmlBodyBlocks(doc).forEach(function (b) {
-          if (overlapsLive(b.start, b.end)) return; // data-slot が差し込んだ主役は畳まない
-          var chunk = doc.split('\n').slice(b.start, b.end + 1).join('\n');
-          var tpl = document.createElement('template');
-          tpl.innerHTML = chunk;
-          var root = tpl.content.firstElementChild;
-          try {
-            if (root && (root.matches(foldTargetSel) || root.querySelector(foldTargetSel))) return; // 対象を含む要素は畳まない
-          } catch (e) { return; } // セレクタが要素に不適合（クラス選択子等）なら安全側で畳まない
-          foldRange(cls, b.start, b.end, 'html-' + b.start, true);
-        });
-      }
-      applyZone(); // 現在の activeZone を反映し直す
+      applyZone(); // fold-row は毎回作り直すため、既存の activeZone を新しい fold-row にも反映する
     }
 
-    // IDE（VS Code）と同じ畳み方：
-    //   ① 行番号の gutter にシェブロン（既定は hover 時のみ表示）
-    //   ② 先頭行はそのまま残し、行末に「⋯」の placeholder
-    //   ③ **対になる閉じ行（} など）も残す** —— 隠すのは中身だけ
-    //   ④ 隠れた行のぶん行番号が飛ぶ
-    // 例：`5 > class Sub extends Sp {⋯` / `7   }` （6 行目だけが隠れる）
-    // 説明文の行（「定型部分 4 行」等）は挿入しない。
-    // keepLast=true のとき end 行を残す（閉じ行を持つブロック用）。
-    // 2026-08-01 修正：以前は毎回の applyFold() 呼び出し（＝トグルするたび）で cls[start] という
-    // **同じ DOM ノードに** addEventListener を積み増していた（このノードは hl.innerHTML の再構築
-    // （＝ paint()）でしか作り直されず、toggle() 自身が呼ぶ applyFold() では作り直されない）。
-    // クリックのたびにリスナーが1本ずつ増え、2回目以降のクリックで複数のリスナーが同時に発火して
-    // 「反転→反転」で見た目上何も起きない（実際にクリック2回に1回ずつ発生することを実測で確認）。
-    // 開閉の実処理はここでは行わず、hl 側の1本の委任リスナー（下記 bindFoldDelegation）に任せる。
-    function foldRange(cls, start, end, key, keepLast) {
-      var lastHidden = keepLast ? end - 1 : end, hidden = [];
-      for (var i = start + 1; i <= lastHidden; i++) hidden.push(i);
-      foldLines(cls, start, hidden, key);
-    }
-    // 隠す行を**リストで**受ける版。head 区は </head> が <style>〜</style> を挟んで離れた位置に
-    // あるため連続区間では表せない（区間で畳むと間の CSS 行まで巻き込む）。2026-08-01 追加。
-    function foldLines(cls, start, hidden, key) {
-      var head = cls[start];
-      if (!head || !hidden.length) return; // 隠す中身が無い＝畳む意味がない
-      var expanded = !!foldState[key];
-      if (!expanded) {
-        hidden.forEach(function (i) { if (cls[i]) cls[i].classList.add('fold-hidden'); });
-      }
-      head.classList.add('foldable', expanded ? 'unfolded' : 'folded');
-      head.dataset.foldKey = key; // 委任リスナーがここを読んで開閉する
-
-      // ① gutter のシェブロン（グリフの出し分けは CSS 側。#s-v9 のようなロールは持たせない —
-      //    行全体がクリック領域なので、矢印自体は装飾）
-      var arrow = document.createElement('span');
-      arrow.className = 'fold-arrow';
-      arrow.setAttribute('aria-hidden', 'true');
-      head.insertBefore(arrow, head.firstChild);
-
-      // ② 行そのものをクリックで開閉できる（展開／折畳みで対称。2026-08-01 修正）。
-      //    「⋯」は畳んでいる時だけ付ける印（ボタンではなく、中身が隠れていることを示す）。
-      head.setAttribute('role', 'button');
-      head.setAttribute('tabindex', '0');
-      head.setAttribute('aria-expanded', expanded ? 'true' : 'false');
-      if (!expanded) {
-        var dots = document.createElement('span');
-        dots.className = 'fold-dots';
-        dots.textContent = '⋯';
-        head.appendChild(dots);
-         head.setAttribute('aria-label', hidden.length + ' 行を展開');
-      } else {
-         head.setAttribute('aria-label', '折りたたむ');
-      }
+    function insertFoldRow(anchorCl, key, expanded, label) {
+      if (!anchorCl) return;
+      var row = document.createElement('div');
+      row.className = 'fold-row' + (expanded ? ' expanded' : '');
+      row.dataset.zone = anchorCl.dataset.zone || '';
+      row.textContent = label;
+      row.addEventListener('click', function () {
+        foldState[key] = !foldState[key];
+        applyFold(lastDoc);
+      });
+      anchorCl.parentNode.insertBefore(row, anchorCl);
     }
 
     function diffLines(a, b) {
@@ -512,18 +358,13 @@
     // ここで同期し、機構としての一致（検証スクリプト項目2）を担保する。
     function apply() {
       var doc = buildDoc();
-      // 初回は「直前の doc」が無いので diffLines() が空を返し、1行も印が付かなかった。
-      // 結果、ページを開いた直後は代码框が全部素のままで、値を1回切り替えて初めて
-      // 「この LAB が動かしている行」が分かる状態だった（2026-08-01 修正）。
-      // 初回は生成域＝値ボタンが動かす行そのものを chg で示す（flash は付けない）。
-      var first = lastDoc === '';
-      var changed = first ? liveLines() : diffLines(lastDoc, doc);
+      var changed = diffLines(lastDoc, doc);
       ta.value = doc;
       revealChanged(doc, changed);
-      paint(doc, changed, first);
+      paint(doc, changed);
       frame.srcdoc = doc;
       lastDoc = doc;
-      pendingFlash = !first && changed.length > 0;
+      pendingFlash = changed.length > 0;
     }
 
     // HTML と CSS が同時に変化することはない設計（値ボタンは focusZone の中だけを動かす）ため、
@@ -580,9 +421,9 @@
         void node.offsetWidth; // アニメーション再始動のための強制リフロー
         node.classList.add('flash');
       });
-      // hl の高さは直前の paint() が 'auto' に設定済み（行数はここでは変わらない）。
-      // 2026-08-01 修正：旧実装は非表示の ta（display:none）の scrollHeight で hl を再計算しており、
-      // 常に 0 になって hl が潰れていた（スライダー操作中に代码框が一瞬つぶれるバグの原因）。
+      ta.style.height = 'auto';
+      ta.style.height = ta.scrollHeight + 'px';
+      hl.style.height = ta.style.height;
     }
     // iframe 内の実スタイルシートから selector に一致する「最後の」ルールを探し、prop だけ書き換える。
     // 見つからない／反映が確認できない場合は false を返し、呼び出し側で全量再構築に降格させる。
@@ -835,12 +676,12 @@
       b.textContent = msg;
       setTimeout(function () { b.innerHTML = keep; }, 1300);
     }
-    // コピーボタンはコード領域の右上に重ねて置く（ツールバー1本ぶん横帯を減らすため）。
-    // .html として保存する機能は 2026-07-31 に撤去（コピーがあれば足りる）。
-    var copyBtn = edWrap.querySelector('.ibtn[data-act="copy"]');
-    copyBtn.addEventListener('click', function () {
+    // .html として保存する機能は 2026-07-31 に撤去（コピーがあれば足り、UI を増やす価値がなかった）
+    edWrap.querySelector('.ed-bar').addEventListener('click', function (e) {
+      var b = e.target.closest('.ibtn'); if (!b) return;
+      if (b.dataset.act !== 'copy') return;
       navigator.clipboard.writeText(ta.value)
-        .then(function () { flashBtn(copyBtn, '済'); }, function () { flashBtn(copyBtn, '失敗'); });
+        .then(function () { flashBtn(b, 'コピー済'); }, function () { flashBtn(b, '失敗'); });
     });
 
     var tabButtons = body.querySelectorAll('.ed-tab');
@@ -915,19 +756,4 @@
     });
   }, { rootMargin: '-15% 0px -70% 0px' });
   map.forEach(function (a, sec) { io.observe(sec); });
-
-  /* ================= kicker → 門戸ページへ戻るリンク =================
-     全ページ共通でこのファイルを読むため、ここに1回書けば各ページを
-     個別に編集しなくても .kicker がリンク化される（index.html 自体は
-     このスクリプトを読まないので対象外）。 */
-  var kicker = document.querySelector('.masthead .kicker');
-  if (kicker && !kicker.querySelector('a')) {
-    var backLink = document.createElement('a');
-    backLink.href = '../index.html';
-    backLink.textContent = '← ' + kicker.textContent;
-    backLink.style.color = 'inherit';
-    backLink.style.textDecoration = 'none';
-    kicker.textContent = '';
-    kicker.appendChild(backLink);
-  }
 })();

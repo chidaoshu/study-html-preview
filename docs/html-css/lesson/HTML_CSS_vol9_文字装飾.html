@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HTML &amp; CSS vol.9 テキストを装飾するプロパティ</title>
-<link rel="stylesheet" href="assets/lab-engine.css">
+<link rel="stylesheet" href="../assets/lab-engine.css">
 <style>
   /* ---- vol.9 専用（ページ固有。共通化しない） ---- */
   .d-fig { border: 1px solid #d8d2c6; background: #fffefc; border-radius: 8px; padding: 14px; margin: 10px 0; }
@@ -23,35 +23,35 @@
 
 <nav class="rail" aria-label="ステージ一覧">
   <div class="rail-inner">
-    <a href="#s-1-1"><span class="no">1.1</span>color 🔴</a>
-    <a href="#s-1-2"><span class="no">1.2</span>色の指定 🔴</a>
+    <a href="#s-1-1" class="major"><span class="no">1.1</span>color 🔴</a>
+    <a href="#s-1-2" class="major"><span class="no">1.2</span>色の指定</a>
     <a href="#s-1-2-1"><span class="no">1.2.1</span>数値指定 🔴</a>
     <a href="#s-1-2-2"><span class="no">1.2.2</span>色関数 🔴</a>
     <a href="#s-1-2-3"><span class="no">1.2.3</span>キーワード 🟡</a>
-    <a href="#s-2-1"><span class="no">2.1</span>font-family 🔴</a>
-    <a href="#s-2-2"><span class="no">2.2</span>font-size 🔴</a>
-    <a href="#s-2-3"><span class="no">2.3</span>font-style 🟡</a>
-    <a href="#s-2-4"><span class="no">2.4</span>font-weight 🟡</a>
-    <a href="#s-2-5"><span class="no">2.5</span>line-height 🟡</a>
-    <a href="#s-2-6"><span class="no">2.6</span>font 🟡</a>
-    <a href="#s-2-7"><span class="no">2.7</span>長さの指定 🔴</a>
+    <a href="#s-2-1" class="major"><span class="no">2.1</span>font-family 🔴</a>
+    <a href="#s-2-2" class="major"><span class="no">2.2</span>font-size 🔴</a>
+    <a href="#s-2-3" class="major"><span class="no">2.3</span>font-style 🟡</a>
+    <a href="#s-2-4" class="major"><span class="no">2.4</span>font-weight 🟡</a>
+    <a href="#s-2-5" class="major"><span class="no">2.5</span>line-height 🟡</a>
+    <a href="#s-2-6" class="major"><span class="no">2.6</span>font 🟡</a>
+    <a href="#s-2-7" class="major"><span class="no">2.7</span>長さの指定</a>
     <a href="#s-2-7-1"><span class="no">2.7.1</span>絶対長さ 🟡</a>
     <a href="#s-2-7-2"><span class="no">2.7.2</span>相対長さ 🔴</a>
-    <a href="#s-3-1"><span class="no">3.1</span>text-decoration-line 🔴</a>
-    <a href="#s-3-2"><span class="no">3.2</span>text-decoration-color 🟡</a>
-    <a href="#s-3-3"><span class="no">3.3</span>text-decoration-style 🟡</a>
-    <a href="#s-3-4"><span class="no">3.4</span>text-decoration 🔴</a>
-    <a href="#s-3-5"><span class="no">3.5</span>text-shadow 🟡</a>
-    <a href="#s-4-1"><span class="no">4.1</span>writing-mode 🟡</a>
-    <a href="#s-4-2"><span class="no">4.2</span>content 🟡</a>
-    <a href="#s-a-1"><span class="no">A.1</span>Webフォント ⚪</a>
+    <a href="#s-3-1" class="major"><span class="no">3.1</span>text-decoration-line 🔴</a>
+    <a href="#s-3-2" class="major"><span class="no">3.2</span>text-decoration-color 🟡</a>
+    <a href="#s-3-3" class="major"><span class="no">3.3</span>text-decoration-style 🟡</a>
+    <a href="#s-3-4" class="major"><span class="no">3.4</span>text-decoration 🔴</a>
+    <a href="#s-3-5" class="major"><span class="no">3.5</span>text-shadow 🟡</a>
+    <a href="#s-4-1" class="major"><span class="no">4.1</span>writing-mode 🟡</a>
+    <a href="#s-4-2" class="major"><span class="no">4.2</span>content 🟡</a>
+    <a href="#s-a-1" class="major"><span class="no">A.1</span>Webフォント ⚪</a>
   </div>
 </nav>
 
 <main>
 
 <!-- ============ 1.1 color ============ -->
-<section class="stage" id="s-1-1">
+<section class="stage major" id="s-1-1">
   <div class="stage-head">
     <span class="stage-no">1.1</span><h2>文字色を変更する（color）</h2>
     <span class="tag red">🔴 重要</span>
@@ -85,10 +85,9 @@
 </section>
 
 <!-- ============ 1.2 色の指定 ============ -->
-<section class="stage" id="s-1-2">
+<section class="stage major" id="s-1-2">
   <div class="stage-head">
     <span class="stage-no">1.2</span><h2>色の指定</h2>
-    <span class="tag red">🔴 重要</span>
   </div>
   <p class="stage-def"><strong>色の指定</strong>（Color Specification）は、RGB（加法混合）や HSL などのカラーモデルを用いてデジタル上の色を表現する仕組みです。</p>
   <div class="d-fig">
@@ -240,7 +239,7 @@
 </section>
 
 <!-- ============ 2.1 font-family ============ -->
-<section class="stage" id="s-2-1">
+<section class="stage major" id="s-2-1">
   <div class="stage-head">
     <span class="stage-no">2.1</span><h2>フォントを設定する（font-family）</h2>
     <span class="tag red">🔴 重要</span>
@@ -274,7 +273,7 @@
 </section>
 
 <!-- ============ 2.2 font-size ============ -->
-<section class="stage" id="s-2-2">
+<section class="stage major" id="s-2-2">
   <div class="stage-head">
     <span class="stage-no">2.2</span><h2>テキストの大きさを設定する（font-size）</h2>
     <span class="tag red">🔴 重要</span>
@@ -313,7 +312,7 @@
 </section>
 
 <!-- ============ 2.3 font-style ============ -->
-<section class="stage" id="s-2-3">
+<section class="stage major" id="s-2-3">
   <div class="stage-head">
     <span class="stage-no">2.3</span><h2>テキストのスタイルを設定する（font-style）</h2>
     <span class="tag yellow">🟡 理解</span>
@@ -345,7 +344,7 @@
 </section>
 
 <!-- ============ 2.4 font-weight ============ -->
-<section class="stage" id="s-2-4">
+<section class="stage major" id="s-2-4">
   <div class="stage-head">
     <span class="stage-no">2.4</span><h2>テキストの太さを設定する（font-weight）</h2>
     <span class="tag yellow">🟡 理解</span>
@@ -384,7 +383,7 @@
 </section>
 
 <!-- ============ 2.5 line-height ============ -->
-<section class="stage" id="s-2-5">
+<section class="stage major" id="s-2-5">
   <div class="stage-head">
     <span class="stage-no">2.5</span><h2>行の高さを設定する（line-height）</h2>
     <span class="tag yellow">🟡 理解</span>
@@ -423,7 +422,7 @@
 </section>
 
 <!-- ============ 2.6 font ============ -->
-<section class="stage" id="s-2-6">
+<section class="stage major" id="s-2-6">
   <div class="stage-head">
     <span class="stage-no">2.6</span><h2>フォントを一括指定する（font）</h2>
     <span class="tag yellow">🟡 理解</span>
@@ -457,10 +456,9 @@
 </section>
 
 <!-- ============ 2.7 長さの指定 ============ -->
-<section class="stage" id="s-2-7">
+<section class="stage major" id="s-2-7">
   <div class="stage-head">
     <span class="stage-no">2.7</span><h2>長さの指定</h2>
-    <span class="tag red">🔴 重要</span>
   </div>
   <p class="stage-def"><strong>長さの指定</strong>（Length Units）は、CSS でサイズや間隔を定義するための単位であり、「絶対長さ」と「相対長さ」に大別されます。</p>
   <div class="d-fig">
@@ -618,7 +616,7 @@
 </section>
 
 <!-- ============ 3.1 text-decoration-line ============ -->
-<section class="stage" id="s-3-1">
+<section class="stage major" id="s-3-1">
   <div class="stage-head">
     <span class="stage-no">3.1</span><h2>テキストに線を装飾する（text-decoration-line）</h2>
     <span class="tag red">🔴 重要</span>
@@ -652,7 +650,7 @@
 </section>
 
 <!-- ============ 3.2 text-decoration-color ============ -->
-<section class="stage" id="s-3-2">
+<section class="stage major" id="s-3-2">
   <div class="stage-head">
     <span class="stage-no">3.2</span><h2>線の色を設定する（text-decoration-color）</h2>
     <span class="tag yellow">🟡 理解</span>
@@ -688,7 +686,7 @@
 </section>
 
 <!-- ============ 3.3 text-decoration-style ============ -->
-<section class="stage" id="s-3-3">
+<section class="stage major" id="s-3-3">
   <div class="stage-head">
     <span class="stage-no">3.3</span><h2>線の線種を設定する（text-decoration-style）</h2>
     <span class="tag yellow">🟡 理解</span>
@@ -725,7 +723,7 @@
 </section>
 
 <!-- ============ 3.4 text-decoration ============ -->
-<section class="stage" id="s-3-4">
+<section class="stage major" id="s-3-4">
   <div class="stage-head">
     <span class="stage-no">3.4</span><h2>テキストの装飾の一括指定（text-decoration）</h2>
     <span class="tag red">🔴 重要</span>
@@ -758,7 +756,7 @@
 </section>
 
 <!-- ============ 3.5 text-shadow ============ -->
-<section class="stage" id="s-3-5">
+<section class="stage major" id="s-3-5">
   <div class="stage-head">
     <span class="stage-no">3.5</span><h2>テキストに影をつける（text-shadow）</h2>
     <span class="tag yellow">🟡 理解</span>
@@ -796,7 +794,7 @@
 </section>
 
 <!-- ============ 4.1 writing-mode ============ -->
-<section class="stage" id="s-4-1">
+<section class="stage major" id="s-4-1">
   <div class="stage-head">
     <span class="stage-no">4.1</span><h2>縦書きにする（writing-mode）</h2>
     <span class="tag yellow">🟡 理解</span>
@@ -833,7 +831,7 @@
 </section>
 
 <!-- ============ 4.2 content ============ -->
-<section class="stage" id="s-4-2">
+<section class="stage major" id="s-4-2">
   <div class="stage-head">
     <span class="stage-no">4.2</span><h2>要素の内容を書き換える（content）</h2>
     <span class="tag yellow">🟡 理解</span>
@@ -858,7 +856,7 @@ p { margin: 8px 0; }
         <span class="ctl-label">content</span>
         <button class="vbtn active" data-rule="p::before { content: normal; } p::after { content: normal; }" data-note="初期値の normal。疑似要素の内容は表示されません。">normal（初期値）</button>
         <button class="vbtn" data-rule="p::before { content: '★ '; color: #b2452c; } p::after { content: ' ♪'; color: #7f9a8e; }" data-note="文字列の挿入。👀 各段落の前に「★」、後ろに「♪」が自動挿入されます。">文字列を挿入</button>
-        <button class="vbtn" data-rule="p::before { content: url('images/cat.png'); display: inline-block; width: 24px; height: 24px; vertical-align: middle; margin-right: 6px; }" data-note="画像の挿入。👀 各段落の前に画像が自動挿入されます。">画像（url）を挿入</button>
+        <button class="vbtn" data-rule="p::before { content: url('../images/cat.png'); display: inline-block; width: 24px; height: 24px; vertical-align: middle; margin-right: 6px; }" data-note="画像の挿入。👀 各段落の前に画像が自動挿入されます。">画像（url）を挿入</button>
         <button class="vbtn" data-rule="p::after { content: ' [注記]'; color: #888; font-size: 0.8em; }" data-note="段落の後ろに補足テキストを挿入します。">末尾に注記挿入</button>
       </div>
     </div>
@@ -868,7 +866,7 @@ p { margin: 8px 0; }
 </section>
 
 <!-- ============ A.1 Webフォント ============ -->
-<section class="stage" id="s-a-1">
+<section class="stage major" id="s-a-1">
   <div class="stage-head">
     <span class="stage-no">A.1</span><h2>Web フォントの利用</h2>
     <span class="tag gray">⚪ 参考</span>
@@ -897,6 +895,6 @@ p { margin: 8px 0; }
 <div class="footer">作成日: 2026-08-01 | 対応教材: HTML &amp; CSS vol.9</div>
 
 </main>
-<script src="assets/lab-engine.js"></script>
+<script src="../assets/lab-engine.js"></script>
 </body>
 </html>

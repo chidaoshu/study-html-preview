@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HTML &amp; CSS vol.11 背景の設定</title>
-<link rel="stylesheet" href="assets/lab-engine.css">
+<link rel="stylesheet" href="../assets/lab-engine.css">
 <style>/* vol.11 専用。d- 接頭辞クラスのみ */</style>
 </head>
 <body>
@@ -129,8 +129,8 @@ body {
       <div class="vbtns">
         <span class="ctl-label">background-image</span>
         <button class="vbtn active" data-rule=".d-image-box { background-image: none; }" data-note="none は初期値。背景画像を設定しません。">none（初期値）</button>
-        <button class="vbtn" data-rule=".d-image-box { background-image: url('images/cat.png'); background-size: 72px auto; }" data-note="local の cat.png を1枚表示。元画像の代替です。">単一画像</button>
-        <button class="vbtn" data-rule=".d-image-box { background-image: url('images/cat.png'), linear-gradient(135deg, rgba(178,69,44,.75), rgba(127,154,142,.75)); background-size: 72px auto, 100% 100%; background-repeat: repeat, no-repeat; }" data-note="画像2枚を重ねます。先に書いた cat.png が上層です。">多層画像</button>
+        <button class="vbtn" data-rule=".d-image-box { background-image: url('../images/cat.png'); background-size: 72px auto; }" data-note="local の cat.png を1枚表示。元画像の代替です。">単一画像</button>
+        <button class="vbtn" data-rule=".d-image-box { background-image: url('../images/cat.png'), linear-gradient(135deg, rgba(178,69,44,.75), rgba(127,154,142,.75)); background-size: 72px auto, 100% 100%; background-repeat: repeat, no-repeat; }" data-note="画像2枚を重ねます。先に書いた cat.png が上層です。">多層画像</button>
       </div>
     </div>
     <div class="lab-body"></div>
@@ -163,7 +163,7 @@ body {
 h1 { background-image: url("https://www.jec.ac.jp/assets/common/images/logo.svg"); }
 */
 /* 原文例2（内部URL）:
-h1::before { content: url("images/logo.svg"); }
+h1::before { content: url("../images/logo.svg"); }
 */
 /* 実演では外部依存を避け、同梱の cat.png で置き換えます。 */
     </script>
@@ -173,8 +173,8 @@ h1::before { content: url("images/logo.svg"); }
     <div class="lab-ctl">
       <div class="vbtns">
         <span class="ctl-label">url()</span>
-        <button class="vbtn active" data-rule="h1 { background-image: url('images/cat.png'); background-repeat: no-repeat; background-size: 42px 42px; padding-left: 58px; }" data-note="内部パスの画像を背景に指定。cat.png は同梱素材です。">内部パス</button>
-        <button class="vbtn" data-rule="h1::before { content: url('images/cat.png'); display: inline-block; width: 42px; height: 42px; vertical-align: middle; margin-right: 8px; }" data-note="::before の content に画像 URL を指定します。外部画像の代替です。">content に指定</button>
+        <button class="vbtn active" data-rule="h1 { background-image: url('../images/cat.png'); background-repeat: no-repeat; background-size: 42px 42px; padding-left: 58px; }" data-note="内部パスの画像を背景に指定。cat.png は同梱素材です。">内部パス</button>
+        <button class="vbtn" data-rule="h1::before { content: url('../images/cat.png'); display: inline-block; width: 42px; height: 42px; vertical-align: middle; margin-right: 8px; }" data-note="::before の content に画像 URL を指定します。外部画像の代替です。">content に指定</button>
       </div>
     </div>
     <div class="lab-body"></div>
@@ -199,7 +199,7 @@ h1::before { content: url("images/logo.svg"); }
     <div><dt>適用要素</dt><dd>全要素</dd></div>
     <div><dt>継承</dt><dd>継承されない</dd></div>
   </dl>
-  <div class="lab" data-selector=".d-repeat-box" data-fixed="background-image: url('images/cat.png'); background-size: 58px auto" data-focus="css" data-minh="230">
+  <div class="lab" data-selector=".d-repeat-box" data-fixed="background-image: url('../images/cat.png'); background-size: 58px auto" data-focus="css" data-minh="230">
     <script type="text/plain" class="lab-css">
 body {
   font-family: sans-serif;
@@ -253,7 +253,7 @@ body {
 .d-repeat-two {
   height: 150px;
   border: 1px solid #d8d2c6;
-  background-image: url('images/cat.png');
+  background-image: url('../images/cat.png');
   background-size: 58px auto;
 }
 /* 2つ指定: 1つ目が水平方向、2つ目が垂直方向 */
@@ -265,7 +265,7 @@ body {
       <div class="vbtns">
         <span class="ctl-label">2値指定</span>
         <button class="vbtn active" data-rule="div { background-repeat: repeat-x space; }" data-note="repeat-x space。横は反復、縦は切れない間隔配置です。">repeat-x space</button>
-        <button class="vbtn" data-rule="div { background-image: url('images/cat.png'), linear-gradient(135deg, rgba(178,69,44,.72), rgba(127,154,142,.72)); background-size: 58px auto, 100% 100%; background-repeat: no-repeat, repeat-x; }" data-note="多層画像の例。各画像に repeat を個別指定します。">no-repeat, repeat-x</button>
+        <button class="vbtn" data-rule="div { background-image: url('../images/cat.png'), linear-gradient(135deg, rgba(178,69,44,.72), rgba(127,154,142,.72)); background-size: 58px auto, 100% 100%; background-repeat: no-repeat, repeat-x; }" data-note="多層画像の例。各画像に repeat を個別指定します。">no-repeat, repeat-x</button>
       </div>
     </div>
     <div class="lab-body"></div>
@@ -297,7 +297,7 @@ body {
   overflow: auto;
   border: 1px dashed #b9b2a5;
   padding: 0 12px 12px;
-  background-image: url('images/cat.png');
+  background-image: url('../images/cat.png');
   background-repeat: repeat;
   background-size: 64px auto;
   background-position: right top;
@@ -348,7 +348,7 @@ body {
   overflow: auto;
   border: 1px dashed #b9b2a5;
   padding: 0 12px 12px;
-  background-image: url('images/cat.png'), linear-gradient(135deg, rgba(178,69,44,.72), rgba(127,154,142,.72));
+  background-image: url('../images/cat.png'), linear-gradient(135deg, rgba(178,69,44,.72), rgba(127,154,142,.72));
   background-repeat: no-repeat, repeat-x;
   background-size: 72px auto, 100% 100%;
   background-position: right top, left top;
@@ -395,7 +395,7 @@ p {
     <div><dt>適用要素</dt><dd>全要素</dd></div>
     <div><dt>継承</dt><dd>継承されない</dd></div>
   </dl>
-  <div class="lab" data-selector=".d-position-box" data-fixed="background-image: url('images/cat.png'); background-repeat: no-repeat; background-size: 54px auto" data-focus="css" data-minh="230">
+  <div class="lab" data-selector=".d-position-box" data-fixed="background-image: url('../images/cat.png'); background-repeat: no-repeat; background-size: 54px auto" data-focus="css" data-minh="230">
     <script type="text/plain" class="lab-css">
 body {
   font-family: sans-serif;
@@ -462,7 +462,7 @@ body {
 .d-position-multi {
   height: 170px;
   border: 1px solid #d8d2c6;
-  background-image: url('images/cat.png'), linear-gradient(135deg, rgba(178,69,44,.72), rgba(127,154,142,.72));
+  background-image: url('../images/cat.png'), linear-gradient(135deg, rgba(178,69,44,.72), rgba(127,154,142,.72));
   background-repeat: no-repeat, no-repeat;
   background-size: 62px auto, 100% 100%;
 }
@@ -494,7 +494,7 @@ body {
     <div><dt>適用要素</dt><dd>全要素</dd></div>
     <div><dt>継承</dt><dd>継承されない</dd></div>
   </dl>
-  <div class="lab" data-selector=".d-size-box" data-fixed="background-image: url('images/cat.png'); background-repeat: no-repeat; background-position: center" data-focus="css" data-minh="230">
+  <div class="lab" data-selector=".d-size-box" data-fixed="background-image: url('../images/cat.png'); background-repeat: no-repeat; background-position: center" data-focus="css" data-minh="230">
     <script type="text/plain" class="lab-css">
 body {
   font-family: sans-serif;
@@ -548,7 +548,7 @@ body {
 .d-size-multi {
   height: 170px;
   border: 1px solid #d8d2c6;
-  background-image: url('images/cat.png'), linear-gradient(135deg, rgba(178,69,44,.72), rgba(127,154,142,.72));
+  background-image: url('../images/cat.png'), linear-gradient(135deg, rgba(178,69,44,.72), rgba(127,154,142,.72));
   background-repeat: no-repeat, no-repeat;
   background-position: center, center;
 }
@@ -580,7 +580,7 @@ body {
     <div><dt>適用要素</dt><dd>全要素</dd></div>
     <div><dt>継承</dt><dd>継承されない</dd></div>
   </dl>
-  <div class="lab" data-selector=".d-origin-box" data-fixed="background-image: url('images/cat.png'); background-repeat: no-repeat; background-size: 54px auto; background-position: left top; border: 10px dashed #888; padding: 20px" data-focus="css" data-minh="250">
+  <div class="lab" data-selector=".d-origin-box" data-fixed="background-image: url('../images/cat.png'); background-repeat: no-repeat; background-size: 54px auto; background-position: left top; border: 10px dashed #888; padding: 20px" data-focus="css" data-minh="250">
     <script type="text/plain" class="lab-css">
 body {
   font-family: sans-serif;
@@ -630,7 +630,7 @@ body {
   height: 180px;
   border: 10px dashed #888;
   padding: 20px;
-  background-image: url('images/cat.png'), linear-gradient(135deg, rgba(178,69,44,.72), rgba(127,154,142,.72));
+  background-image: url('../images/cat.png'), linear-gradient(135deg, rgba(178,69,44,.72), rgba(127,154,142,.72));
   background-repeat: no-repeat, no-repeat;
   background-size: 58px auto, 100% 100%;
 }
@@ -657,7 +657,7 @@ div {
     <div class="lab-body"></div>
     <div class="lab-note" aria-live="polite"></div>
   </div>
-  <div class="lab" data-selector=".d-origin-fixed" data-fixed="background-image: url('images/cat.png'); background-repeat: no-repeat; background-size: 54px auto; background-position: left top; background-attachment: fixed; border: 10px dashed #888; padding: 20px" data-focus="css" data-minh="230">
+  <div class="lab" data-selector=".d-origin-fixed" data-fixed="background-image: url('../images/cat.png'); background-repeat: no-repeat; background-size: 54px auto; background-position: left top; background-attachment: fixed; border: 10px dashed #888; padding: 20px" data-focus="css" data-minh="230">
     <script type="text/plain" class="lab-css">
 body { font-family: sans-serif; margin: 0; padding: 12px; background: #faf8f4; }
 .d-origin-fixed { height: 150px; background-color: #f4ede2; }
@@ -752,8 +752,8 @@ body { font-family: sans-serif; margin: 0; padding: 12px; background: #faf8f4; }
     </script>
     <div class="lab-ctl"><div class="vbtns">
       <span class="ctl-label">background-clip</span>
-      <button class="vbtn active" data-rule=".d-clip-multi { background-image: url('images/cat.png'), linear-gradient(135deg, #b2452c, #7f9a8e); background-repeat: no-repeat, no-repeat; background-size: 90px auto, 100% 100%; color: rgba(0, 0, 0, 0); -webkit-background-clip: text, padding-box; background-clip: text, padding-box; }" data-note="教材の例2。1層目を文字、2層目を padding-box に切り抜きます。">text, padding-box</button>
-      <button class="vbtn" data-rule=".d-clip-multi { background-image: url('images/cat.png'), linear-gradient(135deg, #b2452c, #7f9a8e); background-repeat: no-repeat, no-repeat; background-size: 90px auto, 100% 100%; color: #29251f; -webkit-background-clip: border-box, border-box; background-clip: border-box, border-box; }" data-note="両方を border-box にすると、文字以外の領域にも背景が見えます。">border-box, border-box</button>
+      <button class="vbtn active" data-rule=".d-clip-multi { background-image: url('../images/cat.png'), linear-gradient(135deg, #b2452c, #7f9a8e); background-repeat: no-repeat, no-repeat; background-size: 90px auto, 100% 100%; color: rgba(0, 0, 0, 0); -webkit-background-clip: text, padding-box; background-clip: text, padding-box; }" data-note="教材の例2。1層目を文字、2層目を padding-box に切り抜きます。">text, padding-box</button>
+      <button class="vbtn" data-rule=".d-clip-multi { background-image: url('../images/cat.png'), linear-gradient(135deg, #b2452c, #7f9a8e); background-repeat: no-repeat, no-repeat; background-size: 90px auto, 100% 100%; color: #29251f; -webkit-background-clip: border-box, border-box; background-clip: border-box, border-box; }" data-note="両方を border-box にすると、文字以外の領域にも背景が見えます。">border-box, border-box</button>
     </div></div>
     <div class="lab-body"></div>
     <div class="lab-note" aria-live="polite"></div>
@@ -808,7 +808,7 @@ p {
       <div class="vbtns">
         <span class="ctl-label">background</span>
         <button class="vbtn active" data-rule="p { padding: 20px; border: 1px solid; background: lightblue content-box; }" data-note="原文例1。色と clip をまとめて指定します。">lightblue content-box</button>
-        <button class="vbtn" data-rule="p { background: url('images/cat.png') no-repeat 10px 20px / 100px 150px; }" data-note="原文例2。local の cat.png と / の後の size で実演します。">画像 / size</button>
+        <button class="vbtn" data-rule="p { background: url('../images/cat.png') no-repeat 10px 20px / 100px 150px; }" data-note="原文例2。local の cat.png と / の後の size で実演します。">画像 / size</button>
       </div>
     </div>
     <div class="lab-body"></div>
@@ -833,9 +833,9 @@ body { font-family: sans-serif; margin: 0; padding: 12px; background: #faf8f4; }
     </script>
     <div class="lab-ctl"><div class="vbtns">
       <span class="ctl-label">cross-fade()</span>
-      <button class="vbtn active" data-css="background-image: -webkit-cross-fade(url('images/cat.png'), linear-gradient(135deg, #b2452c, #7f9a8e), 50%)" data-note="教材例の 50%。多くの実装では最初の画像の混合率を指定します。">-webkit- / 50%</button>
-      <button class="vbtn" data-css="background-image: -webkit-cross-fade(url('images/cat.png'), linear-gradient(135deg, #b2452c, #7f9a8e), 80%)" data-note="最初の cat.png の割合を 80% にします。👀 画像が濃くなります。">-webkit- / 80%</button>
-      <button class="vbtn" data-css="background-image: cross-fade(url('images/cat.png'), linear-gradient(135deg, #b2452c, #7f9a8e), 50%)" data-note="標準構文。対応状況はブラウザで異なり、Firefox は非対応です。">標準構文 / 50%</button>
+      <button class="vbtn active" data-css="background-image: -webkit-cross-fade(url('../images/cat.png'), linear-gradient(135deg, #b2452c, #7f9a8e), 50%)" data-note="教材例の 50%。多くの実装では最初の画像の混合率を指定します。">-webkit- / 50%</button>
+      <button class="vbtn" data-css="background-image: -webkit-cross-fade(url('../images/cat.png'), linear-gradient(135deg, #b2452c, #7f9a8e), 80%)" data-note="最初の cat.png の割合を 80% にします。👀 画像が濃くなります。">-webkit- / 80%</button>
+      <button class="vbtn" data-css="background-image: cross-fade(url('../images/cat.png'), linear-gradient(135deg, #b2452c, #7f9a8e), 50%)" data-note="標準構文。対応状況はブラウザで異なり、Firefox は非対応です。">標準構文 / 50%</button>
     </div></div>
     <div class="lab-body"></div>
     <div class="lab-note" aria-live="polite"></div>
@@ -1041,6 +1041,6 @@ body {
 <div class="footer">作成日 2026-08-01｜対応教材 HTML &amp; CSS vol.11</div>
 
 </main>
-<script src="assets/lab-engine.js"></script>
+<script src="../assets/lab-engine.js"></script>
 </body>
 </html>
