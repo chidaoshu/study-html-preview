@@ -2,7 +2,7 @@
    lab-engine.css — 互動講解ページ 共通スタイル
    ------------------------------------------------------------
    対象  : sample/講解ページ/*.html ・ sample/参考実装/*.html
-   参照  : <link rel="stylesheet" href="../assets/lab-engine.css">
+   参照  : <link rel="stylesheet" href="assets/lab-engine.css">
    規約  : 本ファイルは全ページ共通。ページ固有の装飾は各ページの
            <style> に d- 接頭辞クラスとして書く（ここには足さない）。
            本ファイルを直すと全ページに影響する → 直したら
