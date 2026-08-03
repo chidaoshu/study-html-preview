@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HTML &amp; CSS vol.9 テキストを装飾するプロパティ</title>
-<link rel="stylesheet" href="../assets/lab-engine.css">
+<link rel="stylesheet" href="assets/lab-engine.css">
 <style>
   /* ---- vol.9 専用（ページ固有。共通化しない） ---- */
   .d-fig { border: 1px solid #d8d2c6; background: #fffefc; border-radius: 8px; padding: 14px; margin: 10px 0; }
@@ -856,7 +856,7 @@ p { margin: 8px 0; }
         <span class="ctl-label">content</span>
         <button class="vbtn active" data-rule="p::before { content: normal; } p::after { content: normal; }" data-note="初期値の normal。疑似要素の内容は表示されません。">normal（初期値）</button>
         <button class="vbtn" data-rule="p::before { content: '★ '; color: #b2452c; } p::after { content: ' ♪'; color: #7f9a8e; }" data-note="文字列の挿入。👀 各段落の前に「★」、後ろに「♪」が自動挿入されます。">文字列を挿入</button>
-        <button class="vbtn" data-rule="p::before { content: url('../images/cat.png'); display: inline-block; width: 24px; height: 24px; vertical-align: middle; margin-right: 6px; }" data-note="画像の挿入。👀 各段落の前に画像が自動挿入されます。">画像（url）を挿入</button>
+        <button class="vbtn" data-rule="p::before { content: url('images/cat.png'); display: inline-block; width: 24px; height: 24px; vertical-align: middle; margin-right: 6px; }" data-note="画像の挿入。👀 各段落の前に画像が自動挿入されます。">画像（url）を挿入</button>
         <button class="vbtn" data-rule="p::after { content: ' [注記]'; color: #888; font-size: 0.8em; }" data-note="段落の後ろに補足テキストを挿入します。">末尾に注記挿入</button>
       </div>
     </div>
@@ -895,6 +895,6 @@ p { margin: 8px 0; }
 <div class="footer">作成日: 2026-08-01 | 対応教材: HTML &amp; CSS vol.9</div>
 
 </main>
-<script src="../assets/lab-engine.js"></script>
+<script src="assets/lab-engine.js"></script>
 </body>
 </html>
