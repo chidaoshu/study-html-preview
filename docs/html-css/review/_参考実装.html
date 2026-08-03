@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HTML&amp;CSS 期末試験 復習シート — 参考実装（参考実装）</title>
+<style>
+/* =========================================================
+   [1] テーマ (Swiss Vignelli Palette)
+   固定ライト。暗色モードの切替は廃止。
+   ========================================================= */
+:root {
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #666666;
+  --line: #cccccc;
+  --hairline: #e2e2e2;
+  --surface: #f5f5f3;
+   --accent: #d02020;        /* 差分・強調のみに使用 */
+  --demo-bg: #ffffff;
+  --demo-fg: #111111;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Helvetica Neue", Helvetica, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic Medium", sans-serif;
+  line-height: 1.6;
+  text-wrap: pretty;
+  -webkit-text-size-adjust: 100%;
+}
+
+code, pre, .mono {
+  font-family: "SF Mono", "Menlo", "Consolas", monospace;
+}
+
+/* =========================================================
+   [2] Swiss Layout & Grid
+   ========================================================= */
+.wrap {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+@media (min-width: 900px) {
+  .wrap { padding: 0 32px; }
+}
+
+/* Header */
+.top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+}
+.brand-tag {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 2px 6px;
+  background: var(--fg);
+  color: var(--bg);
+}
+.volnav {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  font-size: 13px;
+  font-weight: 500;
+}
+.volnav a {
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 2px 4px;
+}
+.volnav a[aria-current="page"] {
+  color: var(--fg);
+  font-weight: 700;
+  border-bottom: 2px solid var(--fg);
+}
+
+/* Card & Panels */
+.card {
+  border-top: 1px solid var(--line);
+  padding: 32px 0;
+}
+.card-header {
+  margin-bottom: 20px;
+}
+.card-num {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 4px;
+  display: block;
+}
+.card-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+.card-title .en {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-left: 8px;
+}
+.card-desc {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.card-body {
+  display: grid;
+  gap: 16px;
+}
+@media (min-width: 900px) {
+  .card-body {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+}
+
+/* =========================================================
+   [3] Vignelli Tab Bar
+   ========================================================= */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.tab {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  border-bottom: none;
+  background: var(--surface);
+  color: var(--muted);
+  border-radius: 0;
+  transition: color 0.1s, background 0.1s;
+}
+.tab:hover {
+  color: var(--fg);
+  background: var(--bg);
+}
+.tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.tab[aria-selected="true"] {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
+}
+.panel[hidden] {
+  display: none;
+}
+
+/* =========================================================
+   [4] Code & Explanation Blocks
+   ========================================================= */
+pre.code {
+  margin: 0;
+  padding: 14px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.65;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  white-space: pre;
+}
+.hl {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* =========================================================
+   [5] Demo Frame
+   ページの装飾とデモの効果を混同させないための iframe 隔離。
+   ========================================================= */
+.demo {
+  border: 1px solid var(--line);
+  background: var(--demo-bg);
+}
+.demo iframe {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: var(--demo-bg);
+}
+
+/* === 概念図解用 === */
+.d-fig {
+  border: 1px solid var(--line);
+  background: #fffefc;
+  padding: 14px;
+  margin: 10px 0;
+}
+.d-fig svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+</style>
+<style>
+/* === 375px 横溢れ修正（主代理が追加。設計・配色・書体には手を入れていない） === */
+.volnav{overflow-x:auto;min-width:0;flex:1 1 auto;scrollbar-width:none}
+.volnav::-webkit-scrollbar{display:none}
+.top{max-width:100%;overflow:hidden}
+.top>*{min-width:0}
+@media (max-width:899px){
+  .wrap{max-width:100%!important}
+  .card-body{display:block!important}
+  .card-body>*{width:auto!important;max-width:100%!important;min-width:0!important}
+  .card-body>*+*{margin-top:14px}
+  .panel [class*="col"]{width:auto!important;min-width:0!important;max-width:100%!important}
+}
+.wrap>*,.panel,.panel>*{min-width:0}
+pre,[class*="code"]{max-width:100%;min-width:0}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <span class="brand-tag">HTML&amp;CSS</span>
+  <nav class="volnav">
+    <a href="#" aria-current="page">参考</a>
+    <a href="#">1</a>
+    <a href="#">2</a>
+    <a href="#">3</a>
+    <a href="#">4</a>
+    <a href="#">5</a>
+    <a href="#">6</a>
+    <a href="#">7</a>
+    <a href="#">8</a>
+    <a href="#">9</a>
+    <a href="#">10</a>
+    <a href="#">11</a>
+    <a href="#">12</a>
+    <a href="#">13</a>
+    <a href="#">14</a>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <!-- ============================================================
+       要素描画（vol.3〜7 用）
+       要素そのものが描画対象 → コード + iframe 実描画。
+       同じ要素の属性値・種類による描画差を tab で対比する。
+       描画は iframe srcdoc で隔離する（ページ CSS の影響を受けない）。
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 3.5</span>
+      <h2 class="card-title">リストの種別と書式<span class="en">/ ol &amp; ul</span></h2>
+      <p class="card-desc">同じ li の並びでも、ol / ul と type 属性で描画が変わる。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="ul" aria-selected="true">ul（順序なし）</button>
+      <button class="tab" role="tab" type="button" data-tab="ol" aria-selected="false">ol（数値）</button>
+      <button class="tab" role="tab" type="button" data-tab="olalpha" aria-selected="false">ol type="a"</button>
+    </div>
+
+    <!-- Panel: ul -->
+    <div class="panel" data-panel="ul">
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">&lt;ul&gt;</span>
+  &lt;li&gt;順序なしリスト 1&lt;/li&gt;
+  &lt;li&gt;順序なしリスト 2&lt;/li&gt;
+  &lt;li&gt;順序なしリスト 3&lt;/li&gt;
+<span class="hl">&lt;/ul&gt;</span></code></pre>
+        <div class="demo">
+          <iframe title="ul リスト描画" height="140" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.7 sans-serif;margin:12px;color:#111}</style></head><body><ul><li>順序なしリスト 1</li><li>順序なしリスト 2</li><li>順序なしリスト 3</li></ul></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: ol -->
+    <div class="panel" data-panel="ol" hidden>
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">&lt;ol&gt;</span>
+  &lt;li&gt;順序付きリスト 1&lt;/li&gt;
+  &lt;li&gt;順序付きリスト 2&lt;/li&gt;
+  &lt;li&gt;順序付きリスト 3&lt;/li&gt;
+<span class="hl">&lt;/ol&gt;</span></code></pre>
+        <div class="demo">
+          <iframe title="ol リスト描画" height="140" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.7 sans-serif;margin:12px;color:#111}</style></head><body><ol><li>順序付きリスト 1</li><li>順序付きリスト 2</li><li>順序付きリスト 3</li></ol></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: ol type=a -->
+    <div class="panel" data-panel="olalpha" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;ol <span class="hl">type="a"</span>&gt;
+  &lt;li&gt;順序付きリスト 1&lt;/li&gt;
+  &lt;li&gt;順序付きリスト 2&lt;/li&gt;
+  &lt;li&gt;順序付きリスト 3&lt;/li&gt;
+&lt;/ol&gt;</code></pre>
+        <div class="demo">
+          <iframe title="ol type=a リスト描画" height="140" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.7 sans-serif;margin:12px;color:#111}</style></head><body><ol type="a"><li>順序付きリスト 1</li><li>順序付きリスト 2</li><li>順序付きリスト 3</li></ol></body></html>'></iframe>
+        </div>
+      </div>
+      </div>
+  </section>
+
+  <!-- ============================================================
+       要素描画（表 / colspan・rowspan の tab 対比）
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 6.2.2</span>
+      <h2 class="card-title">セルを結合する<span class="en">/ colspan &amp; rowspan</span></h2>
+      <p class="card-desc">結合の向きで描画がどう変わるか。colspan＝横（列方向）、rowspan＝縦（行方向）。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="col" aria-selected="true">colspan="3"</button>
+      <button class="tab" role="tab" type="button" data-tab="row" aria-selected="false">rowspan="3"</button>
+      <button class="tab" role="tab" type="button" data-tab="both" aria-selected="false">colspan+rowspan</button>
+    </div>
+
+    <!-- Panel: colspan -->
+    <div class="panel" data-panel="col">
+      <div class="card-body">
+        <pre class="code"><code>&lt;table border="1"&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1 列目&lt;/td&gt;&lt;td&gt;2 列目&lt;/td&gt;&lt;td&gt;3 列目&lt;/td&gt;&lt;td&gt;4 列目&lt;/td&gt;&lt;td&gt;5 列目&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1 列目&lt;/td&gt;
+      &lt;td <span class="hl">colspan="3"</span>&gt;2 列目&lt;/td&gt;
+      &lt;td&gt;5 列目&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+        <div class="demo">
+          <iframe title="colspan 描画" height="130" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}table{border-collapse:collapse}td{border:1px solid #444;padding:4px 10px}</style></head><body><table border="1"><tbody><tr><td>1 列目</td><td>2 列目</td><td>3 列目</td><td>4 列目</td><td>5 列目</td></tr><tr><td>1 列目</td><td colspan="3">2 列目</td><td>5 列目</td></tr></tbody></table></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: rowspan -->
+    <div class="panel" data-panel="row" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;table border="1"&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;td&gt;1 行目&lt;/td&gt;&lt;td&gt;1 行目&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;2 行目&lt;/td&gt;&lt;td <span class="hl">rowspan="3"</span>&gt;2 行目&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;3 行目&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;4 行目&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;5 行目&lt;/td&gt;&lt;td&gt;5 行目&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+        <div class="demo">
+          <iframe title="rowspan 描画" height="200" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}table{border-collapse:collapse}td{border:1px solid #444;padding:4px 10px}</style></head><body><table border="1"><tbody><tr><td>1 行目</td><td>1 行目</td></tr><tr><td>2 行目</td><td rowspan="3">2 行目</td></tr><tr><td>3 行目</td></tr><tr><td>4 行目</td></tr><tr><td>5 行目</td><td>5 行目</td></tr></tbody></table></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: both -->
+    <div class="panel" data-panel="both" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;table border="1"&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;td&gt;1 行 1 列&lt;/td&gt;&lt;td&gt;1 行 2 列&lt;/td&gt;&lt;td&gt;1 行 3 列&lt;/td&gt;&lt;td&gt;1 行 4 列&lt;/td&gt;&lt;td&gt;1 行 5 列&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;2 行 1 列&lt;/td&gt;&lt;td <span class="hl">colspan="3" rowspan="3"</span>&gt;2 行 2 列&lt;/td&gt;&lt;td&gt;2 行 5 列&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;3 行 1 列&lt;/td&gt;&lt;td&gt;3 行 5 列&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;4 行 1 列&lt;/td&gt;&lt;td&gt;4 行 5 列&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;5 行 1 列&lt;/td&gt;&lt;td&gt;5 行 2 列&lt;/td&gt;&lt;td&gt;5 行 3 列&lt;/td&gt;&lt;td&gt;5 行 4 列&lt;/td&gt;&lt;td&gt;5 行 5 列&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+        <div class="demo">
+          <iframe title="colspan+rowspan 描画" height="200" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}table{border-collapse:collapse}td{border:1px solid #444;padding:4px 10px}</style></head><body><table border="1"><tbody><tr><td>1 行 1 列</td><td>1 行 2 列</td><td>1 行 3 列</td><td>1 行 4 列</td><td>1 行 5 列</td></tr><tr><td>2 行 1 列</td><td colspan="3" rowspan="3">2 行 2 列</td><td>2 行 5 列</td></tr><tr><td>3 行 1 列</td><td>3 行 5 列</td></tr><tr><td>4 行 1 列</td><td>4 行 5 列</td></tr><tr><td>5 行 1 列</td><td>5 行 2 列</td><td>5 行 3 列</td><td>5 行 4 列</td><td>5 行 5 列</td></tr></tbody></table></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CSS 効果（vol.8〜14 用）
+       CSS 規則 → 描画効果。コード + iframe 実描画。
+       差分規則を .hl で示し、同じ HTML に異なる CSS を tab で適用する。
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.6 ★主役</span>
+      <h2 class="card-title">2.6　結合子<span class="en">/ Combinators</span></h2>
+      <p class="card-desc"><strong>HTML は不変。セレクターだけが変わる。</strong> 書式：<code>セレクター1　結合子　セレクター2</code></p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="descendant" aria-selected="true">子孫（空白）</button>
+      <button class="tab" role="tab" type="button" data-tab="child" aria-selected="false">子（&gt;）</button>
+      <button class="tab" role="tab" type="button" data-tab="fol" aria-selected="false">後続兄弟（~）</button>
+      <button class="tab" role="tab" type="button" data-tab="adj" aria-selected="false">次兄弟（+）</button>
+    </div>
+
+    <!-- Panel 1: Descendant -->
+    <div class="panel" data-panel="descendant">
+      <div class="card-body">
+        <div>
+          <pre class="code"><code><span class="hl">.area p</span> { color: blue; }</code></pre>
+          </div>
+        <div class="demo">
+          <iframe title="子孫結合子デモ" height="230" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#1a1a1a}.area p{color:blue;margin:4px 0}.mark{display:inline-block;background:#e0e0e0;padding:2px 6px;font-size:12px;margin:4px 0}.group{border:1px dashed #ccc;padding:4px 8px;margin:4px 0}</style></head><body><div class="area"><p>1. エリア直下の段落（子）</p><div class="group"><p>2. グループ内の段落（孫）</p><p>3. グループ内の段落（孫）</p></div><span class="mark">目印</span><p>4. 目印の直後の段落（隣接兄弟）</p><p>5. 目印より後にある段落（一般兄弟）</p></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: Child -->
+    <div class="panel" data-panel="child" hidden>
+      <div class="card-body">
+        <div>
+          <pre class="code"><code><span class="hl">.area &gt; p</span> { color: blue; }</code></pre>
+          </div>
+        <div class="demo">
+          <iframe title="子結合子デモ" height="230" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#1a1a1a}.area>p{color:blue;margin:4px 0}.area p{margin:4px 0}.mark{display:inline-block;background:#e0e0e0;padding:2px 6px;font-size:12px;margin:4px 0}.group{border:1px dashed #ccc;padding:4px 8px;margin:4px 0}</style></head><body><div class="area"><p>1. エリア直下の段落（子）</p><div class="group"><p>2. グループ内の段落（孫）</p><p>3. グループ内の段落（孫）</p></div><span class="mark">目印</span><p>4. 目印の直後の段落（隣接兄弟）</p><p>5. 目印より後にある段落（一般兄弟）</p></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: Subsequent Sibling -->
+    <div class="panel" data-panel="fol" hidden>
+      <div class="card-body">
+        <div>
+          <pre class="code"><code><span class="hl">.mark ~ p</span> { color: blue; }</code></pre>
+          </div>
+        <div class="demo">
+          <iframe title="後続兄弟結合子デモ" height="230" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#1a1a1a}.mark~p{color:blue;margin:4px 0}.area p{margin:4px 0}.mark{display:inline-block;background:#e0e0e0;padding:2px 6px;font-size:12px;margin:4px 0}.group{border:1px dashed #ccc;padding:4px 8px;margin:4px 0}</style></head><body><div class="area"><p>1. エリア直下の段落（子）</p><div class="group"><p>2. グループ内の段落（孫）</p><p>3. グループ内の段落（孫）</p></div><span class="mark">目印</span><p>4. 目印の直後の段落（隣接兄弟）</p><p>5. 目印より後にある段落（一般兄弟）</p></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 4: Next Sibling -->
+    <div class="panel" data-panel="adj" hidden>
+      <div class="card-body">
+        <div>
+          <pre class="code"><code><span class="hl">.mark + p</span> { color: blue; }</code></pre>
+          </div>
+        <div class="demo">
+          <iframe title="次兄弟結合子デモ" height="230" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#1a1a1a}.mark+p{color:blue;margin:4px 0}.area p{margin:4px 0}.mark{display:inline-block;background:#e0e0e0;padding:2px 6px;font-size:12px;margin:4px 0}.group{border:1px dashed #ccc;padding:4px 8px;margin:4px 0}</style></head><body><div class="area"><p>1. エリア直下の段落（子）</p><div class="group"><p>2. グループ内の段落（孫）</p><p>3. グループ内の段落（孫）</p></div><span class="mark">目印</span><p>4. 目印の直後の段落（隣接兄弟）</p><p>5. 目印より後にある段落（一般兄弟）</p></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       概念図解（vol.1〜2 用）
+       ブラウザで描けない知識 → inline SVG（流れ図・構造図・時間線）。
+       長文説明の代わりに図で示す。コードtabは使わない。
+       ============================================================ -->
+  <section class="card">
+    <div class="card-header">
+      <span class="card-num">SECTION 1.1</span>
+      <h2 class="card-title">URL の構造<span class="en">/ URL Structure</span></h2>
+      <p class="card-desc">3 つの部位に分かれる。scheme が決まると通信ルールが決まる。</p>
+    </div>
+    <div class="d-fig">
+      <svg viewBox="0 0 640 140" role="img" aria-label="URLをスキーム・ホスト名・パスに分解した図">
+        <rect x="30" y="30" width="130" height="40" fill="#f7e8e3" stroke="#b2452c"/>
+        <text x="95" y="55" text-anchor="middle" font-size="15" font-family="monospace" fill="#29251f">https://</text>
+        <rect x="160" y="30" width="250" height="40" fill="#eef3f0" stroke="#7f9a8e"/>
+        <text x="285" y="55" text-anchor="middle" font-size="15" font-family="monospace" fill="#29251f">www.example.com</text>
+        <rect x="410" y="30" width="200" height="40" fill="#f4ede2" stroke="#b0885a"/>
+        <text x="510" y="55" text-anchor="middle" font-size="15" font-family="monospace" fill="#29251f">/index.html</text>
+        <text x="95" y="95" text-anchor="middle" font-size="12" fill="#b2452c">スキーム（scheme）</text>
+        <text x="285" y="95" text-anchor="middle" font-size="12" fill="#7f9a8e">ホスト名（host name）</text>
+        <text x="510" y="95" text-anchor="middle" font-size="12" fill="#b0885a">パス（path）</text>
+        <text x="320" y="130" text-anchor="middle" font-size="12" fill="#6e675d">https＝暗号化通信　/　http＝平文通信</text>
+      </svg>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* ★このスクリプトは一行も変更しない。丸ごとコピーすること★ */
+
+/* タブ: [data-tabs] ごとにスコープされる。カードが何枚あっても干渉しない */
+document.querySelectorAll('[data-tabs]').forEach(function (group) {
+  var tabs = group.querySelectorAll(':scope > .tabs > .tab');
+  var panels = group.querySelectorAll(':scope > .panel');
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var key = tab.dataset.tab;
+      tabs.forEach(function (t) { t.setAttribute('aria-selected', String(t === tab)); });
+      panels.forEach(function (p) { p.hidden = (p.dataset.panel !== key); });
+    });
+  });
+});
+
+/* テーマ固定（ライト）。切替機能は廃止 */
+</script>
+</body>
+</html>

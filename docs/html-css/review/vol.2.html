@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HTML&amp;CSS 期末試験 復習シート — vol.2 HTML文書の基本構造</title>
+<style>
+/* =========================================================
+   [1] テーマ (Swiss Vignelli Palette)
+   固定ライト。暗色モードの切替は廃止。
+   ========================================================= */
+:root {
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #666666;
+  --line: #cccccc;
+  --hairline: #e2e2e2;
+  --surface: #f5f5f3;
+  --accent: #d02020;        /* 差分・強調のみに使用 */
+  --demo-bg: #ffffff;
+  --demo-fg: #111111;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Helvetica Neue", Helvetica, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic Medium", sans-serif;
+  line-height: 1.6;
+  text-wrap: pretty;
+  -webkit-text-size-adjust: 100%;
+}
+
+code, pre, .mono {
+  font-family: "SF Mono", "Menlo", "Consolas", monospace;
+}
+
+/* =========================================================
+   [2] Swiss Layout & Grid
+   ========================================================= */
+.wrap {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+@media (min-width: 900px) {
+  .wrap { padding: 0 32px; }
+}
+
+/* Header */
+.top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+}
+.brand-tag {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 2px 6px;
+  background: var(--fg);
+  color: var(--bg);
+}
+.volnav {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  font-size: 13px;
+  font-weight: 500;
+}
+.volnav a {
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 2px 4px;
+}
+.volnav a[aria-current="page"] {
+  color: var(--fg);
+  font-weight: 700;
+  border-bottom: 2px solid var(--fg);
+}
+
+/* Card & Panels */
+.card {
+  border-top: 1px solid var(--line);
+  padding: 32px 0;
+}
+.card-header {
+  margin-bottom: 20px;
+}
+.card-num {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 4px;
+  display: block;
+}
+.card-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+.card-title .en {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-left: 8px;
+}
+.card-desc {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.card-body {
+  display: grid;
+  gap: 16px;
+}
+@media (min-width: 900px) {
+  .card-body {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+}
+
+/* =========================================================
+   [3] Vignelli Tab Bar
+   ========================================================= */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.tab {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  border-bottom: none;
+  background: var(--surface);
+  color: var(--muted);
+  border-radius: 0;
+  transition: color 0.1s, background 0.1s;
+}
+.tab:hover {
+  color: var(--fg);
+  background: var(--bg);
+}
+.tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.tab[aria-selected="true"] {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
+}
+.panel[hidden] {
+  display: none;
+}
+
+/* =========================================================
+   [4] Code & Explanation Blocks
+   ========================================================= */
+pre.code {
+  margin: 0;
+  padding: 14px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.65;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  white-space: pre;
+}
+.hl {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* =========================================================
+   [5] Demo Frame
+   ページの装飾とデモの効果を混同させないための iframe 隔離。
+   ========================================================= */
+.demo {
+  border: 1px solid var(--line);
+  background: var(--demo-bg);
+}
+.demo iframe {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: var(--demo-bg);
+}
+
+/* === 概念図解用 === */
+.d-fig {
+  border: 1px solid var(--line);
+  background: #fffefc;
+  padding: 14px;
+  margin: 10px 0;
+}
+.d-fig svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Table Style */
+.ref-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  font-size: 13px;
+}
+.ref-table th, .ref-table td {
+  border: 1px solid var(--line);
+  padding: 6px 10px;
+  text-align: left;
+}
+.ref-table th {
+  background: var(--surface);
+  font-weight: 600;
+}
+.ref-table code {
+  color: var(--accent);
+  background: var(--surface);
+  padding: 1px 4px;
+}
+</style>
+<style>
+/* === 375px 横溢れ修正（主代理が追加。設計・配色・書体には手を入れていない） === */
+.volnav{overflow-x:auto;min-width:0;flex:1 1 auto;scrollbar-width:none}
+.volnav::-webkit-scrollbar{display:none}
+.top{max-width:100%;overflow:hidden}
+.top>*{min-width:0}
+@media (max-width:899px){
+  .wrap{max-width:100%!important}
+  .card-body{display:block!important}
+  .card-body>*{width:auto!important;max-width:100%!important;min-width:0!important}
+  .card-body>*+*{margin-top:14px}
+  .panel [class*="col"]{width:auto!important;min-width:0!important;max-width:100%!important}
+}
+.wrap>*,.panel,.panel>*{min-width:0}
+pre,[class*="code"]{max-width:100%;min-width:0}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <span class="brand-tag">HTML&amp;CSS</span>
+  <nav class="volnav">
+    <a href="vol.1.html">1</a>
+    <a href="vol.2.html" aria-current="page">2</a>
+    <a href="vol.3.html">3</a>
+    <a href="vol.4.html">4</a>
+    <a href="vol.5.html">5</a>
+    <a href="vol.6.html">6</a>
+    <a href="vol.7.html">7</a>
+    <a href="vol.8.html">8</a>
+    <a href="vol.9.html">9</a>
+    <a href="vol.10.html">10</a>
+    <a href="vol.11.html">11</a>
+    <a href="vol.12.html">12</a>
+    <a href="vol.13.html">13</a>
+    <a href="vol.14.html">14</a>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <!-- ============================================================
+       SECTION 2.1：要素・タグ・属性の構造
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.1</span>
+      <h2 class="card-title">要素・タグ・属性の構造<span class="en">/ Element, Tag &amp; Attribute</span></h2>
+      <p class="card-desc">開始タグ・内容・終了タグで要素を構成する。属性は追加情報を与える。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="element" aria-selected="true">通常要素（開始・内容・終了）</button>
+      <button class="tab" role="tab" type="button" data-tab="empty" aria-selected="false">空要素（終了タグなし）</button>
+      <button class="tab" role="tab" type="button" data-tab="attr" aria-selected="false">属性の書式（引用符・複数・値なし）</button>
+    </div>
+
+    <!-- Panel 1: 通常要素 -->
+    <div class="panel" data-panel="element">
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- 開始タグ + 内容 + 終了タグ = 要素 --&gt;
+<span class="hl">&lt;h1 class="title"&gt;</span>Hello HTML&amp;CSS!!<span class="hl">&lt;/h1&gt;</span>
+&lt;p&gt;段落テキストの内容&lt;/p&gt;</code></pre>
+        <div class="demo">
+          <iframe title="通常要素の描画" height="140" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}.title{color:#d02020;font-size:18px;margin:0 0 8px}</style></head><body><h1 class="title">Hello HTML&amp;CSS!!</h1><p>段落テキストの内容</p></body></html>'></iframe>
+        </div>
+      </div>
+      <div class="d-fig">
+        <svg viewBox="0 0 640 150" role="img" aria-label="HTML要素の構造図">
+          <rect x="20" y="15" width="600" height="90" fill="#f8f9fa" stroke="#cccccc" stroke-dasharray="4 4" rx="4"/>
+          <text x="35" y="36" font-size="12" font-family="sans-serif" fill="#666666" font-weight="bold">要素 (Element)</text>
+          
+          <rect x="40" y="48" width="200" height="45" fill="#fce8e6" stroke="#d02020" rx="3"/>
+          <text x="140" y="76" text-anchor="middle" font-size="15" font-family="monospace" fill="#d02020" font-weight="bold">&lt;h1 class="title"&gt;</text>
+          <text x="140" y="130" text-anchor="middle" font-size="12" font-family="sans-serif" fill="#d02020">開始タグ (Start tag)</text>
+          
+          <rect x="250" y="48" width="220" height="45" fill="#e8f0fe" stroke="#1a73e8" rx="3"/>
+          <text x="360" y="76" text-anchor="middle" font-size="15" font-family="monospace" fill="#1a73e8" font-weight="bold">Hello HTML&amp;CSS!!</text>
+          <text x="360" y="130" text-anchor="middle" font-size="12" font-family="sans-serif" fill="#1a73e8">内容 (Content)</text>
+          
+          <rect x="480" y="48" width="120" height="45" fill="#e6f4ea" stroke="#137333" rx="3"/>
+          <text x="540" y="76" text-anchor="middle" font-size="15" font-family="monospace" fill="#137333" font-weight="bold">&lt;/h1&gt;</text>
+          <text x="540" y="130" text-anchor="middle" font-size="12" font-family="sans-serif" fill="#137333">終了タグ (End tag)</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Panel 2: 空要素 -->
+    <div class="panel" data-panel="empty" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- 内容と終了タグを持たない空要素 --&gt;
+<span class="hl">&lt;meta charset="utf-8"&gt;</span>
+&lt;p&gt;1行目<span class="hl">&lt;br&gt;</span>2行目&lt;/p&gt;
+<span class="hl">&lt;input type="text" placeholder="名前を入力"&gt;</span></code></pre>
+        <div class="demo">
+          <iframe title="空要素の描画" height="140" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}input{padding:6px;border:1px solid #ccc;border-radius:4px}</style></head><body><p>1行目<br>2行目</p><input type="text" placeholder="名前を入力"></body></html>'></iframe>
+        </div>
+      </div>
+      <div class="d-fig">
+        <svg viewBox="0 0 640 130" role="img" aria-label="空要素の構造図">
+          <rect x="20" y="15" width="600" height="75" fill="#f8f9fa" stroke="#cccccc" stroke-dasharray="4 4" rx="4"/>
+          <text x="35" y="36" font-size="12" font-family="sans-serif" fill="#666666" font-weight="bold">空要素 (Empty Element)</text>
+          
+          <rect x="120" y="38" width="400" height="40" fill="#fce8e6" stroke="#d02020" rx="3"/>
+          <text x="320" y="63" text-anchor="middle" font-size="15" font-family="monospace" fill="#d02020" font-weight="bold">&lt;meta charset="utf-8"&gt;</text>
+          <text x="320" y="112" text-anchor="middle" font-size="12" font-family="sans-serif" fill="#d02020">開始タグのみ（内容・終了タグなし）</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Panel 3: 属性の書式 -->
+    <div class="panel" data-panel="attr" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- 属性の基本規則 --&gt;
+&lt;!-- 1. ダブルクォート " やシングルクォート ' で囲む --&gt;
+&lt;!-- 2. 半角スペース区切りで複数指定可能 --&gt;
+&lt;!-- 3. 属性名のみの指定（boolean属性）も可能 --&gt;
+&lt;input <span class="hl">type="text" name="user" value='ゲスト' required</span>&gt;
+&lt;button <span class="hl">class="btn active" disabled</span>&gt;送信不可&lt;/button&gt;</code></pre>
+        <div class="demo">
+          <iframe title="属性指定の描画" height="140" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111;display:flex;flex-direction:column;gap:10px;align-items:start}input{padding:6px;border:1px solid #ccc;border-radius:4px}button{padding:6px 14px;background:#eee;border:1px solid #ccc;border-radius:4px;color:#888}</style></head><body><input type="text" name="user" value="ゲスト" required><button class="btn active" disabled>送信不可</button></body></html>'></iframe>
+        </div>
+      </div>
+      <div class="d-fig">
+        <svg viewBox="0 0 640 130" role="img" aria-label="属性の分解図">
+          <rect x="80" y="20" width="480" height="50" fill="#fff9e6" stroke="#b0885a" rx="4"/>
+          <text x="180" y="52" font-size="18" font-family="monospace" fill="#d02020" font-weight="bold">charset</text>
+          <text x="260" y="52" font-size="18" font-family="monospace" fill="#111111">=</text>
+          <text x="280" y="52" font-size="18" font-family="monospace" fill="#1a73e8" font-weight="bold">"utf-8"</text>
+          
+          <path d="M 180 60 L 180 85 M 320 60 L 320 85" stroke="#999999" stroke-width="1.5"/>
+          <text x="180" y="105" text-anchor="middle" font-size="12" fill="#d02020">属性名 (attribute name)</text>
+          <text x="320" y="105" text-anchor="middle" font-size="12" fill="#1a73e8">属性値 (attribute value)</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 2.2：要素の階層構造とタグ交差
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.2</span>
+      <h2 class="card-title">要素の階層構造とタグ交差<span class="en">/ Hierarchy &amp; Nesting Rules</span></h2>
+      <p class="card-desc">HTMLはツリー構造。内包順序を守り、タグの交差（入れ子の逆転）を防ぐ。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="tree" aria-selected="true">正しい階層構造 (DOM Tree)</button>
+      <button class="tab" role="tab" type="button" data-tab="cross" aria-selected="false">【禁止】タグの交差 (Invalid Nesting)</button>
+    </div>
+
+    <!-- Panel 1: Tree -->
+    <div class="panel" data-panel="tree">
+      <div class="card-body">
+        <pre class="code"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="ja"&gt;
+  &lt;head&gt;
+    &lt;title&gt;HTML&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;階層構造&lt;/h1&gt;
+    &lt;p&gt;親要素の中の<span class="hl">&lt;strong&gt;強調&lt;em&gt;斜体&lt;/em&gt;&lt;/strong&gt;</span>&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+        <div class="demo">
+          <iframe title="階層構造の描画" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}h1{font-size:18px;margin:0 0 8px}</style></head><body><h1>階層構造</h1><p>親要素の中の<strong>強調<em>斜体</em></strong></p></body></html>'></iframe>
+        </div>
+      </div>
+      <div class="d-fig">
+        <svg viewBox="0 0 640 180" role="img" aria-label="HTML階層ツリー構造図">
+          <rect x="270" y="15" width="100" height="32" fill="#111111" rx="4"/>
+          <text x="320" y="36" text-anchor="middle" fill="#ffffff" font-size="14" font-family="monospace" font-weight="bold">&lt;html&gt;</text>
+          
+          <path d="M 290 47 L 170 70 M 350 47 L 470 70" stroke="#999999" stroke-width="2"/>
+          
+          <rect x="120" y="70" width="100" height="30" fill="#f5f5f3" stroke="#cccccc" rx="4"/>
+          <text x="170" y="90" text-anchor="middle" fill="#111111" font-size="13" font-family="monospace">&lt;head&gt;</text>
+
+          <rect x="420" y="70" width="100" height="30" fill="#e8f0fe" stroke="#1a73e8" rx="4"/>
+          <text x="470" y="90" text-anchor="middle" fill="#1a73e8" font-size="13" font-family="monospace" font-weight="bold">&lt;body&gt;</text>
+          
+          <path d="M 170 100 L 170 125 M 440 100 L 370 125 M 500 100 L 530 125" stroke="#999999" stroke-width="2"/>
+          
+          <rect x="120" y="125" width="100" height="28" fill="#f5f5f3" stroke="#cccccc" rx="4"/>
+          <text x="170" y="144" text-anchor="middle" fill="#666666" font-size="12" font-family="monospace">&lt;title&gt;</text>
+
+          <rect x="320" y="125" width="100" height="28" fill="#ffffff" stroke="#1a73e8" rx="4"/>
+          <text x="370" y="144" text-anchor="middle" fill="#1a73e8" font-size="12" font-family="monospace">&lt;h1&gt;</text>
+
+          <rect x="480" y="125" width="100" height="28" fill="#ffffff" stroke="#1a73e8" rx="4"/>
+          <text x="530" y="144" text-anchor="middle" fill="#1a73e8" font-size="12" font-family="monospace">&lt;p&gt;</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Panel 2: Invalid Nesting -->
+    <div class="panel" data-panel="cross" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- ❌ 違反：タグが交差している（strongが閉じる前にpやheadが閉じている） --&gt;
+&lt;p&gt;<span class="hl">&lt;strong&gt;&lt;em&gt;</span>テキスト<span class="hl">&lt;/strong&gt;&lt;/em&gt;</span>&lt;/p&gt;
+
+&lt;!-- ⭕ 正解：後から開いたタグを先に閉じる --&gt;
+&lt;p&gt;<span class="hl">&lt;strong&gt;&lt;em&gt;</span>テキスト<span class="hl">&lt;/em&gt;&lt;/strong&gt;</span>&lt;/p&gt;</code></pre>
+        <div class="demo">
+          <iframe title="交差の判定" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}.ng{color:#d02020;padding:6px;border:1px solid #d02020;margin-bottom:8px}.ok{color:#137333;padding:6px;border:1px solid #137333}</style></head><body><div class="ng">❌ 構文エラー：閉じ順の交差</div><div class="ok">⭕ 正常：正しいLIFO順（後開先閉）</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 2.5a：文書ルートと基本骨格要素
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.5 (1-3, 8)</span>
+      <h2 class="card-title">HTML文書の基本構造要素<span class="en">/ html, head, title, body</span></h2>
+      <p class="card-desc">html（ルート）、head（非表示メタ情報）、title（タブ名）、body（表示コンテンツ）。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="html" aria-selected="true">html 要素 (Root)</button>
+      <button class="tab" role="tab" type="button" data-tab="head" aria-selected="false">head &amp; title 要素 (Metadata)</button>
+      <button class="tab" role="tab" type="button" data-tab="body" aria-selected="false">body 要素 (Body Content)</button>
+    </div>
+
+    <!-- Panel 1: html -->
+    <div class="panel" data-panel="html">
+      <div class="card-body">
+        <pre class="code"><code>&lt;!DOCTYPE html&gt;
+<span class="hl">&lt;html lang="ja"&gt;</span>
+  &lt;!-- HTML文書全体のルート要素。lang属性指定が推奨される --&gt;
+  &lt;head&gt;...&lt;/head&gt;
+  &lt;body&gt;...&lt;/body&gt;
+<span class="hl">&lt;/html&gt;</span></code></pre>
+        <div class="demo">
+          <iframe title="html要素の構造" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111;background:#f9f9f9;border:2px dashed #999;padding:10px}</style></head><body>&lt;html lang="ja"&gt; （すべての要素を内包するルート要素）</body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: head & title -->
+    <div class="panel" data-panel="head" hidden>
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">&lt;head&gt;</span>
+  &lt;!-- ブラウザ画面には表示されない設定情報 --&gt;
+  &lt;meta charset="utf-8"&gt;
+  <span class="hl">&lt;title&gt;</span>Webページのタイトル<span class="hl">&lt;/title&gt;</span> &lt;!-- 必須 --&gt;
+<span class="hl">&lt;/head&gt;</span></code></pre>
+        <div class="demo">
+          <iframe title="headとtitleの役割" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><title>Webページのタイトル</title><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}.tab-mock{background:#e0e0e0;padding:6px 12px;border-radius:6px 6px 0 0;display:inline-block;font-weight:bold;font-size:12px}</style></head><body><div class="tab-mock">📄 Webページのタイトル</div><p style="margin-top:8px;font-size:12px;color:#666">titleの内容はブラウザのタブや検索結果に表示される</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: body -->
+    <div class="panel" data-panel="body" hidden>
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">&lt;body&gt;</span>
+  &lt;!-- ブラウザのビューポート内にレンダリングされる全コンテンツ --&gt;
+  &lt;h1&gt;メイン見出し&lt;/h1&gt;
+  &lt;p&gt;画面上に表示される本文テキスト。&lt;/p&gt;
+<span class="hl">&lt;/body&gt;</span></code></pre>
+        <div class="demo">
+          <iframe title="body要素の描画" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}h1{font-size:18px;margin:0 0 8px}</style></head><body><h1>メイン見出し</h1><p>画面上に表示される本文テキスト。</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 2.5b：meta要素と文字コード
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.5 (4-5)</span>
+      <h2 class="card-title">meta要素と文字コード指定<span class="en">/ meta Element &amp; charset</span></h2>
+      <p class="card-desc">meta要素はメタ情報を記述する空要素。charset属性で文字コードを明示する。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="utf8" aria-selected="true">UTF-8 (標準・推奨)</button>
+      <button class="tab" role="tab" type="button" data-tab="other" aria-selected="false">Shift_JIS / EUC-JP</button>
+      <button class="tab" role="tab" type="button" data-tab="spec" aria-selected="false">meta要素のスペック</button>
+    </div>
+
+    <!-- Panel 1: UTF-8 -->
+    <div class="panel" data-panel="utf8">
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- HTML5推奨の文字コード指定（大文字・小文字区別なし） --&gt;
+<span class="hl">&lt;meta charset="utf-8"&gt;</span>
+&lt;!-- または --&gt;
+&lt;meta charset="UTF-8"&gt;</code></pre>
+        <div class="demo">
+          <iframe title="UTF-8指定の描画" height="140" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}</style></head><body><p>日本語テキストが正常に表示されます（UTF-8）</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: Other charsets -->
+    <div class="panel" data-panel="other" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- 日本語環境で用いられてきた主な文字コード --&gt;
+&lt;meta charset="Shift_JIS"&gt; &lt;!-- シフトジス --&gt;
+&lt;meta charset="EUC-JP"&gt;    &lt;!-- イーユーシージェーピー --&gt;</code></pre>
+        <div class="demo">
+          <iframe title="各文字コード表記" height="140" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}code{background:#eee;padding:2px 4px}</style></head><body><p><code>UTF-8</code> / <code>Shift_JIS</code> / <code>EUC-JP</code></p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: Specification -->
+    <div class="panel" data-panel="spec" hidden>
+      <table class="ref-table">
+        <thead>
+          <tr>
+            <th>項目</th>
+            <th>内容 / 仕様定義</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>要素名</td>
+            <td><code>&lt;meta&gt;</code></td>
+          </tr>
+          <tr>
+            <td>カテゴリー</td>
+            <td>メタデータ・コンテンツ (Metadata content)</td>
+          </tr>
+          <tr>
+            <td>コンテンツモデル</td>
+            <td>なし (空要素)</td>
+          </tr>
+          <tr>
+            <td>配置場所</td>
+            <td><code>&lt;head&gt;</code> 要素内</td>
+          </tr>
+          <tr>
+            <td>主要属性</td>
+            <td><code>charset</code>, <code>name</code>, <code>http-equiv</code>, <code>content</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 2.6.1：文字参照
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.6.1</span>
+      <h2 class="card-title">文字参照<span class="en">/ Character References</span></h2>
+      <p class="card-desc">特殊記号（&lt;, &gt;, &amp;, "等）をHTML構文崩れを起こさずテキスト描画する書式。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="named" aria-selected="true">名前文字参照 (Named)</button>
+      <button class="tab" role="tab" type="button" data-tab="numeric" aria-selected="false">数値文字参照 (10進/16進)</button>
+      <button class="tab" role="tab" type="button" data-tab="compare" aria-selected="false">エスケープ比較 (Why needed)</button>
+      <button class="tab" role="tab" type="button" data-tab="table" aria-selected="false">代表的文字参照一覧</button>
+    </div>
+
+    <!-- Panel 1: Named -->
+    <div class="panel" data-panel="named">
+      <div class="card-body">
+        <pre class="code"><code>&lt;p&gt;タグの記述例：<span class="hl">&amp;lt;</span>div class=<span class="hl">&amp;quot;</span>box<span class="hl">&amp;quot;</span><span class="hl">&amp;gt;</span>内容<span class="hl">&amp;lt;</span>/div<span class="hl">&amp;gt;</span>&lt;/p&gt;
+&lt;p&gt;著作権：<span class="hl">&amp;copy;</span> 2026 Antigravity&lt;/p&gt;
+&lt;p&gt;計算：1000 <span class="hl">&amp;yen;</span> <span class="hl">&amp;times;</span> 2 <span class="hl">&amp;divide;</span> 4&lt;/p&gt;</code></pre>
+        <div class="demo">
+          <iframe title="名前文字参照の描画" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}</style></head><body><p>タグの記述例：&lt;div class=&quot;box&quot;&gt;内容&lt;/div&gt;</p><p>著作権：&copy; 2026 Antigravity</p><p>計算：1000 &yen; &times; 2 &divide; 4</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: Numeric -->
+    <div class="panel" data-panel="numeric" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- 数値文字参照：10進数 (&#060;) と 16進数 (&#x003C;) --&gt;
+&lt;p&gt;10進数：<span class="hl">&amp;#060;</span>div<span class="hl">&amp;#062;</span> <span class="hl">&amp;#038;</span> <span class="hl">&amp;#034;</span>Text<span class="hl">&amp;#034;</span>&lt;/p&gt;
+&lt;p&gt;16進数：<span class="hl">&amp;#x003C;</span>div<span class="hl">&amp;#x003E;</span> <span class="hl">&amp;#x0026;</span> <span class="hl">&amp;#x0022;</span>Text<span class="hl">&amp;#x0022;</span>&lt;/p&gt;</code></pre>
+        <div class="demo">
+          <iframe title="数値文字参照の描画" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}</style></head><body><p>10進数：&#060;div&#062; &#038; &#034;Text&#034;</p><p>16進数：&#x003C;div&#x003E; &#x0026; &#x0022;Text&#x0022;</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: Compare -->
+    <div class="panel" data-panel="compare" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- ❌ エスケープなし（&lt; がタグ開始とみなされ文字消滅・構文崩れ） --&gt;
+&lt;p&gt;比較: 5 &lt; 10 判定&lt;/p&gt;
+
+&lt;!-- ⭕ 文字参照（&amp;lt; により文字として正確に表示） --&gt;
+&lt;p&gt;正確: 5 <span class="hl">&amp;lt;</span> 10 判定&lt;/p&gt;</code></pre>
+        <div class="demo">
+          <iframe title="文字参照エスケープ対比" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}.ng{color:#d02020;padding:4px 8px;border:1px solid #d02020;margin-bottom:6px}.ok{color:#137333;padding:4px 8px;border:1px solid #137333}</style></head><body><div class="ng">❌ 誤認: 5 < 10 判定（< 以降が消える等）</div><div class="ok">⭕ 正確: 5 &lt; 10 判定</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 4: Table -->
+    <div class="panel" data-panel="table" hidden>
+      <table class="ref-table">
+        <thead>
+          <tr>
+            <th>表示</th>
+            <th>説明</th>
+            <th>名前文字参照</th>
+            <th>数値 (10進)</th>
+            <th>数値 (16進)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>"</code></td>
+            <td>ダブルクォーテーション</td>
+            <td><code>&amp;quot;</code></td>
+            <td><code>&amp;#034;</code></td>
+            <td><code>&amp;#x0022;</code></td>
+          </tr>
+          <tr>
+            <td><code>&amp;</code></td>
+            <td>アンパサンド</td>
+            <td><code>&amp;amp;</code></td>
+            <td><code>&amp;#038;</code></td>
+            <td><code>&amp;#x0026;</code></td>
+          </tr>
+          <tr>
+            <td><code>'</code></td>
+            <td>アポストロフィ</td>
+            <td><code>&amp;apos;</code></td>
+            <td><code>&amp;#039;</code></td>
+            <td><code>&amp;#x0027;</code></td>
+          </tr>
+          <tr>
+            <td><code>&lt;</code></td>
+            <td>小なり (Less-than)</td>
+            <td><code>&amp;lt;</code></td>
+            <td><code>&amp;#060;</code></td>
+            <td><code>&amp;#x003C;</code></td>
+          </tr>
+          <tr>
+            <td><code>&gt;</code></td>
+            <td>大なり (Greater-than)</td>
+            <td><code>&amp;gt;</code></td>
+            <td><code>&amp;#062;</code></td>
+            <td><code>&amp;#x003E;</code></td>
+          </tr>
+          <tr>
+            <td><code>¥</code></td>
+            <td>円マーク</td>
+            <td><code>&amp;yen;</code></td>
+            <td><code>&amp;#165;</code></td>
+            <td><code>&amp;#x00A5;</code></td>
+          </tr>
+          <tr>
+            <td><code>©</code></td>
+            <td>コピーライト</td>
+            <td><code>&amp;copy;</code></td>
+            <td><code>&amp;#169;</code></td>
+            <td><code>&amp;#x00A9;</code></td>
+          </tr>
+          <tr>
+            <td><code>®</code></td>
+            <td>登録商標</td>
+            <td><code>&amp;reg;</code></td>
+            <td><code>&amp;#174;</code></td>
+            <td><code>&amp;#x00AE;</code></td>
+          </tr>
+          <tr>
+            <td><code>×</code></td>
+            <td>乗算</td>
+            <td><code>&amp;times;</code></td>
+            <td><code>&amp;#215;</code></td>
+            <td><code>&amp;#x00D7;</code></td>
+          </tr>
+          <tr>
+            <td><code>÷</code></td>
+            <td>除算</td>
+            <td><code>&amp;divide;</code></td>
+            <td><code>&amp;#247;</code></td>
+            <td><code>&amp;#x00F7;</code></td>
+          </tr>
+          <tr>
+            <td><code> </code></td>
+            <td>不換スペース</td>
+            <td><code>&amp;nbsp;</code></td>
+            <td><code>&amp;#160;</code></td>
+            <td><code>&amp;#x00A0;</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* ★このスクリプトは一行も変更しない。丸ごとコピーすること★ */
+
+/* タブ: [data-tabs] ごとにスコープされる。カードが何枚あっても干渉しない */
+document.querySelectorAll('[data-tabs]').forEach(function (group) {
+  var tabs = group.querySelectorAll(':scope > .tabs > .tab');
+  var panels = group.querySelectorAll(':scope > .panel');
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var key = tab.dataset.tab;
+      tabs.forEach(function (t) { t.setAttribute('aria-selected', String(t === tab)); });
+      panels.forEach(function (p) { p.hidden = (p.dataset.panel !== key); });
+    });
+  });
+});
+
+/* テーマ固定（ライト）。切替機能は廃止 */
+</script>
+</body>
+</html>

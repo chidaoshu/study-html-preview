@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HTML&amp;CSS 期末試験 復習シート — vol.7 基本構造を示す要素</title>
+<style>
+/* =========================================================
+   [1] テーマ (Swiss Vignelli Palette)
+   固定ライト。暗色モードの切替は廃止。
+   ========================================================= */
+:root {
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #666666;
+  --line: #cccccc;
+  --hairline: #e2e2e2;
+  --surface: #f5f5f3;
+  --accent: #d02020;        /* 差分・強調のみに使用 */
+  --demo-bg: #ffffff;
+  --demo-fg: #111111;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Helvetica Neue", Helvetica, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic Medium", sans-serif;
+  line-height: 1.6;
+  text-wrap: pretty;
+  -webkit-text-size-adjust: 100%;
+}
+
+code, pre, .mono {
+  font-family: "SF Mono", "Menlo", "Consolas", monospace;
+}
+
+/* =========================================================
+   [2] Swiss Layout & Grid
+   ========================================================= */
+.wrap {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+@media (min-width: 900px) {
+  .wrap { padding: 0 32px; }
+}
+
+/* Header */
+.top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+}
+.brand-tag {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 2px 6px;
+  background: var(--fg);
+  color: var(--bg);
+}
+.volnav {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  font-size: 13px;
+  font-weight: 500;
+}
+.volnav a {
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 2px 4px;
+}
+.volnav a[aria-current="page"] {
+  color: var(--fg);
+  font-weight: 700;
+  border-bottom: 2px solid var(--fg);
+}
+
+/* Card & Panels */
+.card {
+  border-top: 1px solid var(--line);
+  padding: 32px 0;
+}
+.card-header {
+  margin-bottom: 20px;
+}
+.card-num {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 4px;
+  display: block;
+}
+.card-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+.card-title .en {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-left: 8px;
+}
+.card-desc {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.card-body {
+  display: grid;
+  gap: 16px;
+}
+@media (min-width: 900px) {
+  .card-body {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+}
+
+/* =========================================================
+   [3] Vignelli Tab Bar
+   ========================================================= */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.tab {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  border-bottom: none;
+  background: var(--surface);
+  color: var(--muted);
+  border-radius: 0;
+  transition: color 0.1s, background 0.1s;
+}
+.tab:hover {
+  color: var(--fg);
+  background: var(--bg);
+}
+.tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.tab[aria-selected="true"] {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
+}
+.panel[hidden] {
+  display: none;
+}
+
+/* =========================================================
+   [4] Code & Explanation Blocks
+   ========================================================= */
+pre.code {
+  margin: 0;
+  padding: 14px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.65;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  white-space: pre;
+}
+.hl {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* Table styling for spec summaries */
+.spec-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-top: 12px;
+}
+.spec-table th, .spec-table td {
+  border: 1px solid var(--line);
+  padding: 6px 10px;
+  text-align: left;
+}
+.spec-table th {
+  background: var(--surface);
+  font-weight: 600;
+  white-space: nowrap;
+  width: 130px;
+}
+
+/* =========================================================
+   [5] Demo Frame
+   ========================================================= */
+.demo {
+  border: 1px solid var(--line);
+  background: var(--demo-bg);
+}
+.demo iframe {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: var(--demo-bg);
+}
+
+/* === 概念図解用 === */
+.d-fig {
+  border: 1px solid var(--line);
+  background: #fffefc;
+  padding: 14px;
+  margin: 10px 0;
+}
+.d-fig svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+</style>
+<style>
+/* === 375px 横溢れ修正（主代理が追加。設計・配色・書体には手を入れていない） === */
+.volnav{overflow-x:auto;min-width:0;flex:1 1 auto;scrollbar-width:none}
+.volnav::-webkit-scrollbar{display:none}
+.top{max-width:100%;overflow:hidden}
+.top>*{min-width:0}
+@media (max-width:899px){
+  .wrap{max-width:100%!important}
+  .card-body{display:block!important}
+  .card-body>*{width:auto!important;max-width:100%!important;min-width:0!important}
+  .card-body>*+*{margin-top:14px}
+  .panel [class*="col"]{width:auto!important;min-width:0!important;max-width:100%!important}
+}
+.wrap>*,.panel,.panel>*{min-width:0}
+pre,[class*="code"]{max-width:100%;min-width:0}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <span class="brand-tag">HTML&amp;CSS</span>
+  <nav class="volnav">
+    <a href="vol.1.html">1</a>
+    <a href="vol.2.html">2</a>
+    <a href="vol.3.html">3</a>
+    <a href="vol.4.html">4</a>
+    <a href="vol.5.html">5</a>
+    <a href="vol.6.html">6</a>
+    <a href="vol.7.html" aria-current="page">7</a>
+    <a href="vol.8.html">8</a>
+    <a href="vol.9.html">9</a>
+    <a href="vol.10.html">10</a>
+    <a href="vol.11.html">11</a>
+    <a href="vol.12.html">12</a>
+    <a href="vol.13.html">13</a>
+    <a href="vol.14.html">14</a>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <!-- ============================================================
+       SECTION 7.1: 基本構造を示す要素（header, main, footer）
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 7.1 / 基本構造を示す要素</span>
+      <h2 class="card-title">基本構造要素<span class="en">/ Header, Main &amp; Footer</span></h2>
+      <p class="card-desc">Web ページ全体の骨格（ヘッダー・メイン・フッター）を定義し、検索エンジンに正しい文書構造を伝える要素。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="header" aria-selected="true">header 要素</button>
+      <button class="tab" role="tab" type="button" data-tab="main" aria-selected="false">main 要素</button>
+      <button class="tab" role="tab" type="button" data-tab="footer" aria-selected="false">footer 要素</button>
+      <button class="tab" role="tab" type="button" data-tab="layout" aria-selected="false">全体構造 (配置)</button>
+    </div>
+
+    <!-- Panel 1: header 要素 -->
+    <div class="panel" data-panel="header">
+      <div class="card-body">
+        <div>
+          <pre class="code"><code><span class="hl">&lt;header&gt;</span>
+  &lt;h1&gt;埼玉紹介サイト&lt;/h1&gt;
+  &lt;p&gt;埼玉県を紹介する Web サイトです。&lt;/p&gt;
+<span class="hl">&lt;/header&gt;</span></code></pre>
+          <table class="spec-table">
+            <tr><th>カテゴリー</th><td>フロー・コンテンツ（Flow）, パルパブル・コンテンツ（Palpable）</td></tr>
+            <tr><th>コンテンツモデル</th><td>フロー・コンテンツ（※<span class="hl">header・footer 要素は含みません</span>）</td></tr>
+            <tr><th>属性</th><td>グローバル属性（Global Attributes）</td></tr>
+            <tr><th>役割・特徴</th><td>文書冒頭のタイトル・ロゴ・ナビゲーション等のヘッダー、または1つのセクションのヘッダーとして使用</td></tr>
+          </table>
+        </div>
+        <div class="demo">
+          <iframe title="header要素の描画" height="170" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}header{border-bottom:2px solid #b03030;padding-bottom:8px;background:#f9f9f8;padding:12px;border-radius:4px}h1{font-size:18px;margin:0 0 4px;color:#b03030}p{margin:0;font-size:13px;color:#666}</style></head><body><header><h1>埼玉紹介サイト</h1><p>埼玉県を紹介する Web サイトです。</p></header></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: main 要素 -->
+    <div class="panel" data-panel="main" hidden>
+      <div class="card-body">
+        <div>
+          <pre class="code"><code><span class="hl">&lt;main&gt;</span>
+  &lt;h1&gt;埼玉とは？&lt;/h1&gt;
+  &lt;p&gt;埼玉県は、日本の関東地方に位置する広域地方公共団体（都道府県）のひとつです。&lt;/p&gt;
+<span class="hl">&lt;/main&gt;</span></code></pre>
+          <table class="spec-table">
+            <tr><th>カテゴリー</th><td>フロー・コンテンツ（Flow）, パルパブル・コンテンツ（Palpable）</td></tr>
+            <tr><th>コンテンツモデル</th><td>フロー・コンテンツ</td></tr>
+            <tr><th>属性</th><td>グローバル属性（Global Attributes）</td></tr>
+            <tr><th>役割・特徴</th><td>body 内の主要情報・中心主題。<span class="hl">複数ページ共通の項目（header, footer等）は含めない</span>。原則 <span class="hl">1つの body に 1つ設定</span></td></tr>
+          </table>
+        </div>
+        <div class="demo">
+          <iframe title="main要素の描画" height="170" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}main{border:1px dashed #666;padding:12px;background:#fff;border-radius:4px}h1{font-size:18px;margin:0 0 6px;color:#111}p{margin:0;font-size:13px;color:#333}</style></head><body><main><h1>埼玉とは？</h1><p>埼玉県は、日本の関東地方に位置する広域地方公共団体（都道府県）のひとつです。</p></main></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: footer 要素 -->
+    <div class="panel" data-panel="footer" hidden>
+      <div class="card-body">
+        <div>
+          <pre class="code"><code><span class="hl">&lt;footer&gt;</span>
+  &lt;small&gt;
+    Copyright &amp;copy; 2019 Denshi Taro(19CA0000), All rights reserved.
+  &lt;/small&gt;
+<span class="hl">&lt;/footer&gt;</span></code></pre>
+          <table class="spec-table">
+            <tr><th>カテゴリー</th><td>フロー・コンテンツ（Flow）, パルパブル・コンテンツ（Palpable）</td></tr>
+            <tr><th>コンテンツモデル</th><td>フロー・コンテンツ（※<span class="hl">header・footer 要素は含みません</span>）</td></tr>
+            <tr><th>属性</th><td>グローバル属性（Global Attributes）</td></tr>
+            <tr><th>役割・特徴</th><td>文書・セクションの末尾のフッター（著作権表記・ページ番号・関連情報など）</td></tr>
+          </table>
+        </div>
+        <div class="demo">
+          <iframe title="footer要素の描画" height="170" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}footer{border-top:1px solid #ccc;padding:12px;text-align:center;background:#f5f5f3;border-radius:4px;margin-top:12px}small{font-size:12px;color:#666}</style></head><body><footer><small>Copyright &copy; 2019 Denshi Taro(19CA0000), All rights reserved.</small></footer></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 4: 全体構造 -->
+    <div class="panel" data-panel="layout" hidden>
+      <div class="card-body">
+        <div>
+          <pre class="code"><code>&lt;body&gt;
+  <span class="hl">&lt;header&gt;</span>
+    &lt;h1&gt;埼玉紹介サイト&lt;/h1&gt;
+  <span class="hl">&lt;/header&gt;</span>
+  <span class="hl">&lt;main&gt;</span>
+    &lt;h1&gt;埼玉とは？&lt;/h1&gt;
+    &lt;p&gt;埼玉県は、日本の関東地方に位置する...&lt;/p&gt;
+  <span class="hl">&lt;/main&gt;</span>
+  <span class="hl">&lt;footer&gt;</span>
+    &lt;small&gt;Copyright &amp;copy; 2019 Denshi Taro&lt;/small&gt;
+  <span class="hl">&lt;/footer&gt;</span>
+&lt;/body&gt;</code></pre>
+          <table class="spec-table">
+            <tr><th>構造関係</th><td><code>body</code> ➔ <code>header</code>（共通頭部） ➔ <code>main</code>（主要主題） ➔ <code>footer</code>（共通脚部）</td></tr>
+            <tr><th>設計ルール</th><td>1つの <code>body</code> に <code>main</code> は原則 1 つ。<code>header</code>・<code>footer</code> 内に他の <code>header</code>・<code>footer</code> を入れ子に不可</td></tr>
+          </table>
+        </div>
+        <div class="demo">
+          <iframe title="基本構造全体の描画" height="230" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.5 sans-serif;margin:8px;color:#111;background:#fafafa}header{background:#e8f0fe;border:1px solid #aecbfa;padding:8px 12px;margin-bottom:8px;border-radius:4px}main{background:#ffffff;border:1px solid #dadce0;padding:12px;margin-bottom:8px;border-radius:4px}footer{background:#f1f3f4;border:1px solid #dadce0;padding:8px 12px;text-align:center;border-radius:4px}h1{font-size:15px;margin:0 0 4px;color:#1967d2}p{margin:0;color:#3c4043}small{color:#5f6368;font-size:11px}.tag{font-size:10px;font-weight:bold;background:#1967d2;color:#fff;padding:1px 5px;border-radius:2px;display:inline-block;margin-bottom:4px}</style></head><body><header><span class="tag">header</span><h1>埼玉紹介サイト</h1></header><main><span class="tag" style="background:#188038">main</span><h1 style="color:#188038">埼玉とは？</h1><p>埼玉県は、日本の関東地方に位置する広域地方公共団体（都道府県）のひとつです。</p></main><footer><span class="tag" style="background:#5f6368">footer</span><div><small>Copyright &copy; 2019 Denshi Taro(19CA0000), All rights reserved.</small></div></footer></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 7.2: セクションを表す要素（section, article, aside, nav）
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 7.2 / セクションを表す要素</span>
+      <h2 class="card-title">セクションを表す要素<span class="en">/ Section, Article, Aside &amp; Nav</span></h2>
+      <p class="card-desc">「見出しとそれに対応する内容」をグループ化する要素。意味や目的に応じて使い分ける。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="section" aria-selected="true">section 要素</button>
+      <button class="tab" role="tab" type="button" data-tab="article" aria-selected="false">article 要素</button>
+      <button class="tab" role="tab" type="button" data-tab="aside" aria-selected="false">aside 要素</button>
+      <button class="tab" role="tab" type="button" data-tab="nav" aria-selected="false">nav 要素</button>
+    </div>
+
+    <!-- Panel 1: section 要素 -->
+    <div class="panel" data-panel="section">
+      <div class="card-body">
+        <div>
+          <pre class="code"><code><span class="hl">&lt;section&gt;</span>
+  &lt;h1&gt;見出しサンプル&lt;/h1&gt;
+  &lt;p&gt;段落サンプル&lt;/p&gt;
+<span class="hl">&lt;/section&gt;</span></code></pre>
+          <table class="spec-table">
+            <tr><th>カテゴリー</th><td>フロー, <span class="hl">セクショニング・コンテンツ</span>（Sectioning）, パルパブル</td></tr>
+            <tr><th>コンテンツモデル</th><td>フロー・コンテンツ</td></tr>
+            <tr><th>属性</th><td>グローバル属性（Global Attributes）</td></tr>
+            <tr><th>役割・特徴</th><td>一般的な章・節・項を表す普通のセクション。通常は<span class="hl">見出し（h1〜h6）を伴う</span>。具体的に他意がない場合に使用</td></tr>
+          </table>
+        </div>
+        <div class="demo">
+          <iframe title="section要素の描画" height="170" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}section{border:1px solid #ccc;padding:12px;background:#fff;border-radius:4px}h1{font-size:16px;margin:0 0 6px;color:#111;border-bottom:1px solid #eee;padding-bottom:4px}p{margin:0;font-size:13px;color:#444}</style></head><body><section><h1>見出しサンプル</h1><p>段落サンプル</p></section></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: article 要素 -->
+    <div class="panel" data-panel="article" hidden>
+      <div class="card-body">
+        <div>
+          <pre class="code"><code><span class="hl">&lt;article&gt;</span>
+  &lt;h1&gt;見出しサンプル&lt;/h1&gt;
+  &lt;p&gt;段落サンプル&lt;/p&gt;
+<span class="hl">&lt;/article&gt;</span></code></pre>
+          <table class="spec-table">
+            <tr><th>カテゴリー</th><td>フロー, <span class="hl">セクショニング・コンテンツ</span>（Sectioning）, パルパブル</td></tr>
+            <tr><th>コンテンツモデル</th><td>フロー・コンテンツ（※<span class="hl">main 要素は除く</span>）</td></tr>
+            <tr><th>属性</th><td>グローバル属性（Global Attributes）</td></tr>
+            <tr><th>役割・特徴</th><td><span class="hl">単独で完結</span>しているセクション（ニュース記事・ブログ/SNS投稿等）。個別配信・再利用を意図。入れ子の場合は外側と関係を持つ</td></tr>
+          </table>
+        </div>
+        <div class="demo">
+          <iframe title="article要素の描画" height="170" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}article{border:1px solid #d02020;padding:12px;background:#fffefc;border-radius:4px}h1{font-size:16px;margin:0 0 6px;color:#d02020}p{margin:0;font-size:13px;color:#333}</style></head><body><article><h1>見出しサンプル</h1><p>段落サンプル</p></article></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: aside 要素 -->
+    <div class="panel" data-panel="aside" hidden>
+      <div class="card-body">
+        <div>
+          <pre class="code"><code><span class="hl">&lt;aside&gt;</span>
+  &lt;h2&gt;見出しサンプル&lt;/h2&gt;
+  &lt;p&gt;段落サンプル&lt;/p&gt;
+<span class="hl">&lt;/aside&gt;</span></code></pre>
+          <table class="spec-table">
+            <tr><th>カテゴリー</th><td>フロー, <span class="hl">セクショニング・コンテンツ</span>（Sectioning Content）, パルパブル</td></tr>
+            <tr><th>コンテンツモデル</th><td>フロー・コンテンツ（※<span class="hl">main 要素は除く</span>）</td></tr>
+            <tr><th>属性</th><td>グローバル属性（Global Attributes）</td></tr>
+            <tr><th>役割・特徴</th><td>主要な内容に関係しているが<span class="hl">切り離せるセクション</span>（サイドバー・補足記事・広告等）を表す</td></tr>
+          </table>
+        </div>
+        <div class="demo">
+          <iframe title="aside要素の描画" height="170" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}aside{border:1px solid #e67e22;background:#fffcf5;padding:12px;border-radius:4px}h2{font-size:15px;margin:0 0 6px;color:#e67e22;border-bottom:1px dashed #f39c12;padding-bottom:4px}p{margin:0;font-size:13px;color:#555}</style></head><body><aside><h2>見出しサンプル</h2><p>段落サンプル</p></aside></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 4: nav 要素 -->
+    <div class="panel" data-panel="nav" hidden>
+      <div class="card-body">
+        <div>
+          <pre class="code"><code>&lt;h1&gt;埼玉紹介サイト&lt;/h1&gt;
+<span class="hl">&lt;nav&gt;</span>
+  &lt;a href="#"&gt;ホーム&lt;/a&gt;
+  &lt;a href="#"&gt;観光地&lt;/a&gt;
+  &lt;a href="#"&gt;食べ物&lt;/a&gt;
+  &lt;a href="#"&gt;場所&lt;/a&gt;
+  &lt;a href="#"&gt;その他&lt;/a&gt;
+<span class="hl">&lt;/nav&gt;</span></code></pre>
+          <table class="spec-table">
+            <tr><th>カテゴリー</th><td>フロー, <span class="hl">セクショニング・コンテンツ</span>（Sectioning）, パルパブル</td></tr>
+            <tr><th>コンテンツモデル</th><td>フロー・コンテンツ（※<span class="hl">main 要素は除く</span>）</td></tr>
+            <tr><th>属性</th><td>グローバル属性（Global Attributes）</td></tr>
+            <tr><th>役割・特徴</th><td>Web ページ内または他ページへの<span class="hl">主要なナビゲーションリンクの集合</span>を表す</td></tr>
+          </table>
+          <table class="spec-table" style="margin-top:8px">
+            <tr><th>要素</th><th>内容</th><th>役割</th></tr>
+            <tr><td><code>h1</code></td><td>埼玉紹介サイト</td><td>ページまたはサイトの見出し</td></tr>
+            <tr><td><code>nav</code></td><td>ホーム・観光地・食べ物・場所・その他</td><td>主要ページへのリンク集合</td></tr>
+          </table>
+        </div>
+        <div class="demo">
+          <iframe title="nav要素の描画" height="220" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}h1{font-size:18px;margin:0 0 10px;color:#111}nav{display:flex;gap:8px;background:#f5f5f3;padding:8px 12px;border:1px solid #ccc;border-radius:4px;overflow-x:auto}nav a{color:#0066cc;text-decoration:none;font-weight:bold;white-space:nowrap;padding:4px 8px;border-radius:3px}nav a:hover{background:#e0e0e0}</style></head><body><h1>埼玉紹介サイト</h1><nav><a href="#">ホーム</a><a href="#">観光地</a><a href="#">食べ物</a><a href="#">場所</a><a href="#">その他</a></nav></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 7.3: 特別な意味を持たない要素（div, span）
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 7.3 / 特別な意味を持たない要素</span>
+      <h2 class="card-title">div / span 要素によるグループ化<span class="en">/ div &amp; span Elements</span></h2>
+      <p class="card-desc">固有のセマンティック（意味）を持たず、スタイル適用やレイアウト範囲をまとめるための要素。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="div-single" aria-selected="true">クラス適用（単体）</button>
+      <button class="tab" role="tab" type="button" data-tab="div-nested" aria-selected="false">ネスト構造（入れ子）</button>
+      <button class="tab" role="tab" type="button" data-tab="span" aria-selected="false">span 要素 (インライン/vs div)</button>
+    </div>
+
+    <!-- Panel 1: クラス適用（単体） -->
+    <div class="panel" data-panel="div-single">
+      <div class="card-body">
+        <div>
+          <pre class="code"><code>&lt;!-- 属性 class="cls" を子要素 h1, p に一括適用 --&gt;
+<span class="hl">&lt;div class="cls"&gt;</span>
+  &lt;h1&gt;見出しサンプル&lt;/h1&gt;
+  &lt;p&gt;段落サンプル&lt;/p&gt;
+<span class="hl">&lt;/div&gt;</span></code></pre>
+          <table class="spec-table">
+            <tr><th>カテゴリー</th><td>フロー・コンテンツ（Flow）, パルパブル・コンテンツ（Palpable）</td></tr>
+            <tr><th>コンテンツモデル</th><td>フロー・コンテンツ、他</td></tr>
+            <tr><th>属性</th><td>グローバル属性（Global Attributes）</td></tr>
+            <tr><th>役割・特徴</th><td><span class="hl">特別な意味を持たない</span>。要素をグループ化（Grouping）し、デザインやレイアウトの適用範囲をまとめる</td></tr>
+          </table>
+        </div>
+        <div class="demo">
+          <iframe title="div要素単体の描画" height="170" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}.cls{background:#f0f4f8;border:2px solid #4a90e2;padding:12px;border-radius:4px}.cls h1{font-size:16px;margin:0 0 4px;color:#2c3e50}.cls p{margin:0;font-size:13px;color:#34495e}</style></head><body><div class="cls"><h1>見出しサンプル</h1><p>段落サンプル</p></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: ネスト構造（入れ子） -->
+    <div class="panel" data-panel="div-nested" hidden>
+      <div class="card-body">
+        <div>
+          <pre class="code"><code>&lt;!-- div 要素の中に div 要素を入れ子にする構造 --&gt;
+<span class="hl">&lt;div class="cls"&gt;</span>
+  <span class="hl">&lt;div&gt;</span>
+    &lt;h1&gt;見出しサンプル&lt;/h1&gt;
+    &lt;p&gt;段落サンプル&lt;/p&gt;
+  <span class="hl">&lt;/div&gt;</span>
+<span class="hl">&lt;/div&gt;</span></code></pre>
+          <table class="spec-table">
+            <tr><th>入れ子構造</th><td><code>div</code> 内にさらに <code>div</code> を自由に配置可能（ブロックレベル要素）</td></tr>
+            <tr><th>使用目的</th><td>外枠のレイアウト枠（コンテナ）と内側のデザイン枠を分離するなど、複雑な UI グループ化に使用</td></tr>
+          </table>
+        </div>
+        <div class="demo">
+          <iframe title="div要素入れ子の描画" height="180" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}.cls{background:#eef2f5;border:2px dashed #90a4ae;padding:10px;border-radius:6px}.cls div{background:#ffffff;border:1px solid #b0bec5;padding:10px;border-radius:4px}h1{font-size:15px;margin:0 0 4px;color:#37474f}p{margin:0;font-size:13px;color:#546e7a}</style></head><body><div class="cls"><div><h1>見出しサンプル</h1><p>段落サンプル</p></div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: span 要素 -->
+    <div class="panel" data-panel="span" hidden>
+      <div class="card-body">
+        <div>
+          <pre class="code"><code>&lt;!-- div (ブロックレベル): 改行され、独立したブロックとなる --&gt;
+&lt;div class="box"&gt;div 1 (block)&lt;/div&gt;
+&lt;div class="box"&gt;div 2 (block)&lt;/div&gt;
+
+&lt;!-- span (インライン): 改行されず、テキスト行内でスタイリング --&gt;
+&lt;p&gt;文章の中に <span class="hl">&lt;span class="mark"&gt;</span>span 1 (inline)<span class="hl">&lt;/span&gt;</span> と <span class="hl">&lt;span class="mark"&gt;</span>span 2 (inline)<span class="hl">&lt;/span&gt;</span> をインライン配置。&lt;/p&gt;</code></pre>
+          <table class="spec-table">
+            <tr><th>カテゴリー</th><td>フロー, <span class="hl">フレージング・コンテンツ</span>（Phrasing / インライン）, パルパブル</td></tr>
+            <tr><th>コンテンツモデル</th><td>フレージング・コンテンツ（Phrasing Content）</td></tr>
+            <tr><th>属性</th><td>グローバル属性（Global Attributes）</td></tr>
+            <tr><th>役割・特徴</th><td>固有の意味を持たない<span class="hl">インライングループ化要素</span>。<code>div</code>（ブロック：改行あり）に対し、<code>span</code> は<span class="hl">行内に留まり改行されない</span></td></tr>
+          </table>
+          <table class="spec-table" style="margin-top:8px">
+            <tr><th>要素</th><th>レベル</th><th>改行</th><th>用途</th></tr>
+            <tr><td><code>div</code></td><td>ブロックレベル (Block)</td><td>自動改行（縦並び）</td><td>レイアウト・段落単位のグループ化</td></tr>
+            <tr><td><code>span</code></td><td>インライン (Inline)</td><td>改行なし（横並び）</td><td>テキスト行内の一部分のスタイリング</td></tr>
+          </table>
+        </div>
+        <div class="demo">
+          <iframe title="divとspanの対比描画" height="230" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}.block-demo{margin-bottom:14px}.block-demo div{background:#e3f2fd;border:1px solid #2196f3;padding:6px 10px;margin-bottom:4px;border-radius:3px;font-size:13px;color:#1565c0}.inline-demo p{background:#f5f5f5;border:1px solid #e0e0e0;padding:10px;border-radius:4px;margin:0}.mark{background:#fff9c4;border:1px solid #fbc02d;color:#f57f17;padding:2px 6px;border-radius:3px;font-weight:bold}.label{font-size:11px;font-weight:bold;color:#666;margin-bottom:4px}</style></head><body><div class="block-demo"><div class="label">■ div (Block Level - 改行あり):</div><div>div 要素 1 (横幅いっぱいに広がり改行)</div><div>div 要素 2 (次の行へ配置)</div></div><div class="inline-demo"><div class="label">■ span (Inline Level - 改行なし):</div><p>文章の一部を <span class="mark">span要素</span> でグループ化し、改行させずに <span class="mark">装飾・スタイル</span> を適用します。</p></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* ★このスクリプトは一行も変更しない。丸ごとコピーすること★ */
+
+/* タブ: [data-tabs] ごとにスコープされる。カードが何枚あっても干渉しない */
+document.querySelectorAll('[data-tabs]').forEach(function (group) {
+  var tabs = group.querySelectorAll(':scope > .tabs > .tab');
+  var panels = group.querySelectorAll(':scope > .panel');
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var key = tab.dataset.tab;
+      tabs.forEach(function (t) { t.setAttribute('aria-selected', String(t === tab)); });
+      panels.forEach(function (p) { p.hidden = (p.dataset.panel !== key); });
+    });
+  });
+});
+
+/* テーマ固定（ライト）。切替機能は廃止 */
+</script>
+</body>
+</html>

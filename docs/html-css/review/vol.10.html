@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HTML&amp;CSS 期末試験 復習シート — vol.10 ボックスモデルの基本</title>
+<style>
+/* =========================================================
+   [1] テーマ (Swiss Vignelli Palette)
+   固定ライト。暗色モードの切替は廃止。
+   ========================================================= */
+:root {
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #666666;
+  --line: #cccccc;
+  --hairline: #e2e2e2;
+  --surface: #f5f5f3;
+  --accent: #d02020;        /* 差分・強調のみに使用 */
+  --demo-bg: #ffffff;
+  --demo-fg: #111111;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Helvetica Neue", Helvetica, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic Medium", sans-serif;
+  line-height: 1.6;
+  text-wrap: pretty;
+  -webkit-text-size-adjust: 100%;
+}
+
+code, pre, .mono {
+  font-family: "SF Mono", "Menlo", "Consolas", monospace;
+}
+
+/* =========================================================
+   [2] Swiss Layout & Grid
+   ========================================================= */
+.wrap {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+@media (min-width: 900px) {
+  .wrap { padding: 0 32px; }
+}
+
+/* Header */
+.top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+}
+.brand-tag {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 2px 6px;
+  background: var(--fg);
+  color: var(--bg);
+}
+.volnav {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  font-size: 13px;
+  font-weight: 500;
+}
+.volnav a {
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 2px 4px;
+}
+.volnav a[aria-current="page"] {
+  color: var(--fg);
+  font-weight: 700;
+  border-bottom: 2px solid var(--fg);
+}
+
+/* Card & Panels */
+.card {
+  border-top: 1px solid var(--line);
+  padding: 32px 0;
+}
+.card-header {
+  margin-bottom: 20px;
+}
+.card-num {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 4px;
+  display: block;
+}
+.card-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+.card-title .en {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-left: 8px;
+}
+.card-desc {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.card-body {
+  display: grid;
+  gap: 16px;
+}
+@media (min-width: 900px) {
+  .card-body {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+}
+
+/* =========================================================
+   [3] Vignelli Tab Bar
+   ========================================================= */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.tab {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  border-bottom: none;
+  background: var(--surface);
+  color: var(--muted);
+  border-radius: 0;
+  transition: color 0.1s, background 0.1s;
+}
+.tab:hover {
+  color: var(--fg);
+  background: var(--bg);
+}
+.tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.tab[aria-selected="true"] {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
+}
+.panel[hidden] {
+  display: none;
+}
+
+/* =========================================================
+   [4] Code & Explanation Blocks
+   ========================================================= */
+pre.code {
+  margin: 0;
+  padding: 14px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.65;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  white-space: pre;
+}
+.hl {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* =========================================================
+   [5] Demo Frame
+   ページの装飾とデモの効果を混同させないための iframe 隔離。
+   ========================================================= */
+.demo {
+  border: 1px solid var(--line);
+  background: var(--demo-bg);
+}
+.demo iframe {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: var(--demo-bg);
+}
+
+/* === 概念図解用 === */
+.d-fig {
+  border: 1px solid var(--line);
+  background: #fffefc;
+  padding: 14px;
+  margin: 10px 0;
+}
+.d-fig svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* 対照表スタイル */
+.spec-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  font-size: 13px;
+}
+.spec-table th, .spec-table td {
+  border: 1px solid var(--line);
+  padding: 8px 10px;
+  text-align: left;
+}
+.spec-table th {
+  background: var(--surface);
+  font-weight: 700;
+}
+</style>
+<style>
+/* === 375px 横溢れ修正（主代理が追加。設計・配色・書体には手を入れていない） === */
+.volnav{overflow-x:auto;min-width:0;flex:1 1 auto;scrollbar-width:none}
+.volnav::-webkit-scrollbar{display:none}
+.top{max-width:100%;overflow:hidden}
+.top>*{min-width:0}
+@media (max-width:899px){
+  .wrap{max-width:100%!important}
+  .card-body{display:block!important}
+  .card-body>*{width:auto!important;max-width:100%!important;min-width:0!important}
+  .card-body>*+*{margin-top:14px}
+  .panel [class*="col"]{width:auto!important;min-width:0!important;max-width:100%!important}
+}
+.wrap>*,.panel,.panel>*{min-width:0}
+pre,[class*="code"]{max-width:100%;min-width:0}
+</style>
+</head>
+<body>
+
+<!-- textbook-diff: displayの継承 ノート=継承される → 採用=継承されない / 根拠=W3C CSS Display Specification (Inherited: no) -->
+
+<header class="top">
+  <span class="brand-tag">HTML&amp;CSS</span>
+  <nav class="volnav">
+    <a href="vol.1.html">1</a>
+    <a href="vol.2.html">2</a>
+    <a href="vol.3.html">3</a>
+    <a href="vol.4.html">4</a>
+    <a href="vol.5.html">5</a>
+    <a href="vol.6.html">6</a>
+    <a href="vol.7.html">7</a>
+    <a href="vol.8.html">8</a>
+    <a href="vol.9.html">9</a>
+    <a href="vol.10.html" aria-current="page">10</a>
+    <a href="vol.11.html">11</a>
+    <a href="vol.12.html">12</a>
+    <a href="vol.13.html">13</a>
+    <a href="vol.14.html">14</a>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <!-- ============================================================
+       1.1.1 ボックスモデルの基本構造
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 1.1.1 🔴</span>
+      <h2 class="card-title">1.1.1　ボックスモデルの基本構造<span class="en">/ Box Model Structure</span></h2>
+      <p class="card-desc">すべての HTML 要素はコンテンツ・パディング・ボーダー・マージンの 4 領域で構成される。</p>
+    </div>
+
+    <div class="d-fig">
+      <svg viewBox="0 0 600 220" role="img" aria-label="ボックスモデルの4重構造（マージン、ボーダー、パディング、コンテンツ）を示すSVG図解">
+        <!-- Margin -->
+        <rect x="10" y="10" width="580" height="200" fill="#f9f0e6" stroke="#e0a96d" stroke-dasharray="4,4"/>
+        <text x="25" y="32" font-size="13" font-weight="700" fill="#b06d20">margin (マージン: 外部余白)</text>
+        <text x="300" y="25" text-anchor="middle" font-size="11" fill="#b06d20">top</text>
+        <text x="300" y="204" text-anchor="middle" font-size="11" fill="#b06d20">bottom</text>
+        <text x="22" y="115" font-size="11" fill="#b06d20">left</text>
+        <text x="560" y="115" font-size="11" fill="#b06d20">right</text>
+
+        <!-- Border -->
+        <rect x="70" y="40" width="460" height="140" fill="#fde8e8" stroke="#d02020" stroke-width="2"/>
+        <text x="82" y="60" font-size="13" font-weight="700" fill="#d02020">border (ボーダー: 境界線)</text>
+
+        <!-- Padding -->
+        <rect x="130" y="68" width="340" height="84" fill="#e8f5e9" stroke="#4caf50" stroke-dasharray="3,3"/>
+        <text x="142" y="86" font-size="13" font-weight="700" fill="#2e7d32">padding (パディング: 内部余白)</text>
+
+        <!-- Content -->
+        <rect x="200" y="94" width="200" height="38" fill="#e3f2fd" stroke="#1976d2"/>
+        <text x="300" y="118" text-anchor="middle" font-size="13" font-weight="700" fill="#1565c0">content (コンテンツ: 内容領域)</text>
+      </svg>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="content" aria-selected="true">1. Content (コンテンツ)</button>
+      <button class="tab" role="tab" type="button" data-tab="padding" aria-selected="false">2. Padding (パディング)</button>
+      <button class="tab" role="tab" type="button" data-tab="border" aria-selected="false">3. Border (ボーダー)</button>
+      <button class="tab" role="tab" type="button" data-tab="margin" aria-selected="false">4. Margin (マージン)</button>
+    </div>
+
+    <div class="panel" data-panel="content">
+      <div class="card-body">
+        <pre class="code"><code>.box {
+  <span class="hl">width: 200px; height: 60px;</span>
+  <span class="hl">background: #e3f2fd;</span> /* コンテンツ領域 */
+}</code></pre>
+        <div class="demo">
+          <iframe title="Content領域デモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:16px;background:#fafafa}.box{width:200px;height:60px;background:#e3f2fd;border:1px dashed #1565c0;padding:0;margin:0;display:flex;align-items:center;justify-content:center;color:#1565c0;font-weight:bold}</style></head><body><div class="box">コンテンツ領域 (Text/Image)</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="padding" hidden>
+      <div class="card-body">
+        <pre class="code"><code>.box {
+  width: 200px;
+  background: #e3f2fd;
+  <span class="hl">padding: 20px;</span>        /* 内側余白 */
+  <span class="hl">background-clip: content-box;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="Padding領域デモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:16px;background:#fafafa}.wrap{background:#e8f5e9;padding:20px;display:inline-block;border:1px dashed #2e7d32}.box{width:200px;background:#e3f2fd;color:#1565c0;padding:10px;text-align:center;font-weight:bold}</style></head><body><div class="wrap"><div class="box">Padding（緑）で囲まれた内容</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="border" hidden>
+      <div class="card-body">
+        <pre class="code"><code>.box {
+  width: 200px;
+  padding: 10px;
+  <span class="hl">border: 5px solid #d02020;</span> /* 境界枠線 */
+}</code></pre>
+        <div class="demo">
+          <iframe title="Border領域デモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:16px;background:#fafafa}.box{width:200px;padding:10px;border:5px solid #d02020;background:#e3f2fd;color:#111;text-align:center}</style></head><body><div class="box">Border（赤枠線）が周りを囲む</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="margin" hidden>
+      <div class="card-body">
+        <pre class="code"><code>.box {
+  width: 200px;
+  border: 2px solid #333;
+  <span class="hl">margin: 25px;</span>         /* 外側余白 */
+}</code></pre>
+        <div class="demo">
+          <iframe title="Margin領域デモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:0;background:#fafafa}.outer{background:#f9f0e6;padding:1px;border:1px dashed #b06d20}.box{width:200px;margin:25px;padding:8px;border:2px solid #333;background:#fff;text-align:center}</style></head><body><div class="outer"><div class="box">Margin（茶）で周りから離れる</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       1.1.2 ボックスの種類 (display)
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 1.1.2 🔴</span>
+      <h2 class="card-title">1.1.2　ボックスの種類<span class="en">/ display: block | inline | inline-block</span></h2>
+      <p class="card-desc">display プロパティで幅・高さの指定可否、要素の並び、上下余白の適用範囲が決まる。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="block" aria-selected="true">block</button>
+      <button class="tab" role="tab" type="button" data-tab="inline" aria-selected="false">inline</button>
+      <button class="tab" role="tab" type="button" data-tab="inlineblock" aria-selected="false">inline-block</button>
+    </div>
+
+    <div class="panel" data-panel="block">
+      <div class="card-body">
+        <pre class="code"><code>.item {
+  <span class="hl">display: block;</span>
+  width: 180px; height: 40px;
+  margin: 8px 0;
+}</code></pre>
+        <div class="demo">
+          <iframe title="display blockデモ" height="170" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}.item{display:block;width:180px;height:40px;margin:8px 0;background:#e3f2fd;border:1px solid #1976d2;padding:6px;box-sizing:border-box}</style></head><body><div class="item">要素1 (block: 改行が入る)</div><div class="item">要素2 (幅・高さ指定有効)</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="inline" hidden>
+      <div class="card-body">
+        <pre class="code"><code>.item {
+  <span class="hl">display: inline;</span>
+  <span class="hl">width: 180px; height: 40px;</span> /* 無視される */
+  <span class="hl">margin: 20px 8px;</span>          /* 上下マージン無視 */
+}</code></pre>
+        <div class="demo">
+          <iframe title="display inlineデモ" height="170" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}.item{display:inline;width:180px;height:40px;margin:20px 8px;background:#fff3e0;border:1px solid #e65100;padding:6px}</style></head><body><span class="item">要素1 (inline)</span><span class="item">要素2 (横に並ぶ・幅高さ無効)</span></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="inlineblock" hidden>
+      <div class="card-body">
+        <pre class="code"><code>.item {
+  <span class="hl">display: inline-block;</span>
+  width: 140px; height: 50px;
+  margin: 6px;
+}</code></pre>
+        <div class="demo">
+          <iframe title="display inline-blockデモ" height="170" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}.item{display:inline-block;width:140px;height:50px;margin:6px;background:#e8f5e9;border:1px solid #2e7d32;padding:6px;box-sizing:border-box}</style></head><body><div class="item">要素1 (横並び)</div><div class="item">要素2 (幅高さ有効)</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <table class="spec-table">
+      <thead>
+        <tr>
+          <th>項目</th>
+          <th>inline</th>
+          <th>block</th>
+          <th>inline-block</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>幅・高さの指定</th>
+          <td>不可（無視される）</td>
+          <td>可能</td>
+          <td>可能</td>
+        </tr>
+        <tr>
+          <th>横幅の初期値</th>
+          <td>内容の幅依存</td>
+          <td>親要素の幅（100%）</td>
+          <td>内容の幅依存</td>
+        </tr>
+        <tr>
+          <th>他要素との並び</th>
+          <td>横に並ぶ</td>
+          <td>前後に改行（縦積み）</td>
+          <td>横に並ぶ</td>
+        </tr>
+        <tr>
+          <th>上下余白</th>
+          <td>左右のみ（上下無視）</td>
+          <td>上下左右すべて可能</td>
+          <td>上下左右すべて可能</td>
+        </tr>
+        <tr>
+          <th>代表的なデフォルト要素</th>
+          <td><code>span</code>, <code>a</code>, <code>strong</code>, <code>img</code></td>
+          <td><code>div</code>, <code>p</code>, <code>h1-h6</code>, <code>ul</code></td>
+          <td><code>button</code>, <code>input</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ============================================================
+       1.2.1 幅と高さの指定
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 1.2.1 🔴</span>
+      <h2 class="card-title">1.2.1　幅と高さの指定とキーワード<span class="en">/ width, height, min/max &amp; intrinsic sizing</span></h2>
+      <p class="card-desc">コンテンツの幅・高さを指定する。min/max による上限下限設定、内在的サイズ指定。キーワード（min-content, max-content, fit-content）。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="basic" aria-selected="true">width / height</button>
+      <button class="tab" role="tab" type="button" data-tab="minmax" aria-selected="false">min / max</button>
+      <button class="tab" role="tab" type="button" data-tab="mincontent" aria-selected="false">min-content</button>
+      <button class="tab" role="tab" type="button" data-tab="maxcontent" aria-selected="false">max-content</button>
+      <button class="tab" role="tab" type="button" data-tab="fitcontent" aria-selected="false">fit-content</button>
+    </div>
+
+    <div class="panel" data-panel="basic">
+      <div class="card-body">
+        <pre class="code"><code>.box {
+  <span class="hl">width: 50%;</span>
+  <span class="hl">height: 60px;</span>
+  background: #e3f2fd;
+}</code></pre>
+        <div class="demo">
+          <iframe title="width/heightデモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}.parent{width:100%;background:#eee;padding:8px}.box{width:50%;height:60px;background:#e3f2fd;border:1px solid #1976d2;padding:6px;box-sizing:border-box}</style></head><body><div class="parent"><div class="box">幅 50% / 高さ 60px</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="minmax" hidden>
+      <div class="card-body">
+        <pre class="code"><code>.box {
+  width: 100%;
+  <span class="hl">min-width: 180px;</span>
+  <span class="hl">max-width: 280px;</span>
+  background: #fff3e0;
+}</code></pre>
+        <div class="demo">
+          <iframe title="min/max-widthデモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}.box{width:100%;min-width:180px;max-width:280px;background:#fff3e0;border:1px solid #e65100;padding:8px;box-sizing:border-box}</style></head><body><div class="box">最小180px〜最大280pxの範囲で親幅に追従</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="mincontent" hidden>
+      <div class="card-body">
+        <pre class="code"><code>.box {
+  <span class="hl">width: min-content;</span>
+  background: #e8f5e9;
+  border: 1px solid #2e7d32;
+}</code></pre>
+        <div class="demo">
+          <iframe title="min-contentデモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}.box{width:min-content;background:#e8f5e9;border:1px solid #2e7d32;padding:8px}</style></head><body><div class="box">HyperText Markup Language</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="maxcontent" hidden>
+      <div class="card-body">
+        <pre class="code"><code>.box {
+  <span class="hl">width: max-content;</span>
+  background: #f3e5f5;
+  border: 1px solid #7b1fa2;
+}</code></pre>
+        <div class="demo">
+          <iframe title="max-contentデモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}.parent{width:200px;background:#eee;padding:4px;overflow:visible}.box{width:max-content;background:#f3e5f5;border:1px solid #7b1fa2;padding:8px}</style></head><body><div class="parent"><div class="box">HyperText Markup Language (折り返さず自動拡張)</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="fitcontent" hidden>
+      <div class="card-body">
+        <pre class="code"><code>.box {
+  <span class="hl">width: fit-content;</span>
+  background: #e0f7fa;
+  border: 1px solid #0097a7;
+}</code></pre>
+        <div class="demo">
+          <iframe title="fit-contentデモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}.parent{width:220px;background:#eee;padding:4px}.box{width:fit-content;background:#e0f7fa;border:1px solid #0097a7;padding:8px}</style></head><body><div class="parent"><div class="box">HyperText Markup Language (最大を目指し親幅で折り返す)</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       1.3.1 ボーダーのスタイル・色・太さ
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 1.3.1 🔴</span>
+      <h2 class="card-title">1.3.1　ボーダーの指定<span class="en">/ border-style, color &amp; width</span></h2>
+      <p class="card-desc">border-[方向] または border 一括指定。スタイル（線種）・太さ・色を設定する。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="basicborder" aria-selected="true">実線・二重線</button>
+      <button class="tab" role="tab" type="button" data-tab="dots" aria-selected="false">点線・破線</button>
+      <button class="tab" role="tab" type="button" data-tab="threed" aria-selected="false">立体線 (groove / ridge...)</button>
+      <button class="tab" role="tab" type="button" data-tab="sides" aria-selected="false">4方向個別指定</button>
+    </div>
+
+    <div class="panel" data-panel="basicborder">
+      <div class="card-body">
+        <pre class="code"><code>.box1 { <span class="hl">border: 3px solid #111;</span> }
+.box2 { <span class="hl">border: 6px double #d02020;</span> }</code></pre>
+        <div class="demo">
+          <iframe title="実線・二重線デモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}.box1{border:3px solid #111;padding:8px;margin-bottom:8px}.box2{border:6px double #d02020;padding:8px}</style></head><body><div class="box1">solid (実線 3px)</div><div class="box2">double (二重線 6px)</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="dots" hidden>
+      <div class="card-body">
+        <pre class="code"><code>.box1 { <span class="hl">border: 3px dotted #1976d2;</span> }
+.box2 { <span class="hl">border: 3px dashed #2e7d32;</span> }</code></pre>
+        <div class="demo">
+          <iframe title="点線・破線デモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}.box1{border:3px dotted #1976d2;padding:8px;margin-bottom:8px}.box2{border:3px dashed #2e7d32;padding:8px}</style></head><body><div class="box1">dotted (点線)</div><div class="box2">dashed (破線)</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="threed" hidden>
+      <div class="card-body">
+        <pre class="code"><code>.g { <span class="hl">border: 6px groove #999;</span> }
+.r { <span class="hl">border: 6px ridge #999;</span> }
+.i { <span class="hl">border: 6px inset #999;</span> }
+.o { <span class="hl">border: 6px outset #999;</span> }</code></pre>
+        <div class="demo">
+          <iframe title="立体ボーダーデモ" height="180" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.4 sans-serif;margin:10px;color:#111;display:grid;grid-template-columns:1fr 1fr;gap:8px}div{padding:8px;background:#eee;text-align:center}.g{border:6px groove #aaa}.r{border:6px ridge #aaa}.i{border:6px inset #aaa}.o{border:6px outset #aaa}</style></head><body><div class="g">groove (溝)</div><div class="r">ridge (山)</div><div class="i">inset (凹)</div><div class="o">outset (凸)</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="sides" hidden>
+      <div class="card-body">
+        <pre class="code"><code>p {
+  <span class="hl">border-top: 4px solid red;</span>
+  <span class="hl">border-bottom: thick #00cccc dotted;</span>
+  <span class="hl">border-left: dashed thin green;</span>
+  <span class="hl">border-right: 8px solid purple;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="4方向個別ボーダーデモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}p{border-top:4px solid red;border-bottom:thick #00cccc dotted;border-left:dashed thin green;border-right:8px solid purple;padding:12px;background:#fff}</style></head><body><p>4方向ごとに異なるスタイル・太さ・色を指定</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       1.3.2 個別にボーダーの設定
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 1.3.2 🟡</span>
+      <h2 class="card-title">1.3.2　個別にボーダーの設定<span class="en">/ border-style, border-color &amp; border-width mapping</span></h2>
+      <p class="card-desc">border-style / border-color / border-width に指定する値の個数（1〜4個）による時計回り（上→右→下→左）の方向マッピング規則と方向個別指定。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="bordermapping" aria-selected="true">1〜4値の順時針マッピング</button>
+      <button class="tab" role="tab" type="button" data-tab="bordersides" aria-selected="false">border-[方向]-[種類] の個別指定</button>
+    </div>
+
+    <div class="panel" data-panel="bordermapping">
+      <div class="card-body">
+        <div>
+          <pre class="code"><code>/* 1個: 全方向（上右下左） */
+border-style: solid;
+/* 2個: 上下 左右 */
+border-width: <span class="hl">10px 20px</span>;
+/* 3個: 上 左右 下 */
+border-style: <span class="hl">dotted double solid</span>;
+/* 4個: 上 右 下 左（時計回り） */
+border-color: <span class="hl">red blue green orange</span>;</code></pre>
+          <table class="spec-table">
+            <thead>
+              <tr>
+                <th>指定個数</th>
+                <th>上 (Top)</th>
+                <th>右 (Right)</th>
+                <th>下 (Bottom)</th>
+                <th>左 (Left)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th>1個</th>
+                <td>1番目</td>
+                <td>1番目</td>
+                <td>1番目</td>
+                <td>1番目</td>
+              </tr>
+              <tr>
+                <th>2個</th>
+                <td>1番目</td>
+                <td>2番目</td>
+                <td>1番目</td>
+                <td>2番目</td>
+              </tr>
+              <tr>
+                <th>3個</th>
+                <td>1番目</td>
+                <td>2番目</td>
+                <td>3番目</td>
+                <td>2番目</td>
+              </tr>
+              <tr>
+                <th>4個</th>
+                <td>1番目</td>
+                <td>2番目</td>
+                <td>3番目</td>
+                <td>4番目</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="demo">
+          <iframe title="ボーダー1〜4値マッピングデモ" height="220" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:12px;color:#111}.box{margin-bottom:8px;padding:6px;background:#fff;text-align:center}.b1{border-style:solid;border-width:4px;border-color:#d02020}.b2{border-style:solid;border-width:8px 2px;border-color:#1976d2}.b4{border-style:solid;border-width:4px;border-color:red blue green orange}</style></head><body><div class="box b1">1個指定: 4px 全方向同仕様</div><div class="box b2">2個指定: 上下8px / 左右2px</div><div class="box b4">4個指定: 上赤 / 右青 / 下緑 / 左橙</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="bordersides" hidden>
+      <div class="card-body">
+        <pre class="code"><code>p {
+  border-style: solid;
+  /* 方向と種類を両方指定 */
+  <span class="hl">border-top-width: thin;</span>
+  <span class="hl">border-bottom-width: medium;</span>
+  <span class="hl">border-left-width: thick;</span>
+  <span class="hl">border-right-color: #d02020;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="方向と種類の個別指定デモ" height="160" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}p{border-style:solid;border-top-width:2px;border-bottom-width:6px;border-left-width:10px;border-right-color:#d02020;padding:10px;background:#fff}</style></head><body><p>border-[方向]-[種類]（border-top-width 等）で特定方向のプロパティをピンポイントに変更</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       1.3.3 ボーダーの角を丸くする（border-radius）
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 1.3.3 🔴</span>
+      <h2 class="card-title">1.3.3　ボーダーの角を丸くする<span class="en">/ border-radius &amp; corner properties</span></h2>
+      <p class="card-desc">border-radius でボックスの角を丸く整形する。1〜4値の角マッピング、50% 指定による円形・楕円形作成、および頂角個別指定。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="radiusbasic" aria-selected="true">基本（1〜4値の対角マッピング）</button>
+      <button class="tab" role="tab" type="button" data-tab="radiuscircle" aria-selected="false">50%で円形・楕円形</button>
+      <button class="tab" role="tab" type="button" data-tab="radiussides" aria-selected="false">各頂角個別指定</button>
+    </div>
+
+    <div class="panel" data-panel="radiusbasic">
+      <div class="card-body">
+        <div>
+          <pre class="code"><code>/* 1個: 4角すべて */
+border-radius: 12px;
+
+/* 2個: [左上&右下] [右上&左下] */
+border-radius: <span class="hl">20px 5px</span>;
+
+/* 3個: [左上] [右上&左下] [右下] */
+border-radius: <span class="hl">20px 10px 0</span>;
+
+/* 4個: 左上 右上 右下 左下（時計回り） */
+border-radius: <span class="hl">20px 15px 10px 5px</span>;</code></pre>
+          <table class="spec-table">
+            <thead>
+              <tr>
+                <th>指定個数</th>
+                <th>左上 (Top-Left)</th>
+                <th>右上 (Top-Right)</th>
+                <th>右下 (Bottom-Right)</th>
+                <th>左下 (Bottom-Left)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th>1個</th>
+                <td>1番目</td>
+                <td>1番目</td>
+                <td>1番目</td>
+                <td>1番目</td>
+              </tr>
+              <tr>
+                <th>2個</th>
+                <td>1番目</td>
+                <td>2番目</td>
+                <td>1番目</td>
+                <td>2番目</td>
+              </tr>
+              <tr>
+                <th>3個</th>
+                <td>1番目</td>
+                <td>2番目</td>
+                <td>3番目</td>
+                <td>2番目</td>
+              </tr>
+              <tr>
+                <th>4個</th>
+                <td>1番目</td>
+                <td>2番目</td>
+                <td>3番目</td>
+                <td>4番目</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="demo">
+          <iframe title="border-radius 1〜4値デモ" height="200" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.4 sans-serif;margin:12px;color:#111;display:grid;grid-template-columns:1fr 1fr;gap:8px}.b{background:#e3f2fd;border:2px solid #1976d2;padding:10px;text-align:center}.b1{border-radius:12px}.b2{border-radius:20px 5px}.b3{border-radius:20px 10px 0}.b4{border-radius:25px 15px 5px 0}</style></head><body><div class="b b1">1個: 12px (全角)</div><div class="b b2">2個: 20px 5px</div><div class="b b3">3個: 20px 10px 0</div><div class="b b4">4個: 25px 15px 5px 0</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="radiuscircle" hidden>
+      <div class="card-body">
+        <pre class="code"><code>/* 正方形要素 + 50% = 完全な正円 */
+.circle {
+  width: 80px; height: 80px;
+  <span class="hl">border-radius: 50%;</span>
+}
+
+/* 長方形要素 + 50% = 楕円 (Ellipse) */
+.ellipse {
+  width: 140px; height: 70px;
+  <span class="hl">border-radius: 50%;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="border-radius 50%デモ" height="170" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.4 sans-serif;margin:12px;color:#111;display:flex;gap:16px;align-items:center;justify-content:center}.circle{width:80px;height:80px;border-radius:50%;background:#e8f5e9;border:2px solid #2e7d32;display:flex;align-items:center;justify-content:center;text-align:center}.ellipse{width:130px;height:65px;border-radius:50%;background:#fff3e0;border:2px solid #e65100;display:flex;align-items:center;justify-content:center;text-align:center}</style></head><body><div class="circle">正方形<br>50% (正円)</div><div class="ellipse">長方形<br>50% (楕円)</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="radiussides" hidden>
+      <div class="card-body">
+        <pre class="code"><code>.card-box {
+  /* 各頂角を個別にプロパティ指定 */
+  <span class="hl">border-top-left-radius: 20px;</span>
+  <span class="hl">border-top-right-radius: 0;</span>
+  <span class="hl">border-bottom-right-radius: 20px;</span>
+  <span class="hl">border-bottom-left-radius: 0;</span>
+  border: 2px solid #111;
+}</code></pre>
+        <div class="demo">
+          <iframe title="頂角個別指定デモ" height="160" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:16px;color:#111}.box{border:2px solid #111;background:#fff;padding:12px;border-top-left-radius:20px;border-top-right-radius:0;border-bottom-right-radius:20px;border-bottom-left-radius:0;text-align:center}</style></head><body><div class="box">border-top-left-radius: 20px;<br>border-bottom-right-radius: 20px;<br>（対角線のみ角丸デザイン）</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       1.3.4 テーブルの罫線（border-collapse）
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 1.3.4 🟡</span>
+      <h2 class="card-title">1.3.4　テーブルの罫線<span class="en">/ border-collapse: separate vs collapse</span></h2>
+      <p class="card-desc">table 要素の枠線表示方法を制御する。HTML の border 属性は非推奨・廃止のため CSS の border と border-collapse を使用する。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="collapsecompare" aria-selected="true">separate vs collapse</button>
+    </div>
+
+    <div class="panel" data-panel="collapsecompare">
+      <div class="card-body">
+        <pre class="code"><code>/* separate: 各セルが独立したボーダーを持つ（初期値 / 二重線） */
+table.sep {
+  <span class="hl">border-collapse: separate;</span>
+}
+
+/* collapse: 隣接するセルのボーダーが結合・共有される（1本線） */
+table.col {
+  <span class="hl">border-collapse: collapse;</span>
+}
+
+table, td, th {
+  border: 2px solid #333;
+}</code></pre>
+        <div class="demo">
+          <iframe title="border-collapse比較デモ" height="190" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.4 sans-serif;margin:10px;color:#111;display:flex;gap:12px}table{border:2px solid #333;background:#fff}th,td{border:1px solid #333;padding:4px 8px}.sep{border-collapse:separate}.col{border-collapse:collapse}</style></head><body><div><strong>separate (二重線)</strong><table class="sep"><tr><th>A</th><th>B</th></tr><tr><td>1</td><td>2</td></tr></table></div><div><strong>collapse (結合)</strong><table class="col"><tr><th>A</th><th>B</th></tr><tr><td>1</td><td>2</td></tr></table></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       1.4.1 パディングの設定
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 1.4.1 🔴</span>
+      <h2 class="card-title">1.4.1　パディングの設定<span class="en">/ padding shorthand &amp; percentage</span></h2>
+      <p class="card-desc">コンテンツとボーダーの間の内側余白。1〜4個の値による一括指定規則と % 指定の基準。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="padshorthand" aria-selected="true">ショートハンド（1〜4個）</button>
+      <button class="tab" role="tab" type="button" data-tab="padpercent" aria-selected="false">% 指定の注意点</button>
+    </div>
+
+    <div class="panel" data-panel="padshorthand">
+      <div class="card-body">
+        <pre class="code"><code>/* 1個: 全方向 */      padding: 15px;
+/* 2個: 上下 左右 */   padding: 10px 30px;
+/* 3個: 上 左右 下 */  padding: 10px 30px 20px;
+/* 4個: 上 右 下 左 */ <span class="hl">padding: 5px 25px 15px 5px;</span></code></pre>
+        <div class="demo">
+          <iframe title="paddingショートハンドデモ" height="160" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}.box{border:2px solid #2e7d32;background:#e8f5e9;padding:5px 25px 15px 5px;display:inline-block}.inner{background:#fff;padding:4px;border:1px dashed #666}</style></head><body><div class="box"><div class="inner">padding: 5px 25px 15px 5px;<br>（時計回り：上5 / 右25 / 下15 / 左5）</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="padpercent" hidden>
+      <div class="card-body">
+        <pre class="code"><code>.box {
+  /* 上下パディングの % も親要素の「幅」が基準となる */
+  <span class="hl">padding: 10%;</span>
+  border: 1px solid #1976d2;
+  background: #e3f2fd;
+}</code></pre>
+        <div class="demo">
+          <iframe title="padding %指定デモ" height="160" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}.parent{width:250px;background:#eee;padding:1px}.box{padding:10%;border:1px solid #1976d2;background:#e3f2fd;font-weight:bold;text-align:center}</style></head><body><div class="parent"><div class="box">親幅(250px)の10% = 25px が<br>上下左右すべてのパディングになる</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       1.4.2 マージンの設定
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 1.4.2 🔴</span>
+      <h2 class="card-title">1.4.2　マージンの設定と相殺<span class="en">/ margin, auto centering &amp; collapsing</span></h2>
+      <p class="card-desc">ボーダーの外側の余白。auto による中央揃え、隣接ブロック要素の「マージンの相殺」。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="autoalign" aria-selected="true">margin: auto (中央揃え)</button>
+      <button class="tab" role="tab" type="button" data-tab="collapsing" aria-selected="false">マージンの相殺 (Collapsing)</button>
+    </div>
+
+    <div class="panel" data-panel="autoalign">
+      <div class="card-body">
+        <pre class="code"><code>.box {
+  width: 60%;
+  <span class="hl">margin-left: auto;</span>
+  <span class="hl">margin-right: auto;</span>
+  /* または margin: 0 auto; */
+}</code></pre>
+        <div class="demo">
+          <iframe title="margin autoデモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}.parent{background:#eee;padding:8px}.box{width:60%;margin:0 auto;background:#fff3e0;border:1px solid #e65100;padding:8px;text-align:center}</style></head><body><div class="parent"><div class="box">左右 auto でブロック要素が中央揃え</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="collapsing" hidden>
+      <div class="card-body">
+        <pre class="code"><code>.elem1 { <span class="hl">margin-bottom: 30px;</span> }
+.elem2 { <span class="hl">margin-top: 20px;</span> }
+/* 実際の余白は 30 + 20 = 50px ではなく */
+/* 大きい方の【30px】に相殺される */</code></pre>
+        <div class="demo">
+          <iframe title="マージン相殺デモ" height="170" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111;background:#fafafa}.elem1{margin-bottom:30px;background:#ffebee;border:1px solid #c62828;padding:6px}.elem2{margin-top:20px;background:#e8eaf6;border:1px solid #283593;padding:6px}</style></head><body><div class="elem1">要素1 (margin-bottom: 30px)</div><div class="elem2">要素2 (margin-top: 20px) → 間隔は30px</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       1.5.1 / 1.5.2 要素サイズの計算と box-sizing
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 1.5.1 / 1.5.2 🔴</span>
+      <h2 class="card-title">1.5.1 / 1.5.2　要素サイズの計算と box-sizing<span class="en">/ content-box vs border-box</span></h2>
+      <p class="card-desc">通常計算（content-box）は幅＋余白＋枠線が全体の幅。border-box を使うと指定サイズ内にすべてが収まる。</p>
+    </div>
+
+    <div class="d-fig">
+      <svg viewBox="0 0 600 130" role="img" aria-label="content-box と border-box の幅計算の違いを示す図解">
+        <!-- content-box -->
+        <g transform="translate(10, 10)">
+          <rect x="0" y="0" width="270" height="110" fill="#fafafa" stroke="#ccc"/>
+          <text x="135" y="20" text-anchor="middle" font-size="12" font-weight="700" fill="#d02020">box-sizing: content-box (初期値)</text>
+          <!-- Outer border total -->
+          <rect x="35" y="32" width="200" height="60" fill="#ffebee" stroke="#d02020" stroke-width="4"/>
+          <rect x="55" y="44" width="160" height="36" fill="#e3f2fd" stroke="#1976d2" stroke-dasharray="2,2"/>
+          <text x="135" y="66" text-anchor="middle" font-size="11" fill="#1565c0">width: 200px (コンテンツのみ)</text>
+          <text x="135" y="104" text-anchor="middle" font-size="11" fill="#666">全体幅 = 200 + padding×2 + border×2 (膨らむ)</text>
+        </g>
+        <!-- border-box -->
+        <g transform="translate(320, 10)">
+          <rect x="0" y="0" width="270" height="110" fill="#fafafa" stroke="#ccc"/>
+          <text x="135" y="20" text-anchor="middle" font-size="12" font-weight="700" fill="#2e7d32">box-sizing: border-box</text>
+          <rect x="35" y="32" width="200" height="60" fill="#e8f5e9" stroke="#2e7d32" stroke-width="4"/>
+          <rect x="55" y="44" width="160" height="36" fill="#ffffff" stroke="#999" stroke-dasharray="2,2"/>
+          <text x="135" y="66" text-anchor="middle" font-size="11" fill="#2e7d32">width: 200px (ボーダー含む全体)</text>
+          <text x="135" y="104" text-anchor="middle" font-size="11" fill="#666">全体幅 = 指定通りの 200px に固定</text>
+        </g>
+      </svg>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="contentbox" aria-selected="true">content-box (デフォルト)</button>
+      <button class="tab" role="tab" type="button" data-tab="borderbox" aria-selected="false">border-box (推奨)</button>
+      <button class="tab" role="tab" type="button" data-tab="gridfit" aria-selected="false">横並びレイアウトでの対比</button>
+    </div>
+
+    <div class="panel" data-panel="contentbox">
+      <div class="card-body">
+        <pre class="code"><code>.box {
+  <span class="hl">box-sizing: content-box;</span>
+  width: 200px;
+  padding: 15px;
+  border: 5px solid #d02020;
+  /* 全体幅 = 200 + 30 + 10 = 240px */
+}</code></pre>
+        <div class="demo">
+          <iframe title="content-boxデモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}.wrap{width:200px;background:#eee;border-left:2px solid #000;border-right:2px solid #000;padding:2px 0}.box{box-sizing:content-box;width:200px;padding:15px;border:5px solid #d02020;background:#ffebee;font-size:11px}</style></head><body><div class="wrap"><div class="box">指定幅 200px から左右に飛び出す (240px)</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="borderbox" hidden>
+      <div class="card-body">
+        <pre class="code"><code>.box {
+  <span class="hl">box-sizing: border-box;</span>
+  width: 200px;
+  padding: 15px;
+  border: 5px solid #2e7d32;
+  /* 全体幅 = 指定通りの 200px */
+}</code></pre>
+        <div class="demo">
+          <iframe title="border-boxデモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}.wrap{width:200px;background:#eee;border-left:2px solid #000;border-right:2px solid #000;padding:2px 0}.box{box-sizing:border-box;width:200px;padding:15px;border:5px solid #2e7d32;background:#e8f5e9;font-size:11px}</style></head><body><div class="wrap"><div class="box">指定幅 200px の枠内に綺麗に収まる</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="gridfit" hidden>
+      <div class="card-body">
+        <pre class="code"><code>/* 4等分(width: 25%)に border を付ける場合 */
+.col {
+  display: inline-block;
+  width: 25%;
+  border: 2px solid #333;
+  <span class="hl">box-sizing: border-box;</span> /* これがないと改行される */
+}</code></pre>
+        <div class="demo">
+          <iframe title="横並び比較デモ" height="160" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.4 sans-serif;margin:8px;color:#111}.parent{font-size:0;white-space:nowrap}.col{display:inline-block;width:25%;border:2px solid #333;padding:6px;box-sizing:border-box;font-size:12px;background:#e3f2fd;text-align:center}</style></head><body><div class="parent"><div class="col">列1</div><div class="col">列2</div><div class="col">列3</div><div class="col">列4</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       1.5.3 CSS関数 calc()
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 1.5.3 🔴</span>
+      <h2 class="card-title">1.5.3　CSS関数 calc()<span class="en">/ calc() function &amp; whitespace rules</span></h2>
+      <p class="card-desc">CSS 内で四則演算（+ - * /）を行い、異なる単位（% と px 等）を混在させた動的なサイズ計算を可能にするプロパティ関数。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="calcbasic" aria-selected="true">基本構文（calc(100% - 20px)）</button>
+      <button class="tab" role="tab" type="button" data-tab="calcspace" aria-selected="false">+と-の両側半角空格必須</button>
+    </div>
+
+    <div class="panel" data-panel="calcbasic">
+      <div class="card-body">
+        <pre class="code"><code>/* 横並び4等分でマージン 10px を差し引いた幅計算 */
+.box {
+  width: <span class="hl">calc(25% - 10px)</span>;
+  margin-right: 10px;
+  display: inline-block;
+  box-sizing: border-box;
+}
+
+/* 親要素から 40px 引いた幅を動的に設定 */
+.full-minus {
+  width: <span class="hl">calc(100% - 40px)</span>;
+  margin: 0 auto;
+}</code></pre>
+        <div class="demo">
+          <iframe title="calc基本構文デモ" height="160" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.4 sans-serif;margin:8px;color:#111;background:#fafafa}.wrap{font-size:0;white-space:nowrap;background:#eee;padding:8px 0 8px 8px}.box{display:inline-block;font-size:12px;width:calc(25% - 8px);margin-right:8px;padding:8px 4px;background:#e8f5e9;border:1px solid #2e7d32;box-sizing:border-box;text-align:center}</style></head><body><div class="wrap"><div class="box">1 (25%-8px)</div><div class="box">2 (25%-8px)</div><div class="box">3 (25%-8px)</div><div class="box">4 (25%-8px)</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="calcspace" hidden>
+      <div class="card-body">
+        <pre class="code"><code>/* ✅ 正しい構文: + や - の前後に半角スペースを必ず開ける */
+width: <span class="hl">calc(100% - 20px)</span>;  /* 正常に計算される */
+font-size: <span class="hl">calc(2em + 4px)</span>; /* 正常に計算される */
+
+/* ❌ 構文エラー (Invalid): スペースがないと負の数や識別子と見なされる */
+width: calc(100%-20px);   /* ❌ 無効（適用されない） */
+font-size: calc(2em+4px);  /* ❌ 無効（適用されない） */
+
+/* ※ 乗算(*) や 除算(/) はスペースなしでも構文上動作するが、
+   統一して前後にスペースを入れるのが推奨規約 */</code></pre>
+        <div class="demo">
+          <iframe title="calcスペースルールデモ" height="160" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:12px;color:#111}.valid{width:calc(100% - 30px);background:#e8f5e9;border:1px solid #2e7d32;padding:8px;margin-bottom:8px}.invalid{width:calc(100%-30px);background:#ffebee;border:1px solid #c62828;padding:8px}</style></head><body><div class="valid">✅ calc(100% - 30px) : スペースあり → 正常適用</div><div class="invalid">❌ calc(100%-30px) : スペースなし → 無効（幅100%のまま）</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       1.6.1 box-shadow プロパティ
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 1.6.1 🟡</span>
+      <h2 class="card-title">1.6.1　box-shadow プロパティ<span class="en">/ box-shadow syntax &amp; parameter order</span></h2>
+      <p class="card-desc">要素にドロップシャドウ（影）を付与する。水平オフセット・垂直オフセット・ぼかし半径・広がり・色の指定順序。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="shadowbasic" aria-selected="true">水平・垂直・ぼかし・色</button>
+    </div>
+
+    <div class="panel" data-panel="shadowbasic">
+      <div class="card-body">
+        <pre class="code"><code>/* 構文: box-shadow: 水平オフセット 垂直オフセット ぼかし半径 色; */
+
+/* 1. 基本（水平10px, 垂直10px, ぼかしなし, 色初期値/currentColor） */
+box-shadow: <span class="hl">10px 10px</span>;
+
+/* 2. ぼかし付き（水平5px, 垂直5px, ぼかし8px, 黒半透明） */
+box-shadow: <span class="hl">5px 5px 8px rgba(0, 0, 0, 0.3)</span>;
+
+/* 3. 影の削除 */
+box-shadow: <span class="hl">none</span>;</code></pre>
+        <div class="demo">
+          <iframe title="box-shadow基本デモ" height="170" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.4 sans-serif;margin:12px;color:#111;display:flex;gap:16px;justify-content:center;align-items:center}.box1{width:110px;height:70px;background:#fff;border:2px solid #d02020;box-shadow:8px 8px #d02020;padding:8px;text-anchor:middle;text-align:center}.box2{width:110px;height:70px;background:#fff;border:1px solid #ccc;box-shadow:4px 6px 12px rgba(0,0,0,0.25);padding:8px;text-align:center}</style></head><body><div class="box1">8px 8px<br>(ぼかしなし)</div><div class="box2">4px 6px 12px<br>(ぼかしあり)</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* ★このスクリプトは一行も変更しない。丸ごとコピーすること★ */
+
+/* タブ: [data-tabs] ごとにスコープされる。カードが何枚あっても干渉しない */
+document.querySelectorAll('[data-tabs]').forEach(function (group) {
+  var tabs = group.querySelectorAll(':scope > .tabs > .tab');
+  var panels = group.querySelectorAll(':scope > .panel');
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var key = tab.dataset.tab;
+      tabs.forEach(function (t) { t.setAttribute('aria-selected', String(t === tab)); });
+      panels.forEach(function (p) { p.hidden = (p.dataset.panel !== key); });
+    });
+  });
+});
+
+/* テーマ固定（ライト）。切替機能は廃止 */
+</script>
+</body>
+</html>

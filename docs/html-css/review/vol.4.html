@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HTML&amp;CSS 期末試験 復習シート — vol.4 リソースを指定する要素</title>
+<style>
+/* =========================================================
+   [1] テーマ (Swiss Vignelli Palette)
+   固定ライト。暗色モードの切替は廃止。
+   ========================================================= */
+:root {
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #666666;
+  --line: #cccccc;
+  --hairline: #e2e2e2;
+  --surface: #f5f5f3;
+  --accent: #d02020;        /* 差分・強調のみに使用 */
+  --demo-bg: #ffffff;
+  --demo-fg: #111111;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Helvetica Neue", Helvetica, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic Medium", sans-serif;
+  line-height: 1.6;
+  text-wrap: pretty;
+  -webkit-text-size-adjust: 100%;
+}
+
+code, pre, .mono {
+  font-family: "SF Mono", "Menlo", "Consolas", monospace;
+}
+
+/* =========================================================
+   [2] Swiss Layout & Grid
+   ========================================================= */
+.wrap {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+@media (min-width: 900px) {
+  .wrap { padding: 0 32px; }
+}
+
+/* Header */
+.top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+}
+.brand-tag {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 2px 6px;
+  background: var(--fg);
+  color: var(--bg);
+}
+.volnav {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  font-size: 13px;
+  font-weight: 500;
+}
+.volnav a {
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 2px 4px;
+}
+.volnav a[aria-current="page"] {
+  color: var(--fg);
+  font-weight: 700;
+  border-bottom: 2px solid var(--fg);
+}
+
+/* Card & Panels */
+.card {
+  border-top: 1px solid var(--line);
+  padding: 32px 0;
+}
+.card-header {
+  margin-bottom: 20px;
+}
+.card-num {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 4px;
+  display: block;
+}
+.card-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+.card-title .en {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-left: 8px;
+}
+.card-desc {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.card-body {
+  display: grid;
+  gap: 16px;
+}
+@media (min-width: 900px) {
+  .card-body {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+}
+
+/* =========================================================
+   [3] Vignelli Tab Bar
+   ========================================================= */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.tab {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  border-bottom: none;
+  background: var(--surface);
+  color: var(--muted);
+  border-radius: 0;
+  transition: color 0.1s, background 0.1s;
+}
+.tab:hover {
+  color: var(--fg);
+  background: var(--bg);
+}
+.tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.tab[aria-selected="true"] {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
+}
+.panel[hidden] {
+  display: none;
+}
+
+/* =========================================================
+   [4] Code & Explanation Blocks
+   ========================================================= */
+pre.code {
+  margin: 0;
+  padding: 14px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.65;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  white-space: pre;
+}
+.hl {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* =========================================================
+   [5] Demo Frame
+   ========================================================= */
+.demo {
+  border: 1px solid var(--line);
+  background: var(--demo-bg);
+}
+.demo iframe {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: var(--demo-bg);
+}
+
+/* 概念図解・表 */
+.d-fig {
+  border: 1px solid var(--line);
+  background: #fffefc;
+  padding: 14px;
+  margin: 10px 0;
+}
+.d-fig svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.spec-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin-top: 10px;
+  background: var(--bg);
+}
+.spec-table th, .spec-table td {
+  border: 1px solid var(--hairline);
+  padding: 6px 10px;
+  text-align: left;
+}
+.spec-table th {
+  background: var(--surface);
+  font-weight: 700;
+  width: 30%;
+}
+</style>
+<style>
+/* === 375px 横溢れ修正（主代理が追加。設計・配色・書体には手を入れていない） === */
+.volnav{overflow-x:auto;min-width:0;flex:1 1 auto;scrollbar-width:none}
+.volnav::-webkit-scrollbar{display:none}
+.top{max-width:100%;overflow:hidden}
+.top>*{min-width:0}
+@media (max-width:899px){
+  .wrap{max-width:100%!important}
+  .card-body{display:block!important}
+  .card-body>*{width:auto!important;max-width:100%!important;min-width:0!important}
+  .card-body>*+*{margin-top:14px}
+  .panel [class*="col"]{width:auto!important;min-width:0!important;max-width:100%!important}
+}
+.wrap>*,.panel,.panel>*{min-width:0}
+pre,[class*="code"]{max-width:100%;min-width:0}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <span class="brand-tag">HTML&amp;CSS</span>
+  <nav class="volnav">
+    <a href="vol.1.html">1</a>
+    <a href="vol.2.html">2</a>
+    <a href="vol.3.html">3</a>
+    <a href="vol.4.html" aria-current="page">4</a>
+    <a href="vol.5.html">5</a>
+    <a href="vol.6.html">6</a>
+    <a href="vol.7.html">7</a>
+    <a href="vol.8.html">8</a>
+    <a href="vol.9.html">9</a>
+    <a href="vol.10.html">10</a>
+    <a href="vol.11.html">11</a>
+    <a href="vol.12.html">12</a>
+    <a href="vol.13.html">13</a>
+    <a href="vol.14.html">14</a>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <!-- ============================================================
+       SECTION 4.1.1 & 4.1.2: 画像フォーマットとピクセル (Image Formats & Pixels)
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 4.1.1 &amp; 4.1.2</span>
+      <h2 class="card-title">画像フォーマットとピクセル<span class="en">/ Image Formats &amp; Pixels</span></h2>
+      <p class="card-desc">Webで扱う画像形式の分類（ラスタ vs ベクタ）、主要拡張子ごとの圧縮特性、および画面表示の最小単位であるピクセル（Pixel）の概念。</p>
+
+      <table class="spec-table">
+        <tr>
+          <th>画像形式分類 / Classification</th>
+          <td>ラスタ形式（Raster / Bitmaps） vs ベクタ形式（Vector Graphics）</td>
+        </tr>
+        <tr>
+          <th>圧縮方式 / Compression</th>
+          <td>非可逆圧縮（Lossy Compression） vs 可逆圧縮（Lossless Compression）</td>
+        </tr>
+        <tr>
+          <th>画素単位 / Minimum Unit</th>
+          <td>ピクセル（Pixel / 画素） — 色情報（RGB）を持つ格子状の最小単位点</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="rvsv" aria-selected="true">1. ラスタ vs ベクタ</button>
+      <button class="tab" role="tab" type="button" data-tab="fmt" aria-selected="false">2. フォーマット比較表</button>
+      <button class="tab" role="tab" type="button" data-tab="px" aria-selected="false">3. ピクセルの概念</button>
+    </div>
+
+    <!-- Panel 1: rvsv -->
+    <div class="panel" data-panel="rvsv">
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- ラスタ形式 (PNG/JPG): ピクセルの集合。拡大するとドットが見える (ジャギ) --&gt;
+&lt;img <span class="hl">src="photo.jpg"</span> alt="ラスタ画像 (Raster)"&gt;
+
+&lt;!-- ベクタ形式 (SVG): 数式・座標で描画。拡大しても画質劣化なし (無段階拡大) --&gt;
+&lt;img <span class="hl">src="logo.svg"</span> alt="ベクタ画像 (Vector)"&gt;</code></pre>
+        <div class="demo">
+          <iframe title="ラスタ vs ベクタ デモ" height="200" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:12px;color:#111}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.box{border:1px solid #cbd5e1;padding:10px;border-radius:4px;background:#f8fafc}.ttl{font-weight:bold;margin-bottom:6px;font-size:13px;display:flex;align-items:center;gap:4px}</style></head><body><div class="grid"><div class="box"><div class="ttl" style="color:#d02020">■ ラスタ (Raster / Bitmap)</div><div style="background:#fff;border:1px solid #e2e8f0;padding:8px;text-align:center"><svg width="100" height="60" viewBox="0 0 100 60"><rect width="100" height="60" fill="#f1f5f9"/><circle cx="50" cy="30" r="22" fill="#ef4444" stroke="#991b1b" stroke-width="2" stroke-dasharray="2,2"/><text x="50" y="55" text-anchor="middle" font-size="9" fill="#7f1d1d">拡大時: 輪郭が鋸歯状(ジャギ)</text></svg></div><p style="margin:6px 0 0;font-size:11px;color:#64748b">.jpg / .png / .gif / .webp<br>写真・複雑な色階調に最適</p></div><div class="box"><div class="ttl" style="color:#0284c7">★ ベクタ (Vector Graphics)</div><div style="background:#fff;border:1px solid #e2e8f0;padding:8px;text-align:center"><svg width="100" height="60" viewBox="0 0 100 60"><rect width="100" height="60" fill="#f1f5f9"/><circle cx="50" cy="30" r="22" fill="#0284c7" stroke="#0369a1" stroke-width="2"/><text x="50" y="55" text-anchor="middle" font-size="9" fill="#0c4a6e">拡大時: 無段階で滑らか</text></svg></div><p style="margin:6px 0 0;font-size:11px;color:#64748b">.svg<br>ロゴ・アイコン・図形に最適</p></div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: fmt -->
+    <div class="panel" data-panel="fmt" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- 主要画像フォーマットの比較と用途 --&gt;
+&lt;!-- JPG : 写真・複雑なグラデーション（非可逆 / 1677万色 / 透過不可） --&gt;
+&lt;!-- PNG : ロゴ・イラスト・透明画像（可逆 / 1677万色 / Alpha透過） --&gt;
+&lt;!-- GIF : アニメーション・アイコン（可逆 / 256色 / 2値透過） --&gt;
+&lt;!-- WebP: 次世代規格。JPGの軽量＋PNGの透明＋GIFのアニメを統合 --&gt;
+&lt;!-- SVG : ベクタテキスト（拡大無損 / CSS・JS制御可能） --&gt;
+&lt;!-- BMP : Windows非圧縮。ファイルサイズ巨大のためWeb使用不可 --&gt;</code></pre>
+        <div class="demo">
+          <iframe title="フォーマット比較表 デモ" height="230" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:11px/1.4 sans-serif;margin:8px;color:#111}table{width:100%;border-collapse:collapse}th,td{border:1px solid #cbd5e1;padding:5px 6px;text-align:left}th{background:#f1f5f9;font-weight:bold}.ok{color:#166534;font-weight:bold}.ng{color:#991b1b}</style></head><body><table><thead><tr><th>形式</th><th>種別</th><th>圧縮</th><th>色数</th><th>透過</th><th>主な用途</th></tr></thead><tbody><tr><td><b>JPG</b></td><td>ラスタ</td><td>非可逆</td><td>1677万</td><td class="ng">×</td><td>写真、複雑な画像</td></tr><tr><td><b>PNG</b></td><td>ラスタ</td><td>可逆</td><td>1677万</td><td class="ok">○ (Alpha)</td><td>ロゴ、図形、イラスト</td></tr><tr><td><b>GIF</b></td><td>ラスタ</td><td>可逆</td><td>256色</td><td class="ok">○ (2値)</td><td>アニメーション</td></tr><tr><td><b>WebP</b></td><td>ラスタ</td><td>非/可逆</td><td>1677万</td><td class="ok">○</td><td>Web最適化次世代形式</td></tr><tr><td><b>SVG</b></td><td>ベクタ</td><td>-</td><td>無制限</td><td class="ok">○</td><td>アイコン、ロゴ、図形</td></tr><tr><td><b>BMP</b></td><td>ラスタ</td><td>非圧縮</td><td>1677万</td><td class="ng">×</td><td>Web使用不可（非推奨）</td></tr></tbody></table></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: px -->
+    <div class="panel" data-panel="px" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- ピクセル（Pixel / 画素）: 画像・画面の最小格子単位 --&gt;
+&lt;!-- 1px は R(赤) G(緑) B(青) の輝度情報を持つ --&gt;
+&lt;div style="<span class="hl">width: 200px; height: 100px;</span>"&gt;
+  幅200ピクセル × 高さ100ピクセル = 合計 20,000 画素
+&lt;/div&gt;</code></pre>
+        <div class="demo">
+          <iframe title="ピクセルの概念 デモ" height="200" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:12px;color:#111}.grid-container{display:flex;align-items:center;gap:16px}.px-box{width:80px;height:80px;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#94a3b8;border:1px solid #475569}.px-item{background:#38bdf8}.px-item:nth-child(even){background:#0284c7}</style></head><body><div class="grid-container"><div class="px-box"><div class="px-item"></div><div class="px-item"></div><div class="px-item"></div><div class="px-item"></div><div class="px-item"></div><div class="px-item"></div><div class="px-item"></div><div class="px-item"></div><div class="px-item"></div><div class="px-item"></div><div class="px-item"></div><div class="px-item"></div><div class="px-item"></div><div class="px-item"></div><div class="px-item"></div><div class="px-item"></div></div><div><strong style="color:#0284c7">ピクセル (Pixel = Picture Element)</strong><p style="margin:4px 0 0;font-size:11px;color:#475569">画面上に敷き詰められた「色情報の最小単位格子」。<br>ディスプレイの解像度（ppi: pixel per inch）が高いほど細密に表示される。</p></div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       SECTION 4.1.3: img 要素 (img Element)
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 4.1.3</span>
+      <h2 class="card-title">img 要素<span class="en">/ img Element</span></h2>
+      <p class="card-desc">画像および代替コンテンツ（Fallback Content）の表示。空要素。</p>
+
+      <table class="spec-table">
+        <tr>
+          <th>カテゴリー / Category</th>
+          <td>フロー（Flow）, フレージング（Phrasing）, エンベッディド（Embedded）, インタラクティブ（Interactive, usemap使用時）, パルパブル（Palpable）</td>
+        </tr>
+        <tr>
+          <th>コンテンツモデル / Content Model</th>
+          <td>なし（空要素）</td>
+        </tr>
+        <tr>
+          <th>主要属性 / Attributes</th>
+          <td><code>src</code> (必須), <code>alt</code>, <code>usemap</code>, <code>width</code>, <code>height</code>, グローバル属性</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="src" aria-selected="true">1. src 指定</button>
+      <button class="tab" role="tab" type="button" data-tab="alt" aria-selected="false">2. alt (エラー時代替)</button>
+      <button class="tab" role="tab" type="button" data-tab="width" aria-selected="false">3. width のみ指定</button>
+      <button class="tab" role="tab" type="button" data-tab="height" aria-selected="false">4. height のみ指定</button>
+      <button class="tab" role="tab" type="button" data-tab="both" aria-selected="false">5. width+height (比率変更)</button>
+    </div>
+
+    <!-- Panel 1: src -->
+    <div class="panel" data-panel="src">
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- images/cat01_640.jpg を標準表示 --&gt;
+&lt;img <span class="hl">src="images/cat01_640.jpg"</span>&gt;</code></pre>
+        <div class="demo">
+          <iframe title="img src デモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}</style></head><body><img src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22320%22 height=%22100%22 viewBox=%220 0 320 100%22%3E%3Crect width=%22320%22 height=%22100%22 fill=%22%23e2e8f0%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%23475569%22 font-size=%2214%22%3Ecat01_640.jpg (標準表示)%3C/text%3E%3C/svg%3E" alt="猫の写真"></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: alt -->
+    <div class="panel" data-panel="alt" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- パス間違い時、alt 属性の代替テキストを表示 --&gt;
+&lt;img <span class="hl">src="images/cat"</span> <span class="hl">alt="座っている猫"</span>&gt;</code></pre>
+        <div class="demo">
+          <iframe title="img alt デモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}</style></head><body><img src="images/cat_invalid_path.jpg" alt="座っている猫"></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: width -->
+    <div class="panel" data-panel="width" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- width のみ指定（アスペクト比を維持して自動縮小） --&gt;
+&lt;img src="images/cat01_640.jpg" <span class="hl">width="160"</span>&gt;</code></pre>
+        <div class="demo">
+          <iframe title="img width デモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}</style></head><body><img src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22320%22 height=%22100%22 viewBox=%220 0 320 100%22%3E%3Crect width=%22320%22 height=%22100%22 fill=%22%23cbd5e1%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%23334155%22 font-size=%2214%22%3Ewidth=160 (比率保持)%3C/text%3E%3C/svg%3E" width="160" alt="幅指定"></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 4: height -->
+    <div class="panel" data-panel="height" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- height のみ指定（縦幅に合わせてアスペクト比維持） --&gt;
+&lt;img src="images/cat01_640.jpg" <span class="hl">height="50"</span>&gt;</code></pre>
+        <div class="demo">
+          <iframe title="img height デモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}</style></head><body><img src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22320%22 height=%22100%22 viewBox=%220 0 320 100%22%3E%3Crect width=%22320%22 height=%22100%22 fill=%22%2394a3b8%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%230f172a%22 font-size=%2214%22%3Eheight=50 (比率保持)%3C/text%3E%3C/svg%3E" height="50" alt="高さ指定"></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 5: width + height -->
+    <div class="panel" data-panel="both" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- width と height の両方を明示指定（比率が強制変化） --&gt;
+&lt;img src="images/cat01_640.jpg" <span class="hl">width="50%" height="200"</span>&gt;</code></pre>
+        <div class="demo">
+          <iframe title="img width height デモ" height="230" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}</style></head><body><img src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22320%22 height=%22100%22 viewBox=%220 0 320 100%22%3E%3Crect width=%22320%22 height=%22100%22 fill=%22%23f1f5f9%22 stroke=%22%23475569%22 stroke-width=%222%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%230f172a%22 font-size=%2214%22%3E50%25 x 200px (変形表示)%3C/text%3E%3C/svg%3E" width="50%" height="200" alt="両方指定"></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       SECTION 4.1.5 & 4.1.6: picture 要素 & source 要素
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 4.1.5 &amp; 4.1.6</span>
+      <h2 class="card-title">picture 要素 &amp; source 要素<span class="en">/ picture &amp; source Elements</span></h2>
+      <p class="card-desc">端末環境や画面幅に応じて最適な画像を選択（レスポンシブ Web デザイン / Responsive Web Design）。記述順に判定され、最初に条件一致したソースが表示される。最後に img 要素を記述する。</p>
+
+      <table class="spec-table">
+        <tr>
+          <th>picture カテゴリー / Content Model</th>
+          <td>フロー, フレージング, エンベッディド / 0個以上の source 要素 ＋ 最後の 1 つの img 要素</td>
+        </tr>
+        <tr>
+          <th>source 属性 / Attributes</th>
+          <td><code>src</code> (video/audio用), <code>type</code> (MIMEタイプ), <code>srcset</code> (画像パス), <code>media</code> (メディアクエリ)</td>
+        </tr>
+      </table>
+
+      <!-- メディアクエリ参照表 -->
+      <table class="spec-table" style="margin-top:12px">
+        <thead>
+          <tr>
+            <th>区分</th>
+            <th>キーワード / 特性名</th>
+            <th>内容・意味</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th rowspan="2">メディアタイプ<br>(Media Type)</th>
+            <td><code>screen</code> / <code>all</code> (初期値)</td>
+            <td>ディスプレイ画面 / すべての機器（他: <code>print</code>, <code>handheld</code>, <code>projection</code>）</td>
+          </tr>
+          <tr>
+            <td><code>print</code></td>
+            <td>印刷・印刷プレビューモード</td>
+          </tr>
+          <tr>
+            <th rowspan="2">メディア特性<br>(Media Feature)</th>
+            <td><code>min-width</code> / <code>max-width</code></td>
+            <td>ウィンドウ幅の最小値 / 最大値</td>
+          </tr>
+          <tr>
+            <td><code>min-height</code> / <code>max-height</code></td>
+            <td>ウィンドウ高さの最小値 / 最大値</td>
+          </tr>
+          <tr>
+            <th>演算子 / Operator</th>
+            <td><code>and</code> / <code>,</code> (カンマ)</td>
+            <td>AND 条件結合 / OR 条件結合</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="media" aria-selected="true">1. media (画面幅分岐)</button>
+      <button class="tab" role="tab" type="button" data-tab="type" aria-selected="false">2. type (MIMEフォーマット選択)</button>
+      <button class="tab" role="tab" type="button" data-tab="fallback" aria-selected="false">3. img フォールバック役割</button>
+    </div>
+
+    <!-- Panel 1: media -->
+    <div class="panel" data-panel="media">
+      <div class="card-body">
+        <pre class="code"><code>&lt;picture&gt;
+  &lt;!-- 1280px 以上 --&gt;
+  &lt;source <span class="hl">media="(min-width:1280px)"</span> <span class="hl">srcset="images/cat01_1280.jpg"</span>&gt;
+  &lt;!-- 640px 以上 --&gt;
+  &lt;source <span class="hl">media="(min-width:640px)"</span> <span class="hl">srcset="images/cat01_640.jpg"</span>&gt;
+  &lt;!-- 上記以外 --&gt;
+  &lt;source <span class="hl">srcset="images/cat01_320.jpg"</span>&gt;
+  &lt;!-- 非対応ブラウザ用 / 寸法属性保持 --&gt;
+  &lt;<span class="hl">img</span> src="images/cat01_320.jpg" alt="猫"&gt;
+&lt;/picture&gt;</code></pre>
+        <div class="demo">
+          <iframe title="picture media デモ" height="160" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}img{max-width:100%;height:auto}</style></head><body><picture><source media="(min-width: 600px)" srcset="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22500%22 height=%2280%22%3E%3Crect width=%22500%22 height=%2280%22 fill=%22%23bbf7d0%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%23166534%22 font-size=%2214%22%3E[大画面表示] cat01_1280.jpg (min-width: 600px)%3C/text%3E%3C/svg%3E"><source srcset="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%2280%22%3E%3Crect width=%22300%22 height=%2280%22 fill=%22%23fef08a%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%23854d0e%22 font-size=%2214%22%3E[小画面表示] cat01_320.jpg%3C/text%3E%3C/svg%3E"><img src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%2280%22%3E%3Crect width=%22300%22 height=%2280%22 fill=%22%23e2e8f0%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22%3EFallback img%3C/text%3E%3C/svg%3E" alt="猫"></picture></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: type -->
+    <div class="panel" data-panel="type" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;picture&gt;
+  &lt;!-- WebP 対応ブラウザへ配信 --&gt;
+  &lt;source <span class="hl">type="image/webp"</span> srcset="images/cat.webp"&gt;
+  &lt;!-- 未対応ブラウザへ PNG 配信 --&gt;
+  &lt;img src="images/cat.png" alt="猫"&gt;
+&lt;/picture&gt;</code></pre>
+        <div class="demo">
+          <iframe title="picture type デモ" height="160" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}img{max-width:100%}</style></head><body><picture><source type="image/webp" srcset="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22360%22 height=%2280%22%3E%3Crect width=%22360%22 height=%2280%22 fill=%22%23bfdbfe%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%231e40af%22 font-size=%2214%22%3EWebP フォーマットが優先描画されました%3C/text%3E%3C/svg%3E"><img src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22360%22 height=%2280%22%3E%3Crect width=%22360%22 height=%2280%22 fill=%22%23fed7aa%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%239a3412%22 font-size=%2214%22%3EPNG (フォールバック描画)%3C/text%3E%3C/svg%3E" alt="猫"></picture></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: fallback -->
+    <div class="panel" data-panel="fallback" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;picture&gt;
+  &lt;source media="(min-width: 2000px)" srcset="huge.jpg"&gt;
+  &lt;!-- 条件に一致しない場合、最後の img が表示される --&gt;
+  <span class="hl">&lt;img src="images/cat01_320.jpg" alt="猫" width="300"&gt;</span>
+&lt;/picture&gt;</code></pre>
+        <div class="demo">
+          <iframe title="picture fallback デモ" height="160" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}</style></head><body><picture><source media="(min-width: 2000px)" srcset="huge.jpg"><img src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%2280%22%3E%3Crect width=%22300%22 height=%2280%22 fill=%22%23f3f4f6%22 stroke=%22%239ca3af%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%23374151%22 font-size=%2213%22%3E条件不一致 → 最後の img 要素を表示%3C/text%3E%3C/svg%3E" alt="猫" width="300"></picture></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       SECTION 4.2.1 & 4.3.1: メディアフォーマット (Video & Audio Formats)
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 4.2.1 &amp; 4.3.1</span>
+      <h2 class="card-title">メディアフォーマット<span class="en">/ Video &amp; Audio Formats</span></h2>
+      <p class="card-desc">Webで利用される動画ファイル形式（.mp4 / .webm / .mov / .avi）および音声ファイル形式（.mp3 / .m4a / .wav）の拡張子と特徴。</p>
+
+      <table class="spec-table">
+        <tr>
+          <th>動画拡張子 / Video Formats</th>
+          <td><code>.mp4</code> (Web標準 / H.264+AAC), <code>.webm</code> (VP9/AV1), <code>.mov</code> (QuickTime), <code>.avi</code> (MS非圧縮)</td>
+        </tr>
+        <tr>
+          <th>音声拡張子 / Audio Formats</th>
+          <td><code>.mp3</code> (万能非可逆 / 1/10圧縮), <code>.m4a</code> (AAC高音質), <code>.wav</code> (RIFF非圧縮)</td>
+        </tr>
+        <tr>
+          <th>マルチブラウザ対応 / Fallback</th>
+          <td><code>&lt;video&gt;</code> または <code>&lt;audio&gt;</code> 内に複数の <code>&lt;source&gt;</code> を順に記述して互換性を担保</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="vfmt" aria-selected="true">1. 動画拡張子</button>
+      <button class="tab" role="tab" type="button" data-tab="afmt" aria-selected="false">2. 音声拡張子</button>
+    </div>
+
+    <!-- Panel 1: vfmt -->
+    <div class="panel" data-panel="vfmt">
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- 動画ファイルフォーマットの指定 --&gt;
+&lt;!-- MP4 (.mp4)  : H.264/AAC。全主要ブラウザ対応のデファクトスタンダード --&gt;
+&lt;!-- WebM (.webm): Google提唱のオープン形式。高圧縮率 (VP9 / AV1) --&gt;
+&lt;!-- MOV (.mov)  : Apple QuickTime 標準。Mac/iOSで親和性高 --&gt;
+&lt;!-- AVI (.avi)  : MS標準形式。容量が大きくWeb配信には非推奨 --&gt;
+
+&lt;video controls&gt;
+  &lt;source <span class="hl">src="movie.webm" type="video/webm"</span>&gt;
+  &lt;source <span class="hl">src="movie.mp4" type="video/mp4"</span>&gt;
+&lt;/video&gt;</code></pre>
+        <div class="demo">
+          <iframe title="動画拡張子 デモ" height="210" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.4 sans-serif;margin:10px;color:#111}.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.card{border:1px solid #cbd5e1;padding:8px;border-radius:4px;background:#f8fafc}.tag{font-weight:bold;display:inline-block;padding:2px 6px;border-radius:3px;font-size:10px;color:#fff;margin-bottom:4px}.mp4{background:#0284c7}.webm{background:#16a34a}.mov{background:#7c3aed}.avi{background:#dc2626}</style></head><body><div class="grid"><div class="card"><span class="tag mp4">.mp4</span> <strong>MPEG-4</strong><br><span style="font-size:11px;color:#475569">H.264 / AAC<br>Web標準・高互換性（100%推奨）</span></div><div class="card"><span class="tag webm">.webm</span> <strong>WebM</strong><br><span style="font-size:11px;color:#475569">VP9 / AV1<br>Google開発・高圧縮ライセンスフリー</span></div><div class="card"><span class="tag mov">.mov</span> <strong>QuickTime</strong><br><span style="font-size:11px;color:#475569">Apple標準<br>高品質だがファイルサイズ大</span></div><div class="card"><span class="tag avi">.avi</span> <strong>AVI</strong><br><span style="font-size:11px;color:#475569">Microsoft標準<br>古く非圧縮・Web埋め込み非推奨</span></div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: afmt -->
+    <div class="panel" data-panel="afmt" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- 音声ファイルフォーマットの指定 --&gt;
+&lt;!-- MP3 (.mp3): 非可逆圧縮。約1/10の圧縮比。全端末・全ブラウザ対応 --&gt;
+&lt;!-- M4A (.m4a): AACコーデック。MP3より同ビットレートで高音質 --&gt;
+&lt;!-- WAV (.wav): 非圧縮RIFF。スタジオ品質だが容量巨大でWeb非推奨 --&gt;
+
+&lt;audio controls&gt;
+  &lt;source <span class="hl">src="sound.m4a" type="audio/mp4"</span>&gt;
+  &lt;source <span class="hl">src="sound.mp3" type="audio/mpeg"</span>&gt;
+&lt;/audio&gt;</code></pre>
+        <div class="demo">
+          <iframe title="音声拡張子 デモ" height="210" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.4 sans-serif;margin:10px;color:#111}.item{border-left:4px solid #0284c7;background:#f1f5f9;padding:8px 12px;margin-bottom:8px;border-radius:0 4px 4px 0}.item strong{font-size:13px}.badge{background:#e2e8f0;padding:2px 6px;border-radius:3px;font-size:10px;margin-left:6px}</style></head><body><div class="item" style="border-color:#0284c7"><strong>.mp3</strong> <span class="badge">MPEG-1 Audio Layer-3</span><br><span style="font-size:11px;color:#475569">非可逆圧縮 / 最も高いポータビリティと互換性</span></div><div class="item" style="border-color:#16a34a"><strong>.m4a</strong> <span class="badge">AAC (Advanced Audio Coding)</span><br><span style="font-size:11px;color:#475569">非可逆圧縮 / Apple標準 / MP3の後継・高音質</span></div><div class="item" style="border-color:#dc2626"><strong>.wav</strong> <span class="badge">Waveform Audio File Format</span><br><span style="font-size:11px;color:#475569">非圧縮 / 最高音質だがファイルサイズが極大</span></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       SECTION 4.2.2: video 要素 (video Element)
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 4.2.2</span>
+      <h2 class="card-title">video 要素<span class="en">/ video Element</span></h2>
+      <p class="card-desc">動画コンテンツの挿入。複数 source 要素や WebVTT 字幕（track 要素）にも対応。</p>
+
+      <table class="spec-table">
+        <tr>
+          <th>カテゴリー / Category</th>
+          <td>フロー, フレージング, エンベッディド, インタラクティブ (controlsあり), パルパブル</td>
+        </tr>
+        <tr>
+          <th>コンテンツモデル / Content Model</th>
+          <td>srcあり: トランスペアレント, track / srcなし: トランスペアレント, track, source</td>
+        </tr>
+        <tr>
+          <th>主要属性 / Attributes</th>
+          <td><code>src</code>, <code>autoplay</code> (Chromeはmuted必須), <code>loop</code>, <code>muted</code>, <code>controls</code>, <code>poster</code>, <code>width</code>, <code>height</code>, <code>playsinline</code></td>
+        </tr>
+        <tr>
+          <th>字幕機能 / 字幕要素</th>
+          <td><code>&lt;track&gt;</code> 要素 (src属性に WebVTT 形式 <code>.vtt</code> ファイルを指定)</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="single" aria-selected="true">1. video 単独指定</button>
+      <button class="tab" role="tab" type="button" data-tab="sources" aria-selected="false">2. 複数 source + 自動再生</button>
+      <button class="tab" role="tab" type="button" data-tab="track" aria-selected="false">3. track 要素 (字幕)</button>
+    </div>
+
+    <!-- Panel 1: single -->
+    <div class="panel" data-panel="single">
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- video 要素単体指定 (autoplay, muted, loop) --&gt;
+&lt;video <span class="hl">src="videos/sea01_640.mp4"</span> <span class="hl">autoplay muted loop</span>&gt;&lt;/video&gt;</code></pre>
+        <div class="demo">
+          <iframe title="video 単独デモ" height="180" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}</style></head><body><video width="280" height="130" controls poster="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22280%22 height=%22130%22%3E%3Crect width=%22280%22 height=%22130%22 fill=%22%231e293b%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%23f8fafc%22 font-size=%2214%22%3E▶ videos/sea01_640.mp4%3C/text%3E%3C/svg%3E"><source src="videos/sea01_640.mp4" type="video/mp4"></video></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: sources -->
+    <div class="panel" data-panel="sources" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;video width="320" <span class="hl">autoplay loop muted</span> <span class="hl">poster="images/broken-link_640.png"</span>&gt;
+  &lt;source <span class="hl">src="videos/sea01_640.mov"</span>&gt;
+  &lt;source <span class="hl">src="videos/sea01_640.mp4"</span>&gt;
+  video 要素はサポートされていません。
+&lt;/video&gt;</code></pre>
+        <div class="demo">
+          <iframe title="video 複数 source デモ" height="180" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}</style></head><body><video width="280" height="130" autoplay loop muted poster="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22280%22 height=%22130%22%3E%3Crect width=%22280%22 height=%22130%22 fill=%22%230f172a%22/%3E%3Ccircle cx=%22140%22 cy=%2265%22 r=%2224%22 fill=%22%2338bdf8%22 opacity=%220.8%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%23ffffff%22 font-size=%2212%22%3EPoster &amp; Autoplay%3C/text%3E%3C/svg%3E"><source src="videos/sea01_640.mov"><source src="videos/sea01_640.mp4">非対応ブラウザ用テキスト</video></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: track -->
+    <div class="panel" data-panel="track" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;video controls src="videos/sea01_640.mp4"&gt;
+  &lt;!-- WebVTT (.vtt) 形式の字幕ファイルを指定 --&gt;
+  <span class="hl">&lt;track src="subtitles_ja.vtt" kind="subtitles" srclang="ja" label="日本語"&gt;</span>
+&lt;/video&gt;</code></pre>
+        <div class="demo">
+          <iframe title="video track デモ" height="180" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}</style></head><body><video width="280" height="130" controls poster="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22280%22 height=%22130%22%3E%3Crect width=%22280%22 height=%22130%22 fill=%22%23334155%22/%3E%3Crect x=%2240%22 y=%2290%22 width=%22200%22 height=%2224%22 fill=%22rgba(0,0,0,0.7)%22 rx=%224%22/%3E%3Ctext x=%2250%25%22 y=%22102%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%23ffffff%22 font-size=%2211%22%3E[字幕 / WebVTT] 波の音%3C/text%3E%3C/svg%3E"><track src="subtitles_ja.vtt" kind="subtitles" srclang="ja" label="日本語"></video></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       SECTION 4.3.2: audio 要素 (audio Element)
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 4.3.2</span>
+      <h2 class="card-title">audio 要素<span class="en">/ audio Element</span></h2>
+      <p class="card-desc">音声ファイルの挿入。コントロール操作 UI の表示や複数形式のフォールバック指定が可能。</p>
+
+      <table class="spec-table">
+        <tr>
+          <th>カテゴリー / Category</th>
+          <td>フロー, フレージング, エンベッディド, インタラクティブ (controlsあり), パルパブル (controlsあり)</td>
+        </tr>
+        <tr>
+          <th>コンテンツモデル / Content Model</th>
+          <td>srcあり: トランスペアレント, track / srcなし: トランスペアレント, track, source</td>
+        </tr>
+        <tr>
+          <th>主要属性 / Attributes</th>
+          <td><code>src</code>, <code>autoplay</code> (Chrome未対応), <code>loop</code>, <code>muted</code>, <code>controls</code></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="audio1" aria-selected="true">1. audio 単独 (controls)</button>
+      <button class="tab" role="tab" type="button" data-tab="audio2" aria-selected="false">2. 複数 source 指定</button>
+      <button class="tab" role="tab" type="button" data-tab="audio3" aria-selected="false">3. 未対応時テキスト</button>
+    </div>
+
+    <!-- Panel 1: audio1 -->
+    <div class="panel" data-panel="audio1">
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- audio 要素のみで1つのファイルを指定 --&gt;
+&lt;audio <span class="hl">src="audios/gekko.mp3"</span> <span class="hl">controls</span>&gt;&lt;/audio&gt;</code></pre>
+        <div class="demo">
+          <iframe title="audio 単独デモ" height="120" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:16px;color:#111}</style></head><body><audio src="audios/gekko.mp3" controls style="width:100%;max-width:300px"></audio></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: audio2 -->
+    <div class="panel" data-panel="audio2" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;audio <span class="hl">controls autoplay muted</span>&gt;
+  &lt;source <span class="hl">src="audios/birds.m4a"</span>&gt;
+  &lt;source <span class="hl">src="audios/gekko.mp3"</span>&gt;
+  再生可能な音声がありません。
+&lt;/audio&gt;</code></pre>
+        <div class="demo">
+          <iframe title="audio 複数 source デモ" height="120" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:16px;color:#111}</style></head><body><audio controls autoplay muted style="width:100%;max-width:300px"><source src="audios/birds.m4a"><source src="audios/gekko.mp3"></audio></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: audio3 -->
+    <div class="panel" data-panel="audio3" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;audio controls&gt;
+  &lt;source src="audio.invalid"&gt;
+  &lt;!-- 非対応ブラウザではタグ内の文書代替が表示される --&gt;
+  <span class="hl">再生可能な音声がありません。</span>
+&lt;/audio&gt;</code></pre>
+        <div class="demo">
+          <iframe title="audio フォールバックデモ" height="120" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:16px;color:#111}</style></head><body><p style="margin:0;font-size:12px;color:#666">（未対応環境の描画イメージ）</p><div style="border:1px dashed #ccc;padding:8px;margin-top:4px;color:#d02020;font-size:13px">再生可能な音声がありません。</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       SECTION 4.4.1 & 4.4.2: 図とキャプション (figure & figcaption Elements)
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 4.4.1 &amp; 4.4.2</span>
+      <h2 class="card-title">図とキャプション<span class="en">/ figure &amp; figcaption Elements</span></h2>
+      <p class="card-desc">図表・写真・コード・引用文などの自律的コンテンツ（figure）と、そのキャプション・見出し（figcaption）のセマンティックな紐付け。</p>
+
+      <table class="spec-table">
+        <tr>
+          <th>カテゴリー / Category</th>
+          <td>フロー（Flow）, パルパブル（Palpable）, セクショニングルート（Sectioning Root）</td>
+        </tr>
+        <tr>
+          <th>コンテンツモデル / Content Model</th>
+          <td>1つの <code>&lt;figcaption&gt;</code> 要素（最初または最後） ＋ フローコンテンツ</td>
+        </tr>
+        <tr>
+          <th>配置位置ルール / Position Rule</th>
+          <td><code>&lt;figcaption&gt;</code> は <code>&lt;figure&gt;</code> の直下の【最初】または【最後】のみ配置可能（中間に置くと文法エラー）</td>
+        </tr>
+        <tr>
+          <th>大綱構造 / Outline</th>
+          <td>Sectioning Root であるため、内部の <code>&lt;h1&gt;〜&lt;h6&gt;</code> は主文書の大綱（Outline）に影響を与えない</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="fig-img" aria-selected="true">1. 画像＋キャプション</button>
+      <button class="tab" role="tab" type="button" data-tab="fig-quote" aria-selected="false">2. 引用文＋キャプション</button>
+      <button class="tab" role="tab" type="button" data-tab="fig-code" aria-selected="false">3. コード＋キャプション</button>
+    </div>
+
+    <!-- Panel 1: fig-img -->
+    <div class="panel" data-panel="fig-img">
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- キャプションを下部に配置する一般的な図表構造 --&gt;
+&lt;figure&gt;
+  &lt;img src="images/cat01_640.jpg" alt="猫"&gt;
+  <span class="hl">&lt;figcaption&gt;図1: 日向ぼっこをする猫&lt;/figcaption&gt;</span>
+&lt;/figure&gt;
+
+&lt;!-- キャプションを上部に配置（直下の最初も文法的に正解） --&gt;
+&lt;figure&gt;
+  <span class="hl">&lt;figcaption&gt;図2: 山頂の夕焼け&lt;/figcaption&gt;</span>
+  &lt;img src="images/sunset.jpg" alt="夕焼け"&gt;
+&lt;/figure&gt;</code></pre>
+        <div class="demo">
+          <iframe title="figure 画像キャプション デモ" height="220" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:10px;color:#111}figure{margin:0 0 12px 0;padding:8px;border:1px solid #cbd5e1;background:#fff;border-radius:4px}figcaption{font-size:11px;font-weight:bold;color:#475569;padding:4px 0}</style></head><body><figure><img src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22260%22 height=%2260%22%3E%3Crect width=%22260%22 height=%2260%22 fill=%22%23e2e8f0%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%23475569%22%3E[画像コンテンツ]%3C/text%3E%3C/svg%3E" alt="猫"><figcaption>図1: 日向ぼっこをする猫（キャプション下）</figcaption></figure><figure><figcaption>図2: 山頂の夕焼け（キャプション上）</figcaption><img src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22260%22 height=%2250%22%3E%3Crect width=%22260%22 height=%2250%22 fill=%22%23fef3c7%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%23b45309%22%3E[画像コンテンツ]%3C/text%3E%3C/svg%3E" alt="夕焼け"></figure></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: fig-quote -->
+    <div class="panel" data-panel="fig-quote" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- figure 要素は引用文 (blockquote) と出典の指定にも利用される --&gt;
+&lt;figure&gt;
+  &lt;blockquote cite="https://example.com"&gt;
+    &lt;p&gt;シンプルさは究極の洗練である。&lt;/p&gt;
+  &lt;/blockquote&gt;
+  <span class="hl">&lt;figcaption&gt;出典: &lt;cite&gt;レオナルド・ダ・ヴィンチの言葉&lt;/cite&gt;&lt;/figcaption&gt;</span>
+&lt;/figure&gt;</code></pre>
+        <div class="demo">
+          <iframe title="figure 引用文 デモ" height="200" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:12px;color:#111}figure{margin:0;padding:12px;background:#f8fafc;border-left:4px solid #0284c7;border-radius:0 4px 4px 0}blockquote{margin:0;font-style:italic;color:#1e293b}figcaption{margin-top:8px;font-size:11px;color:#64748b;text-align:right}cite{font-style:normal;font-weight:bold;color:#0369a1}</style></head><body><figure><blockquote><p>「シンプルさは究極の洗練である。」</p></blockquote><figcaption>出典: <cite>レオナルド・ダ・ヴィンチの言葉</cite></figcaption></figure></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: fig-code -->
+    <div class="panel" data-panel="fig-code" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- ソースコードブロックと見出しタイトルの紐付け --&gt;
+&lt;figure&gt;
+  <span class="hl">&lt;figcaption&gt;リスト1.1: HTML5 基本骨格コード&lt;/figcaption&gt;</span>
+  &lt;pre&gt;&lt;code&gt;&amp;lt;!DOCTYPE html&amp;gt;
+&amp;lt;html lang="ja"&amp;gt;
+  &amp;lt;head&amp;gt;&amp;lt;title&amp;gt;Sample&amp;lt;/title&amp;gt;&amp;lt;/head&amp;gt;
+  &amp;lt;body&amp;gt;&amp;lt;h1&amp;gt;Hello World&amp;lt;/h1&amp;gt;&amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/figure&gt;</code></pre>
+        <div class="demo">
+          <iframe title="figure コード デモ" height="200" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:12px;color:#111}figure{margin:0;border:1px solid #cbd5e1;border-radius:4px;overflow:hidden}figcaption{background:#e2e8f0;padding:6px 10px;font-weight:bold;font-size:11px;color:#334155}pre{margin:0;padding:10px;background:#0f172a;color:#f8fafc;font-family:monospace;font-size:11px;line-height:1.4}</style></head><body><figure><figcaption>リスト1.1: HTML5 基本骨格コード</figcaption><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="ja"&gt;
+  &lt;head&gt;&lt;title&gt;Sample&lt;/title&gt;&lt;/head&gt;
+  &lt;body&gt;&lt;h1&gt;Hello World&lt;/h1&gt;&lt;/body&gt;
+&lt;/html&gt;</code></pre></figure></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       SECTION 4.5.1: iframe 要素 (iframe Element)
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 4.5.1</span>
+      <h2 class="card-title">iframe 要素<span class="en">/ iframe Element</span></h2>
+      <p class="card-desc">インラインフレーム（inline frame）。外部 HTML 文書やウェブサービス（YouTube, Google Map等）をページ内にインライン埋め込み表示する。</p>
+
+      <table class="spec-table">
+        <tr>
+          <th>カテゴリー / Category</th>
+          <td>フロー, フレージング, エンベッディド, インタラクティブ, パルパブル</td>
+        </tr>
+        <tr>
+          <th>コンテンツモデル / Content Model</th>
+          <td>iframe 非対応ブラウザで表示される代替コンテンツ</td>
+        </tr>
+        <tr>
+          <th>主要属性 / Attributes</th>
+          <td><code>src</code> (URL指定), <code>name</code>, <code>width</code>, <code>height</code>, グローバル属性</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="local" aria-selected="true">1. HTML埋め込み</button>
+      <button class="tab" role="tab" type="button" data-tab="yt" aria-selected="false">2. YouTube 埋め込み</button>
+      <button class="tab" role="tab" type="button" data-tab="gmap" aria-selected="false">3. Google Map 埋め込み</button>
+    </div>
+
+    <!-- Panel 1: local -->
+    <div class="panel" data-panel="local">
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- sample.html を幅 500、高さ 300 の枠内に埋め込み --&gt;
+&lt;iframe <span class="hl">src="sample.html"</span> <span class="hl">width="500" height="300"</span>&gt;
+  iframe が表示できないときはこの内容が表示されます。
+&lt;/iframe&gt;</code></pre>
+        <div class="demo">
+          <iframe title="iframe 基本デモ" height="170" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}</style></head><body><iframe width="100%" height="120" style="border:1px solid #94a3b8" srcdoc="<!DOCTYPE html><html><body style='font-family:sans-serif;padding:10px;background:%23f8fafc'><h4>sample.html の中身</h4><p style='font-size:12px;color:%23475569'>独立した HTML 文書が埋め込まれています。</p></body></html>"></iframe></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: yt -->
+    <div class="panel" data-panel="yt" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- YouTube の「共有」→「埋め込む」より取得した iframe --&gt;
+&lt;iframe <span class="hl">width="560" height="315"</span>
+  <span class="hl">src="https://www.youtube.com/embed/XXXXXX"</span>
+  title="YouTube video player"
+  frameborder="0" allowfullscreen&gt;
+&lt;/iframe&gt;</code></pre>
+        <div class="demo">
+          <iframe title="iframe YouTube デモ" height="170" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}</style></head><body><div style="width:100%;height:120px;background:#000;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:4px"><span style="color:#ff0000;font-size:24px">▶</span><span style="font-size:12px;margin-top:4px">YouTube 埋め込みプレイヤー (embed URL)</span></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: gmap -->
+    <div class="panel" data-panel="gmap" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- Google Maps の「共有」→「地図を埋め込む」の HTML --&gt;
+&lt;iframe <span class="hl">src="https://www.google.com/maps/embed?pb=..."</span>
+  <span class="hl">width="600" height="450"</span>
+  style="border:0;" allowfullscreen="" loading="lazy"&gt;
+&lt;/iframe&gt;</code></pre>
+        <div class="demo">
+          <iframe title="iframe Google Map デモ" height="170" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}</style></head><body><div style="width:100%;height:120px;background:#e2e8f0;border:1px solid #cbd5e1;display:flex;flex-direction:column;align-items:center;justify-content:center"><span style="font-size:20px">📍</span><span style="font-size:12px;color:#334155;margin-top:2px">Google Maps 埋め込み (maps/embed)</span></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       SECTION A.1 & A.2: パスの設定 (Path Settings)
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION A.1 &amp; A.2</span>
+      <h2 class="card-title">パスの設定<span class="en">/ Absolute &amp; Relative Paths</span></h2>
+      <p class="card-desc">ファイルの位置を特定するための道筋。Web サーバー公開を前提とするため、区切り文字は常に <code>/</code> を使用する。</p>
+
+      <!-- SVG ディレクトリ構造概念図解  -->
+      <div class="d-fig">
+        <svg viewBox="0 0 640 170" role="img" aria-label="ファイル構造とパス参照の概念図">
+          <!-- Root / -->
+          <rect x="20" y="20" width="100" height="30" fill="#1e293b" rx="4"/>
+          <text x="70" y="40" fill="#ffffff" text-anchor="middle" font-size="12" font-family="monospace">/ (Root)</text>
+          
+          <!-- line to html -->
+          <line x1="70" y1="50" x2="70" y2="70" stroke="#94a3b8" stroke-width="2"/>
+          <rect x="20" y="70" width="100" height="30" fill="#475569" rx="4"/>
+          <text x="70" y="90" fill="#ffffff" text-anchor="middle" font-size="12" font-family="monospace">html/</text>
+
+          <!-- branches -->
+          <line x1="120" y1="85" x2="160" y2="85" stroke="#94a3b8" stroke-width="2"/>
+          <line x1="160" y1="55" x2="160" y2="125" stroke="#94a3b8" stroke-width="2"/>
+
+          <!-- Branch 1: vol.4 -->
+          <line x1="160" y1="55" x2="190" y2="55" stroke="#94a3b8" stroke-width="2"/>
+          <rect x="190" y="40" width="110" height="30" fill="#0284c7" rx="4"/>
+          <text x="245" y="60" fill="#ffffff" text-anchor="middle" font-size="12" font-family="monospace">vol.4/ (Current)</text>
+
+          <!-- Branch 2: vol.5 -->
+          <line x1="160" y1="125" x2="190" y2="125" stroke="#94a3b8" stroke-width="2"/>
+          <rect x="190" y="110" width="110" height="30" fill="#64748b" rx="4"/>
+          <text x="245" y="130" fill="#ffffff" text-anchor="middle" font-size="12" font-family="monospace">vol.5/</text>
+
+          <!-- vol.4 contents -->
+          <line x1="300" y1="55" x2="330" y2="30" stroke="#94a3b8" stroke-width="2"/>
+          <rect x="330" y="15" width="120" height="28" fill="#d97706" rx="4"/>
+          <text x="390" y="33" fill="#ffffff" text-anchor="middle" font-size="11" font-family="monospace">hello.html (起点)</text>
+
+          <line x1="300" y1="55" x2="330" y2="80" stroke="#94a3b8" stroke-width="2"/>
+          <rect x="330" y="65" width="100" height="28" fill="#0284c7" rx="4"/>
+          <text x="380" y="83" fill="#ffffff" text-anchor="middle" font-size="11" font-family="monospace">images/</text>
+
+          <line x1="430" y1="79" x2="460" y2="79" stroke="#94a3b8" stroke-width="2"/>
+          <rect x="460" y="65" width="120" height="28" fill="#059669" rx="4"/>
+          <text x="520" y="83" fill="#ffffff" text-anchor="middle" font-size="11" font-family="monospace">sample.png (参照先)</text>
+
+          <!-- vol.5 contents -->
+          <line x1="300" y1="125" x2="330" y2="125" stroke="#94a3b8" stroke-width="2"/>
+          <rect x="330" y="110" width="100" height="28" fill="#64748b" rx="4"/>
+          <text x="380" y="128" fill="#ffffff" text-anchor="middle" font-size="11" font-family="monospace">foo.html</text>
+        </svg>
+      </div>
+
+      <!-- パス種別対照表 -->
+      <table class="spec-table">
+        <thead>
+          <tr>
+            <th>区分</th>
+            <th>起点（基準）</th>
+            <th>特徴・用途</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>絶対パス<br>(Absolute Path)</th>
+            <td>ルートディレクトリ (<code>/</code>)</td>
+            <td>参照元を移動しても壊れない。他PCへのコピー時は同一ディレクトリ構成が必要。</td>
+          </tr>
+          <tr>
+            <th>相対パス<br>(Relative Path)</th>
+            <td>カレントディレクトリ (現在地)</td>
+            <td>フォルダ構造ごとそのままコピー・移設可能。参照元移動時は書き換えが必要。</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- 特殊記号記号表 -->
+      <table class="spec-table" style="margin-top:10px">
+        <tr>
+          <th><code>.</code> (ドット1つ)</th>
+          <td>カレントディレクトリ（現在操作対象のディレクトリ）を表す。</td>
+        </tr>
+        <tr>
+          <th><code>..</code> (ドット2つ)</th>
+          <td>1つ上位の親ディレクトリ（Parent Directory）を表す。</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="rel" aria-selected="true">1. 相対パス (同階層/配下)</button>
+      <button class="tab" role="tab" type="button" data-tab="parent" aria-selected="false">2. 相対パス (親階層経由 ..)</button>
+      <button class="tab" role="tab" type="button" data-tab="abs" aria-selected="false">3. 絶対パス (ルート起点 /)</button>
+    </div>
+
+    <!-- Panel 1: rel -->
+    <div class="panel" data-panel="rel">
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- hello.html から配下の sample.png を参照 --&gt;
+&lt;!-- カレントディレクトリ (vol.4) からの道筋 --&gt;
+&lt;img src="<span class="hl">images/sample.png</span>" alt="サンプル"&gt;
+&lt;!-- または --&gt;
+&lt;img src="<span class="hl">./images/sample.png</span>" alt="サンプル"&gt;</code></pre>
+        <div class="demo">
+          <iframe title="相対パス 同階層デモ" height="130" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.6 sans-serif;margin:12px;color:#111}</style></head><body><div style="background:#e0f2fe;border:1px solid #0284c7;padding:10px;border-radius:4px"><strong>現在地:</strong> vol.4/hello.html<br><strong>相対パス:</strong> <code>images/sample.png</code><br><span style="color:#0369a1">→ カレント(vol.4) 配下の images/ 内を参照</span></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: parent -->
+    <div class="panel" data-panel="parent" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- hello.html から 隣の vol.5/foo.html を参照 --&gt;
+&lt;!-- .. で一度親ディレクトリ (html) に上がって下りる --&gt;
+&lt;a href="<span class="hl">../vol.5/foo.html</span>"&gt;vol.5 へ移動&lt;/a&gt;</code></pre>
+        <div class="demo">
+          <iframe title="相対パス 親階層デモ" height="130" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.6 sans-serif;margin:12px;color:#111}</style></head><body><div style="background:#fef3c7;border:1px solid #d97706;padding:10px;border-radius:4px"><strong>現在地:</strong> vol.4/hello.html<br><strong>相対パス:</strong> <code>../vol.5/foo.html</code><br><span style="color:#b45309">→ <code>..</code> (親html/) 経由で別フォルダ vol.5/ 内を参照</span></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: abs -->
+    <div class="panel" data-panel="abs" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- ルートディレクトリ (/) からの完全な道筋を指定 --&gt;
+&lt;img src="<span class="hl">/html/vol.4/images/sample.png</span>" alt="サンプル"&gt;</code></pre>
+        <div class="demo">
+          <iframe title="絶対パス デモ" height="130" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.6 sans-serif;margin:12px;color:#111}</style></head><body><div style="background:#f3f4f6;border:1px solid #4b5563;padding:10px;border-radius:4px"><strong>絶対パス:</strong> <code>/html/vol.4/images/sample.png</code><br><span style="color:#374151">→ ルート <code>/</code> を起点に固定指定（ファイルを移動しても変化しない）</span></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* ★このスクリプトは一行も変更しない。丸ごとコピーすること★ */
+
+/* タブ: [data-tabs] ごとにスコープされる。カードが何枚あっても干渉しない */
+document.querySelectorAll('[data-tabs]').forEach(function (group) {
+  var tabs = group.querySelectorAll(':scope > .tabs > .tab');
+  var panels = group.querySelectorAll(':scope > .panel');
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var key = tab.dataset.tab;
+      tabs.forEach(function (t) { t.setAttribute('aria-selected', String(t === tab)); });
+      panels.forEach(function (p) { p.hidden = (p.dataset.panel !== key); });
+    });
+  });
+});
+
+/* テーマ固定（ライト）。切替機能は廃止 */
+</script>
+</body>
+</html>

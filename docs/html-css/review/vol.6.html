@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HTML&amp;CSS 期末試験 復習シート — vol.6 テーブル等を構成する要素</title>
+<style>
+/* =========================================================
+   [1] テーマ (Swiss Vignelli Palette)
+   固定ライト。暗色モードの切替は廃止。
+   ========================================================= */
+:root {
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #666666;
+  --line: #cccccc;
+  --hairline: #e2e2e2;
+  --surface: #f5f5f3;
+  --accent: #d02020;        /* 差分・強調のみに使用 */
+  --demo-bg: #ffffff;
+  --demo-fg: #111111;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Helvetica Neue", Helvetica, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic Medium", sans-serif;
+  line-height: 1.6;
+  text-wrap: pretty;
+  -webkit-text-size-adjust: 100%;
+}
+
+code, pre, .mono {
+  font-family: "SF Mono", "Menlo", "Consolas", monospace;
+}
+
+/* =========================================================
+   [2] Swiss Layout & Grid
+   ========================================================= */
+.wrap {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+@media (min-width: 900px) {
+  .wrap { padding: 0 32px; }
+}
+
+/* Header */
+.top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+}
+.brand-tag {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 2px 6px;
+  background: var(--fg);
+  color: var(--bg);
+}
+.volnav {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  font-size: 13px;
+  font-weight: 500;
+}
+.volnav a {
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 2px 4px;
+}
+.volnav a[aria-current="page"] {
+  color: var(--fg);
+  font-weight: 700;
+  border-bottom: 2px solid var(--fg);
+}
+
+/* Card & Panels */
+.card {
+  border-top: 1px solid var(--line);
+  padding: 32px 0;
+}
+.card-header {
+  margin-bottom: 20px;
+}
+.card-num {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 4px;
+  display: block;
+}
+.card-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+.card-title .en {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-left: 8px;
+}
+.card-desc {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.card-body {
+  display: grid;
+  gap: 16px;
+}
+@media (min-width: 900px) {
+  .card-body {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+}
+
+/* =========================================================
+   [3] Vignelli Tab Bar
+   ========================================================= */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.tab {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  border-bottom: none;
+  background: var(--surface);
+  color: var(--muted);
+  border-radius: 0;
+  transition: color 0.1s, background 0.1s;
+}
+.tab:hover {
+  color: var(--fg);
+  background: var(--bg);
+}
+.tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.tab[aria-selected="true"] {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
+}
+.panel[hidden] {
+  display: none;
+}
+
+/* =========================================================
+   [4] Code & Explanation Blocks
+   ========================================================= */
+pre.code {
+  margin: 0;
+  padding: 14px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.65;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  white-space: pre;
+}
+.hl {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* =========================================================
+   [5] Demo Frame（ 用）
+   ========================================================= */
+.demo {
+  border: 1px solid var(--line);
+  background: var(--demo-bg);
+}
+.demo iframe {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: var(--demo-bg);
+}
+
+/* === 概念図解用 === */
+.d-fig {
+  border: 1px solid var(--line);
+  background: #fffefc;
+  padding: 14px;
+  margin: 16px 0;
+}
+.d-fig svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* 仕様一覧表 */
+.spec-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-top: 16px;
+}
+.spec-table th, .spec-table td {
+  border: 1px solid var(--line);
+  padding: 8px 12px;
+  text-align: left;
+}
+.spec-table th {
+  background: var(--surface);
+  font-weight: 700;
+  width: 25%;
+}
+</style>
+<style>
+/* === 375px 横溢れ修正 === */
+.volnav{overflow-x:auto;min-width:0;flex:1 1 auto;scrollbar-width:none}
+.volnav::-webkit-scrollbar{display:none}
+.top{max-width:100%;overflow:hidden}
+.top>*{min-width:0}
+@media (max-width:899px){
+  .wrap{max-width:100%!important}
+  .card-body{display:block!important}
+  .card-body>*{width:auto!important;max-width:100%!important;min-width:0!important}
+  .card-body>*+*{margin-top:14px}
+  .panel [class*="col"]{width:auto!important;min-width:0!important;max-width:100%!important}
+}
+.wrap>*,.panel,.panel>*{min-width:0}
+pre,[class*="code"]{max-width:100%;min-width:0}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <span class="brand-tag">HTML&amp;CSS</span>
+  <nav class="volnav">
+    <a href="vol.1.html">1</a>
+    <a href="vol.2.html">2</a>
+    <a href="vol.3.html">3</a>
+    <a href="vol.4.html">4</a>
+    <a href="vol.5.html">5</a>
+    <a href="vol.6.html" aria-current="page">6</a>
+    <a href="vol.7.html">7</a>
+    <a href="vol.8.html">8</a>
+    <a href="vol.9.html">9</a>
+    <a href="vol.10.html">10</a>
+    <a href="vol.11.html">11</a>
+    <a href="vol.12.html">12</a>
+    <a href="vol.13.html">13</a>
+    <a href="vol.14.html">14</a>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <div style="padding: 24px 0 12px 0;">
+    <span style="font-size:12px; font-weight:700; letter-spacing:0.1em; color:var(--muted);">期末対策 復習シート</span>
+    <h1 style="font-size:24px; font-weight:700; margin:4px 0 0 0; letter-spacing:-0.02em;">vol.6 テーブル等を構成する要素 <span style="font-size:15px; font-weight:400; color:var(--muted);">/ Table Elements</span></h1>
+  </div>
+
+  <!-- ============================================================
+       カード 1：SECTION 6.1.1 & 6.1.3
+       table 要素と tr 要素の基本構造・罫線・子要素順序
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 6.1.1 &amp; 6.1.3</span>
+      <h2 class="card-title">テーブルの作成と行要素<span class="en">/ table &amp; tr</span></h2>
+      <p class="card-desc">表を定義する <code>&lt;table&gt;</code> と行を定義する <code>&lt;tr&gt;</code>。罫線は CSS で指定し、子要素は規定の順序で内包する。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="css-border" aria-selected="true">CSS 罫線指定（推奨）</button>
+      <button class="tab" role="tab" type="button" data-tab="html-border" aria-selected="false">border="1"（非推奨/廃止）</button>
+      <button class="tab" role="tab" type="button" data-tab="content-model" aria-selected="false">子要素構造（Content Model）</button>
+    </div>
+
+    <!-- Panel 1: CSS Border -->
+    <div class="panel" data-panel="css-border">
+      <div class="card-body">
+        <pre class="code"><code>&lt;style&gt;
+  <span class="hl">table { border-collapse: collapse; }</span>
+  <span class="hl">th, td { border: 1px solid #444; padding: 6px 12px; }</span>
+&lt;/style&gt;
+&lt;table&gt;
+  &lt;tr&gt;&lt;th&gt;項目&lt;/th&gt;&lt;th&gt;状態&lt;/th&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;CSS 罫線&lt;/td&gt;&lt;td&gt;二重線防止（collapse）&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;</code></pre>
+        <div class="demo">
+          <iframe title="CSS 罫線指定デモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}table{border-collapse:collapse;width:100%}th,td{border:1px solid #444;padding:6px 12px;text-align:left}th{background:#f5f5f3}</style></head><body><table><thead><tr><th>項目</th><th>状態</th></tr></thead><tbody><tr><td>CSS 罫線</td><td>二重線防止（collapse）</td></tr></tbody></table></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: HTML Border Attribute -->
+    <div class="panel" data-panel="html-border" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- border 属性は HTML5.2 以降で廃止。CSS を使用する --&gt;
+&lt;table <span class="hl">border="1"</span>&gt;
+  &lt;tr&gt;&lt;th&gt;項目&lt;/th&gt;&lt;th&gt;状態&lt;/th&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;border="1"&lt;/td&gt;&lt;td&gt;古式 3D 枠線（非推奨）&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;</code></pre>
+        <div class="demo">
+          <iframe title="border=1 属性デモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}table{width:100%}th,td{padding:6px 12px;text-align:left}th{background:#f5f5f3}</style></head><body><table border="1"><thead><tr><th>項目</th><th>状態</th></tr></thead><tbody><tr><td>border="1"</td><td>古式 3D 枠線（非推奨）</td></tr></tbody></table></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: Content Model Order -->
+    <div class="panel" data-panel="content-model" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;table border="1"&gt;
+  <span class="hl">&lt;caption&gt;[1] 表題&lt;/caption&gt;</span>
+  <span class="hl">&lt;colgroup&gt;&lt;col style="background:#f9f9f9"&gt;&lt;/colgroup&gt;</span>
+  <span class="hl">&lt;thead&gt;&lt;tr&gt;&lt;th&gt;[3] 見出し&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;</span>
+  <span class="hl">&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;[4] データ&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;</span>
+  <span class="hl">&lt;tfoot&gt;&lt;tr&gt;&lt;td&gt;[5] 総括&lt;/td&gt;&lt;/tr&gt;&lt;/tfoot&gt;</span>
+&lt;/table&gt;</code></pre>
+        <div class="demo">
+          <iframe title="コンテンツモデル順序デモ" height="170" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}table{border-collapse:collapse;width:100%}caption{font-weight:bold;margin-bottom:6px;color:#d02020}th,td{border:1px solid #888;padding:6px 10px;text-align:left}thead{background:#eee}tfoot{background:#f9f9f9;font-weight:bold}</style></head><body><table><caption>[1] caption: 表題</caption><colgroup><col style="background:#fff"><col style="background:#f0f7ff"></colgroup><thead><tr><th>[3] thead 見出し</th><th>列 2</th></tr></thead><tbody><tr><td>[4] tbody データ 1</td><td>値 A</td></tr><tr><td>[4] tbody データ 2</td><td>値 B</td></tr></tbody><tfoot><tr><td>[5] tfoot 総括</td><td>計 2件</td></tr></tfoot></table></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- SVG 図解：table 要素の子要素定義順序 -->
+    <div class="d-fig">
+      <svg viewBox="0 0 640 150" role="img" aria-label="table要素の子要素の標準内包順序">
+        <rect x="10" y="10" width="620" height="130" fill="none" stroke="#111" stroke-width="2" stroke-dasharray="4 4"/>
+        <text x="25" y="32" font-size="12" font-weight="bold" fill="#666">table 要素のコンテンツモデル内包順序</text>
+
+        <rect x="25" y="45" width="110" height="40" fill="#fdf2f2" stroke="#d02020"/>
+        <text x="80" y="64" text-anchor="middle" font-size="12" font-weight="bold" fill="#d02020">1. caption</text>
+        <text x="80" y="78" text-anchor="middle" font-size="10" fill="#666">(0 or 1個)</text>
+
+        <rect x="145" y="45" width="110" height="40" fill="#f4f4f4" stroke="#888"/>
+        <text x="200" y="64" text-anchor="middle" font-size="12" font-weight="bold" fill="#111">2. colgroup</text>
+        <text x="200" y="78" text-anchor="middle" font-size="10" fill="#666">(0個以上)</text>
+
+        <rect x="265" y="45" width="110" height="40" fill="#eef3f0" stroke="#7f9a8e"/>
+        <text x="320" y="64" text-anchor="middle" font-size="12" font-weight="bold" fill="#111">3. thead</text>
+        <text x="320" y="78" text-anchor="middle" font-size="10" fill="#666">(0 or 1個)</text>
+
+        <rect x="385" y="45" width="110" height="40" fill="#eef3f0" stroke="#7f9a8e"/>
+        <text x="440" y="64" text-anchor="middle" font-size="12" font-weight="bold" fill="#111">4. tbody / tr</text>
+        <text x="440" y="78" text-anchor="middle" font-size="10" fill="#666">(0個以上/1個以上)</text>
+
+        <rect x="505" y="45" width="110" height="40" fill="#eef3f0" stroke="#7f9a8e"/>
+        <text x="560" y="64" text-anchor="middle" font-size="12" font-weight="bold" fill="#111">5. tfoot</text>
+        <text x="560" y="78" text-anchor="middle" font-size="10" fill="#666">(0 or 1個)</text>
+
+        <text x="320" y="118" text-anchor="middle" font-size="11" fill="#444">子要素はこの順序に厳密に従って配置される（border 属性は HTML5.2 以降廃止され CSS 指定が必須）</text>
+      </svg>
+    </div>
+
+    <!-- 要素仕様表 -->
+    <table class="spec-table">
+      <thead>
+        <tr>
+          <th>要素名</th>
+          <th>カテゴリー / Category</th>
+          <th>コンテンツモデル / Content Model</th>
+          <th>属性 / Attributes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>table</th>
+          <td>フロー・コンテンツ<br>パルパブル・コンテンツ</td>
+          <td>caption → colgroup → thead → tbody（または tr） → tfoot の順序</td>
+          <td>グローバル属性<br>（<code>border="1"</code> は廃止・非推奨）</td>
+        </tr>
+        <tr>
+          <th>tr</th>
+          <td>なし</td>
+          <td>0個以上の <code>th</code>・<code>td</code> 要素</td>
+          <td>グローバル属性</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ============================================================
+       カード 2：SECTION 6.1.2
+       表の分類（thead・tbody・tfoot 要素）
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 6.1.2</span>
+      <h2 class="card-title">表の分類<span class="en">/ thead, tbody &amp; tfoot</span></h2>
+      <p class="card-desc">表の構造をヘッダー（<code>&lt;thead&gt;</code>）、本体（<code>&lt;tbody&gt;</code>）、フッター（<code>&lt;tfoot&gt;</code>）に論理分割し、視認性とアクセシビリティを向上させる。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="basic-struct" aria-selected="true">基本構造（thead/tbody/tfoot）</button>
+      <button class="tab" role="tab" type="button" data-tab="style-spec" aria-selected="false">スタイル指定（背景色・隔行変色・加粗）</button>
+    </div>
+
+    <!-- Panel 1: Basic Structure -->
+    <div class="panel" data-panel="basic-struct">
+      <div class="card-body">
+        <pre class="code"><code>&lt;table border="1"&gt;
+  <span class="hl">&lt;thead&gt;</span>
+    &lt;tr&gt;&lt;th&gt;商品名&lt;/th&gt;&lt;th&gt;単価&lt;/th&gt;&lt;th&gt;数量&lt;/th&gt;&lt;/tr&gt;
+  <span class="hl">&lt;/thead&gt;</span>
+  <span class="hl">&lt;tbody&gt;</span>
+    &lt;tr&gt;&lt;td&gt;ノートPC&lt;/td&gt;&lt;td&gt;¥120,000&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;マウス&lt;/td&gt;&lt;td&gt;¥3,500&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;/tr&gt;
+  <span class="hl">&lt;/tbody&gt;</span>
+  <span class="hl">&lt;tfoot&gt;</span>
+    &lt;tr&gt;&lt;th&gt;合計&lt;/th&gt;&lt;td colspan="2"&gt;¥127,000&lt;/td&gt;&lt;/tr&gt;
+  <span class="hl">&lt;/tfoot&gt;</span>
+&lt;/table&gt;</code></pre>
+        <div class="demo">
+          <iframe title="基本構造デモ" height="160" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}table{border-collapse:collapse;width:100%}th,td{border:1px solid #444;padding:6px 12px;text-align:left}thead{background:#f5f5f3}tfoot{background:#fafafa}</style></head><body><table><thead><tr><th>商品名</th><th>単価</th><th>数量</th></tr></thead><tbody><tr><td>ノートPC</td><td>¥120,000</td><td>1</td></tr><tr><td>マウス</td><td>¥3,500</td><td>2</td></tr></tbody><tfoot><tr><th>合計</th><td colspan="2">¥127,000</td></tr></tfoot></table></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: Style Spec -->
+    <div class="panel" data-panel="style-spec" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;style&gt;
+  <span class="hl">thead { background: #333; color: #fff; }</span>
+  <span class="hl">tbody tr:nth-child(even) { background: #f9f9f9; }</span>
+  <span class="hl">tfoot { font-weight: bold; background: #eef3f0; }</span>
+&lt;/style&gt;
+&lt;table&gt;
+  &lt;thead&gt;&lt;tr&gt;&lt;th&gt;月&lt;/th&gt;&lt;th&gt;売上&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;td&gt;1月&lt;/td&gt;&lt;td&gt;¥500,000&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;2月&lt;/td&gt;&lt;td&gt;¥620,000&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;3月&lt;/td&gt;&lt;td&gt;¥580,000&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+  &lt;tfoot&gt;&lt;tr&gt;&lt;td&gt;合計&lt;/td&gt;&lt;td&gt;¥1,700,000&lt;/td&gt;&lt;/tr&gt;&lt;/tfoot&gt;
+&lt;/table&gt;</code></pre>
+        <div class="demo">
+          <iframe title="スタイル指定デモ" height="180" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}table{border-collapse:collapse;width:100%}th,td{border:1px solid #ccc;padding:6px 12px;text-align:left}thead{background:#333;color:#fff}thead th{color:#fff}tbody tr:nth-child(even){background:#f9f9f9}tfoot{font-weight:bold;background:#eef3f0;border-top:2px solid #333}</style></head><body><table><thead><tr><th>月</th><th>売上</th></tr></thead><tbody><tr><td>1月</td><td>¥500,000</td></tr><tr><td>2月</td><td>¥620,000</td></tr><tr><td>3月</td><td>¥580,000</td></tr></tbody><tfoot><tr><td>合計</td><td>¥1,700,000</td></tr></tfoot></table></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- 仕様一覧表 -->
+    <table class="spec-table">
+      <thead>
+        <tr>
+          <th>要素名</th>
+          <th>カテゴリー / Category</th>
+          <th>役割と特徴 / Role &amp; Features</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>thead</th>
+          <td>表のヘッダーグループ（Header Group）</td>
+          <td>表の見出し行群をまとめる。<code>table</code> 内に 0 個または 1 個配置可能。</td>
+        </tr>
+        <tr>
+          <th>tbody</th>
+          <td>表のボディグループ（Body Group）</td>
+          <td>表の本体データ行群をまとめる。<code>table</code> 内に 0 個以上配置可能。</td>
+        </tr>
+        <tr>
+          <th>tfoot</th>
+          <td>表のフッターグループ（Footer Group）</td>
+          <td>表の要約・合計行群をまとめる。<code>table</code> 内に 0 個または 1 個配置可能。</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ============================================================
+       カード 3：SECTION 6.1.4
+       列・セルの作成（td 要素・th 要素と属性）
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 6.1.4</span>
+      <h2 class="card-title">列・セルの作成<span class="en">/ td &amp; th</span></h2>
+      <p class="card-desc">データセル（<code>&lt;td&gt;</code>）とヘッダーセル（<code>&lt;th&gt;</code>）。読み上げ支援属性（<code>scope</code>, <code>headers</code>, <code>abbr</code>）でセルの対象を明示する。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="th-vs-td" aria-selected="true">th vs td スタイル</button>
+      <button class="tab" role="tab" type="button" data-tab="scope-attr" aria-selected="false">scope 属性</button>
+      <button class="tab" role="tab" type="button" data-tab="access-attr" aria-selected="false">headers / abbr 属性</button>
+    </div>
+
+    <!-- Panel 1: th vs td -->
+    <div class="panel" data-panel="th-vs-td">
+      <div class="card-body">
+        <pre class="code"><code>&lt;table border="1"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      <span class="hl">&lt;th&gt;科目（th: 太字・中央）&lt;/th&gt;</span>
+      <span class="hl">&lt;th&gt;得点（th: 太字・中央）&lt;/th&gt;</span>
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      <span class="hl">&lt;td&gt;HTML&amp;amp;CSS（td: 標準・左）&lt;/td&gt;</span>
+      <span class="hl">&lt;td&gt;100点（td: 標準・左）&lt;/td&gt;</span>
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+        <div class="demo">
+          <iframe title="th vs td 表示デモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}table{border-collapse:collapse;width:100%}th,td{border:1px solid #444;padding:8px 12px}th{background:#f5f5f3}</style></head><body><table><thead><tr><th>科目（th: 太字・中央）</th><th>得点（th: 太字・中央）</th></tr></thead><tbody><tr><td>HTML&amp;CSS（td: 標準・左）</td><td>100点（td: 標準・左）</td></tr></tbody></table></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: scope Attribute -->
+    <div class="panel" data-panel="scope-attr" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;table border="1"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th <span class="hl">scope="col"</span>&gt;科目&lt;/th&gt;
+      &lt;th <span class="hl">scope="col"</span>&gt;得点&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th <span class="hl">scope="row"</span>&gt;HTML&amp;amp;CSS&lt;/th&gt;
+      &lt;td&gt;100 点&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+        <div class="demo">
+          <iframe title="scope 属性デモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}table{border-collapse:collapse;width:100%}th,td{border:1px solid #444;padding:8px 12px}th[scope="col"]{background:#eef3f0}th[scope="row"]{background:#f4ede2;text-align:left}</style></head><body><table><thead><tr><th scope="col">科目 (scope="col")</th><th scope="col">得点 (scope="col")</th></tr></thead><tbody><tr><th scope="row">HTML&amp;CSS (scope="row")</th><td>100 点</td></tr><tr><th scope="row">Java (scope="row")</th><td>80 点</td></tr></tbody></table></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: headers & abbr Attributes -->
+    <div class="panel" data-panel="access-attr" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;table border="1"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th <span class="hl">id="subj" abbr="科目"</span>&gt;Webプログラミング基礎&lt;/th&gt;
+      &lt;th <span class="hl">id="score" abbr="点数"</span>&gt;期末評価得点&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td <span class="hl">headers="subj"</span>&gt;HTML&amp;amp;CSS&lt;/td&gt;
+      &lt;td <span class="hl">headers="score"</span>&gt;100 点&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+        <div class="demo">
+          <iframe title="headers/abbr 属性デモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}table{border-collapse:collapse;width:100%}th,td{border:1px solid #444;padding:8px 12px}th{background:#f5f5f3;text-align:left}</style></head><body><table><thead><tr><th id="subj" abbr="科目">Webプログラミング基礎（abbr="科目"）</th><th id="score" abbr="点数">期末評価得点（abbr="点数"）</th></tr></thead><tbody><tr><td headers="subj">HTML&amp;CSS（headers="subj"）</td><td headers="score">100 点（headers="score"）</td></tr></tbody></table></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- 属性・要素仕様一覧表 -->
+    <table class="spec-table">
+      <thead>
+        <tr>
+          <th>要素 / 属性</th>
+          <th>種別・仕様</th>
+          <th>詳細情報</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>td</th>
+          <td>データセル（Data Cell）</td>
+          <td>カテゴリー: セクショニング・ルート / コンテンツモデル: フロー・コンテンツ</td>
+        </tr>
+        <tr>
+          <th>th</th>
+          <td>ヘッダーセル（Header Cell）</td>
+          <td>デフォルトで<b>太字・中央揃え</b>表示。見出し情報を表す。</td>
+        </tr>
+        <tr>
+          <th>colspan="N"</th>
+          <td>セル結合（列方向）</td>
+          <td>指定したセルから<b>右方向</b>に N 列分結合する。</td>
+        </tr>
+        <tr>
+          <th>rowspan="N"</th>
+          <td>セル結合（行方向）</td>
+          <td>指定したセルから<b>下方向</b>に N 行分結合する。</td>
+        </tr>
+        <tr>
+          <th>scope</th>
+          <td>見出し対象範囲（th 専用）</td>
+          <td>対象範囲（<code>col</code> / <code>row</code> / <code>colgroup</code> / <code>rowgroup</code>）を指定（音声読み上げ用）。</td>
+        </tr>
+        <tr>
+          <th>headers</th>
+          <td>関連見出し ID</td>
+          <td>関連する <code>th</code> の <code>id</code> 属性値を指定（音声ブラウザ用）。</td>
+        </tr>
+        <tr>
+          <th>abbr</th>
+          <td>代替ラベル（th 専用）</td>
+          <td>見出し内容の簡略化したテキストラベルを指定（音声ブラウザ用）。</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ============================================================
+       カード 4：SECTION 6.2.1
+       表題をつける（caption 要素）
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 6.2.1</span>
+      <h2 class="card-title">表題をつける<span class="en">/ caption</span></h2>
+      <p class="card-desc">テーブルのタイトルや概要を示す <code>&lt;caption&gt;</code> 要素。必ず <code>&lt;table&gt;</code> の直下（最初の要素）に配置し、CSS の <code>caption-side</code> で表示位置を調整する。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="caption-basic" aria-selected="true">基本配置（第一子要素）</button>
+      <button class="tab" role="tab" type="button" data-tab="caption-side" aria-selected="false">caption-side（位置調整）</button>
+    </div>
+
+    <!-- Panel 1: Basic Caption Placement -->
+    <div class="panel" data-panel="caption-basic">
+      <div class="card-body">
+        <pre class="code"><code>&lt;table border="1"&gt;
+  <span class="hl">&lt;caption&gt;2024年度 履修科目一覧&lt;/caption&gt;</span>
+  &lt;thead&gt;
+    &lt;tr&gt;&lt;th&gt;科目&lt;/th&gt;&lt;th&gt;単位&lt;/th&gt;&lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;td&gt;HTML&amp;amp;CSS 演習&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+        <div class="demo">
+          <iframe title="基本配置デモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}table{border-collapse:collapse;width:100%}caption{font-weight:bold;font-size:14px;margin-bottom:6px;text-align:left;color:#d02020}th,td{border:1px solid #444;padding:6px 12px;text-align:left}th{background:#f5f5f3}</style></head><body><table><caption>2024年度 履修科目一覧 (caption)</caption><thead><tr><th>科目</th><th>単位</th></tr></thead><tbody><tr><td>HTML&amp;CSS 演習</td><td>2</td></tr></tbody></table></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: caption-side Property -->
+    <div class="panel" data-panel="caption-side" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;style&gt;
+  /* 上部配置 (デフォルト) */
+  .cap-top caption { <span class="hl">caption-side: top;</span> }
+  /* 下部配置 */
+  .cap-bottom caption { <span class="hl">caption-side: bottom;</span> text-align: right; }
+&lt;/style&gt;
+
+&lt;table class="cap-bottom" border="1"&gt;
+  &lt;caption&gt;※注記：2024年4月現在のデータです&lt;/caption&gt;
+  &lt;thead&gt;&lt;tr&gt;&lt;th&gt;項目&lt;/th&gt;&lt;th&gt;数値&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+  &lt;tbody&gt;&lt;tr&gt;&lt;td&gt;売上&lt;/td&gt;&lt;td&gt;100万&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+        <div class="demo">
+          <iframe title="caption-side デモ" height="160" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}table{border-collapse:collapse;width:100%}th,td{border:1px solid #444;padding:6px 12px;text-align:left}th{background:#f5f5f3}.cap-bottom caption{caption-side:bottom;text-align:right;font-size:12px;color:#666;margin-top:6px}</style></head><body><table class="cap-bottom"><caption>※注記：caption-side: bottom で表の下部に配置</caption><thead><tr><th>項目</th><th>数値</th></tr></thead><tbody><tr><td>売上</td><td>100万</td></tr></tbody></table></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- 仕様一覧表 -->
+    <table class="spec-table">
+      <thead>
+        <tr>
+          <th>要素 / CSSプロパティ</th>
+          <th>配置規則 / 値</th>
+          <th>詳細情報</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>caption</th>
+          <td><code>table</code> の最初の直下子要素</td>
+          <td>表のタイトルや説明文を定義。表内で 1 つのみ配置可能。</td>
+        </tr>
+        <tr>
+          <th>caption-side</th>
+          <td><code>top</code> (初期値) / <code>bottom</code></td>
+          <td>CSS プロパティ。<code>caption</code> の表示位置をテーブルの上部または下部に切り替える。</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ============================================================
+       カード 5：SECTION 6.2.2
+       セルを結合する（colspan 属性・rowspan 属性）
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 6.2.2</span>
+      <h2 class="card-title">セルを結合する<span class="en">/ colspan &amp; rowspan</span></h2>
+      <p class="card-desc">横方向（列）結合の <code>colspan</code>、縦方向（行）結合の <code>rowspan</code>、および両方の組み合わせ。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="col" aria-selected="true">colspan="3"（横結合）</button>
+      <button class="tab" role="tab" type="button" data-tab="row" aria-selected="false">rowspan="3"（縦結合）</button>
+      <button class="tab" role="tab" type="button" data-tab="both" aria-selected="false">colspan + rowspan（縦横）</button>
+    </div>
+
+    <!-- Panel: colspan -->
+    <div class="panel" data-panel="col">
+      <div class="card-body">
+        <pre class="code"><code>&lt;table border="1"&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1 列目&lt;/td&gt;&lt;td&gt;2 列目&lt;/td&gt;&lt;td&gt;3 列目&lt;/td&gt;&lt;td&gt;4 列目&lt;/td&gt;&lt;td&gt;5 列目&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1 列目&lt;/td&gt;
+      &lt;td <span class="hl">colspan="3"</span>&gt;2〜4 列目を結合 (3列分)&lt;/td&gt;
+      &lt;td&gt;5 列目&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+        <div class="demo">
+          <iframe title="colspan 描画" height="140" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}table{border-collapse:collapse;width:100%}td{border:1px solid #444;padding:6px 10px;text-align:center}td.merged{background:#ffebee;font-weight:bold;color:#d02020}</style></head><body><table border="1"><tbody><tr><td>1 列目</td><td>2 列目</td><td>3 列目</td><td>4 列目</td><td>5 列目</td></tr><tr><td>1 列目</td><td colspan="3" class="merged">colspan="3"（2〜4列目を横結合）</td><td>5 列目</td></tr></tbody></table></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: rowspan -->
+    <div class="panel" data-panel="row" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;table border="1"&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;td&gt;1 行目&lt;/td&gt;&lt;td&gt;1 行目&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;2 行目&lt;/td&gt;&lt;td <span class="hl">rowspan="3"</span>&gt;2〜4 行目を結合 (3行分)&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;3 行目&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;4 行目&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;5 行目&lt;/td&gt;&lt;td&gt;5 行目&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+        <div class="demo">
+          <iframe title="rowspan 描画" height="200" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}table{border-collapse:collapse;width:100%}td{border:1px solid #444;padding:6px 10px;text-align:center}td.merged{background:#ffebee;font-weight:bold;color:#d02020}</style></head><body><table border="1"><tbody><tr><td>1 行目</td><td>1 行目</td></tr><tr><td>2 行目</td><td rowspan="3" class="merged">rowspan="3"<br>（2〜4行目を縦結合）</td></tr><tr><td>3 行目</td></tr><tr><td>4 行目</td></tr><tr><td>5 行目</td><td>5 行目</td></tr></tbody></table></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: both -->
+    <div class="panel" data-panel="both" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;table border="1"&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;td&gt;1行1列&lt;/td&gt;&lt;td&gt;1行2列&lt;/td&gt;&lt;td&gt;1行3列&lt;/td&gt;&lt;td&gt;1行4列&lt;/td&gt;&lt;td&gt;1行5列&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;2行1列&lt;/td&gt;&lt;td <span class="hl">colspan="3" rowspan="3"</span>&gt;3列×3行を結合&lt;/td&gt;&lt;td&gt;2行5列&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;3行1列&lt;/td&gt;&lt;td&gt;3行5列&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;4行1列&lt;/td&gt;&lt;td&gt;4行5列&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;5行1列&lt;/td&gt;&lt;td&gt;5行2列&lt;/td&gt;&lt;td&gt;5行3列&lt;/td&gt;&lt;td&gt;5行4列&lt;/td&gt;&lt;td&gt;5行5列&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+        <div class="demo">
+          <iframe title="colspan+rowspan 描画" height="210" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}table{border-collapse:collapse;width:100%}td{border:1px solid #444;padding:6px 10px;text-align:center}td.merged{background:#ffebee;font-weight:bold;color:#d02020}</style></head><body><table border="1"><tbody><tr><td>1行1列</td><td>1行2列</td><td>1行3列</td><td>1行4列</td><td>1行5列</td></tr><tr><td>2行1列</td><td colspan="3" rowspan="3" class="merged">colspan="3" rowspan="3"<br>（3列×3行を結合）</td><td>2行5列</td></tr><tr><td>3行1列</td><td>3行5列</td></tr><tr><td>4行1列</td><td>4行5列</td></tr><tr><td>5行1列</td><td>5行2列</td><td>5行3列</td><td>5行4列</td><td>5行5列</td></tr></tbody></table></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- SVG 図解：結合方向の概念図 -->
+    <div class="d-fig">
+      <svg viewBox="0 0 640 135" role="img" aria-label="colspanとrowspanの結合方向の概念図">
+        <g transform="translate(20, 12)">
+          <rect x="0" y="0" width="280" height="110" fill="#fafafa" stroke="#ccc"/>
+          <text x="140" y="24" text-anchor="middle" font-size="13" font-weight="bold" fill="#111">colspan="N" （横方向・列の結合）</text>
+          <rect x="25" y="38" width="230" height="36" fill="#fdf2f2" stroke="#d02020" stroke-width="2"/>
+          <text x="140" y="60" text-anchor="middle" font-size="12" font-weight="bold" fill="#d02020">起点から右方向へ N 列結合 ➔</text>
+          <text x="140" y="96" text-anchor="middle" font-size="11" fill="#666">例: colspan="3" → 起点 + 右隣2列を結合</text>
+        </g>
+
+        <g transform="translate(340, 12)">
+          <rect x="0" y="0" width="280" height="110" fill="#fafafa" stroke="#ccc"/>
+          <text x="140" y="24" text-anchor="middle" font-size="13" font-weight="bold" fill="#111">rowspan="N" （縦方向・行の結合）</text>
+          <rect x="65" y="38" width="150" height="48" fill="#fdf2f2" stroke="#d02020" stroke-width="2"/>
+          <text x="140" y="58" text-anchor="middle" font-size="12" font-weight="bold" fill="#d02020">起点から下方向へ</text>
+          <text x="140" y="74" text-anchor="middle" font-size="12" font-weight="bold" fill="#d02020">N 行結合 ⬇</text>
+          <text x="140" y="98" text-anchor="middle" font-size="11" fill="#666">例: rowspan="3" → 起点 + 下隣2行を結合</text>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       カード 6：SECTION 6.2.3
+       列のグループ化（colgroup・col 要素）
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 6.2.3</span>
+      <h2 class="card-title">列のグループ化<span class="en">/ colgroup &amp; col</span></h2>
+      <p class="card-desc">縦方向の列（Column）をグループ化してまとめて CSS スタイルを適用する <code>&lt;colgroup&gt;</code> と <code>&lt;col&gt;</code> 要素。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="colgroup-span" aria-selected="true">colgroup span（一括スタイル指定）</button>
+      <button class="tab" role="tab" type="button" data-tab="col-element" aria-selected="false">col要素の利用（個別・差異化指定）</button>
+    </div>
+
+    <!-- Panel 1: colgroup span -->
+    <div class="panel" data-panel="colgroup-span">
+      <div class="card-body">
+        <pre class="code"><code>&lt;table border="1"&gt;
+  <span class="hl">&lt;colgroup span="2" style="background: #ffebee;"&gt;&lt;/colgroup&gt;</span>
+  <span class="hl">&lt;colgroup span="1" style="background: #e3f2fd;"&gt;&lt;/colgroup&gt;</span>
+  &lt;thead&gt;
+    &lt;tr&gt;&lt;th&gt;列 1&lt;/th&gt;&lt;th&gt;列 2&lt;/th&gt;&lt;th&gt;列 3&lt;/th&gt;&lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;td&gt;データ A&lt;/td&gt;&lt;td&gt;データ B&lt;/td&gt;&lt;td&gt;データ C&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;データ D&lt;/td&gt;&lt;td&gt;データ E&lt;/td&gt;&lt;td&gt;データ F&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+        <div class="demo">
+          <iframe title="colgroup span デモ" height="160" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}table{border-collapse:collapse;width:100%}th,td{border:1px solid #444;padding:6px 12px;text-align:center}th{background:rgba(0,0,0,0.05)}</style></head><body><table><colgroup span="2" style="background:#ffebee;"></colgroup><colgroup span="1" style="background:#e3f2fd;"></colgroup><thead><tr><th>列 1 (span=2)</th><th>列 2 (span=2)</th><th>列 3 (span=1)</th></tr></thead><tbody><tr><td>データ A</td><td>データ B</td><td>データ C</td></tr><tr><td>データ D</td><td>データ E</td><td>データ F</td></tr></tbody></table></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: col Element -->
+    <div class="panel" data-panel="col-element" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;table border="1"&gt;
+  &lt;colgroup&gt;
+    <span class="hl">&lt;col style="width: 30%; background: #fdf2f2;"&gt;</span>
+    <span class="hl">&lt;col style="width: 50%; background: #ffffff;"&gt;</span>
+    <span class="hl">&lt;col style="width: 20%; background: #eef3f0;"&gt;</span>
+  &lt;/colgroup&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;&lt;th&gt;分類&lt;/th&gt;&lt;th&gt;詳細&lt;/th&gt;&lt;th&gt;備考&lt;/th&gt;&lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;td&gt;HTML&lt;/td&gt;&lt;td&gt;マークアップ言語&lt;/td&gt;&lt;td&gt;必須&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;CSS&lt;/td&gt;&lt;td&gt;スタイルシート&lt;/td&gt;&lt;td&gt;必須&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+        <div class="demo">
+          <iframe title="col 要素デモ" height="160" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}table{border-collapse:collapse;width:100%}th,td{border:1px solid #444;padding:6px 10px;text-align:left}</style></head><body><table><colgroup><col style="width:30%;background:#fdf2f2;"><col style="width:50%;background:#ffffff;"><col style="width:20%;background:#eef3f0;"></colgroup><thead><tr><th>分類 (col 30%)</th><th>詳細 (col 50%)</th><th>備考 (col 20%)</th></tr></thead><tbody><tr><td>HTML</td><td>マークアップ言語</td><td>必須</td></tr><tr><td>CSS</td><td>スタイルシート</td><td>必須</td></tr></tbody></table></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- 仕様一覧表 -->
+    <table class="spec-table">
+      <thead>
+        <tr>
+          <th>要素 / 属性</th>
+          <th>種別・仕様</th>
+          <th>詳細情報</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>colgroup</th>
+          <td>列グループ要素（Column Group）</td>
+          <td>表の列を論理的にグループ化する。<code>span</code> 属性で列数を指定可能。</td>
+        </tr>
+        <tr>
+          <th>col</th>
+          <td>空要素（Void Element）</td>
+          <td><code>colgroup</code> 内で個別の列のスタイルを定義する。終了タグ不可。</td>
+        </tr>
+        <tr>
+          <th>適用可能 CSS</th>
+          <td>制限あり</td>
+          <td><code>background</code>, <code>width</code>, <code>border</code>, <code>visibility</code> のみ指定可能。</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+</main>
+
+<script>
+/* ★このスクリプトは一行も変更しない。丸ごとコピーすること★ */
+
+/* タブ: [data-tabs] ごとにスコープされる。カードが何枚あっても干渉しない */
+document.querySelectorAll('[data-tabs]').forEach(function (group) {
+  var tabs = group.querySelectorAll(':scope > .tabs > .tab');
+  var panels = group.querySelectorAll(':scope > .panel');
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var key = tab.dataset.tab;
+      tabs.forEach(function (t) { t.setAttribute('aria-selected', String(t === tab)); });
+      panels.forEach(function (p) { p.hidden = (p.dataset.panel !== key); });
+    });
+  });
+});
+
+/* テーマ固定（ライト）。切替機能は廃止 */
+</script>
+</body>
+</html>

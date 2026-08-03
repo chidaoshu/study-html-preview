@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HTML&amp;CSS 期末試験 復習シート — vol.5 リンクを構成する要素</title>
+<style>
+/* =========================================================
+   [1] テーマ (Swiss Vignelli Palette)
+   固定ライト。暗色モードの切替は廃止。
+   ========================================================= */
+:root {
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #666666;
+  --line: #cccccc;
+  --hairline: #e2e2e2;
+  --surface: #f5f5f3;
+  --accent: #d02020;        /* 差分・強調のみに使用 */
+  --demo-bg: #ffffff;
+  --demo-fg: #111111;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Helvetica Neue", Helvetica, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic Medium", sans-serif;
+  line-height: 1.6;
+  text-wrap: pretty;
+  -webkit-text-size-adjust: 100%;
+}
+
+code, pre, .mono {
+  font-family: "SF Mono", "Menlo", "Consolas", monospace;
+}
+
+/* =========================================================
+   [2] Swiss Layout & Grid
+   ========================================================= */
+.wrap {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+@media (min-width: 900px) {
+  .wrap { padding: 0 32px; }
+}
+
+/* Header */
+.top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+}
+.brand-tag {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 2px 6px;
+  background: var(--fg);
+  color: var(--bg);
+}
+.volnav {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  font-size: 13px;
+  font-weight: 500;
+}
+.volnav a {
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 2px 4px;
+}
+.volnav a[aria-current="page"] {
+  color: var(--fg);
+  font-weight: 700;
+  border-bottom: 2px solid var(--fg);
+}
+
+/* Card & Panels */
+.card {
+  border-top: 1px solid var(--line);
+  padding: 32px 0;
+}
+.card-header {
+  margin-bottom: 20px;
+}
+.card-num {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 4px;
+  display: block;
+}
+.card-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+.card-title .en {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-left: 8px;
+}
+.card-desc {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.card-body {
+  display: grid;
+  gap: 16px;
+}
+@media (min-width: 900px) {
+  .card-body {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+}
+
+/* =========================================================
+   [3] Vignelli Tab Bar
+   ========================================================= */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.tab {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  border-bottom: none;
+  background: var(--surface);
+  color: var(--muted);
+  border-radius: 0;
+  transition: color 0.1s, background 0.1s;
+}
+.tab:hover {
+  color: var(--fg);
+  background: var(--bg);
+}
+.tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.tab[aria-selected="true"] {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
+}
+.panel[hidden] {
+  display: none;
+}
+
+/* =========================================================
+   [4] Code & Explanation Blocks
+   ========================================================= */
+pre.code {
+  margin: 0;
+  padding: 14px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.65;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  white-space: pre;
+}
+.hl {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* Table styling for spec summaries */
+.spec-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-top: 10px;
+}
+.spec-table th, .spec-table td {
+  border: 1px solid var(--line);
+  padding: 6px 10px;
+  text-align: left;
+}
+.spec-table th {
+  background: var(--surface);
+  font-weight: 600;
+}
+
+/* =========================================================
+   [5] Demo Frame
+   ========================================================= */
+.demo {
+  border: 1px solid var(--line);
+  background: var(--demo-bg);
+}
+.demo iframe {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: var(--demo-bg);
+}
+
+/* === 概念図解用 === */
+.d-fig {
+  border: 1px solid var(--line);
+  background: #fffefc;
+  padding: 14px;
+  margin: 10px 0;
+}
+.d-fig svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+</style>
+<style>
+/* === 375px 横溢れ修正（主代理が追加。設計・配色・書体には手を入れていない） === */
+.volnav{overflow-x:auto;min-width:0;flex:1 1 auto;scrollbar-width:none}
+.volnav::-webkit-scrollbar{display:none}
+.top{max-width:100%;overflow:hidden}
+.top>*{min-width:0}
+@media (max-width:899px){
+  .wrap{max-width:100%!important}
+  .card-body{display:block!important}
+  .card-body>*{width:auto!important;max-width:100%!important;min-width:0!important}
+  .card-body>*+*{margin-top:14px}
+  .panel [class*="col"]{width:auto!important;min-width:0!important;max-width:100%!important}
+}
+.wrap>*,.panel,.panel>*{min-width:0}
+pre,[class*="code"]{max-width:100%;min-width:0}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <span class="brand-tag">HTML&amp;CSS</span>
+  <nav class="volnav">
+    <a href="vol.1.html">1</a>
+    <a href="vol.2.html">2</a>
+    <a href="vol.3.html">3</a>
+    <a href="vol.4.html">4</a>
+    <a href="vol.5.html" aria-current="page">5</a>
+    <a href="vol.6.html">6</a>
+    <a href="vol.7.html">7</a>
+    <a href="vol.8.html">8</a>
+    <a href="vol.9.html">9</a>
+    <a href="vol.10.html">10</a>
+    <a href="vol.11.html">11</a>
+    <a href="vol.12.html">12</a>
+    <a href="vol.13.html">13</a>
+    <a href="vol.14.html">14</a>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <!-- ============================================================
+       SECTION 5.1: a 要素の基本構文とカテゴリー・コンテンツモデル
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 5.1 / a 要素</span>
+      <h2 class="card-title">a 要素の構造とコンテンツモデル<span class="en">/ Anchor Element</span></h2>
+      <p class="card-desc">ハイパーリンクを構成する要素。子要素の内容をリンク化する。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="text" aria-selected="true">テキストリンク</button>
+      <button class="tab" role="tab" type="button" data-tab="image" aria-selected="false">画像リンク</button>
+      <button class="tab" role="tab" type="button" data-tab="download" aria-selected="false">ファイル保存 (download)</button>
+    </div>
+
+    <!-- Panel 1: テキストリンク -->
+    <div class="panel" data-panel="text">
+      <div class="card-body">
+        <div>
+          <pre class="code"><code>&lt;a <span class="hl">href="https://www.jec.ac.jp"</span>&gt;
+  日本電子専門学校
+&lt;/a&gt;</code></pre>
+          <table class="spec-table">
+            <tr><th>カテゴリー</th><td>Flow, Phrasing, Interactive (href時), Palpable</td></tr>
+            <tr><th>コンテンツモデル</th><td><span class="hl">Transparent</span>（親要素を継承。※aやbutton等のインタラクティブ要素は子不可）</td></tr>
+          </table>
+        </div>
+        <div class="demo">
+          <iframe title="a要素 テキストリンクデモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:16px;color:#111}a{color:#0066cc;text-decoration:underline}a:hover{color:#d02020}</style></head><body><p>学校Webサイトへ移行：</p><p><a href="https://www.jec.ac.jp" target="_blank">日本電子専門学校 (jec.ac.jp)</a></p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: 画像リンク -->
+    <div class="panel" data-panel="image" hidden>
+      <div class="card-body">
+        <div>
+          <pre class="code"><code>&lt;a <span class="hl">href="sample.html"</span>&gt;
+  <span class="hl">&lt;img src="banner.png" alt="サンプルページへ"&gt;</span>
+&lt;/a&gt;</code></pre>
+          <table class="spec-table">
+            <tr><th>要素のネスト</th><td>`img`（フレージング・コンテンツ）を包含して画像全体をリンク化できる</td></tr>
+          </table>
+        </div>
+        <div class="demo">
+          <iframe title="a要素 画像リンクデモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:16px;color:#111}a{display:inline-block;border:2px solid #0066cc;padding:4px;background:#f0f7ff;text-decoration:none;color:#0066cc;font-weight:bold}a:hover{background:#e0f0ff}</style></head><body><p>クリック可能なバナー要素：</p><a href="#" onclick="alert(&quot;画像リンクがクリックされました&quot;);return false;"><svg width="140" height="40" style="vertical-align:middle"><rect width="140" height="40" fill="#0066cc" rx="4"/><text x="70" y="25" fill="#fff" font-size="14" text-anchor="middle">BANNER LINK</text></svg></a></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: download 属性 -->
+    <div class="panel" data-panel="download" hidden>
+      <div class="card-body">
+        <div>
+          <pre class="code"><code>&lt;!-- 値省略：元のファイル名で保存 --&gt;
+&lt;a href="report.pdf" <span class="hl">download</span>&gt;資料ダウンロード&lt;/a&gt;
+
+&lt;!-- 値指定：指定したファイル名で保存 --&gt;
+&lt;a href="report.pdf" <span class="hl">download="期末対策_vol5.pdf"</span>&gt;資料保存&lt;/a&gt;</code></pre>
+          <table class="spec-table">
+            <tr><th>download 属性</th><td>リソースを遷移せずダウンロード。値で保存時のファイル名を指定。</td></tr>
+          </table>
+        </div>
+        <div class="demo">
+          <iframe title="a要素 download属性デモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:16px;color:#111}.btn{display:inline-block;padding:6px 12px;background:#222;color:#fff;text-decoration:none;font-size:13px;border-radius:3px}.btn:hover{background:#d02020}</style></head><body><p>ファイルのダウンロードリンク：</p><a href="#" download="sample_manual.pdf" class="btn" onclick="alert(&quot;download属性付きリンクの模擬実行（sample_manual.pdf として保存）&quot;);return false;">📄 資料PDFをダウンロード (download)</a></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 5.1.1: href で設定できる主なリンク先
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 5.1.1 / href 属性</span>
+      <h2 class="card-title">href で設定できるリンク先種別<span class="en">/ href Link Targets</span></h2>
+      <p class="card-desc">指定するパス形式やスキームによって、ブラウザの挙動が変化する。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="path" aria-selected="true">相対パス / 絶対パス / URL</button>
+      <button class="tab" role="tab" type="button" data-tab="anchor" aria-selected="false">ページ内ジャンプ (#id / #)</button>
+      <button class="tab" role="tab" type="button" data-tab="scheme" aria-selected="false">javascript: / mailto:</button>
+      <button class="tab" role="tab" type="button" data-tab="reload" aria-selected="false">空文字 ("")</button>
+    </div>
+
+    <!-- Panel 1: パス/URL -->
+    <div class="panel" data-panel="path">
+      <div class="card-body">
+        <div>
+          <pre class="code"><code>&lt;!-- 相対パス（同一PC/サーバー内） --&gt;
+&lt;a <span class="hl">href="images/test.html"</span>&gt;相対パス&lt;/a&gt;
+&lt;a <span class="hl">href="images/test.jpg"</span>&gt;画像パス&lt;/a&gt;
+
+&lt;!-- 絶対パス・URL --&gt;
+&lt;a <span class="hl">href="https://www.jec.ac.jp"</span>&gt;外部URL&lt;/a&gt;</code></pre>
+          <table class="spec-table">
+            <tr><th>相対パス</th><td>現在のファイル位置を基準に指定（`images/test.html`）</td></tr>
+            <tr><th>絶対パス / URL</th><td>ドライブレター（`c:/...`）やプロトコル（`https://...`）から全指定</td></tr>
+          </table>
+        </div>
+        <div class="demo">
+          <iframe title="href パス種別デモ" height="170" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}ul{padding-left:20px}li{margin-bottom:6px}a{color:#0066cc}</style></head><body><ul><li>相対パス指定: <a href="sample.html" onclick="alert(&quot;相対パス: sample.html へ遷移&quot;);return false;">images/test.html</a></li><li>URL指定: <a href="https://www.jec.ac.jp" target="_blank">https://www.jec.ac.jp</a></li></ul></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: ページ内ジャンプ -->
+    <div class="panel" data-panel="anchor" hidden>
+      <div class="card-body">
+        <div>
+          <pre class="code"><code>&lt;!-- 特定要素（id="test"）へジャンプ --&gt;
+&lt;a <span class="hl">href="test.html#test"</span>&gt;特定セクションへ&lt;/a&gt;
+&lt;a <span class="hl">href="#sec2"</span>&gt;同一ページ内の #sec2 へ&lt;/a&gt;
+
+&lt;!-- ページの先頭へジャンプ --&gt;
+&lt;a <span class="hl">href="#"</span>&gt;ページ先頭へ&lt;/a&gt;</code></pre>
+          <table class="spec-table">
+            <tr><th>`#id`</th><td>リンク先要素に `id="id名"` が設定されている必要がある</td></tr>
+            <tr><th>`#`</th><td>単体指定の場合、ページの最上部（先頭）へジャンプする</td></tr>
+          </table>
+        </div>
+        <div class="demo">
+          <iframe title="href ページ内ジャンプデモ" height="170" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}a{color:#0066cc}.box{height:80px;background:#eee;margin:8px 0;padding:8px;border:1px dashed #ccc}</style></head><body><a href="#sec2">↓ #sec2 へジャンプ</a><div style="height:40px"></div><div id="sec2" class="box"><strong>[id="sec2"] の対象領域</strong><br><a href="#">↑ ページ先頭 (#) へ戻る</a></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: スクリプト・メール -->
+    <div class="panel" data-panel="scheme" hidden>
+      <div class="card-body">
+        <div>
+          <pre class="code"><code>&lt;!-- リンク押下で JavaScript を実行 --&gt;
+&lt;a <span class="hl">href="javascript:alert('test');"</span>&gt;スクリプト実行&lt;/a&gt;
+
+&lt;!-- メールソフトを起動 --&gt;
+&lt;a <span class="hl">href="mailto:user@example.com"</span>&gt;メールを送信&lt;/a&gt;</code></pre>
+          <table class="spec-table">
+            <tr><th>`javascript:`</th><td>擬似プロトコル。指定した JavaScript ソースコードを実行</td></tr>
+            <tr><th>`mailto:`</th><td>既定のメールクライアントを起出し送信画面を開く</td></tr>
+          </table>
+        </div>
+        <div class="demo">
+          <iframe title="href 擬似スキームデモ" height="170" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}a{display:inline-block;margin:4px 0;color:#0066cc}</style></head><body><p><a href="javascript:alert(&quot;javascript: 擬似スキームが実行されました！&quot;);">▶ href="javascript:alert(&apos;test&apos;);"</a></p><p><a href="mailto:info@example.com">✉ href="mailto:info@example.com"</a></p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 4: 空文字 -->
+    <div class="panel" data-panel="reload" hidden>
+      <div class="card-body">
+        <div>
+          <pre class="code"><code>&lt;!-- ページをリロード（再読み込み） --&gt;
+&lt;a <span class="hl">href=""</span>&gt;ページ再読み込み&lt;/a&gt;</code></pre>
+          <table class="spec-table">
+            <tr><th>`""` （空文字）</th><td>現在の URL 自体を指定した扱いとなり、ページを再読み込み（リロード）する</td></tr>
+          </table>
+        </div>
+        <div class="demo">
+          <iframe title="href 空文字リロードデモ" height="170" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}a{color:#d02020;font-weight:bold}</style></head><body><p>現在の読み込み時刻: <span id="t"></span></p><p><a href="" onclick="location.reload();return false;">🔄 href="" (ページリロード)</a></p><script>document.getElementById("t").textContent=new Date().toLocaleTimeString();</script></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 5.1.2: target 属性の主な属性値
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 5.1.2 / target 属性</span>
+      <h2 class="card-title">target 属性の属性値と表示場所<span class="en">/ target Attribute Values</span></h2>
+      <p class="card-desc">リンク先のリソースを表示させるウィンドウ・フレームの場所を指定する。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="self" aria-selected="true">_self (デフォルト)</button>
+      <button class="tab" role="tab" type="button" data-tab="blank" aria-selected="false">_blank (新規タブ)</button>
+      <button class="tab" role="tab" type="button" data-tab="framename" aria-selected="false">iframe 名指定</button>
+      <button class="tab" role="tab" type="button" data-tab="parenttop" aria-selected="false">_parent / _top</button>
+    </div>
+
+    <!-- Panel 1: _self -->
+    <div class="panel" data-panel="self">
+      <div class="card-body">
+        <div>
+          <pre class="code"><code>&lt;a href="sample.html" <span class="hl">target="_self"</span>&gt;リンク&lt;/a&gt;</code></pre>
+          <table class="spec-table">
+            <tr><th>`_self`</th><td>現在と同じウィンドウ・フレームに表示（属性省略時のデフォルト挙動）</td></tr>
+          </table>
+        </div>
+        <div class="demo">
+          <iframe title="target _self デモ" height="160" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}a{color:#0066cc}</style></head><body><p>現在のフレーム内で直接遷移：</p><a href="#" onclick="document.body.innerHTML=&quot;<p style=&apos;color:#d02020&apos;>_self により同一フレーム内で新コンテンツが表示されました。</p>&quot;;return false;">target="_self" リンクをクリック</a></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: _blank -->
+    <div class="panel" data-panel="blank" hidden>
+      <div class="card-body">
+        <div>
+          <pre class="code"><code>&lt;a href="https://www.jec.ac.jp" <span class="hl">target="_blank"</span>&gt;リンク&lt;/a&gt;</code></pre>
+          <table class="spec-table">
+            <tr><th>`_blank`</th><td>新しいタブ（または新しいウィンドウ）にリソースを表示する</td></tr>
+          </table>
+        </div>
+        <div class="demo">
+          <iframe title="target _blank デモ" height="160" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}a{color:#0066cc;font-weight:bold}</style></head><body><p>別タブで開くリンク指定：</p><a href="https://www.jec.ac.jp" target="_blank">target="_blank" (新規タブで開く ↗)</a></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: iframe 名指定 -->
+    <div class="panel" data-panel="framename" hidden>
+      <div class="card-body">
+        <div>
+          <pre class="code"><code>&lt;a href="sample.html" <span class="hl">target="if01"</span>&gt;リンク&lt;/a&gt;
+
+&lt;!-- リンク先の表示対象となる iframe --&gt;
+&lt;iframe <span class="hl">name="if01"</span> src="default.html"&gt;&lt;/iframe&gt;</code></pre>
+          <table class="spec-table">
+            <tr><th>iframe の name</th><td>`name="if01"` が付けられた iframe 内へリソースを表示する</td></tr>
+          </table>
+        </div>
+        <div class="demo">
+          <iframe title="target iframe名指定デモ" height="180" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:8px;color:#111}a{color:#0066cc;font-weight:bold}iframe{width:100%;height:80px;border:1px solid #999;margin-top:6px}</style></head><body><a href="about:blank" target="if01" onclick="var f=document.getElementsByName(&apos;if01&apos;)[0];f.contentDocument.write(&apos;<h4 style=color:#d02020;margin:8px>target=&quot;if01&quot; によりこのiframe内に読込まれました</h4>&apos;);return false;">▶ target="if01" で下部iframeを更新</a><iframe name="if01" srcdoc="<p style=margin:8px;color:#666>初期状態: name=&quot;if01&quot; の iframe</p>"></iframe></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 4: _parent / _top -->
+    <div class="panel" data-panel="parenttop" hidden>
+      <div class="card-body">
+        <div>
+          <pre class="code"><code>&lt;!-- 親ウィンドウに表示 --&gt;
+&lt;a href="sample.html" <span class="hl">target="_parent"</span>&gt;親ウィンドウ&lt;/a&gt;
+
+&lt;!-- 最上位ウィンドウに表示 --&gt;
+&lt;a href="sample.html" <span class="hl">target="_top"</span>&gt;最上位ウィンドウ&lt;/a&gt;</code></pre>
+          <table class="spec-table">
+            <tr><th>`_parent`</th><td>親ウィンドウに表示。親が無い場合は `_self` と同じ挙動</td></tr>
+            <tr><th>`_top`</th><td>最上位のウィンドウに表示。親が無い場合は `_self` と同じ挙動</td></tr>
+          </table>
+        </div>
+        <div class="demo">
+          <iframe title="target _parent _top デモ" height="160" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}a{display:block;margin:4px 0;color:#0066cc}</style></head><body><a href="#" onclick="alert(&quot;target=_parent: 親ウィンドウへ表示&quot;);return false;">▶ target="_parent"</a><a href="#" onclick="alert(&quot;target=_top: 最上位ウィンドウへ表示&quot;);return false;">▶ target="_top"</a></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 5.2: area 要素とイメージマップ
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 5.2.2 / area 要素 🔴</span>
+      <h2 class="card-title">イメージマップの領域指定<span class="en">/ shape &amp; coords</span></h2>
+      <p class="card-desc">`<map>` と `<area>` を使用して、画像内の特定図形領域に個別のリンクを定義する。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="rect" aria-selected="true">rect (長方形)</button>
+      <button class="tab" role="tab" type="button" data-tab="circle" aria-selected="false">circle (円形)</button>
+      <button class="tab" role="tab" type="button" data-tab="poly" aria-selected="false">poly (多角形)</button>
+      <button class="tab" role="tab" type="button" data-tab="default" aria-selected="false">default (画像全体)</button>
+    </div>
+
+    <!-- Panel 1: rect -->
+    <div class="panel" data-panel="rect">
+      <div class="card-body">
+        <div>
+          <pre class="code"><code>&lt;img src="sample.jpg" <span class="hl">usemap="#map01"</span>&gt;
+&lt;map <span class="hl">name="map01"</span>&gt;
+  &lt;area <span class="hl">shape="rect"</span>
+        <span class="hl">coords="0, 0, 100, 100"</span>
+        href="test1.html" alt="領域1"&gt;
+&lt;/map&gt;</code></pre>
+          <table class="spec-table">
+            <tr><th>`shape="rect"`</th><td>長方形・正方形</td></tr>
+            <tr><th>`coords` (4値)</th><td>左上角(x1, y1) と 右下角(x2, y2) の座標<br>例：`0, 0, 100, 100`</td></tr>
+          </table>
+        </div>
+        <div class="demo">
+          <iframe title="area rect デモ" height="210" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:10px;color:#111}.map-box{position:relative;width:240px;height:120px;background:#f5f5f3;border:1px solid #ccc}rect{fill:#0066cc;fill-opacity:0.2;stroke:#0066cc;stroke-width:2;cursor:pointer}rect:hover{fill-opacity:0.5}</style></head><body><div class="map-box"><svg width="240" height="120"><rect x="0" y="0" width="100" height="100" onclick="alert(&quot;rect(0,0,100,100) -> test1.htmlへ遷移&quot;)"/><text x="50" y="55" font-size="12" text-anchor="middle" fill="#0066cc">rect 領域</text></svg></div><p style="margin:6px 0 0;font-size:12px;color:#666">クリック可能領域: (0,0) 〜 (100,100)</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: circle -->
+    <div class="panel" data-panel="circle" hidden>
+      <div class="card-body">
+        <div>
+          <pre class="code"><code>&lt;img src="sample.jpg" <span class="hl">usemap="#map01"</span>&gt;
+&lt;map <span class="hl">name="map01"</span>&gt;
+  &lt;area <span class="hl">shape="circle"</span>
+        <span class="hl">coords="100, 100, 50"</span>
+        href="test2.html" alt="領域2"&gt;
+&lt;/map&gt;</code></pre>
+          <table class="spec-table">
+            <tr><th>`shape="circle"`</th><td>円形</td></tr>
+            <tr><th>`coords` (3値)</th><td>中心点(x, y) と 半径(r)<br>例：`100, 100, 50` (中心(100,100)、半径50)</td></tr>
+          </table>
+        </div>
+        <div class="demo">
+          <iframe title="area circle デモ" height="210" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:10px;color:#111}.map-box{position:relative;width:240px;height:180px;background:#f5f5f3;border:1px solid #ccc}circle{fill:#d02020;fill-opacity:0.2;stroke:#d02020;stroke-width:2;cursor:pointer}circle:hover{fill-opacity:0.5}</style></head><body><div class="map-box"><svg width="240" height="180"><circle cx="100" cy="100" r="50" onclick="alert(&quot;circle(100,100,r=50) -> test2.htmlへ遷移&quot;)"/><text x="100" y="105" font-size="12" text-anchor="middle" fill="#d02020">circle 領域</text></svg></div><p style="margin:6px 0 0;font-size:12px;color:#666">クリック可能領域: 中心(100,100), 半径 50</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: poly -->
+    <div class="panel" data-panel="poly" hidden>
+      <div class="card-body">
+        <div>
+          <pre class="code"><code>&lt;img src="sample.jpg" <span class="hl">usemap="#map03"</span>&gt;
+&lt;map <span class="hl">name="map03"</span>&gt;
+  &lt;area <span class="hl">shape="poly"</span>
+        <span class="hl">coords="55,10, 10,110, 110,110"</span>
+        href="test1.html" alt="三角形"&gt;
+&lt;/map&gt;</code></pre>
+          <table class="spec-table">
+            <tr><th>`shape="poly"`</th><td>多角形（ポリゴン）</td></tr>
+            <tr><th>`coords` (偶数値)</th><td>すべての角の座標 (x1, y1, x2, y2, x3, y3, ...)<br>三角形＝6個の座標値</td></tr>
+          </table>
+        </div>
+        <div class="demo">
+          <iframe title="area poly デモ" height="210" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:10px;color:#111}.map-box{position:relative;width:240px;height:140px;background:#f5f5f3;border:1px solid #ccc}polygon{fill:#2e7d32;fill-opacity:0.2;stroke:#2e7d32;stroke-width:2;cursor:pointer}polygon:hover{fill-opacity:0.5}</style></head><body><div class="map-box"><svg width="240" height="140"><polygon points="55,10 10,110 110,110" onclick="alert(&quot;poly(55,10, 10,110, 110,110) -> test1.htmlへ遷移&quot;)"/><text x="58" y="80" font-size="12" text-anchor="middle" fill="#2e7d32">poly 三角形</text></svg></div><p style="margin:6px 0 0;font-size:12px;color:#666">クリック可能領域: 3頂点 (55,10), (10,110), (110,110)</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 4: default -->
+    <div class="panel" data-panel="default" hidden>
+      <div class="card-body">
+        <div>
+          <pre class="code"><code>&lt;img src="sample.jpg" <span class="hl">usemap="#map04"</span>&gt;
+&lt;map <span class="hl">name="map04"</span>&gt;
+  &lt;area <span class="hl">shape="default"</span> href="all.html" alt="全域"&gt;
+&lt;/map&gt;</code></pre>
+          <table class="spec-table">
+            <tr><th>`shape="default"`</th><td>画像全体の領域を指定（`coords` 属性の指定は不要）</td></tr>
+          </table>
+        </div>
+        <div class="demo">
+          <iframe title="area default デモ" height="210" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:10px;color:#111}.map-box{position:relative;width:240px;height:120px;background:#e8f5e9;border:2px dashed #2e7d32;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#2e7d32}</style></head><body><div class="map-box" onclick="alert(&quot;default -> 画像全体がクリック対象&quot;)">default: 画像エリア全体</div><p style="margin:6px 0 0;font-size:12px;color:#666">他のareaに該当しない画像全域に適用</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 5.3: 試験出題ポイントと構造上の落とし穴
+       ============================================================ -->
+  <section class="card">
+    <div class="card-header">
+      <span class="card-num">SECTION 5.3 / 出題ポイント &amp; 落とし穴</span>
+      <h2 class="card-title">試験頻出ルールと構造的注意事項<span class="en">/ Exam Pitfalls</span></h2>
+      <p class="card-desc">`usemap` の構文紐付け、空要素の性質、ネスト制限に関する重要ルール。</p>
+    </div>
+
+    <!-- 図解 1: usemap と map name の # 紐付け -->
+    <div class="d-fig">
+      <svg viewBox="0 0 640 140" role="img" aria-label="imgのusemap属性とmapのname属性のハッシュ参照図">
+        <rect x="20" y="25" width="280" height="45" fill="#f7f5f0" stroke="#111" stroke-width="1.5"/>
+        <text x="35" y="52" font-size="14" font-family="monospace" fill="#111">&lt;img usemap="<tspan fill="#d02020" font-weight="bold">#map01</tspan>"&gt;</text>
+        
+        <rect x="340" y="25" width="280" height="45" fill="#f7f5f0" stroke="#111" stroke-width="1.5"/>
+        <text x="355" y="52" font-size="14" font-family="monospace" fill="#111">&lt;map name="<tspan fill="#0066cc" font-weight="bold">map01</tspan>"&gt;</text>
+        
+        <path d="M 245 47 Q 310 10 375 47" fill="none" stroke="#d02020" stroke-width="2" stroke-dasharray="4 4"/>
+        <polygon points="375,47 367,42 369,50" fill="#d02020"/>
+        
+        <text x="310" y="100" text-anchor="middle" font-size="13" font-weight="bold" fill="#d02020">usemap 属性値には「#」が必須！ / map の name 属性値には「#」を付けない</text>
+        <text x="310" y="125" text-anchor="middle" font-size="12" fill="#666">（※ 例：usemap="#map01" ↔ name="map01"）</text>
+      </svg>
+    </div>
+
+    <table class="spec-table" style="margin-top:16px;">
+      <thead>
+        <tr>
+          <th style="width:30%">項目・構文点</th>
+          <th>正誤・試験上の落とし穴</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>`usemap` の `#` 指定</strong></td>
+          <td>`usemap="#map01"` ✅ / `usemap="map01"` ❌ （`#` が無いと紐付かない）</td>
+        </tr>
+        <tr>
+          <td><strong>`area` 要素のタグ構造</strong></td>
+          <td><span class="hl">Void Element (空要素)</span>。閉じタグ `&lt;/area&gt;` は不可（`&lt;area ...&gt;` または `&lt;area ... /&gt;`）</td>
+        </tr>
+        <tr>
+          <td><strong>`a` 要素のネスト制限</strong></td>
+          <td>`a` 要素の中に `a` 要素を含めることは**不可**（`&lt;a&gt;&lt;a&gt;...&lt;/a&gt;&lt;/a&gt;` ❌）</td>
+        </tr>
+        <tr>
+          <td><strong>インタラクティブ要素の包含</strong></td>
+          <td>`a` 要素の中に `button` や `input` などのインタラクティブ・コンテンツを含めることは**不可**</td>
+        </tr>
+        <tr>
+          <td><strong>`target="_blank"` のセキュリティ</strong></td>
+          <td>外部リンクを別タブで開く際、`rel="noopener noreferrer"` の併用が現代のベストプラクティス</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+</main>
+
+<script>
+/* ★このスクリプトは一行も変更しない。丸ごとコピーすること★ */
+
+/* タブ: [data-tabs] ごとにスコープされる。カードが何枚あっても干渉しない */
+document.querySelectorAll('[data-tabs]').forEach(function (group) {
+  var tabs = group.querySelectorAll(':scope > .tabs > .tab');
+  var panels = group.querySelectorAll(':scope > .panel');
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var key = tab.dataset.tab;
+      tabs.forEach(function (t) { t.setAttribute('aria-selected', String(t === tab)); });
+      panels.forEach(function (p) { p.hidden = (p.dataset.panel !== key); });
+    });
+  });
+});
+
+/* テーマ固定（ライト）。切替機能は廃止 */
+</script>
+</body>
+</html>

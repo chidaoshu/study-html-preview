@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HTML&amp;CSS 期末試験 復習シート — vol.11 背景の設定</title>
+<style>
+/* =========================================================
+   [1] テーマ (Swiss Vignelli Palette)
+   固定ライト。暗色モードの切替は廃止。
+   ========================================================= */
+:root {
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #666666;
+  --line: #cccccc;
+  --hairline: #e2e2e2;
+  --surface: #f5f5f3;
+  --accent: #d02020;        /* 差分・強調のみに使用 */
+  --demo-bg: #ffffff;
+  --demo-fg: #111111;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Helvetica Neue", Helvetica, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic Medium", sans-serif;
+  line-height: 1.6;
+  text-wrap: pretty;
+  -webkit-text-size-adjust: 100%;
+}
+
+code, pre, .mono {
+  font-family: "SF Mono", "Menlo", "Consolas", monospace;
+}
+
+/* =========================================================
+   [2] Swiss Layout & Grid
+   ========================================================= */
+.wrap {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+@media (min-width: 900px) {
+  .wrap { padding: 0 32px; }
+}
+
+/* Header */
+.top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+}
+.brand-tag {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 2px 6px;
+  background: var(--fg);
+  color: var(--bg);
+}
+.volnav {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  font-size: 13px;
+  font-weight: 500;
+}
+.volnav a {
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 2px 4px;
+}
+.volnav a[aria-current="page"] {
+  color: var(--fg);
+  font-weight: 700;
+  border-bottom: 2px solid var(--fg);
+}
+
+/* Card & Panels */
+.card {
+  border-top: 1px solid var(--line);
+  padding: 32px 0;
+}
+.card-header {
+  margin-bottom: 20px;
+}
+.card-num {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 4px;
+  display: block;
+}
+.card-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+.card-title .en {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-left: 8px;
+}
+.card-desc {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.card-body {
+  display: grid;
+  gap: 16px;
+}
+@media (min-width: 900px) {
+  .card-body {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+}
+
+/* =========================================================
+   [3] Vignelli Tab Bar
+   ========================================================= */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.tab {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  border-bottom: none;
+  background: var(--surface);
+  color: var(--muted);
+  border-radius: 0;
+  transition: color 0.1s, background 0.1s;
+}
+.tab:hover {
+  color: var(--fg);
+  background: var(--bg);
+}
+.tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.tab[aria-selected="true"] {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
+}
+.panel[hidden] {
+  display: none;
+}
+
+/* =========================================================
+   [4] Code & Explanation Blocks
+   ========================================================= */
+pre.code {
+  margin: 0;
+  padding: 14px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.65;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  white-space: pre;
+}
+.hl {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* Specification Table */
+.spec-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+.spec-table th, .spec-table td {
+  border: 1px solid var(--hairline);
+  padding: 4px 8px;
+  text-align: left;
+}
+.spec-table th {
+  background: var(--surface);
+  color: var(--muted);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   [5] Demo Frame（ 用）
+   ========================================================= */
+.demo {
+  border: 1px solid var(--line);
+  background: var(--demo-bg);
+}
+.demo iframe {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: var(--demo-bg);
+}
+</style>
+<style>
+/* === 375px 横溢れ修正（主代理が追加。設計・配色・書体には手を入れていない） === */
+.volnav{overflow-x:auto;min-width:0;flex:1 1 auto;scrollbar-width:none}
+.volnav::-webkit-scrollbar{display:none}
+.top{max-width:100%;overflow:hidden}
+.top>*{min-width:0}
+@media (max-width:899px){
+  .wrap{max-width:100%!important}
+  .card-body{display:block!important}
+  .card-body>*{width:auto!important;max-width:100%!important;min-width:0!important}
+  .card-body>*+*{margin-top:14px}
+  .panel [class*="col"]{width:auto!important;min-width:0!important;max-width:100%!important}
+}
+.wrap>*,.panel,.panel>*{min-width:0}
+pre,[class*="code"]{max-width:100%;min-width:0}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <span class="brand-tag">HTML&amp;CSS</span>
+  <nav class="volnav">
+    <a href="vol.1.html">1</a>
+    <a href="vol.2.html">2</a>
+    <a href="vol.3.html">3</a>
+    <a href="vol.4.html">4</a>
+    <a href="vol.5.html">5</a>
+    <a href="vol.6.html">6</a>
+    <a href="vol.7.html">7</a>
+    <a href="vol.8.html">8</a>
+    <a href="vol.9.html">9</a>
+    <a href="vol.10.html">10</a>
+    <a href="vol.11.html" aria-current="page">11</a>
+    <a href="vol.12.html">12</a>
+    <a href="vol.13.html">13</a>
+    <a href="vol.14.html">14</a>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <!-- ============================================================
+       SECTION 2.1.1　背景色の設定 / background-color
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.1.1</span>
+      <h2 class="card-title">背景色の設定 <span class="en">/ background-color</span></h2>
+      <table class="spec-table">
+        <tr><th>初期値</th><td>transparent（透明）</td><th>適用要素</th><td>全要素</td><th>継承</th><td>なし</td></tr>
+      </table>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="bgc-trans" aria-selected="true">transparent (初期値)</button>
+      <button class="tab" role="tab" type="button" data-tab="bgc-name" aria-selected="false">yellow (色名)</button>
+      <button class="tab" role="tab" type="button" data-tab="bgc-hex" aria-selected="false">#e0e7ff (16進数)</button>
+      <button class="tab" role="tab" type="button" data-tab="bgc-rgba" aria-selected="false">rgba (半透明)</button>
+    </div>
+
+    <!-- Panel 1: transparent -->
+    <div class="panel" data-panel="bgc-trans">
+      <div class="card-body">
+        <pre class="code"><code>p {
+  <span class="hl">background-color: transparent;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="background-color transparent" height="130" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;background:#f0f4f8;color:#111}p{background-color:transparent;padding:12px;border:1px dashed #666}</style></head><body><p>親要素の背景色（#f0f4f8）が透過して見えます（transparent）。</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: yellow -->
+    <div class="panel" data-panel="bgc-name" hidden>
+      <div class="card-body">
+        <pre class="code"><code>p {
+  <span class="hl">background-color: yellow;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="background-color yellow" height="130" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;background:#f0f4f8;color:#111}p{background-color:yellow;padding:12px;border:1px dashed #666}</style></head><body><p>背景色が黄色（yellow）に塗りつぶされます。</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: #e0e7ff -->
+    <div class="panel" data-panel="bgc-hex" hidden>
+      <div class="card-body">
+        <pre class="code"><code>p {
+  <span class="hl">background-color: #e0e7ff;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="background-color hex" height="130" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;background:#f0f4f8;color:#111}p{background-color:#e0e7ff;padding:12px;border:1px dashed #666}</style></head><body><p>16進数（#e0e7ff）で指定された薄い青色になります。</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 4: rgba -->
+    <div class="panel" data-panel="bgc-rgba" hidden>
+      <div class="card-body">
+        <pre class="code"><code>p {
+  <span class="hl">background-color: rgba(208, 32, 32, 0.2);</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="background-color rgba" height="130" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;background:#f0f4f8;color:#111}p{background-color:rgba(208,32,32,0.2);padding:12px;border:1px dashed #666}</style></head><body><p>アルファ値（不透明度0.2）を含む赤色背景になります。</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 2.1.2　背景画像の設定 / background-image
+       ============================================================ -->
+  <!-- textbook-diff: background-image 初期値 ノート=なし -> 採用=none / 根拠=CSS Backgrounds and Borders Module Level 3 (initial value: none) -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.1.2</span>
+      <h2 class="card-title">背景画像の設定 <span class="en">/ background-image</span></h2>
+      <table class="spec-table">
+        <tr><th>初期値</th><td>none（なし）</td><th>適用要素</th><td>全要素</td><th>継承</th><td>なし</td></tr>
+      </table>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="bgi-none" aria-selected="true">none (初期値)</button>
+      <button class="tab" role="tab" type="button" data-tab="bgi-single" aria-selected="false">url("single.png")</button>
+      <button class="tab" role="tab" type="button" data-tab="bgi-multi" aria-selected="false">複数指定 (重ね合わせ)</button>
+    </div>
+
+    <!-- Panel 1: none -->
+    <div class="panel" data-panel="bgi-none">
+      <div class="card-body">
+        <pre class="code"><code>p {
+  <span class="hl">background-image: none;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="background-image none" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}p{background-image:none;padding:16px;border:1px solid #ccc}</style></head><body><p>背景画像は表示されません（none）。</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: single -->
+    <div class="panel" data-panel="bgi-single" hidden>
+      <div class="card-body">
+        <pre class="code"><code>p {
+  <span class="hl">background-image: url("brick.png");</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="background-image single" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}p{background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2740%27 height=%2740%27 viewBox=%270 0 40 40%27%3E%3Crect width=%2740%27 height=%2740%27 fill=%27%23f5f5f3%27/%3E%3Cpath d=%27M0 20h40M20 0v40%27 stroke=%27%23cccccc%27 stroke-width=%272%27/%3E%3C/svg%3E");padding:16px;border:1px solid #ccc}</style></head><body><p>指定した単一の画像が敷き詰められて表示されます。</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: multiple -->
+    <div class="panel" data-panel="bgi-multi" hidden>
+      <div class="card-body">
+        <pre class="code"><code>p {
+  /* カンマ区切りで複数指定（先頭が最も上） */
+  <span class="hl">background-image: url("icon.png"),</span>
+                    <span class="hl">url("pattern.png");</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="background-image multiple" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}p{background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2750%27 height=%2750%27 viewBox=%270 0 50 50%27%3E%3Ccircle cx=%2725%27 cy=%2725%27 r=%2720%27 fill=%27%23d02020%27/%3E%3Ctext x=%2725%27 y=%2730%27 font-size=%2712%27 text-anchor=%27middle%27 fill=%27%23fff%27 font-weight=%27bold%27%3ETOP%3C/text%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2740%27 height=%2740%27 viewBox=%270 0 40 40%27%3E%3Crect width=%2740%27 height=%2740%27 fill=%27%23f5f5f3%27/%3E%3Cpath d=%27M0 20h40M20 0v40%27 stroke=%27%23cccccc%27 stroke-width=%272%27/%3E%3C/svg%3E");background-repeat:no-repeat,repeat;padding:16px;border:1px solid #ccc}</style></head><body><p style="padding-left:60px;">最初に記述したアイコン画像（赤丸）が、背景パターン（格子）の上（前面）に重ねて描画されます。</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 2.1.3　画像ファイルの指定方法 / url() 関数と相対パス
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.1.3</span>
+      <h2 class="card-title">画像ファイルの指定方法 <span class="en">/ url() 関数と相対パス</span></h2>
+      <table class="spec-table">
+        <tr><th>構文</th><td>url("画像ファイルのURL")</td><th>適用対象</th><td>CSS画像関数</td><th>基準パス</th><td>CSSファイルのあるディレクトリ</td></tr>
+      </table>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="url-syntax" aria-selected="true">url()構文と相対パス</button>
+    </div>
+
+    <!-- Panel 1: url syntax -->
+    <div class="panel" data-panel="url-syntax">
+      <div class="card-body">
+        <pre class="code"><code>/* 相対パス（パスの基準は「CSSファイル」があるディレクトリ） */
+p {
+  <span class="hl">background-image: url("../images/pattern.png");</span>
+}
+
+/* 外部URL（絶対パス）の指定 */
+h1 {
+  <span class="hl">background-image: url("https://example.com/assets/logo.svg");</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="url function relative path" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}.note{background:#f0f4f8;padding:12px;border-left:4px solid #d02020;font-size:12px}.code-inline{font-family:monospace;background:#e2e2e2;padding:2px 4px}</style></head><body><div class="note"><strong>【試験最重要ポイント】</strong><br>外部CSSファイル内に記述された <span class="code-inline">url()</span> の相対パスは、HTMLファイルの位置ではなく<strong>「CSSファイルが存在するディレクトリ」</strong>を基準（カレントディレクトリ）として解釈されます。</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 2.2.1　背景画像の繰り返し表示 / background-repeat
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.2.1</span>
+      <h2 class="card-title">背景画像の繰り返し表示 <span class="en">/ background-repeat</span></h2>
+      <table class="spec-table">
+        <tr><th>初期値</th><td>repeat</td><th>適用要素</th><td>全要素</td><th>継承</th><td>なし</td></tr>
+      </table>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="bgr-repeat" aria-selected="true">repeat (初期値)</button>
+      <button class="tab" role="tab" type="button" data-tab="bgr-rx" aria-selected="false">repeat-x</button>
+      <button class="tab" role="tab" type="button" data-tab="bgr-ry" aria-selected="false">repeat-y</button>
+      <button class="tab" role="tab" type="button" data-tab="bgr-norepeat" aria-selected="false">no-repeat</button>
+      <button class="tab" role="tab" type="button" data-tab="bgr-space" aria-selected="false">space</button>
+      <button class="tab" role="tab" type="button" data-tab="bgr-round" aria-selected="false">round</button>
+      <button class="tab" role="tab" type="button" data-tab="bgr-multi" aria-selected="false">複数指定</button>
+    </div>
+
+    <!-- Panel 1: repeat -->
+    <div class="panel" data-panel="bgr-repeat">
+      <div class="card-body">
+        <pre class="code"><code>p {
+  background-image: url("ball.png");
+  <span class="hl">background-repeat: repeat;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="background-repeat repeat" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}div{height:120px;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2730%27 height=%2730%27 viewBox=%270 0 30 30%27%3E%3Ccircle cx=%2715%27 cy=%2715%27 r=%2710%27 fill=%27%23d02020%27/%3E%3C/svg%3E");background-repeat:repeat;border:1px solid #ccc;padding:8px}</style></head><body><div>水平・垂直の両方向に全体を覆うように繰り返します。</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: repeat-x -->
+    <div class="panel" data-panel="bgr-rx" hidden>
+      <div class="card-body">
+        <pre class="code"><code>p {
+  background-image: url("ball.png");
+  <span class="hl">background-repeat: repeat-x;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="background-repeat repeat-x" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}div{height:120px;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2730%27 height=%2730%27 viewBox=%270 0 30 30%27%3E%3Ccircle cx=%2715%27 cy=%2715%27 r=%2710%27 fill=%27%23d02020%27/%3E%3C/svg%3E");background-repeat:repeat-x;border:1px solid #ccc;padding:8px}</style></head><body><div>水平方向（X軸）のみ繰り返します。</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: repeat-y -->
+    <div class="panel" data-panel="bgr-ry" hidden>
+      <div class="card-body">
+        <pre class="code"><code>p {
+  background-image: url("ball.png");
+  <span class="hl">background-repeat: repeat-y;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="background-repeat repeat-y" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}div{height:120px;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2730%27 height=%2730%27 viewBox=%270 0 30 30%27%3E%3Ccircle cx=%2715%27 cy=%2715%27 r=%2710%27 fill=%27%23d02020%27/%3E%3C/svg%3E");background-repeat:repeat-y;border:1px solid #ccc;padding:8px;padding-left:40px}</style></head><body><div>垂直方向（Y軸）のみ繰り返します。</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 4: no-repeat -->
+    <div class="panel" data-panel="bgr-norepeat" hidden>
+      <div class="card-body">
+        <pre class="code"><code>p {
+  background-image: url("ball.png");
+  <span class="hl">background-repeat: no-repeat;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="background-repeat no-repeat" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}div{height:120px;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2730%27 height=%2730%27 viewBox=%270 0 30 30%27%3E%3Ccircle cx=%2715%27 cy=%2715%27 r=%2710%27 fill=%27%23d02020%27/%3E%3C/svg%3E");background-repeat:no-repeat;border:1px solid #ccc;padding:8px;padding-left:40px}</style></head><body><div>画像は繰り返されず1回のみ表示されます。</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 5: space -->
+    <div class="panel" data-panel="bgr-space" hidden>
+      <div class="card-body">
+        <pre class="code"><code>p {
+  background-image: url("ball.png");
+  <span class="hl">background-repeat: space;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="background-repeat space" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}div{height:120px;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2730%27 height=%2730%27 viewBox=%270 0 30 30%27%3E%3Ccircle cx=%2715%27 cy=%2715%27 r=%2710%27 fill=%27%23d02020%27/%3E%3C/svg%3E");background-repeat:space;border:1px solid #ccc;padding:8px}</style></head><body><div>画像が途中で切れないよう等間隔の空白を空けて配置されます。</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 6: round -->
+    <div class="panel" data-panel="bgr-round" hidden>
+      <div class="card-body">
+        <pre class="code"><code>p {
+  background-image: url("ball.png");
+  <span class="hl">background-repeat: round;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="background-repeat round" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}div{height:120px;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2735%27 height=%2735%27 viewBox=%270 0 35 35%27%3E%3Ccircle cx=%2717.5%27 cy=%2717.5%27 r=%2714%27 fill=%27%23d02020%27/%3E%3C/svg%3E");background-repeat:round;border:1px solid #ccc;padding:8px}</style></head><body><div>領域にぴったり収まるよう画像が自動的に縮小・拡大されて敷き詰められます。</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 7: multiple -->
+    <div class="panel" data-panel="bgr-multi" hidden>
+      <div class="card-body">
+        <pre class="code"><code>p {
+  background-image: url("icon.png"), url("brick.png");
+  /* それぞれの画像に対応する設定 */
+  <span class="hl">background-repeat: no-repeat, repeat-x;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="background-repeat multiple" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}div{height:120px;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2740%27 height=%2740%27 viewBox=%270 0 40 40%27%3E%3Ccircle cx=%2720%27 cy=%2720%27 r=%2715%27 fill=%27%23d02020%27/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2730%27 height=%2730%27 viewBox=%270 0 30 30%27%3E%3Crect width=%2730%27 height=%2730%27 fill=%27%23f0f0f0%27/%3E%3Cpath d=%27M0 15h30%27 stroke=%27%23aaa%27/%3E%3C/svg%3E");background-repeat:no-repeat,repeat-x;border:1px solid #ccc;padding:8px;padding-left:50px}</style></head><body><div>1枚目（赤丸）は no-repeat、2枚目（背景線）は repeat-x が適用されます。</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 2.2.2　背景画像の固定・スクロール設定 / background-attachment
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.2.2</span>
+      <h2 class="card-title">背景画像の固定・スクロール設定 <span class="en">/ background-attachment</span></h2>
+      <table class="spec-table">
+        <tr><th>初期値</th><td>scroll</td><th>適用要素</th><td>全要素</td><th>継承</th><td>なし</td></tr>
+      </table>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="bga-all" aria-selected="true">scroll / fixed / local</button>
+    </div>
+
+    <!-- Panel 1: scroll / fixed / local -->
+    <div class="panel" data-panel="bga-all">
+      <div class="card-body">
+        <pre class="code"><code>/* scroll (初期値): 要素位置に固定（内容スクロール時に動かない） */
+.box-scroll { <span class="hl">background-attachment: scroll;</span> }
+
+/* fixed: ビューポート（画面）に対して固定 */
+.box-fixed { <span class="hl">background-attachment: fixed;</span> }
+
+/* local: 要素の内容とともに背景もスクロールする */
+.box-local { <span class="hl">background-attachment: local;</span> }</code></pre>
+        <div class="demo">
+          <iframe title="background-attachment comparison" height="200" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.4 sans-serif;margin:8px;color:#111;display:flex;gap:8px}.scroller{flex:1;height:170px;overflow-y:scroll;border:1px solid #ccc;padding:8px;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2730%27 height=%2730%27 viewBox=%270 0 30 30%27%3E%3Ccircle cx=%2715%27 cy=%2715%27 r=%2710%27 fill=%27%23d02020%27/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px top 10px}.s-scroll{background-attachment:scroll}.s-fixed{background-attachment:fixed}.s-local{background-attachment:local}.content{height:350px}.title{font-weight:bold;background:rgba(255,255,255,0.85);padding:2px}</style></head><body><div class="scroller s-scroll"><div class="title">scroll (初期値)</div><div class="content">スクロールしてください。<br>背景は要素枠に固定（内容と共に動かない）。</div></div><div class="scroller s-fixed"><div class="title">fixed</div><div class="content">スクロールしてください。<br>背景は画面(Viewport)に固定。</div></div><div class="scroller s-local"><div class="title">local</div><div class="content">スクロールしてください。<br>背景も内容と一緒にスクロール。</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 2.2.3　背景画像の表示位置の指定 / background-position
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.2.3</span>
+      <h2 class="card-title">背景画像の表示位置の指定 <span class="en">/ background-position</span></h2>
+      <table class="spec-table">
+        <tr><th>初期値</th><td>0% 0%</td><th>適用要素</th><td>全要素</td><th>継承</th><td>なし</td></tr>
+      </table>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="bgp-px" aria-selected="true">15px 30px (数値)</button>
+      <button class="tab" role="tab" type="button" data-tab="bgp-kw" aria-selected="false">right top (キーワード)</button>
+      <button class="tab" role="tab" type="button" data-tab="bgp-center" aria-selected="false">center (50%)</button>
+      <button class="tab" role="tab" type="button" data-tab="bgp-percent" aria-selected="false">40% 50% (%)</button>
+      <button class="tab" role="tab" type="button" data-tab="bgp-multi" aria-selected="false">複数指定</button>
+    </div>
+
+    <!-- Panel 1: px -->
+    <div class="panel" data-panel="bgp-px">
+      <div class="card-body">
+        <pre class="code"><code>div {
+  background-image: url("ball.png");
+  background-repeat: no-repeat;
+  <span class="hl">background-position: 15px 30px;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="background-position px" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}div{height:120px;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2730%27 height=%2730%27 viewBox=%270 0 30 30%27%3E%3Ccircle cx=%2715%27 cy=%2715%27 r=%2712%27 fill=%27%23d02020%27/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:15px 30px;border:1px solid #ccc;padding:8px}</style></head><body><div>左から 15px、上から 30px の位置に配置されます。</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: keywords -->
+    <div class="panel" data-panel="bgp-kw" hidden>
+      <div class="card-body">
+        <pre class="code"><code>div {
+  background-image: url("ball.png");
+  background-repeat: no-repeat;
+  <span class="hl">background-position: right top;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="background-position keywords" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}div{height:120px;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2730%27 height=%2730%27 viewBox=%270 0 30 30%27%3E%3Ccircle cx=%2715%27 cy=%2715%27 r=%2712%27 fill=%27%23d02020%27/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right top;border:1px solid #ccc;padding:8px}</style></head><body><div>右端（100%）、上端（0%）に配置されます。キーワード順序は順不同。</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: center -->
+    <div class="panel" data-panel="bgp-center" hidden>
+      <div class="card-body">
+        <pre class="code"><code>div {
+  background-image: url("ball.png");
+  background-repeat: no-repeat;
+  /* 1つの場合、省略された2つ目は 50% になる */
+  <span class="hl">background-position: center;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="background-position center" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}div{height:120px;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2730%27 height=%2730%27 viewBox=%270 0 30 30%27%3E%3Ccircle cx=%2715%27 cy=%2715%27 r=%2712%27 fill=%27%23d02020%27/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:center;border:1px solid #ccc;padding:8px}</style></head><body><div>中央（水平50%・垂直50%）に配置されます。</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 4: percentage -->
+    <div class="panel" data-panel="bgp-percent" hidden>
+      <div class="card-body">
+        <pre class="code"><code>div {
+  background-image: url("ball.png");
+  background-repeat: no-repeat;
+  <span class="hl">background-position: 40% 50%;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="background-position percentage" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}div{height:120px;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2730%27 height=%2730%27 viewBox=%270 0 30 30%27%3E%3Ccircle cx=%2715%27 cy=%2715%27 r=%2712%27 fill=%27%23d02020%27/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:40% 50%;border:1px solid #ccc;padding:8px}</style></head><body><div>画像の40%位置と要素の40%位置（水平）が揃うように配置されます。</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 5: multiple -->
+    <div class="panel" data-panel="bgp-multi" hidden>
+      <div class="card-body">
+        <pre class="code"><code>p {
+  background-image: url("icon.png"), url("ball.png");
+  background-repeat: no-repeat, no-repeat;
+  <span class="hl">background-position: right top, 20px 50px;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="background-position multiple" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}div{height:120px;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2730%27 height=%2730%27 viewBox=%270 0 30 30%27%3E%3Crect width=%2730%27 height=%2730%27 fill=%27%23d02020%27/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2730%27 height=%2730%27 viewBox=%270 0 30 30%27%3E%3Ccircle cx=%2715%27 cy=%2715%27 r=%2712%27 fill=%27%232070d0%27/%3E%3C/svg%3E");background-repeat:no-repeat,no-repeat;background-position:right top,20px 50px;border:1px solid #ccc;padding:8px}</style></head><body><div>1枚目（赤四角）は右上、2枚目（青丸）は 20px 50px の位置に配置されます。</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 2.2.4　背景画像の大きさを変更する / background-size
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.2.4</span>
+      <h2 class="card-title">背景画像の大きさを変更する <span class="en">/ background-size</span></h2>
+      <table class="spec-table">
+        <tr><th>初期値</th><td>auto</td><th>適用要素</th><td>全要素</td><th>継承</th><td>なし</td></tr>
+      </table>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="bgs-auto" aria-selected="true">auto (初期値)</button>
+      <button class="tab" role="tab" type="button" data-tab="bgs-contain" aria-selected="false">contain</button>
+      <button class="tab" role="tab" type="button" data-tab="bgs-cover" aria-selected="false">cover</button>
+      <button class="tab" role="tab" type="button" data-tab="bgs-size" aria-selected="false">200px 100px (数値)</button>
+      <button class="tab" role="tab" type="button" data-tab="bgs-multi" aria-selected="false">複数指定</button>
+    </div>
+
+    <!-- Panel 1: auto -->
+    <div class="panel" data-panel="bgs-auto">
+      <div class="card-body">
+        <pre class="code"><code>p {
+  background-image: url("ball.png");
+  background-repeat: no-repeat;
+  <span class="hl">background-size: auto;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="background-size auto" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}div{height:120px;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27100%27 height=%2750%27 viewBox=%270 0 100 50%27%3E%3Crect width=%27100%27 height=%2750%27 fill=%27%23d02020%27/%3E%3Ctext x=%2750%27 y=%2730%27 fill=%27%23fff%27 text-anchor=%27middle%27 font-size=%2712%27%3E100x50%3C/text%3E%3C/svg%3E");background-repeat:no-repeat;background-size:auto;border:1px solid #ccc;padding:8px}</style></head><body><div>画像本来のサイズ（100px×50px）で表示されます。</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: contain -->
+    <div class="panel" data-panel="bgs-contain" hidden>
+      <div class="card-body">
+        <pre class="code"><code>p {
+  background-image: url("ball.png");
+  background-repeat: no-repeat;
+  <span class="hl">background-size: contain;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="background-size contain" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}div{height:120px;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27100%27 height=%2750%27 viewBox=%270 0 100 50%27%3E%3Crect width=%27100%27 height=%2750%27 fill=%27%23d02020%27/%3E%3Ctext x=%2750%27 y=%2730%27 fill=%27%23fff%27 text-anchor=%27middle%27 font-size=%2712%27%3E100x50%3C/text%3E%3C/svg%3E");background-repeat:no-repeat;background-size:contain;border:1px solid #ccc;padding:8px}</style></head><body><div>アスペクト比を維持し、全体が収まる最大の大きさに拡大・縮小されます。</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: cover -->
+    <div class="panel" data-panel="bgs-cover" hidden>
+      <div class="card-body">
+        <pre class="code"><code>p {
+  background-image: url("ball.png");
+  background-repeat: no-repeat;
+  <span class="hl">background-size: cover;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="background-size cover" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}div{height:120px;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27100%27 height=%2750%27 viewBox=%270 0 100 50%27%3E%3Crect width=%27100%27 height=%2750%27 fill=%27%23d02020%27/%3E%3Ctext x=%2750%27 y=%2730%27 fill=%27%23fff%27 text-anchor=%27middle%27 font-size=%2712%27%3E100x50%3C/text%3E%3C/svg%3E");background-repeat:no-repeat;background-size:cover;border:1px solid #ccc;padding:8px;color:#fff}</style></head><body><div>アスペクト比を維持し、背景領域全体を完全に覆う最小サイズに設定されます。</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 4: length -->
+    <div class="panel" data-panel="bgs-size" hidden>
+      <div class="card-body">
+        <pre class="code"><code>p {
+  background-image: url("ball.png");
+  background-repeat: no-repeat;
+  /* 水平 200px、垂直 100px */
+  <span class="hl">background-size: 200px 100px;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="background-size custom length" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}div{height:120px;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27100%27 height=%2750%27 viewBox=%270 0 100 50%27%3E%3Crect width=%27100%27 height=%2750%27 fill=%27%23d02020%27/%3E%3Ctext x=%2750%27 y=%2730%27 fill=%27%23fff%27 text-anchor=%27middle%27 font-size=%2712%27%3E100x50%3C/text%3E%3C/svg%3E");background-repeat:no-repeat;background-size:200px 100px;border:1px solid #ccc;padding:8px}</style></head><body><div>幅 200px、高さ 100px に変形されて表示されます。</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 5: multiple -->
+    <div class="panel" data-panel="bgs-multi" hidden>
+      <div class="card-body">
+        <pre class="code"><code>div {
+  background-image: url("img1.png"), url("img2.png");
+  background-repeat: no-repeat, no-repeat;
+  <span class="hl">background-size: contain, cover;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="background-size multiple" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}div{height:120px;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2750%27 height=%2750%27 viewBox=%270 0 50 50%27%3E%3Ccircle cx=%2725%27 cy=%2725%27 r=%2720%27 fill=%27%23d02020%27/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27100%27 height=%2750%27 viewBox=%270 0 100 50%27%3E%3Crect width=%27100%27 height=%2750%27 fill=%27%23e0e7ff%27/%3E%3C/svg%3E");background-repeat:no-repeat,no-repeat;background-size:contain,cover;border:1px solid #ccc;padding:8px}</style></head><body><div>1枚目は contain、2枚目は cover が適用されます。</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 2.2.5　背景画像の基準位置を指定する / background-origin
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.2.5</span>
+      <h2 class="card-title">背景画像の基準位置を指定する <span class="en">/ background-origin</span></h2>
+      <table class="spec-table">
+        <tr><th>初期値</th><td>padding-box</td><th>適用要素</th><td>全要素</td><th>継承</th><td>なし</td></tr>
+      </table>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="bgo-all" aria-selected="true">padding-box / border-box / content-box</button>
+    </div>
+
+    <!-- Panel 1: padding-box / border-box / content-box -->
+    <div class="panel" data-panel="bgo-all">
+      <div class="card-body">
+        <pre class="code"><code>p {
+  border: 10px dashed #666;
+  padding: 20px;
+  background-image: url("ball.png");
+  background-repeat: no-repeat;
+  /* background-attachment: fixed の場合は無効 */
+  <span class="hl">background-origin: content-box;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="background-origin comparison" height="200" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.4 sans-serif;margin:8px;color:#111;display:flex;flex-direction:column;gap:8px}.box{border:8px dashed #666;padding:14px;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2724%27 height=%2724%27 viewBox=%270 0 24 24%27%3E%3Ccircle cx=%2712%27 cy=%2712%27 r=%2710%27 fill=%27%23d02020%27/%3E%3C/svg%3E");background-repeat:no-repeat;background-color:#f5f5f3}.b-pad{background-origin:padding-box}.b-bor{background-origin:border-box}.b-con{background-origin:content-box}</style></head><body><div class="box b-pad"><strong>padding-box (初期値)</strong>: パディング内角が原点 (0,0)</div><div class="box b-bor"><strong>border-box</strong>: ボーダー外角が原点 (0,0)</div><div class="box b-con"><strong>content-box</strong>: コンテンツ領域が原点 (0,0)</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 2.3.1　背景の範囲を指定する / background-clip 🔴高頻度
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.3.1</span>
+      <h2 class="card-title">背景の範囲を指定する <span class="en">/ background-clip</span> 🔴高頻度</h2>
+      <table class="spec-table">
+        <tr><th>初期値</th><td>border-box</td><th>適用要素</th><td>全要素</td><th>継承</th><td>なし</td></tr>
+      </table>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="clip-box" aria-selected="true">border-box / padding-box / content-box</button>
+      <button class="tab" role="tab" type="button" data-tab="clip-text" aria-selected="false">text (テキストくり抜き)</button>
+    </div>
+
+    <!-- Panel 1: border-box / padding-box / content-box -->
+    <div class="panel" data-panel="clip-box">
+      <div class="card-body">
+        <pre class="code"><code>p {
+  border: 10px dashed #333;
+  padding: 16px;
+  background-color: #e0e7ff;
+}
+
+/* border-box (初期値): ボーダー領域まで背景を描画 */
+.box1 { <span class="hl">background-clip: border-box;</span> }
+
+/* padding-box: パディング領域まで背景を描画 */
+.box2 { <span class="hl">background-clip: padding-box;</span> }
+
+/* content-box: コンテンツ領域のみ背景を描画 */
+.box3 { <span class="hl">background-clip: content-box;</span> }</code></pre>
+        <div class="demo">
+          <iframe title="background-clip boxes" height="200" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.4 sans-serif;margin:8px;color:#111;display:flex;flex-direction:column;gap:8px}.box{border:8px dashed #333;padding:12px;background-color:#e0e7ff}.b-bor{background-clip:border-box}.b-pad{background-clip:padding-box}.b-con{background-clip:content-box}</style></head><body><div class="box b-bor"><strong>border-box (初期値)</strong>: 枠線（破線）の下まで背景色が及ぶ</div><div class="box b-pad"><strong>padding-box</strong>: 枠線の内側（パディング領域）まで描画</div><div class="box b-con"><strong>content-box</strong>: テキスト領域（コンテンツ）のみ描画</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: text -->
+    <div class="panel" data-panel="clip-text" hidden>
+      <div class="card-body">
+        <pre class="code"><code>h1 {
+  background-image: linear-gradient(45deg, #d02020, #2070d0);
+  /* テキストの形に背景画像を切り抜く（Chrome等は-webkit-必須） */
+  <span class="hl">-webkit-background-clip: text;</span>
+  <span class="hl">background-clip: text;</span>
+  /* テキスト文字自体を透明化して背景を浮き上がらせる */
+  <span class="hl">color: transparent;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="background-clip text" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:16px;color:#111;background:#f5f5f3}h1{font-size:32px;font-weight:900;margin:0;background-image:linear-gradient(45deg,#d02020,#2070d0);-webkit-background-clip:text;background-clip:text;color:transparent}</style></head><body><h1>GRADIENT TEXT</h1><p style="font-size:12px;color:#666;margin-top:8px;">文字色を color: transparent に設定し、-webkit-background-clip: text を指定することでグラデーションテキストが実現します。</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 2.3.2　背景を一括指定する / background
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.3.2</span>
+      <h2 class="card-title">背景を一括指定する <span class="en">/ background</span></h2>
+      <table class="spec-table">
+        <tr><th>初期値</th><td>個々のプロパティに基づく</td><th>適用要素</th><td>全要素</td><th>継承</th><td>なし</td></tr>
+      </table>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="bg-color-box" aria-selected="true">色 + clip指定</button>
+      <button class="tab" role="tab" type="button" data-tab="bg-pos-size" aria-selected="false">position / size 記法</button>
+    </div>
+
+    <!-- Panel 1: color + clip -->
+    <div class="panel" data-panel="bg-color-box">
+      <div class="card-body">
+        <pre class="code"><code>p {
+  padding: 20px;
+  border: 1px solid;
+  <span class="hl">background: lightblue content-box;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="background color and box" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}p{padding:20px;border:1px solid #333;background:lightblue content-box}</style></head><body><p>color と clip(content-box) を一括指定。パディングを除いた範囲に水色背景が描画されます。</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: position / size -->
+    <div class="panel" data-panel="bg-pos-size" hidden>
+      <div class="card-body">
+        <pre class="code"><code>p {
+  /* size を書く場合は position の直後に "/" で繋ぐ */
+  <span class="hl">background: url("ball.png")</span>
+              <span class="hl">no-repeat 10px 20px / 100px 80px;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="background position and size shorthand" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}div{height:120px;background:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2750%27 height=%2750%27 viewBox=%270 0 50 50%27%3E%3Ccircle cx=%2725%27 cy=%2725%27 r=%2720%27 fill=%27%23d02020%27/%3E%3C/svg%3E") no-repeat 10px 20px / 100px 80px;border:1px solid #ccc;padding:8px}</style></head><body><div>位置 10px 20px、サイズ 100px 80px で一括指定された背景描画。</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION A.2.1　線形グラデーション / linear-gradient() 🔴高頻度
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION A.2.1</span>
+      <h2 class="card-title">線形グラデーション <span class="en">/ linear-gradient()</span> 🔴高頻度</h2>
+      <table class="spec-table">
+        <tr><th>構文</th><td>linear-gradient([方向/角度], 開始色 [位置], 終了色)</td><th>適用要素</th><td>全要素 (画像関数)</td><th>既定方向</th><td>to bottom (180deg)</td></tr>
+      </table>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="lg-dir" aria-selected="true">基本構文と方向</button>
+      <button class="tab" role="tab" type="button" data-tab="lg-deg" aria-selected="false">角度指定</button>
+      <button class="tab" role="tab" type="button" data-tab="lg-stops" aria-selected="false">色階位置</button>
+    </div>
+
+    <!-- Panel 1: Direction -->
+    <div class="panel" data-panel="lg-dir">
+      <div class="card-body">
+        <pre class="code"><code>/* キーワード「to」+ 方向（to right, to bottom left など） */
+.box1 {
+  <span class="hl">background-image: linear-gradient(to right, #d02020, #2070d0);</span>
+}
+.box2 {
+  <span class="hl">background-image: linear-gradient(to bottom left, #ff9900, #9900ff);</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="linear-gradient direction" height="160" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.4 sans-serif;margin:12px;color:#fff;display:flex;gap:12px}.box{flex:1;height:120px;padding:10px;border-radius:4px;font-weight:bold}.b1{background-image:linear-gradient(to right,#d02020,#2070d0)}.b2{background-image:linear-gradient(to bottom left,#ff9900,#9900ff)}</style></head><body><div class="box b1">to right<br>(左 → 右)</div><div class="box b2">to bottom left<br>(右上 → 左下)</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: Angle -->
+    <div class="panel" data-panel="lg-deg" hidden>
+      <div class="card-body">
+        <pre class="code"><code>/* 角度指定 deg（時計回り: 0deg=上向き, 90deg=右向き） */
+.box1 {
+  <span class="hl">background-image: linear-gradient(45deg, #d02020, #e0e7ff);</span>
+}
+
+/* ターン指定 turn（1turn = 360deg, 0.25turn = 90deg = to right） */
+.box2 {
+  <span class="hl">background-image: linear-gradient(0.25turn, #111111, #d02020);</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="linear-gradient angle" height="160" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.4 sans-serif;margin:12px;color:#fff;display:flex;gap:12px}.box{flex:1;height:120px;padding:10px;border-radius:4px;font-weight:bold}.b1{background-image:linear-gradient(45deg,#d02020,#e0e7ff);color:#111}.b2{background-image:linear-gradient(0.25turn,#111111,#d02020)}</style></head><body><div class="box b1">45deg<br>(対角線 45度)</div><div class="box b2">0.25turn<br>(90度 = to right)</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: Color Stops -->
+    <div class="panel" data-panel="lg-stops" hidden>
+      <div class="card-body">
+        <pre class="code"><code>/* 色階位置（カラーストップ）: 赤が10%位置、青が100%位置 */
+div {
+  <span class="hl">background-image: linear-gradient(.25turn, red 10%, blue);</span>
+}
+
+/* 3色以上の経由点指定 */
+div {
+  <span class="hl">background-image: linear-gradient(to right, red 0%, yellow 50%, blue 100%);</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="linear-gradient color stops" height="160" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.4 sans-serif;margin:12px;color:#fff;display:flex;flex-direction:column;gap:8px}.box{height:55px;padding:8px;border-radius:4px;font-weight:bold}.b1{background-image:linear-gradient(.25turn,red 10%,blue)}.b2{background-image:linear-gradient(to right,red 0%,yellow 50%,blue 100%)}</style></head><body><div class="box b1">.25turn, red 10%, blue</div><div class="box b2">to right, red 0%, yellow 50%, blue 100%</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* ★このスクリプトは一行も変更しない。丸ごとコピーすること★ */
+
+/* タブ: [data-tabs] ごとにスコープされる。カードが何枚あっても干渉しない */
+document.querySelectorAll('[data-tabs]').forEach(function (group) {
+  var tabs = group.querySelectorAll(':scope > .tabs > .tab');
+  var panels = group.querySelectorAll(':scope > .panel');
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var key = tab.dataset.tab;
+      tabs.forEach(function (t) { t.setAttribute('aria-selected', String(t === tab)); });
+      panels.forEach(function (p) { p.hidden = (p.dataset.panel !== key); });
+    });
+  });
+});
+
+/* テーマ固定（ライト）。切替機能は廃止 */
+</script>
+</body>
+</html>

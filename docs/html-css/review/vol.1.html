@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HTML&amp;CSS 期末試験 復習シート — vol.1</title>
+<style>
+/* =========================================================
+   [1] テーマ (Swiss Vignelli Palette)
+   固定ライト。暗色モードの切替は廃止。
+   ========================================================= */
+:root {
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #666666;
+  --line: #cccccc;
+  --hairline: #e2e2e2;
+  --surface: #f5f5f3;
+  --accent: #d02020;        /* 差分・強調のみに使用 */
+  --demo-bg: #ffffff;
+  --demo-fg: #111111;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Helvetica Neue", Helvetica, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic Medium", sans-serif;
+  line-height: 1.6;
+  text-wrap: pretty;
+  -webkit-text-size-adjust: 100%;
+}
+
+code, pre, .mono {
+  font-family: "SF Mono", "Menlo", "Consolas", monospace;
+}
+
+/* =========================================================
+   [2] Swiss Layout & Grid
+   ========================================================= */
+.wrap {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+@media (min-width: 900px) {
+  .wrap { padding: 0 32px; }
+}
+
+/* Header */
+.top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+}
+.brand-tag {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 2px 6px;
+  background: var(--fg);
+  color: var(--bg);
+}
+.volnav {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  font-size: 13px;
+  font-weight: 500;
+}
+.volnav a {
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 2px 4px;
+}
+.volnav a[aria-current="page"] {
+  color: var(--fg);
+  font-weight: 700;
+  border-bottom: 2px solid var(--fg);
+}
+
+/* Card & Panels */
+.card {
+  border-top: 1px solid var(--line);
+  padding: 32px 0;
+}
+.card-header {
+  margin-bottom: 20px;
+}
+.card-num {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 4px;
+  display: block;
+}
+.card-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+.card-title .en {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-left: 8px;
+}
+.card-desc {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.card-body {
+  display: grid;
+  gap: 16px;
+}
+@media (min-width: 900px) {
+  .card-body {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+}
+
+/* =========================================================
+   [3] Vignelli Tab Bar
+   ========================================================= */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.tab {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  border-bottom: none;
+  background: var(--surface);
+  color: var(--muted);
+  border-radius: 0;
+  transition: color 0.1s, background 0.1s;
+}
+.tab:hover {
+  color: var(--fg);
+  background: var(--bg);
+}
+.tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.tab[aria-selected="true"] {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
+}
+.panel[hidden] {
+  display: none;
+}
+
+/* =========================================================
+   [4] Code & Explanation Blocks
+   ========================================================= */
+pre.code {
+  margin: 0;
+  padding: 14px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.65;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  white-space: pre;
+}
+.hl {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* =========================================================
+   [5] Demo Frame
+   ページの装飾とデモの効果を混同させないための iframe 隔離。
+   ========================================================= */
+.demo {
+  border: 1px solid var(--line);
+  background: var(--demo-bg);
+}
+.demo iframe {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: var(--demo-bg);
+}
+
+/* === 概念図解用 === */
+.d-fig {
+  border: 1px solid var(--line);
+  background: #fffefc;
+  padding: 14px;
+  margin: 10px 0;
+}
+.d-fig svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* データテーブル用スタイル */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin: 8px 0;
+  background: var(--bg);
+}
+.data-table th, .data-table td {
+  border: 1px solid var(--line);
+  padding: 6px 10px;
+  text-align: left;
+}
+.data-table th {
+  background: var(--surface);
+  font-weight: 700;
+  color: var(--fg);
+}
+.data-table tr:nth-child(even) td {
+  background: #fafaf9;
+}
+</style>
+<style>
+/* === 375px 横溢れ修正（主代理が追加。設計・配色・書体には手を入れていない） === */
+.volnav{overflow-x:auto;min-width:0;flex:1 1 auto;scrollbar-width:none}
+.volnav::-webkit-scrollbar{display:none}
+.top{max-width:100%;overflow:hidden}
+.top>*{min-width:0}
+@media (max-width:899px){
+  .wrap{max-width:100%!important}
+  .card-body{display:block!important}
+  .card-body>*{width:auto!important;max-width:100%!important;min-width:0!important}
+  .card-body>*+*{margin-top:14px}
+  .panel [class*="col"]{width:auto!important;min-width:0!important;max-width:100%!important}
+}
+.wrap>*,.panel,.panel>*{min-width:0}
+pre,[class*="code"]{max-width:100%;min-width:0}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <span class="brand-tag">HTML&amp;CSS</span>
+  <nav class="volnav">
+    <a href="vol.1.html" aria-current="page">1</a>
+    <a href="vol.2.html">2</a>
+    <a href="vol.3.html">3</a>
+    <a href="vol.4.html">4</a>
+    <a href="vol.5.html">5</a>
+    <a href="vol.6.html">6</a>
+    <a href="vol.7.html">7</a>
+    <a href="vol.8.html">8</a>
+    <a href="vol.9.html">9</a>
+    <a href="vol.10.html">10</a>
+    <a href="vol.11.html">11</a>
+    <a href="vol.12.html">12</a>
+    <a href="vol.13.html">13</a>
+    <a href="vol.14.html">14</a>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <!-- ============================================================
+       SECTION 1: 1.1.2 & 1.1.3 HTMLのバージョンとCSSの役割
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 1.1.2 / 1.1.3</span>
+      <h2 class="card-title">HTML バージョン &amp; CSS 分離<span class="en">/ HTML Versions &amp; CSS Separation</span></h2>
+      <p class="card-desc">標準化団体（W3C / WHATWG）の変遷と、CSSによる「コンテンツとレイアウト・装飾の分離」。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="no-css" aria-selected="true">HTMLのみ（分離前）</button>
+      <button class="tab" role="tab" type="button" data-tab="with-css" aria-selected="false">HTML + CSS（分離後）</button>
+      <button class="tab" role="tab" type="button" data-tab="standards" aria-selected="false">標準化団体 &amp; 歴史年表</button>
+    </div>
+
+    <!-- Panel 1: HTMLのみ -->
+    <div class="panel" data-panel="no-css">
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- HTMLのみ：ブラウザデフォルト描画 --&gt;
+&lt;h1&gt;HTML&amp;CSS 復習&lt;/h1&gt;
+&lt;p&gt;CSSを適用しない場合、文書の論理構造（h1, p）のみが素のスタイルで描画されます。&lt;/p&gt;</code></pre>
+        <div class="demo">
+          <iframe title="HTMLのみ描画" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:12px;color:#111}</style></head><body><h1>HTML&amp;CSS 復習</h1><p>CSSを適用しない場合、文書の論理構造（h1, p）のみが素のスタイルで描画されます。</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: HTML + CSS -->
+    <div class="panel" data-panel="with-css" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- HTML + CSS：コンテンツを変更せずレイアウト・装飾を変更 --&gt;
+&lt;style&gt;
+  <span class="hl">h1 { color: #d02020; border-bottom: 2px solid #111; padding-bottom: 4px; }</span>
+  <span class="hl">p { background: #f5f5f3; padding: 10px; border-left: 4px solid #d02020; margin-top: 8px; }</span>
+&lt;/style&gt;
+&lt;h1&gt;HTML&amp;CSS 復習&lt;/h1&gt;
+&lt;p&gt;CSSを分離定義することで、HTML構造を変えずに装飾やレイアウトを一括制御できます。&lt;/p&gt;</code></pre>
+        <div class="demo">
+          <iframe title="HTML+CSS描画" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:12px;color:#111}h1{color:#d02020;border-bottom:2px solid #111;padding-bottom:4px;font-size:18px;margin:0}p{background:#f5f5f3;padding:10px;border-left:4px solid #d02020;margin-top:8px;font-size:13px}</style></head><body><h1>HTML&amp;CSS 復習</h1><p>CSSを分離定義することで、HTML構造を変えずに装飾やレイアウトを一括制御できます。</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: 標準化団体 & 年表 -->
+    <div class="panel" data-panel="standards" hidden>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>標準化団体</th>
+            <th>設立/結成</th>
+            <th>構成・特徴</th>
+            <th>担当規格</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>W3C</strong><br>(World Wide Web Consortium)</td>
+            <td>1994年</td>
+            <td>Web技術の標準化を推進する非営利団体</td>
+            <td>HTML 1.0 〜 HTML 5.2<br>CSS全般 (H. W. Lie 提唱)</td>
+          </tr>
+          <tr>
+            <td><strong>WHATWG</strong><br>(Web Hypertext Application... Group)</td>
+            <td>2004年</td>
+            <td>W3Cの姿勢に不満を持ったApple, Mozilla, Operaの開発者が結成</td>
+            <td>HTML Living Standard<br>(2019年6月〜管理主体)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px;">
+        <div>
+          <strong style="font-size:13px;">HTML バージョン変遷</strong>
+          <table class="data-table">
+            <thead><tr><th>年月</th><th>名称</th></tr></thead>
+            <tbody>
+              <tr><td>1993年 6月</td><td>HTML 1.0</td></tr>
+              <tr><td>1995年 11月</td><td>HTML 2.0</td></tr>
+              <tr><td>1997年 1月</td><td>HTML 3.2</td></tr>
+              <tr><td>1997年 12月</td><td>HTML 4.0</td></tr>
+              <tr><td>1999年 12月</td><td>HTML 4.01</td></tr>
+              <tr><td>2014年 10月</td><td>HTML 5 (W3C)</td></tr>
+              <tr><td>2016年 11月</td><td>HTML 5.1</td></tr>
+              <tr><td>2017年 12月</td><td>HTML 5.2 (W3C最終)</td></tr>
+              <tr><td>2019年 6月</td><td>HTML Living Standard (WHATWG)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div>
+          <strong style="font-size:13px;">CSS レベル（Level）変遷</strong>
+          <table class="data-table">
+            <thead><tr><th>年月</th><th>名称</th></tr></thead>
+            <tbody>
+              <tr><td>1996年 12月</td><td>CSS1</td></tr>
+              <tr><td>1998年 5月</td><td>CSS2</td></tr>
+              <tr><td>2011年 6月</td><td>CSS2.1</td></tr>
+              <tr><td>2013年 4月</td><td>CSS Conditional Rules Module Level 3</td></tr>
+              <tr><td>2017年 4月</td><td>CSS Image Values &amp; Replaced Content Level 4</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:11px; color:var(--muted); margin:4px 0 0;">※CSSはバージョンではなくモジュール毎の「レベル (Level)」で個別更新。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 2: 1.2.1 & 1.2.2 Web表示の流れとURL構成
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 1.2.1 / 1.2.2</span>
+      <h2 class="card-title">Web 表示フロー &amp; URL 構造<span class="en">/ Web Architecture &amp; URL Structure</span></h2>
+      <p class="card-desc">ブラウザとサーバー間の表示の流れ、URLの6つの構成要素、および URI / URL / URN の関係。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="url-parse" aria-selected="true">URL の 6 構成要素</button>
+      <button class="tab" role="tab" type="button" data-tab="web-flow" aria-selected="false">Web 表示の流れ</button>
+      <button class="tab" role="tab" type="button" data-tab="uri-relation" aria-selected="false">URI / URL / URN の関係</button>
+    </div>
+
+    <!-- Panel 1: URL構成 -->
+    <div class="panel" data-panel="url-parse">
+      <div class="d-fig">
+        <svg viewBox="0 0 760 140" role="img" aria-label="URLの構成要素分解図">
+          <!-- URL Blocks -->
+          <rect x="10" y="20" width="80" height="36" fill="#f7e8e3" stroke="#b2452c"/>
+          <text x="50" y="43" text-anchor="middle" font-size="13" font-family="monospace" fill="#111">https://</text>
+
+          <rect x="90" y="20" width="220" height="36" fill="#eef3f0" stroke="#4a7c59"/>
+          <text x="200" y="43" text-anchor="middle" font-size="13" font-family="monospace" fill="#111">www.metro.tokyo.lg.jp</text>
+
+          <rect x="310" y="20" width="55" height="36" fill="#e8f0fe" stroke="#1a73e8"/>
+          <text x="337" y="43" text-anchor="middle" font-size="13" font-family="monospace" fill="#111">:443</text>
+
+          <rect x="365" y="20" width="130" height="36" fill="#f4ede2" stroke="#b0885a"/>
+          <text x="430" y="43" text-anchor="middle" font-size="13" font-family="monospace" fill="#111">/index.html</text>
+
+          <rect x="495" y="20" width="75" height="36" fill="#f3e8f9" stroke="#7b1fa2"/>
+          <text x="532" y="43" text-anchor="middle" font-size="13" font-family="monospace" fill="#111">?x=1</text>
+
+          <rect x="570" y="20" width="175" height="36" fill="#f5f5f5" stroke="#616161"/>
+          <text x="657" y="43" text-anchor="middle" font-size="13" font-family="monospace" fill="#111">#tmp_faddress</text>
+
+          <!-- Labels -->
+          <text x="50" y="80" text-anchor="middle" font-size="11" font-weight="bold" fill="#b2452c">①スキーム</text>
+          <text x="50" y="96" text-anchor="middle" font-size="10" fill="#666">(scheme)</text>
+
+          <text x="200" y="80" text-anchor="middle" font-size="11" font-weight="bold" fill="#4a7c59">②ドメイン名</text>
+          <text x="200" y="96" text-anchor="middle" font-size="10" fill="#666">(domain name)</text>
+
+          <text x="337" y="80" text-anchor="middle" font-size="11" font-weight="bold" fill="#1a73e8">③ポート</text>
+          <text x="337" y="96" text-anchor="middle" font-size="10" fill="#666">(port)</text>
+
+          <text x="430" y="80" text-anchor="middle" font-size="11" font-weight="bold" fill="#b0885a">④パス</text>
+          <text x="430" y="96" text-anchor="middle" font-size="10" fill="#666">(file path)</text>
+
+          <text x="532" y="80" text-anchor="middle" font-size="11" font-weight="bold" fill="#7b1fa2">⑤クエリ</text>
+          <text x="532" y="96" text-anchor="middle" font-size="10" fill="#666">(query string)</text>
+
+          <text x="657" y="80" text-anchor="middle" font-size="11" font-weight="bold" fill="#616161">⑥フラグメント</text>
+          <text x="657" y="96" text-anchor="middle" font-size="10" fill="#666">(fragment)</text>
+        </svg>
+      </div>
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:12px;">
+        <table class="data-table">
+          <thead><tr><th>番号</th><th>要素名</th><th>役割・説明</th></tr></thead>
+          <tbody>
+            <tr><td>①</td><td>スキーム</td><td>通信手段（例：https）</td></tr>
+            <tr><td>②</td><td>ドメイン名</td><td>リソースを保持するサーバーコンピュータ</td></tr>
+            <tr><td>③</td><td>ポート番号</td><td>サーバー上のソフトウェア識別番号（httpsは通常443）</td></tr>
+            <tr><td>④</td><td>ファイルパス</td><td>サーバー内におけるリソースの保存場所</td></tr>
+            <tr><td>⑤</td><td>クエリ文字列</td><td>リソースに渡すパラメータ情報（x=1）</td></tr>
+            <tr><td>⑥</td><td>フラグメント</td><td>ページ内の特定位置を示す識別子</td></tr>
+          </tbody>
+        </table>
+
+        <div>
+          <strong style="font-size:13px;">ウェルノウンポート (0〜1023)</strong>
+          <table class="data-table">
+            <thead><tr><th>ポート</th><th>プロトコル</th><th>用途</th></tr></thead>
+            <tbody>
+              <tr><td><strong>443</strong></td><td>HTTPS</td><td>暗号化Web通信</td></tr>
+              <tr><td><strong>80</strong></td><td>HTTP</td><td>平文Web通信</td></tr>
+              <tr><td>20 / 21</td><td>FTP</td><td>ファイル転送</td></tr>
+              <tr><td>25</td><td>SMTP</td><td>メール送信</td></tr>
+              <tr><td>110</td><td>POP3</td><td>メール受信</td></tr>
+              <tr><td>53</td><td>DNS</td><td>ドメイン名解決</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: Web表示の流れ -->
+    <div class="panel" data-panel="web-flow" hidden>
+      <div class="d-fig">
+        <svg viewBox="0 0 680 180" role="img" aria-label="Webサイトが表示されるまでのシーケンス図">
+          <!-- Client -->
+          <rect x="30" y="40" width="120" height="90" fill="#f5f5f3" stroke="#111" stroke-width="2"/>
+          <text x="90" y="70" text-anchor="middle" font-size="14" font-weight="bold">クライアント</text>
+          <text x="90" y="95" text-anchor="middle" font-size="12" fill="#666">(Webブラウザ)</text>
+
+          <!-- Server -->
+          <rect x="530" y="40" width="120" height="90" fill="#f5f5f3" stroke="#111" stroke-width="2"/>
+          <text x="590" y="70" text-anchor="middle" font-size="14" font-weight="bold">Webサーバー</text>
+          <text x="590" y="95" text-anchor="middle" font-size="12" fill="#666">(www.metro.tokyo...)</text>
+
+          <!-- Arrows -->
+          <!-- Request Arrow -->
+          <path d="M 155 70 L 520 70" stroke="#d02020" stroke-width="2" marker-end="url(#arrow-red)"/>
+          <text x="337" y="60" text-anchor="middle" font-size="12" font-weight="bold" fill="#d02020">① リクエスト要求 (index.html)</text>
+
+          <!-- Response Arrow -->
+          <path d="M 525 105 L 160 105" stroke="#1a73e8" stroke-width="2" marker-end="url(#arrow-blue)"/>
+          <text x="337" y="125" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a73e8">② レスポンス送信 (HTMLデータ返送)</text>
+
+          <text x="90" y="155" text-anchor="middle" font-size="11" fill="#111">URL入力 ➔ 画面解析描画</text>
+          <text x="590" y="155" text-anchor="middle" font-size="11" fill="#111">ファイル読み込み ➔ 返送</text>
+
+          <defs>
+            <marker id="arrow-red" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#d02020" />
+            </marker>
+            <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#1a73e8" />
+            </marker>
+          </defs>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Panel 3: URI / URL / URN -->
+    <div class="panel" data-panel="uri-relation" hidden>
+      <div class="card-body">
+        <div class="d-fig">
+          <svg viewBox="0 0 380 200" role="img" aria-label="URI URL URN の包含関係ベン図">
+            <!-- URI Outer Circle -->
+            <rect x="20" y="20" width="340" height="160" rx="10" fill="#f5f5f3" stroke="#111" stroke-width="2"/>
+            <text x="40" y="45" font-size="16" font-weight="bold" fill="#111">URI (Uniform Resource Identifier)</text>
+            <text x="40" y="62" font-size="11" fill="#666">リソースを識別する識別子の総称</text>
+
+            <!-- URL Inner Box -->
+            <rect x="40" y="80" width="140" height="85" rx="6" fill="#eef3f0" stroke="#4a7c59" stroke-width="2"/>
+            <text x="110" y="105" text-anchor="middle" font-size="14" font-weight="bold" fill="#4a7c59">URL</text>
+            <text x="110" y="125" text-anchor="middle" font-size="10" fill="#111">Resource Locator</text>
+            <text x="110" y="145" text-anchor="middle" font-size="11" font-weight="bold">「場所」を表す</text>
+
+            <!-- URN Inner Box -->
+            <rect x="200" y="80" width="140" height="85" rx="6" fill="#f4ede2" stroke="#b0885a" stroke-width="2"/>
+            <text x="270" y="105" text-anchor="middle" font-size="14" font-weight="bold" fill="#b0885a">URN</text>
+            <text x="270" y="125" text-anchor="middle" font-size="10" fill="#111">Resource Name</text>
+            <text x="270" y="145" text-anchor="middle" font-size="11" font-weight="bold">「名前」を表す</text>
+          </svg>
+        </div>
+
+        <table class="data-table">
+          <thead><tr><th>略称</th><th>正式名称</th><th>概念と役割</th></tr></thead>
+          <tbody>
+            <tr><td><strong>URI</strong></td><td>Uniform Resource Identifier</td><td>ネットワーク上のリソースを識別する文字列の総称</td></tr>
+            <tr><td><strong>URL</strong></td><td>Uniform Resource Locator</td><td>ネットワーク上のリソースが存在する「場所」を識別</td></tr>
+            <tr><td><strong>URN</strong></td><td>Uniform Resource Name</td><td>ネットワーク上のリソースを永続的に特定する「名前」を識別</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 3: 1.3.1 & 1.3.2 HTTP通信とリクエストメッセージ
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 1.3.1 / 1.3.2</span>
+      <h2 class="card-title">HTTP 通信 &amp; リクエスト構造<span class="en">/ HTTP Protocol &amp; Request Message</span></h2>
+      <p class="card-desc">ステートレス通信（RFC 1945）の原則、リクエストメッセージ構造、HTTPメソッドおよびヘッダー。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="req-get" aria-selected="true">GET リクエスト構造</button>
+      <button class="tab" role="tab" type="button" data-tab="req-post" aria-selected="false">POST リクエスト構造</button>
+      <button class="tab" role="tab" type="button" data-tab="methods" aria-selected="false">HTTP メソッド一覧</button>
+      <button class="tab" role="tab" type="button" data-tab="req-headers" aria-selected="false">リクエストヘッダー一覧</button>
+    </div>
+
+    <!-- Panel 1: GET リクエスト -->
+    <div class="panel" data-panel="req-get">
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- リクエストライン: メソッド / パス / HTTPバージョン --&gt;
+<span class="hl">GET /test/index.html HTTP/1.1</span>
+Host: localhost:8080
+User-Agent: Mozilla/5.0 (Windows NT 10.0; ja)
+Accept: text/html,application/xhtml+xml
+Accept-Language: ja,en-us;q=0.7
+Connection: keep-alive
+
+&lt;!-- ※GET通信ではメッセージボディは空 --&gt;</code></pre>
+        <div class="demo">
+          <iframe title="GETリクエスト構造" height="180" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 monospace;margin:10px;background:#f5f5f3}.line{padding:4px;margin-bottom:4px;border-left:3px solid #ccc;background:#fff}.hl{border-color:#d02020;background:#fff5f5;font-weight:bold}</style></head><body><div class="line hl">【リクエストライン】<br>GET /test/index.html HTTP/1.1</div><div class="line">【リクエストヘッダー】<br>Host: localhost:8080<br>User-Agent: Mozilla/5.0...</div><div class="line">【空白行】(CR+LF)</div><div class="line">【メッセージボディ】(なし)</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: POST リクエスト -->
+    <div class="panel" data-panel="req-post" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- POSTリクエスト: 送信データはボディに格納される --&gt;
+<span class="hl">POST /test/index.html HTTP/1.1</span>
+Host: localhost:8080
+User-Agent: Mozilla/5.0
+Content-Type: application/x-www-form-urlencoded
+<span class="hl">Content-Length: 6</span>
+Connection: keep-alive
+
+<span class="hl">num=10</span></code></pre>
+        <div class="demo">
+          <iframe title="POSTリクエスト構造" height="180" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 monospace;margin:10px;background:#f5f5f3}.line{padding:4px;margin-bottom:4px;border-left:3px solid #ccc;background:#fff}.hl{border-color:#d02020;background:#fff5f5;font-weight:bold}</style></head><body><div class="line hl">【リクエストライン】<br>POST /test/index.html HTTP/1.1</div><div class="line">【リクエストヘッダー】<br>Host: localhost:8080<br>Content-Length: 6</div><div class="line">【空白行】(CR+LF)</div><div class="line hl">【メッセージボディ】<br>num=10 (フォーム送信データ)</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: HTTPメソッド一覧 -->
+    <div class="panel" data-panel="methods" hidden>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>メソッド</th>
+            <th>HTTP/1.0</th>
+            <th>HTTP/1.1</th>
+            <th>機能・説明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>GET</strong></td><td>○</td><td>○</td><td>指定したサーバー上のファイル内容・データを要求・取得する。</td></tr>
+          <tr><td><strong>POST</strong></td><td>○</td><td>○</td><td>サーバーにデータを送信する。送信データはメッセージボディに記述。</td></tr>
+          <tr><td><strong>HEAD</strong></td><td>○</td><td>○</td><td>URLで指定されたファイルのヘッダー情報のみを要求する。</td></tr>
+          <tr><td><strong>PUT</strong></td><td>○</td><td>○</td><td>Webサーバー上に指定ファイルをアップロードする。</td></tr>
+          <tr><td><strong>DELETE</strong></td><td>○</td><td>○</td><td>URLで指定したファイルをWebサーバー上から削除する。</td></tr>
+          <tr><td><strong>TRACE</strong></td><td>×</td><td>○</td><td>HTTP通信の動作をループバックトレースする。</td></tr>
+          <tr><td><strong>OPTIONS</strong></td><td>×</td><td>○</td><td>サーバーがサポートする通信オプション（メソッド等）を調べる。</td></tr>
+          <tr><td><strong>CONNECT</strong></td><td>×</td><td>○</td><td>プロキシに対してSSL等のトンネリング接続を要求する。</td></tr>
+          <tr><td><strong>LINK</strong></td><td>○</td><td>×</td><td>リソースを他のWebページ等に関連付ける（1.1で廃止）。</td></tr>
+          <tr><td><strong>UNLINK</strong></td><td>○</td><td>×</td><td>LINKによる関連付けを切り離す（1.1で廃止）。</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:12px; color:var(--muted); margin:6px 0 0;">※<strong>ステートレス通信（stateless communication）</strong>：過去の通信状態を維持せず、同一リクエストに対して常に同一レスポンスを返す性質。</p>
+    </div>
+
+    <!-- Panel 4: リクエストヘッダー -->
+    <div class="panel" data-panel="req-headers" hidden>
+      <table class="data-table">
+        <thead><tr><th>ヘッダー名</th><th>概要と説明</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Host</strong></td><td>リクエスト先の Web サーバー名（およびポート番号）を表す。</td></tr>
+          <tr><td><strong>User-Agent</strong></td><td>クライアントが使用している Web ブラウザの名称・バージョン・OS情報を表す。</td></tr>
+          <tr><td><strong>Accept</strong></td><td>クライアントブラウザが受信可能なデータ形式（MIMEタイプ）を表す。</td></tr>
+          <tr><td><strong>Accept-Language</strong></td><td>クライアントブラウザが優先する言語（ja, en-us 等）を表す。</td></tr>
+          <tr><td><strong>Content-Length</strong></td><td>POST メソッド等における送信データサイズ（バイト数）を表す。</td></tr>
+          <tr><td><strong>Connection</strong></td><td>持続的な HTTP 接続（keep-alive）を扱うか否かを指定する。</td></tr>
+          <tr><td><strong>Origin</strong></td><td>リクエストの発信元スキーム・ドメイン・ポートを表す。</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 4: 1.3.3 レスポンスメッセージとMIMEタイプ
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 1.3.3</span>
+      <h2 class="card-title">レスポンス構造 &amp; MIME タイプ<span class="en">/ HTTP Response &amp; MIME Types</span></h2>
+      <p class="card-desc">ステータスライン（コード・リーズンフレーズ）、レスポンスヘッダー、MIMEタイプによる描画動作の差。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="res-html" aria-selected="true">text/html 描画</button>
+      <button class="tab" role="tab" type="button" data-tab="res-plain" aria-selected="false">text/plain 描画</button>
+      <button class="tab" role="tab" type="button" data-tab="status-codes" aria-selected="false">ステータスコード &amp; 理由</button>
+      <button class="tab" role="tab" type="button" data-tab="mime-list" aria-selected="false">MIME タイプ一覧</button>
+      <button class="tab" role="tab" type="button" data-tab="res-headers" aria-selected="false">レスポンスヘッダー</button>
+    </div>
+
+    <!-- Panel 1: text/html -->
+    <div class="panel" data-panel="res-html">
+      <div class="card-body">
+        <pre class="code"><code>HTTP/1.x <span class="hl">200 OK</span>
+Server: Apache-Coyote/1.1
+Content-Type: <span class="hl">text/html</span>
+Content-Length: 48
+
+&lt;html&gt;&lt;body&gt;&lt;h1&gt;Sample&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;</code></pre>
+        <div class="demo">
+          <iframe title="text/html レンダリング" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:12px;color:#111}h1{color:#d02020;font-size:18px}</style></head><body><h1>Sample</h1><p style="font-size:12px;color:#666">Content-Type: text/html により、ブラウザがHTMLタグを解析して見出し描画します。</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: text/plain -->
+    <div class="panel" data-panel="res-plain" hidden>
+      <div class="card-body">
+        <pre class="code"><code>HTTP/1.x <span class="hl">200 OK</span>
+Server: Apache-Coyote/1.1
+Content-Type: <span class="hl">text/plain</span>
+Content-Length: 48
+
+&lt;html&gt;&lt;body&gt;&lt;h1&gt;Sample&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;</code></pre>
+        <div class="demo">
+          <iframe title="text/plain レンダリング" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"></head><body><pre style="font-family:monospace;margin:12px;white-space:pre-wrap;font-size:13px;color:#111">&lt;html&gt;&lt;body&gt;&lt;h1&gt;Sample&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;</pre></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: ステータスコード -->
+    <div class="panel" data-panel="status-codes" hidden>
+      <strong style="font-size:13px;">ステータスコードの分類範囲</strong>
+      <table class="data-table">
+        <thead><tr><th>範囲</th><th>分類名</th><th>概要</th></tr></thead>
+        <tbody>
+          <tr><td><strong>100〜199</strong></td><td>お知らせ (Informational)</td><td>リクエストが受け付けられ、処理が継続中であることを示す。</td></tr>
+          <tr><td><strong>200〜299</strong></td><td>成功 (Success)</td><td>リクエストが正常に理解され、受託・完了したことを示す。</td></tr>
+          <tr><td><strong>300〜399</strong></td><td>移転通知 (Redirection)</td><td>リクエスト完了のために追加の動作（リダイレクト等）が必要。</td></tr>
+          <tr><td><strong>400〜499</strong></td><td>クライアントエラー</td><td>リクエストの構文不正や認証不足などクライアント側の誤り。</td></tr>
+          <tr><td><strong>500〜599</strong></td><td>サーバーエラー</td><td>サーバーが正常なリクエストの処理に失敗したことを示す。</td></tr>
+        </tbody>
+      </table>
+
+      <strong style="font-size:13px; margin-top:12px; display:block;">代表的なコード &amp; リーズンフレーズ (Reason Phrase)</strong>
+      <table class="data-table">
+        <thead><tr><th>コード</th><th>リーズンフレーズ</th><th>詳細説明</th></tr></thead>
+        <tbody>
+          <tr><td>100</td><td>Continue</td><td>リクエストの継続送信を促す状態。</td></tr>
+          <tr><td>101</td><td>Switching Protocols</td><td>プロトコル切り替え要求に応じる状態。</td></tr>
+          <tr><td><strong>200</strong></td><td>OK</td><td>リクエスト正常処理完了。</td></tr>
+          <tr><td>201</td><td>Created</td><td>PUT等で新しいリソース作成が成功。</td></tr>
+          <tr><td>300</td><td>Multiple Choice</td><td>複数の選択肢が存在し、クライアント選択待ち。</td></tr>
+          <tr><td><strong>301</strong></td><td>Moved Permanently</td><td>恒久的なURL変更（自動リダイレクト）。</td></tr>
+          <tr><td><strong>302</strong></td><td>Found</td><td>一時的なURL変更（自動リダイレクト）。</td></tr>
+          <tr><td>303</td><td>See Other</td><td>他のURLにレスポンスが存在する。</td></tr>
+          <tr><td><strong>304</strong></td><td>Not Modified</td><td>未更新のためキャッシュ済データを使用。</td></tr>
+          <tr><td>307</td><td>Temporary Redirect</td><td>メソッドを変更せず一時リダイレクト。</td></tr>
+          <tr><td><strong>400</strong></td><td>Bad Request</td><td>リクエストの構文エラー。</td></tr>
+          <tr><td><strong>401</strong></td><td>Unauthorized</td><td>認証（ユーザー名・パスワード）が必要。</td></tr>
+          <tr><td><strong>403</strong></td><td>Forbidden</td><td>アクセス権限がないため禁止。</td></tr>
+          <tr><td><strong>404</strong></td><td>Not Found</td><td>指定リソースが存在しない。</td></tr>
+          <tr><td><strong>500</strong></td><td>Internal Server Error</td><td>サーバー内部で不特定のエラー発生。</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Panel 4: MIMEタイプ一覧 -->
+    <div class="panel" data-panel="mime-list" hidden>
+      <p style="font-size:12px; color:var(--muted); margin:0 0 8px;">MIME（Multipurpose Internet Mail Extensions）タイプは IANA が管理。「メインタイプ/サブタイプ」形式。</p>
+      <table class="data-table">
+        <thead><tr><th>種別</th><th>拡張子</th><th>MIME タイプ (Content-Type)</th></tr></thead>
+        <tbody>
+          <tr><td>プレーンテキスト</td><td>.txt</td><td><code>text/plain</code></td></tr>
+          <tr><td>HTML 文書</td><td>.htm, .html</td><td><code>text/html</code></td></tr>
+          <tr><td>XML 文書</td><td>.xml</td><td><code>text/xml</code></td></tr>
+          <tr><td>CSS スタイルシート</td><td>.css</td><td><code>text/css</code></td></tr>
+          <tr><td>GIF 画像</td><td>.gif</td><td><code>image/gif</code></td></tr>
+          <tr><td>JPEG 画像</td><td>.jpg, .jpeg</td><td><code>image/jpeg</code></td></tr>
+          <tr><td>PNG 画像</td><td>.png</td><td><code>image/png</code></td></tr>
+          <tr><td>Word 文書</td><td>.doc</td><td><code>application/msword</code></td></tr>
+          <tr><td>Excel 文書</td><td>.xls</td><td><code>application/vnd.ms-excel</code></td></tr>
+          <tr><td>PDF 文書</td><td>.pdf</td><td><code>application/pdf</code></td></tr>
+          <tr><td>MPEG 音声</td><td>.mpeg</td><td><code>audio/mpeg</code></td></tr>
+          <tr><td>MP4 動画</td><td>.mp4</td><td><code>video/mp4</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Panel 5: レスポンスヘッダー -->
+    <div class="panel" data-panel="res-headers" hidden>
+      <table class="data-table">
+        <thead><tr><th>ヘッダー名</th><th>概要と説明</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Date</strong></td><td>レスポンスが作成・送信された日時を表す。</td></tr>
+          <tr><td><strong>Server</strong></td><td>Web サーバーのソフトウェア名称およびバージョンを表す。</td></tr>
+          <tr><td><strong>Content-Language</strong></td><td>レスポンス本文のドキュメント言語（ja, en 等）を表す。</td></tr>
+          <tr><td><strong>Content-Length</strong></td><td>レスポンスのデータサイズ（バイト数）を表す。</td></tr>
+          <tr><td><strong>Content-Type</strong></td><td>レスポンスに含まれるドキュメントの MIME タイプを表す。</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 5: 1.3.4 & 1.3.5 CookieとHTTPS通信
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 1.3.4 / 1.3.5</span>
+      <h2 class="card-title">HTTP Cookie &amp; HTTPS セキュリティ<span class="en">/ Cookie Session &amp; HTTPS Security</span></h2>
+      <p class="card-desc">ステートレスなHTTP通信でセッション管理を実現するCookie機構と、SSL暗号化によるHTTPS通信。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="cookie-set" aria-selected="true">1. 初回レスポンス (Set-Cookie)</button>
+      <button class="tab" role="tab" type="button" data-tab="cookie-send" aria-selected="false">2. 次回リクエスト (Cookie返送)</button>
+      <button class="tab" role="tab" type="button" data-tab="https-sec" aria-selected="false">HTTP vs HTTPS 暗号化対比</button>
+    </div>
+
+    <!-- Panel 1: Set-Cookie -->
+    <div class="panel" data-panel="cookie-set">
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- サーバーからの初回レスポンス --&gt;
+HTTP/1.1 200 OK
+<span class="hl">Set-Cookie: session_id=XYZ123; Path=/</span>
+Content-Type: text/html
+
+&lt;html&gt;&lt;body&gt;ログイン成功&lt;/body&gt;&lt;/html&gt;</code></pre>
+        <div class="demo">
+          <iframe title="Set-Cookie 動作" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:12px;font-size:13px;color:#111}.box{border:1px solid #1a73e8;background:#e8f0fe;padding:8px;margin-top:6px}</style></head><body><strong>サーバーからの応答:</strong><div class="box">Set-Cookie ヘッダーを受信し、ブラウザが <code>session_id=XYZ123</code> を端末内に保存しました。</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: Cookie返送 -->
+    <div class="panel" data-panel="cookie-send" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- ブラウザからの次回以降のリクエスト --&gt;
+GET /cart HTTP/1.1
+Host: example.com
+<span class="hl">Cookie: session_id=XYZ123</span>
+
+&lt;!-- サーバーはCookieからユーザーを識別（セッション管理） --&gt;</code></pre>
+        <div class="demo">
+          <iframe title="Cookie 返送動作" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:12px;font-size:13px;color:#111}.box{border:1px solid #4a7c59;background:#eef3f0;padding:8px;margin-top:6px}</style></head><body><strong>サーバー側の処理:</strong><div class="box">リクエストの <code>Cookie: session_id=XYZ123</code> を認識し、ログイン状態・カート情報（<strong>セッション管理</strong>）を維持します。</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: HTTPS対比 -->
+    <div class="panel" data-panel="https-sec" hidden>
+      <div class="d-fig">
+        <svg viewBox="0 0 680 160" role="img" aria-label="HTTPとHTTPSのセキュリティ比較図">
+          <!-- HTTP Block -->
+          <rect x="20" y="20" width="310" height="120" rx="6" fill="#fff5f5" stroke="#d02020" stroke-width="2"/>
+          <text x="175" y="45" text-anchor="middle" font-size="15" font-weight="bold" fill="#d02020">HTTP (ポート 80)</text>
+          <text x="175" y="70" text-anchor="middle" font-size="13" font-weight="bold">平文通信 (Plaintext)</text>
+          <text x="175" y="95" text-anchor="middle" font-size="11" fill="#d02020">⚠️ 第三者による盗聴・改ざん・なりすましリスク</text>
+
+          <!-- HTTPS Block -->
+          <rect x="350" y="20" width="310" height="120" rx="6" fill="#eef3f0" stroke="#4a7c59" stroke-width="2"/>
+          <text x="505" y="45" text-anchor="middle" font-size="15" font-weight="bold" fill="#4a7c59">HTTPS (ポート 443)</text>
+          <text x="505" y="70" text-anchor="middle" font-size="13" font-weight="bold">SSL / TLS 暗号化通信</text>
+          <text x="505" y="95" text-anchor="middle" font-size="11" fill="#4a7c59">🔒 データが暗号化 (Encryption) され安全通信</text>
+        </svg>
+      </div>
+
+      <table class="data-table">
+        <thead><tr><th>項目</th><th>HTTP</th><th>HTTPS (HyperText Transfer Protocol Secure)</th></tr></thead>
+        <tbody>
+          <tr><td><strong>標準ポート</strong></td><td>80 番</td><td><strong>443 番</strong></td></tr>
+          <tr><td><strong>セキュリティ</strong></td><td>なし（平文）</td><td><strong>SSL (Secure Sockets Layer) / TLS による暗号化</strong></td></tr>
+          <tr><td><strong>通信内容</strong></td><td>そのまま送信されるため盗聴可能</td><td>通信路全体が暗号化されるため安全</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* ★このスクリプトは一行も変更しない。丸ごとコピーすること★ */
+
+/* タブ: [data-tabs] ごとにスコープされる。カードが何枚あっても干渉しない */
+document.querySelectorAll('[data-tabs]').forEach(function (group) {
+  var tabs = group.querySelectorAll(':scope > .tabs > .tab');
+  var panels = group.querySelectorAll(':scope > .panel');
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var key = tab.dataset.tab;
+      tabs.forEach(function (t) { t.setAttribute('aria-selected', String(t === tab)); });
+      panels.forEach(function (p) { p.hidden = (p.dataset.panel !== key); });
+    });
+  });
+});
+
+/* テーマ固定（ライト）。切替機能は廃止 */
+</script>
+</body>
+</html>

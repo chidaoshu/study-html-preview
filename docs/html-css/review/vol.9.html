@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HTML&amp;CSS 期末試験 復習シート — vol.9</title>
+<style>
+/* =========================================================
+   [1] テーマ (Swiss Vignelli Palette)
+   固定ライト。暗色モードの切替は廃止。
+   ========================================================= */
+:root {
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #666666;
+  --line: #cccccc;
+  --hairline: #e2e2e2;
+  --surface: #f5f5f3;
+  --accent: #d02020;        /* 差分・強調のみに使用 */
+  --demo-bg: #ffffff;
+  --demo-fg: #111111;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Helvetica Neue", Helvetica, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic Medium", sans-serif;
+  line-height: 1.6;
+  text-wrap: pretty;
+  -webkit-text-size-adjust: 100%;
+}
+
+code, pre, .mono {
+  font-family: "SF Mono", "Menlo", "Consolas", monospace;
+}
+
+/* =========================================================
+   [2] Swiss Layout & Grid
+   ========================================================= */
+.wrap {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+@media (min-width: 900px) {
+  .wrap { padding: 0 32px; }
+}
+
+/* Header */
+.top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+}
+.brand-tag {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 2px 6px;
+  background: var(--fg);
+  color: var(--bg);
+}
+.volnav {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  font-size: 13px;
+  font-weight: 500;
+}
+.volnav a {
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 2px 4px;
+}
+.volnav a[aria-current="page"] {
+  color: var(--fg);
+  font-weight: 700;
+  border-bottom: 2px solid var(--fg);
+}
+
+/* Card & Panels */
+.card {
+  border-top: 1px solid var(--line);
+  padding: 32px 0;
+}
+.card-header {
+  margin-bottom: 20px;
+}
+.card-num {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 4px;
+  display: block;
+}
+.card-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+.card-title .en {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-left: 8px;
+}
+.card-desc {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.card-body {
+  display: grid;
+  gap: 16px;
+}
+@media (min-width: 900px) {
+  .card-body {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+}
+
+/* =========================================================
+   [3] Vignelli Tab Bar
+   ========================================================= */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.tab {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  border-bottom: none;
+  background: var(--surface);
+  color: var(--muted);
+  border-radius: 0;
+  transition: color 0.1s, background 0.1s;
+}
+.tab:hover {
+  color: var(--fg);
+  background: var(--bg);
+}
+.tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.tab[aria-selected="true"] {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
+}
+.panel[hidden] {
+  display: none;
+}
+
+/* =========================================================
+   [4] Code & Explanation Blocks
+   ========================================================= */
+pre.code {
+  margin: 0;
+  padding: 14px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.65;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  white-space: pre;
+}
+.hl {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* Data Table */
+.data-table-wrapper {
+  overflow-x: auto;
+  margin-bottom: 16px;
+  border: 1px solid var(--line);
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  text-align: left;
+}
+.data-table th, .data-table td {
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+}
+.data-table th {
+  background: var(--surface);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   [5] Demo Frame
+   ========================================================= */
+.demo {
+  border: 1px solid var(--line);
+  background: var(--demo-bg);
+}
+.demo iframe {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: var(--demo-bg);
+}
+
+/* SVG Figure */
+.d-fig {
+  border: 1px solid var(--line);
+  background: #fffefc;
+  padding: 14px;
+  margin: 16px 0;
+}
+.d-fig svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+</style>
+<style>
+/* === 375px 横溢れ修正 === */
+.volnav{overflow-x:auto;min-width:0;flex:1 1 auto;scrollbar-width:none}
+.volnav::-webkit-scrollbar{display:none}
+.top{max-width:100%;overflow:hidden}
+.top>*{min-width:0}
+@media (max-width:899px){
+  .wrap{max-width:100%!important}
+  .card-body{display:block!important}
+  .card-body>*{width:auto!important;max-width:100%!important;min-width:0!important}
+  .card-body>*+*{margin-top:14px}
+  .panel [class*="col"]{width:auto!important;min-width:0!important;max-width:100%!important}
+}
+.wrap>*,.panel,.panel>*{min-width:0}
+pre,[class*="code"]{max-width:100%;min-width:0}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <span class="brand-tag">HTML&amp;CSS</span>
+  <nav class="volnav">
+    <a href="vol.1.html">1</a>
+    <a href="vol.2.html">2</a>
+    <a href="vol.3.html">3</a>
+    <a href="vol.4.html">4</a>
+    <a href="vol.5.html">5</a>
+    <a href="vol.6.html">6</a>
+    <a href="vol.7.html">7</a>
+    <a href="vol.8.html">8</a>
+    <a href="vol.9.html" aria-current="page">9</a>
+    <a href="vol.10.html">10</a>
+    <a href="vol.11.html">11</a>
+    <a href="vol.12.html">12</a>
+    <a href="vol.13.html">13</a>
+    <a href="vol.14.html">14</a>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <!-- SECTION 1: 1.1 & 1.2 文字色と色の指定方法 -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 1.1 - 1.2</span>
+      <h2 class="card-title">文字色と色の指定方法<span class="en">/ color &amp; Color Specifications</span></h2>
+      <p class="card-desc">文字色は <code>color</code> プロパティで変更。RGB（加法混合）や HSL（色相・彩度・輝度）のモデルに基づき、HEX や色関数（<code>rgb</code>, <code>rgba</code>, <code>hsl</code>, <code>hsla</code>）で指定する。</p>
+    </div>
+
+    <!-- 仕様表 & 引数仕様表 -->
+    <div class="data-table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>プロパティ / 項目</th>
+            <th>初期値</th>
+            <th>適用要素</th>
+            <th>継承</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>color</code></td>
+            <td>ブラウザ依存</td>
+            <td>全要素</td>
+            <td>継承される</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="d-fig">
+      <svg viewBox="0 0 640 120" role="img" aria-label="RGBカラーモデルとHSLカラーモデルの構造">
+        <rect x="20" y="20" width="280" height="80" fill="#fcf8f8" stroke="#d02020" rx="4"/>
+        <text x="160" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#d02020">RGB カラーモデル (加法混合)</text>
+        <text x="160" y="68" text-anchor="middle" font-size="12" fill="#333">Red (0-255) / Green (0-255) / Blue (0-255)</text>
+        <text x="160" y="86" text-anchor="middle" font-size="11" fill="#666">Hex (#RRGGBB) または rgb(), rgba() 関数</text>
+
+        <rect x="340" y="20" width="280" height="80" fill="#f4f8fc" stroke="#2060d0" rx="4"/>
+        <text x="480" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#2060d0">HSL カラーモデル</text>
+        <text x="480" y="68" text-anchor="middle" font-size="12" fill="#333">Hue (0-360°) / Saturation (0-100%) / Lightness (0-100%)</text>
+        <text x="480" y="86" text-anchor="middle" font-size="11" fill="#666">hsl(), hsla() 関数（不透明度 alpha 0.0-1.0）</text>
+      </svg>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="hex" aria-selected="true">HEX (#ff7700)</button>
+      <button class="tab" role="tab" type="button" data-tab="rgb" aria-selected="false">RGB (rgb)</button>
+      <button class="tab" role="tab" type="button" data-tab="rgba" aria-selected="false">RGBA (半透明)</button>
+      <button class="tab" role="tab" type="button" data-tab="hsl" aria-selected="false">HSL (hsl)</button>
+      <button class="tab" role="tab" type="button" data-tab="hsla" aria-selected="false">HSLA (半透明)</button>
+    </div>
+
+    <!-- Panel 1: HEX -->
+    <div class="panel" data-panel="hex">
+      <div class="card-body">
+        <pre class="code"><code>/* 16進数（Hexadecimal） 6桁 または 3桁 */
+h1 { <span class="hl">color: #ff7700;</span> }
+h2 { <span class="hl">color: #f70;</span> }  /* 同義の短縮形 */</code></pre>
+        <div class="demo">
+          <iframe title="HEX 色指定デモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}h1{color:#ff7700;margin:0 0 8px}h2{color:#f70;margin:0}</style></head><body><h1>HEX 6桁 (#ff7700) オレンジ</h1><h2>HEX 3桁 (#f70) オレンジ</h2></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: RGB -->
+    <div class="panel" data-panel="rgb" hidden>
+      <div class="card-body">
+        <pre class="code"><code>/* RGB 関数：0-255 または 0%-100% */
+h1 { <span class="hl">color: rgb(255, 119, 0);</span> }
+h2 { <span class="hl">color: rgb(100%, 50%, 0%);</span> }</code></pre>
+        <div class="demo">
+          <iframe title="RGB 色指定デモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}h1{color:rgb(255,119,0);margin:0 0 8px}h2{color:rgb(100%,50%,0%);margin:0}</style></head><body><h1>rgb(255, 119, 0) オレンジ</h1><h2>rgb(100%, 50%, 0%) オレンジ</h2></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: RGBA -->
+    <div class="panel" data-panel="rgba" hidden>
+      <div class="card-body">
+        <pre class="code"><code>/* RGBA 関数：alpha 不透明度 (0.0-1.0) */
+h1 { <span class="hl">color: rgba(255, 0, 0, 0.5);</span> }
+h2 { <span class="hl">color: rgba(100%, 0%, 100%, 0.5);</span> }</code></pre>
+        <div class="demo">
+          <iframe title="RGBA 色指定デモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111;background:#f0f0f0}.box{background:#fff;padding:10px;border:1px solid #ccc}h1{color:rgba(255,0,0,0.5);margin:0 0 8px}h2{color:rgba(100%,0%,100%,0.5);margin:0}</style></head><body><div class="box"><h1>rgba(255, 0, 0, 0.5) 半透明赤</h1><h2>rgba(100%, 0%, 100%, 0.5) 半透明紫</h2></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 4: HSL -->
+    <div class="panel" data-panel="hsl" hidden>
+      <div class="card-body">
+        <pre class="code"><code>/* HSL 関数：色相(0-360), 彩度(%), 輝度(%) */
+h1 { <span class="hl">color: hsl(100, 50%, 40%);</span> }
+h2 { <span class="hl">color: hsl(28, 100%, 50%);</span> }</code></pre>
+        <div class="demo">
+          <iframe title="HSL 色指定デモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}h1{color:hsl(100,50%,40%);margin:0 0 8px}h2{color:hsl(28,100%,50%);margin:0}</style></head><body><h1>hsl(100, 50%, 40%) 緑</h1><h2>hsl(28, 100%, 50%) オレンジ</h2></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 5: HSLA -->
+    <div class="panel" data-panel="hsla" hidden>
+      <div class="card-body">
+        <pre class="code"><code>/* HSLA 関数：HSL + alpha 不透明度 (0.0-1.0) */
+h1 { <span class="hl">color: hsla(200, 70%, 40%, 0.5);</span> }</code></pre>
+        <div class="demo">
+          <iframe title="HSLA 色指定デモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111;background:#eee}.box{background:#fff;padding:10px;border:1px solid #ccc}h1{color:hsla(200,70%,40%,0.5);margin:0}</style></head><body><div class="box"><h1>hsla(200, 70%, 40%, 0.5) 半透明青緑</h1></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 1.2.3: キーワードによる色指定 -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 1.2.3</span>
+      <h2 class="card-title">キーワードによる色指定<span class="en">/ Color Keywords</span></h2>
+      <p class="card-desc">基本16色などの名前（<code>red</code>, <code>blue</code>）のほか、現在の文字色を動的に継承する <code>currentColor</code> や、完全な透明を表す <code>transparent</code> が使用できる。</p>
+    </div>
+
+    <div class="data-table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>特殊キーワード</th>
+            <th>説明</th>
+            <th>用途・試験ポイント</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>currentColor</code></td>
+            <td>その要素の <code>color</code> プロパティ値</td>
+            <td>枠線（border）や影の色を文字色と自動的に同期させる</td>
+          </tr>
+          <tr>
+            <td><code>transparent</code></td>
+            <td>完全透明（不透明度 0.0）</td>
+            <td>背景の透過、ボーダーの非表示、グラデーションの始点終点に利用</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="currentcolor" aria-selected="true">currentColor (文字色継承)</button>
+      <button class="tab" role="tab" type="button" data-tab="transparent" aria-selected="false">transparent (完全透明)</button>
+      <button class="tab" role="tab" type="button" data-tab="keywords" aria-selected="false">基本カラーキーワード (16色)</button>
+    </div>
+
+    <!-- Panel 1: currentColor -->
+    <div class="panel" data-panel="currentcolor">
+      <div class="card-body">
+        <pre class="code"><code>.box {
+  color: #d02020;  /* 赤色テキスト */
+  /* border の色に currentColor を指定すると
+     文字色 (#d02020) が動的に同期適用される */
+  <span class="hl">border: 2px solid currentColor;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="currentColor デモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}.box{color:#d02020;border:2px solid currentColor;padding:10px;background:#f5f5f3}.title{font-weight:bold;margin:0 0 4px}</style></head><body><div class="box"><div class="title">currentColor 指定ボックス</div>テキスト色が #d02020（赤）のため、border の currentColor も自動的に赤色になります。</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: transparent -->
+    <div class="panel" data-panel="transparent" hidden>
+      <div class="card-body">
+        <pre class="code"><code>/* 完全透明な背景指定（背景パターンが透ける） */
+button {
+  <span class="hl">background-color: transparent;</span>
+  border: 2px solid #111;
+  color: #111;
+}</code></pre>
+        <div class="demo">
+          <iframe title="transparent デモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;background:linear-gradient(45deg,#eee 25%,#fff 25%,#fff 50%,#eee 50%,#eee 75%,#fff 75%);background-size:16px 16px}button{padding:8px 16px;font:inherit;border:2px solid #111;background-color:transparent;cursor:pointer;font-weight:bold}</style></head><body><p style="margin:0 0 8px">市松模様背景上のボタン：</p><button>background: transparent</button></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: keywords -->
+    <div class="panel" data-panel="keywords" hidden>
+      <div class="card-body">
+        <pre class="code"><code>/* 基本16色キーワード例 (navy, teal, coral 等) */
+h1 { <span class="hl">color: navy;</span> }  /* #000080 */
+h2 { <span class="hl">color: teal;</span> }  /* #008080 */
+p  { <span class="hl">color: coral;</span> } /* #FF7F50 */</code></pre>
+        <div class="demo">
+          <iframe title="カラーキーワードデモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px}h1{color:navy;font-size:16px;margin:0 0 4px}h2{color:teal;font-size:15px;margin:0 0 4px}p{color:coral;margin:0;font-weight:bold}</style></head><body><h1>navy (#000080) の見出し</h1><h2>teal (#008080) の見出し</h2><p>coral (#FF7F50) の本文テキスト</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: 2.1 フォントの設定 (font-family) -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.1</span>
+      <h2 class="card-title">フォントの設定<span class="en">/ font-family</span></h2>
+      <p class="card-desc"><code>font-family</code> で書体を設定。スペース含む名前は引用符で囲み、優先順にカンマ区切りで複数指定。末尾には総称フォント名（<code>sans-serif</code> 等）を記載する。</p>
+    </div>
+
+    <div class="data-table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>プロパティ</th>
+            <th>初期値</th>
+            <th>適用要素</th>
+            <th>継承</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>font-family</code></td>
+            <td>ブラウザ依存</td>
+            <td>全要素</td>
+            <td>継承される</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="sans" aria-selected="true">ゴシック体 (sans-serif)</button>
+      <button class="tab" role="tab" type="button" data-tab="serif" aria-selected="false">明朝体 (serif)</button>
+      <button class="tab" role="tab" type="button" data-tab="mono" aria-selected="false">等幅 (monospace)</button>
+    </div>
+
+    <!-- Panel 1: sans-serif -->
+    <div class="panel" data-panel="sans">
+      <div class="card-body">
+        <pre class="code"><code>body {
+  <span class="hl">font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="ゴシック体フォントデモ" height="140" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif;font-size:15px;line-height:1.6;margin:12px;color:#111}</style></head><body><p>これはゴシック体（sans-serif）の表示サンプルです。<br>Font Family: Hiragino Kaku Gothic ProN, Yu Gothic, Meiryo, sans-serif</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: serif -->
+    <div class="panel" data-panel="serif" hidden>
+      <div class="card-body">
+        <pre class="code"><code>body {
+  <span class="hl">font-family: "Hiragino Mincho ProN", "Yu Mincho", "MS Mincho", serif;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="明朝体フォントデモ" height="140" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:"Hiragino Mincho ProN","Yu Mincho","MS Mincho",serif;font-size:15px;line-height:1.6;margin:12px;color:#111}</style></head><body><p>これは明朝体（serif）の表示サンプルです。<br>Font Family: Hiragino Mincho ProN, Yu Mincho, MS Mincho, serif</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: monospace -->
+    <div class="panel" data-panel="mono" hidden>
+      <div class="card-body">
+        <pre class="code"><code>body {
+  <span class="hl">font-family: "SF Mono", "Consolas", "Courier New", monospace;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="等幅フォントデモ" height="140" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:"SF Mono","Consolas","Courier New",monospace;font-size:14px;line-height:1.6;margin:12px;color:#111}</style></head><body><p>これは等幅フォント（monospace）の表示サンプルです。<br>Font Family: SF Mono, Consolas, Courier New, monospace</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: 2.2 テキストの大きさを設定する (font-size) -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.2</span>
+      <h2 class="card-title">テキストの大きさを設定する<span class="en">/ font-size</span></h2>
+      <p class="card-desc"><code>font-size</code> で文字サイズを指定。絶対サイズキーワード（<code>xx-small</code>〜<code>xx-large</code>）と HTML 見出しの対応関係、および相対サイズキーワード（<code>larger</code> / <code>smaller</code>）が定義されている。</p>
+    </div>
+
+    <div class="data-table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>キーワード</th>
+            <th>xx-small</th>
+            <th>x-small</th>
+            <th>small</th>
+            <th>medium</th>
+            <th>large</th>
+            <th>x-large</th>
+            <th>xx-large</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>HTML 見出し</th>
+            <td>h6</td>
+            <td>-</td>
+            <td>h5</td>
+            <td>h4 (初期値)</td>
+            <td>h3</td>
+            <td>h2</td>
+            <td>h1</td>
+          </tr>
+          <tr>
+            <th>倍率</th>
+            <td>3/5 (0.6)</td>
+            <td>3/4 (0.75)</td>
+            <td>8/9 (0.89)</td>
+            <td>1.0</td>
+            <td>6/5 (1.2)</td>
+            <td>3/2 (1.5)</td>
+            <td>2.0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="medium" aria-selected="true">medium (初期値)</button>
+      <button class="tab" role="tab" type="button" data-tab="xxlarge" aria-selected="false">xx-large (h1相当)</button>
+      <button class="tab" role="tab" type="button" data-tab="xxsmall" aria-selected="false">xx-small (h6相当)</button>
+      <button class="tab" role="tab" type="button" data-tab="rel" aria-selected="false">larger / smaller</button>
+    </div>
+
+    <!-- Panel 1: medium -->
+    <div class="panel" data-panel="medium">
+      <div class="card-body">
+        <pre class="code"><code>p {
+  <span class="hl">font-size: medium;</span>  /* 初期値 (h4 相当, 倍率 1.0) */
+}</code></pre>
+        <div class="demo">
+          <iframe title="medium サイズデモ" height="130" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}p{font-size:medium;margin:0}</style></head><body><p>font-size: medium のテキスト（標準サイズ）</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: xx-large -->
+    <div class="panel" data-panel="xxlarge" hidden>
+      <div class="card-body">
+        <pre class="code"><code>p {
+  <span class="hl">font-size: xx-large;</span>  /* h1 相当 (倍率 2.0) */
+}</code></pre>
+        <div class="demo">
+          <iframe title="xx-large サイズデモ" height="130" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}p{font-size:xx-large;margin:0}</style></head><body><p>font-size: xx-large のテキスト（h1相当）</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: xx-small -->
+    <div class="panel" data-panel="xxsmall" hidden>
+      <div class="card-body">
+        <pre class="code"><code>p {
+  <span class="hl">font-size: xx-small;</span>  /* h6 相当 (倍率 3/5 = 0.6) */
+}</code></pre>
+        <div class="demo">
+          <iframe title="xx-small サイズデモ" height="130" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}p{font-size:xx-small;margin:0}</style></head><body><p>font-size: xx-small のテキスト（h6相当）</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 4: larger / smaller -->
+    <div class="panel" data-panel="rel" hidden>
+      <div class="card-body">
+        <pre class="code"><code>.big   { <span class="hl">font-size: larger;</span> }   /* 親より1段階大きい */
+.small { <span class="hl">font-size: smaller;</span> }  /* 親より1段階小さい */</code></pre>
+        <div class="demo">
+          <iframe title="相対サイズデモ" height="130" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}.big{font-size:larger}.small{font-size:smaller}</style></head><body><div>親テキスト <span class="big">larger (大)</span> / <span class="small">smaller (小)</span></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2.3: テキストのスタイル (font-style) -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.3</span>
+      <h2 class="card-title">テキストのスタイル<span class="en">/ font-style</span></h2>
+      <p class="card-desc"><code>font-style</code> でフォントのイタリック体や斜体を設定。筆記体風にデザインされた <code>italic</code> と、標準字形を機械的に傾けた <code>oblique</code> の違いを押さえる。</p>
+    </div>
+
+    <div class="data-table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>プロパティ</th>
+            <th>初期値</th>
+            <th>適用要素</th>
+            <th>継承</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>font-style</code></td>
+            <td><code>normal</code></td>
+            <td>全要素</td>
+            <td>継承される</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="fs-normal" aria-selected="true">normal (標準)</button>
+      <button class="tab" role="tab" type="button" data-tab="fs-italic" aria-selected="false">italic (イタリック体)</button>
+      <button class="tab" role="tab" type="button" data-tab="fs-oblique" aria-selected="false">oblique (斜体)</button>
+    </div>
+
+    <!-- Panel 1: normal -->
+    <div class="panel" data-panel="fs-normal">
+      <div class="card-body">
+        <pre class="code"><code>p {
+  <span class="hl">font-style: normal;</span>  /* 標準（直立スタイル） */
+}</code></pre>
+        <div class="demo">
+          <iframe title="font-style normal デモ" height="130" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}p{font-style:normal;margin:0}</style></head><body><p>font-style: normal（標準の直立した表示です）</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: italic -->
+    <div class="panel" data-panel="fs-italic" hidden>
+      <div class="card-body">
+        <pre class="code"><code>/* イタリック体 (筆記体風にデザインされた専用グリフ) */
+p {
+  <span class="hl">font-style: italic;</span>
+  font-family: "Georgia", serif;
+}</code></pre>
+        <div class="demo">
+          <iframe title="font-style italic デモ" height="130" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:15px/1.6 "Georgia",serif;margin:12px;color:#111}p{font-style:italic;margin:0}</style></head><body><p>font-style: italic (Sample text in Georgia italic font)</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: oblique -->
+    <div class="panel" data-panel="fs-oblique" hidden>
+      <div class="card-body">
+        <pre class="code"><code>/* 斜体 (標準グリフを角度をつけて傾けた表示) */
+p {
+  <span class="hl">font-style: oblique;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="font-style oblique デモ" height="130" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:15px/1.6 sans-serif;margin:12px;color:#111}p{font-style:oblique;margin:0}</style></head><body><p>font-style: oblique (標準文字を機械的に傾けた表示)</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2.4: テキストの太さ (font-weight) -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.4</span>
+      <h2 class="card-title">テキストの太さ<span class="en">/ font-weight</span></h2>
+      <p class="card-desc"><code>font-weight</code> で文字の太さを設定。キーワード <code>normal</code> / <code>bold</code> と数値 <code>400</code> / <code>700</code> の対応関係（試験最頻出）および 100〜900 の数値スケールを理解する。</p>
+    </div>
+
+    <div class="data-table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>プロパティ</th>
+            <th>初期値</th>
+            <th>適用要素</th>
+            <th>継承</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>font-weight</code></td>
+            <td><code>normal</code></td>
+            <td>全要素</td>
+            <td>継承される</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="fw-map" aria-selected="true">キーワードと数値の対応 (400/700)</button>
+      <button class="tab" role="tab" type="button" data-tab="fw-scale" aria-selected="false">100〜900の数値スケール</button>
+      <button class="tab" role="tab" type="button" data-tab="fw-rel" aria-selected="false">相対指定 (bolder / lighter)</button>
+    </div>
+
+    <!-- Panel 1: Keyword vs Number -->
+    <div class="panel" data-panel="fw-map">
+      <div class="card-body">
+        <pre class="code"><code>/* キーワードと数値の完全対応（★超高頻出考点） */
+.norm-kw  { <span class="hl">font-weight: normal;</span> } /* 標準 */
+.norm-num { <span class="hl">font-weight: 400;</span> }    /* = normal と同義 */
+
+.bold-kw  { <span class="hl">font-weight: bold;</span> }   /* 太字 */
+.bold-num { <span class="hl">font-weight: 700;</span> }    /* = bold と同義 */</code></pre>
+        <div class="demo">
+          <iframe title="font-weight キーワードと数値デモ" height="160" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.5 sans-serif;margin:12px;color:#111}div{margin-bottom:6px}.normal-kw{font-weight:normal}.normal-num{font-weight:400}.bold-kw{font-weight:bold}.bold-num{font-weight:700}</style></head><body><div class="normal-kw">font-weight: normal (標準テキスト)</div><div class="normal-num">font-weight: 400 (400 = normal と同等)</div><div class="bold-kw">font-weight: bold (太字テキスト)</div><div class="bold-num">font-weight: 700 (700 = bold と同等)</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: 100-900 Scale -->
+    <div class="panel" data-panel="fw-scale" hidden>
+      <div class="card-body">
+        <pre class="code"><code>/* 100〜900の範囲で100刻みの数値スケール */
+.w100 { <span class="hl">font-weight: 100;</span> } /* Thin (極細) */
+.w300 { <span class="hl">font-weight: 300;</span> } /* Light (細字) */
+.w400 { <span class="hl">font-weight: 400;</span> } /* Normal (標準) */
+.w700 { <span class="hl">font-weight: 700;</span> } /* Bold (太字) */
+.w900 { <span class="hl">font-weight: 900;</span> } /* Black (極太) */</code></pre>
+        <div class="demo">
+          <iframe title="font-weight 数値スケールデモ" height="170" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.4 sans-serif;margin:12px;color:#111}div{margin-bottom:4px}.w100{font-weight:100}.w300{font-weight:300}.w400{font-weight:400}.w700{font-weight:700}.w900{font-weight:900}</style></head><body><div class="w100">font-weight: 100 (Thin - 極細)</div><div class="w300">font-weight: 300 (Light - 細字)</div><div class="w400">font-weight: 400 (Normal - 標準)</div><div class="w700">font-weight: 700 (Bold - 太字)</div><div class="w900">font-weight: 900 (Black - 極太)</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: Relative -->
+    <div class="panel" data-panel="fw-rel" hidden>
+      <div class="card-body">
+        <pre class="code"><code>/* 親要素に対する相対的な太さ変更 */
+.parent { font-weight: 400; }
+.bolder  { <span class="hl">font-weight: bolder;</span> }  /* 親より1段階太く */
+.lighter { <span class="hl">font-weight: lighter;</span> } /* 親より1段階細く */</code></pre>
+        <div class="demo">
+          <iframe title="font-weight 相対指定デモ" height="140" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}.parent{font-weight:400;border:1px dashed #ccc;padding:8px}.bolder{font-weight:bolder;color:#d02020}.lighter{font-weight:lighter;color:#2060d0}</style></head><body><div class="parent">親要素 (normal / 400)<div class="bolder">bolder: 親より1段階太く</div><div class="lighter">lighter: 親より1段階細く</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2.5: 行の高さ (line-height) -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.5</span>
+      <h2 class="card-title">行の高さ<span class="en">/ line-height</span></h2>
+      <p class="card-desc"><code>line-height</code> で「文字高＋上下余白」の行高を設定。<code>normal</code>、<code>%</code>、単位なし数値の指定法と、子要素に継承される際の計算規則（<code>1.5</code> vs <code>150%</code>）が重要。</p>
+    </div>
+
+    <div class="data-table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>プロパティ</th>
+            <th>初期値</th>
+            <th>適用要素</th>
+            <th>継承</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>line-height</code></td>
+            <td><code>normal</code></td>
+            <td>全要素</td>
+            <td>継承される（※継承の挙動に注意）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="lh-compare" aria-selected="true">normal / % / 単位なし数値の対比</button>
+      <button class="tab" role="tab" type="button" data-tab="lh-inherit" aria-selected="false">継承の違い (1.5 vs 150%)</button>
+    </div>
+
+    <!-- Panel 1: Unit Comparison -->
+    <div class="panel" data-panel="lh-compare">
+      <div class="card-body">
+        <pre class="code"><code>.box1 { <span class="hl">line-height: normal;</span> } /* 自動適正値 (約1.2) */
+.box2 { <span class="hl">line-height: 180%;</span> }   /* パーセンテージ指定 */
+.box3 { <span class="hl">line-height: 1.8;</span> }    /* 単位なし数値（★推奨） */</code></pre>
+        <div class="demo">
+          <iframe title="line-height 単位対比デモ" height="170" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.4 sans-serif;margin:10px;color:#111}.box{border:1px solid #ddd;padding:6px;margin-bottom:8px;background:#f9f9f9}.n{line-height:normal}.p{line-height:180%}.u{line-height:1.8;background:#eef6ff}</style></head><body><div class="box n">line-height: normal<br>自動計算された標準行高</div><div class="box p">line-height: 180%<br>フォントサイズの180%</div><div class="box u">line-height: 1.8（推奨）<br>フォントサイズの1.8倍（単位なし）</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: Inheritance Difference -->
+    <div class="panel" data-panel="lh-inherit" hidden>
+      <div class="card-body">
+        <pre class="code"><code>/* ★超高頻出考点：親(24px)・子(12px) の場合 */
+/* 1. 単位なし (1.5): 倍率を継承！ */
+.parent-num { font-size: 24px; <span class="hl">line-height: 1.5;</span> }
+.child-num  { font-size: 12px; } /* 子で 12px × 1.5 = 18px 再計算 */
+
+/* 2. パーセンテージ (150%): 計算済絶対値を固定継承！ */
+.parent-pct { font-size: 24px; <span class="hl">line-height: 150%;</span> }
+.child-pct  { font-size: 12px; } /* 親の 36px (24×1.5) を固定継承 */</code></pre>
+        <div class="demo">
+          <iframe title="line-height 継承の違いデモ" height="180" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px sans-serif;margin:10px;color:#111}.p-num{font-size:24px;line-height:1.5;border:1px solid #2060d0;padding:6px;margin-bottom:10px}.c-num{font-size:12px;background:#eef6ff}.p-pct{font-size:24px;line-height:150%;border:1px solid #d02020;padding:6px}.c-pct{font-size:12px;background:#ffeefe}</style></head><body><div class="p-num">親 24px (line-height: 1.5)<div class="c-num">子 12px → 行高 18px (12px×1.5) で再計算され適切！</div></div><div class="p-pct">親 24px (line-height: 150%)<div class="c-pct">子 12px → 親の計算値 36px (24px×150%) を固定継承し広すぎる！</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2.6: フォントを一括指定する (font) -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.6</span>
+      <h2 class="card-title">フォントを一括指定する<span class="en">/ font</span></h2>
+      <p class="card-desc"><code>font</code> プロパティで <code>style</code>, <code>weight</code>, <code>size</code>, <code>line-height</code>, <code>family</code> を一括指定。<code>size</code> と <code>family</code> が必須項目であり、厳密な順序規則が存在する。</p>
+    </div>
+
+    <div class="data-table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>プロパティ</th>
+            <th>初期値</th>
+            <th>適用要素</th>
+            <th>継承</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>font</code> (一括指定)</td>
+            <td>個々のプロパティ参照</td>
+            <td>全要素</td>
+            <td>継承される</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="font-req" aria-selected="true">必須項目 (size &amp; family)</button>
+      <button class="tab" role="tab" type="button" data-tab="font-order" aria-selected="false">順序制約 (style/weight → size → /lh → family)</button>
+    </div>
+
+    <!-- Panel 1: Required Properties -->
+    <div class="panel" data-panel="font-req">
+      <div class="card-body">
+        <pre class="code"><code>/* ★必須項目ルール：font-size と font-family が必須！ */
+p.valid {
+  <span class="hl">font: 16px/1.5 sans-serif;</span>  /* ○ 有効 */
+}
+p.invalid {
+  <span class="hl">font: bold 16px;</span>            /* × 無効 (family が欠落) */
+}</code></pre>
+        <div class="demo">
+          <iframe title="font 必須項目デモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}.ok{font:16px/1.5 sans-serif;color:#2060d0;border:1px solid #2060d0;padding:6px;margin-bottom:8px}.ng{font:bold 16px;color:#d02020;border:1px solid #d02020;padding:6px}</style></head><body><div class="ok">font: 16px/1.5 sans-serif;（sizeとfamilyがあり有効）</div><div class="ng">font: bold 16px;（familyが無いため無効・スタイル適用されず）</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: Sequence Constraints -->
+    <div class="panel" data-panel="font-order" hidden>
+      <div class="card-body">
+        <pre class="code"><code>/* 記述順序ルール：
+   1. style/weight は size の前
+   2. line-height は size の直後に / 区切り
+   3. family は必ず最後 */
+p {
+  <span class="hl">font: italic bold 16px/1.6 "Georgia", serif;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="font 順序制約デモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{margin:12px;color:#111}.spec{font:italic bold 16px/1.6 "Georgia",serif;border:1px solid #111;padding:10px;background:#fafafa}</style></head><body><div class="spec">font: italic bold 16px/1.6 "Georgia", serif;<br>・style/weight (italic bold)<br>・size/line-height (16px/1.6)<br>・family ("Georgia", serif)</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: 2.7.2 相対長さ (Relative Length) -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.7.2</span>
+      <h2 class="card-title">相対長さの指定<span class="en">/ Relative Length</span></h2>
+      <p class="card-desc">基準に対する長さの表現。親要素基準（<code>em</code>）、ルート基準（<code>rem</code>）、文字幅・高（<code>ch</code>, <code>ex</code>, <code>lh</code>）、ビューポート基準（<code>vw</code>, <code>vh</code>, <code>vmin</code>, <code>vmax</code>）がある。</p>
+    </div>
+
+    <div class="data-table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>単位</th>
+            <th>基準（Reference）</th>
+            <th>説明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>em</code></td>
+            <td>親要素の font-size</td>
+            <td>親要素の文字サイズに対する比率 (1.0 ＝ 同じ長さ)</td>
+          </tr>
+          <tr>
+            <td><code>rem</code></td>
+            <td>ルート要素 (html) の font-size</td>
+            <td>ルート要素の文字サイズに対する比率</td>
+          </tr>
+          <tr>
+            <td><code>ex</code></td>
+            <td>その要素の「x」の高さ</td>
+            <td>小文字「x」の高さに対する比率</td>
+          </tr>
+          <tr>
+            <td><code>ch</code></td>
+            <td>その要素の「0」の幅</td>
+            <td>数字「0」の幅に対する比率</td>
+          </tr>
+          <tr>
+            <td><code>lh</code></td>
+            <td>その要素の line-height</td>
+            <td>その要素の行の高さと同じ値を指定</td>
+          </tr>
+          <tr>
+            <td><code>vw</code> / <code>vh</code></td>
+            <td>ビューポートの幅 / 高さ</td>
+            <td>ビューポートの幅 / 高さに対する比率 (1〜100)</td>
+          </tr>
+          <tr>
+            <td><code>vmin</code> / <code>vmax</code></td>
+            <td>ビューポートの小 / 大の辺</td>
+            <td>幅と高さのうち小さい方(vmin) / 大きい方(vmax) に対する比率</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="emrem" aria-selected="true">em vs rem</button>
+      <button class="tab" role="tab" type="button" data-tab="ch" aria-selected="false">ch (文字数幅制限)</button>
+      <button class="tab" role="tab" type="button" data-tab="vwvh" aria-selected="false">vw / vh (視口基準)</button>
+    </div>
+
+    <!-- Panel 1: em vs rem -->
+    <div class="panel" data-panel="emrem">
+      <div class="card-body">
+        <pre class="code"><code>.parent { font-size: 20px; }
+.child-em  { <span class="hl">font-size: 1.5em;</span> } /* 親(20px)の1.5倍 = 30px */
+.child-rem { <span class="hl">font-size: 1.5rem;</span> } /* ルート(16px)の1.5倍 = 24px */</code></pre>
+        <div class="demo">
+          <iframe title="em vs rem デモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>html{font-size:16px}body{font-family:sans-serif;margin:12px;color:#111}.parent{font-size:20px;border:1px dashed #aaa;padding:6px}.child-em{font-size:1.5em;color:#d02020}.child-rem{font-size:1.5rem;color:#2060d0}</style></head><body><div class="parent">親 (20px)<div class="child-em">1.5em (30px)</div><div class="child-rem">1.5rem (24px)</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: ch -->
+    <div class="panel" data-panel="ch" hidden>
+      <div class="card-body">
+        <pre class="code"><code>/* 数字「0」の幅基準。10ch ＝ 約10文字分の幅 */
+.box {
+  <span class="hl">width: 10ch;</span>
+  border: 1px solid #111;
+  overflow: hidden;
+}</code></pre>
+        <div class="demo">
+          <iframe title="ch 単位デモ" height="130" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 monospace;margin:12px;color:#111}.box{width:10ch;border:1px solid #111;padding:4px;background:#f5f5f3}</style></head><body><div class="box">0123456789ABCDEF</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: vw / vh -->
+    <div class="panel" data-panel="vwvh" hidden>
+      <div class="card-body">
+        <pre class="code"><code>/* ビューポートの幅 80% / 高さ 40% */
+.box {
+  <span class="hl">width: 80vw;</span>
+  <span class="hl">height: 40vh;</span>
+  background: #e2e2e2;
+}</code></pre>
+        <div class="demo">
+          <iframe title="vw vh 単位デモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{margin:8px;font:13px sans-serif}.box{width:80vw;height:40vh;max-height:100px;background:#e2e2e2;border:1px solid #888;display:flex;align-items:center;justify-content:center}</style></head><body><div class="box">width: 80vw / height: 40vh</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: 3.1 & 3.4 テキストに線を装飾する・一括指定 -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 3.1 &amp; 3.4</span>
+      <h2 class="card-title">テキストの線装飾と一括指定<span class="en">/ text-decoration-line &amp; text-decoration</span></h2>
+      <p class="card-desc"><code>text-decoration-line</code> で上線・下線・取り消し線を装飾（複数指定可）。<code>text-decoration</code> で線種・色の属性を一括指定（順不同）できる。</p>
+    </div>
+
+    <div class="data-table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>プロパティ</th>
+            <th>初期値</th>
+            <th>適用要素</th>
+            <th>継承</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>text-decoration-line</code></td>
+            <td><code>none</code></td>
+            <td>全要素</td>
+            <td>継承されない</td>
+          </tr>
+          <tr>
+            <td><code>text-decoration</code> (一括指定)</td>
+            <td>個々に準ずる</td>
+            <td>全要素</td>
+            <td>継承されない</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="under" aria-selected="true">underline (下線)</button>
+      <button class="tab" role="tab" type="button" data-tab="both" aria-selected="false">underline overline (複数)</button>
+      <button class="tab" role="tab" type="button" data-tab="through" aria-selected="false">line-through (取り消し)</button>
+      <button class="tab" role="tab" type="button" data-tab="shorthand" aria-selected="false">text-decoration 一括指定</button>
+    </div>
+
+    <!-- Panel 1: underline -->
+    <div class="panel" data-panel="under">
+      <div class="card-body">
+        <pre class="code"><code>p {
+  <span class="hl">text-decoration-line: underline;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="underline デモ" height="130" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}p{text-decoration-line:underline;margin:0}</style></head><body><p>下線（underline）が引かれたテキスト</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: underline overline -->
+    <div class="panel" data-panel="both" hidden>
+      <div class="card-body">
+        <pre class="code"><code>/* 半角スペースで区切り、複数指定が可能 */
+p {
+  <span class="hl">text-decoration-line: underline overline;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="underline overline デモ" height="130" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}p{text-decoration-line:underline overline;margin:0}</style></head><body><p>上線と下線（underline overline）が同時に引かれたテキスト</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: line-through -->
+    <div class="panel" data-panel="through" hidden>
+      <div class="card-body">
+        <pre class="code"><code>p {
+  <span class="hl">text-decoration-line: line-through;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="line-through デモ" height="130" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}p{text-decoration-line:line-through;margin:0}</style></head><body><p>取り消し線（line-through）が引かれたテキスト</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 4: text-decoration (shorthand) -->
+    <div class="panel" data-panel="shorthand" hidden>
+      <div class="card-body">
+        <pre class="code"><code>/* 一括指定：[line] [style] [color] （順不同） */
+p {
+  <span class="hl">text-decoration: underline wavy #d02020;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="text-decoration 一括指定デモ" height="130" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}p{text-decoration:underline wavy #d02020;margin:0}</style></head><body><p>赤色で波状の下線（underline wavy #d02020）が引かれたテキスト</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3.5: テキストに影をつける (text-shadow) -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 3.5</span>
+      <h2 class="card-title">テキストに影をつける<span class="en">/ text-shadow</span></h2>
+      <p class="card-desc"><code>text-shadow</code> で文字に影を付与。指定順は <code>offset-x offset-y blur-radius color</code>。カンマ区切りで多重影（Multiple Shadows）を重ねることも可能。</p>
+    </div>
+
+    <div class="data-table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>プロパティ</th>
+            <th>初期値</th>
+            <th>適用要素</th>
+            <th>継承</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>text-shadow</code></td>
+            <td><code>none</code></td>
+            <td>全要素</td>
+            <td>継承される</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="ts-basic" aria-selected="true">基本文法 (offset-x y blur color)</button>
+      <button class="tab" role="tab" type="button" data-tab="ts-multi" aria-selected="false">多重影 (Multiple Shadows)</button>
+    </div>
+
+    <!-- Panel 1: Basic Shadow -->
+    <div class="panel" data-panel="ts-basic">
+      <div class="card-body">
+        <pre class="code"><code>/* 右4px 下4px ぼかし3px 半透明青影 */
+h1 {
+  <span class="hl">text-shadow: 4px 4px 3px rgba(32, 96, 208, 0.4);</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="text-shadow 基本デモ" height="140" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}h1{font-size:22px;text-shadow:4px 4px 3px rgba(32,96,208,0.4);margin:0}</style></head><body><h1>text-shadow: 4px 4px 3px rgba(...)</h1><p style="margin:6px 0 0;color:#666">右に4px、下に4px、ぼかし3pxの青系影</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: Multiple Shadows -->
+    <div class="panel" data-panel="ts-multi" hidden>
+      <div class="card-body">
+        <pre class="code"><code>/* カンマ区切りで複数の影を指定（ネオン発光効果） */
+h1 {
+  color: #fff;
+  <span class="hl">text-shadow: 0 0 5px #ff3366, 0 0 10px #ff3366, 0 0 20px #ff3366;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="text-shadow 多重影デモ" height="140" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;background:#111;color:#fff}h1{font-size:22px;text-shadow:0 0 5px #ff3366,0 0 10px #ff3366,0 0 20px #ff3366;margin:0}</style></head><body><h1>Neon Glow Multiple Shadow</h1><p style="margin:6px 0 0;color:#ccc">カンマ区切りで複数の発光影を付与</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4.2: 要素の内容を書き換える (content) -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 4.2</span>
+      <h2 class="card-title">要素の内容を書き換える<span class="en">/ content Property &amp; Pseudo-elements</span></h2>
+      <p class="card-desc"><code>content</code> プロパティは擬似要素（<code>::before</code> / <code>::after</code>）と組み合わせて文字や画像を動的に挿入。文字列、<code>url()</code> 画像、<code>attr()</code> 属性値の埋め込みに対応する。</p>
+    </div>
+
+    <div class="data-table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>プロパティ</th>
+            <th>初期値</th>
+            <th>適用要素</th>
+            <th>継承</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>content</code></td>
+            <td><code>normal</code></td>
+            <td><code>::before</code> / <code>::after</code> 擬似要素</td>
+            <td>継承されない</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="cnt-pseudo" aria-selected="true">::before / ::after との組み合わせ</button>
+      <button class="tab" role="tab" type="button" data-tab="cnt-values" aria-selected="false">url() / 文字列 / 属性値 (attr)</button>
+    </div>
+
+    <!-- Panel 1: Pseudo-elements Combination -->
+    <div class="panel" data-panel="cnt-pseudo">
+      <div class="card-body">
+        <pre class="code"><code>/* 擬似要素 ::before / ::after には content が必須！ */
+.note::before {
+  <span class="hl">content: "【重要】 ";</span>
+  color: #d02020;
+  font-weight: bold;
+}
+.note::after {
+  <span class="hl">content: " (※補足説明)";</span>
+  color: #666;
+  font-size: 12px;
+}</code></pre>
+        <div class="demo">
+          <iframe title="content 擬似要素デモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}.note{background:#f9f9f9;padding:8px;border:1px solid #ccc}.note::before{content:"【重要】 ";color:#d02020;font-weight:bold}.note::after{content:" (※補足説明)";color:#666;font-size:12px}</style></head><body><div class="note">これは段落テキストです。前後に content プロパティで自動挿入されます。</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: Values & Functions -->
+    <div class="panel" data-panel="cnt-values" hidden>
+      <div class="card-body">
+        <pre class="code"><code>/* 1. 文字列指定 */
+.badge::before { <span class="hl">content: "★ ";</span> color: gold; }
+
+/* 2. attr() による HTML 属性値 (href 等) の動的埋め込み */
+a::after {
+  <span class="hl">content: " (" attr(href) ")";</span>
+  font-size: 11px;
+  color: #666;
+}</code></pre>
+        <div class="demo">
+          <iframe title="content 値の種類デモ" height="160" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.6 sans-serif;margin:12px;color:#111}a{color:#2060d0;text-decoration:none}a::after{content:" (" attr(href) ")";font-size:11px;color:#666}.str::before{content:"★ ";color:#e0a000;font-weight:bold}</style></head><body><div class="str">文字列の挿入（★ マーク）</div><div style="margin-top:8px"><a href="https://example.com">外部リンク例</a></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* ★このスクリプトは一行も変更しない。丸ごとコピーすること★ */
+
+/* タブ: [data-tabs] ごとにスコープされる。カードが何枚あっても干渉しない */
+document.querySelectorAll('[data-tabs]').forEach(function (group) {
+  var tabs = group.querySelectorAll(':scope > .tabs > .tab');
+  var panels = group.querySelectorAll(':scope > .panel');
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var key = tab.dataset.tab;
+      tabs.forEach(function (t) { t.setAttribute('aria-selected', String(t === tab)); });
+      panels.forEach(function (p) { p.hidden = (p.dataset.panel !== key); });
+    });
+  });
+});
+
+/* テーマ固定（ライト）。切替機能は廃止 */
+</script>
+</body>
+</html>

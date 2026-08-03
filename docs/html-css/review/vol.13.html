@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HTML&amp;CSS 期末試験 復習シート — vol.13 フレックスボックス</title>
+<style>
+/* =========================================================
+   [1] テーマ (Swiss Vignelli Palette)
+   固定ライト。暗色モードの切替は廃止。
+   ========================================================= */
+:root {
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #666666;
+  --line: #cccccc;
+  --hairline: #e2e2e2;
+  --surface: #f5f5f3;
+  --accent: #d02020;        /* 差分・強調のみに使用 */
+  --demo-bg: #ffffff;
+  --demo-fg: #111111;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Helvetica Neue", Helvetica, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic Medium", sans-serif;
+  line-height: 1.6;
+  text-wrap: pretty;
+  -webkit-text-size-adjust: 100%;
+}
+
+code, pre, .mono {
+  font-family: "SF Mono", "Menlo", "Consolas", monospace;
+}
+
+/* =========================================================
+   [2] Swiss Layout & Grid
+   ========================================================= */
+.wrap {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+@media (min-width: 900px) {
+  .wrap { padding: 0 32px; }
+}
+
+/* Header */
+.top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+}
+.brand-tag {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 2px 6px;
+  background: var(--fg);
+  color: var(--bg);
+}
+.volnav {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  font-size: 13px;
+  font-weight: 500;
+}
+.volnav a {
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 2px 4px;
+}
+.volnav a[aria-current="page"] {
+  color: var(--fg);
+  font-weight: 700;
+  border-bottom: 2px solid var(--fg);
+}
+
+/* Card & Panels */
+.card {
+  border-top: 1px solid var(--line);
+  padding: 32px 0;
+}
+.card-header {
+  margin-bottom: 20px;
+}
+.card-num {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 4px;
+  display: block;
+}
+.card-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+.card-title .en {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-left: 8px;
+}
+.card-desc {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.card-body {
+  display: grid;
+  gap: 16px;
+}
+@media (min-width: 900px) {
+  .card-body {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+}
+
+/* =========================================================
+   [3] Vignelli Tab Bar
+   ========================================================= */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.tab {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  border-bottom: none;
+  background: var(--surface);
+  color: var(--muted);
+  border-radius: 0;
+  transition: color 0.1s, background 0.1s;
+}
+.tab:hover {
+  color: var(--fg);
+  background: var(--bg);
+}
+.tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.tab[aria-selected="true"] {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
+}
+.panel[hidden] {
+  display: none;
+}
+
+/* =========================================================
+   [4] Code & Explanation Blocks
+   ========================================================= */
+pre.code {
+  margin: 0;
+  padding: 14px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.65;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  white-space: pre;
+}
+.hl {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* =========================================================
+   [5] Demo Frame
+   ページの装飾とデモの効果を混同させないための iframe 隔離。
+   ========================================================= */
+.demo {
+  border: 1px solid var(--line);
+  background: var(--demo-bg);
+}
+.demo iframe {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: var(--demo-bg);
+}
+
+/* === 概念図解用 === */
+.d-fig {
+  border: 1px solid var(--line);
+  background: #fffefc;
+  padding: 14px;
+  margin: 10px 0;
+}
+.d-fig svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+</style>
+<style>
+/* === 375px 横溢れ修正（主代理が追加。設計・配色・書体には手を入れていない） === */
+.volnav{overflow-x:auto;min-width:0;flex:1 1 auto;scrollbar-width:none}
+.volnav::-webkit-scrollbar{display:none}
+.top{max-width:100%;overflow:hidden}
+.top>*{min-width:0}
+@media (max-width:899px){
+  .wrap{max-width:100%!important}
+  .card-body{display:block!important}
+  .card-body>*{width:auto!important;max-width:100%!important;min-width:0!important}
+  .card-body>*+*{margin-top:14px}
+  .panel [class*="col"]{width:auto!important;min-width:0!important;max-width:100%!important}
+}
+.wrap>*,.panel,.panel>*{min-width:0}
+pre,[class*="code"]{max-width:100%;min-width:0}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <span class="brand-tag">HTML&amp;CSS</span>
+  <nav class="volnav">
+    <a href="vol.1.html">1</a>
+    <a href="vol.2.html">2</a>
+    <a href="vol.3.html">3</a>
+    <a href="vol.4.html">4</a>
+    <a href="vol.5.html">5</a>
+    <a href="vol.6.html">6</a>
+    <a href="vol.7.html">7</a>
+    <a href="vol.8.html">8</a>
+    <a href="vol.9.html">9</a>
+    <a href="vol.10.html">10</a>
+    <a href="vol.11.html">11</a>
+    <a href="vol.12.html">12</a>
+    <a href="vol.13.html" aria-current="page">13</a>
+    <a href="vol.14.html">14</a>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <!-- ============================================================
+       SECTION 1.1 フレックスボックスとは
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 1.1</span>
+      <h2 class="card-title">フレックスボックスの構成と特徴<span class="en">/ Flexbox Overview &amp; Advantages</span></h2>
+      <p class="card-desc">親要素（Flex Container）と直下の子要素（Flex Item）で構成される。Float / Inline-Block と対比した 3 つの利点を実描画で比較する。</p>
+    </div>
+
+    <div class="d-fig">
+      <svg viewBox="0 0 600 120" role="img" aria-label="フレックスコンテナとフレックスアイテムの構造図">
+        <rect x="10" y="10" width="580" height="100" fill="#f8f9fa" stroke="#2b579a" stroke-width="1.5" stroke-dasharray="6,4" rx="4"/>
+        <text x="25" y="30" font-size="12" font-weight="bold" fill="#2b579a">親要素：フレックスコンテナ（Flex Container）</text>
+        
+        <rect x="25" y="40" width="120" height="60" fill="#eaf2ff" stroke="#4a90e2" stroke-width="1.5" rx="3"/>
+        <text x="85" y="63" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a365d">子要素 1</text>
+        <text x="85" y="81" text-anchor="middle" font-size="10" fill="#4a5568">Flex Item</text>
+
+        <rect x="155" y="40" width="120" height="60" fill="#eaf2ff" stroke="#4a90e2" stroke-width="1.5" rx="3"/>
+        <text x="215" y="63" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a365d">子要素 2</text>
+        <text x="215" y="81" text-anchor="middle" font-size="10" fill="#4a5568">Flex Item</text>
+
+        <rect x="285" y="40" width="120" height="60" fill="#eaf2ff" stroke="#4a90e2" stroke-width="1.5" rx="3"/>
+        <text x="345" y="63" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a365d">子要素 3</text>
+        <text x="345" y="81" text-anchor="middle" font-size="10" fill="#4a5568">Flex Item</text>
+
+        <rect x="415" y="40" width="160" height="60" fill="#eaf2ff" stroke="#4a90e2" stroke-width="1.5" rx="3"/>
+        <text x="495" y="58" text-anchor="middle" font-size="11" font-weight="bold" fill="#1a365d">子要素 4（Flex Item）</text>
+        <rect x="423" y="65" width="144" height="28" fill="#fff5eb" stroke="#ed8936" stroke-width="1" rx="2"/>
+        <text x="495" y="83" text-anchor="middle" font-size="9" fill="#c05621">.other（孫div:非アイテム）</text>
+      </svg>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="height" aria-selected="true">1. 高さが自動揃う</button>
+      <button class="tab" role="tab" type="button" data-tab="order" aria-selected="false">2. 並び順の変更 (order)</button>
+      <button class="tab" role="tab" type="button" data-tab="space" aria-selected="false">3. 余白調整の容易さ</button>
+    </div>
+
+    <!-- Panel 1: Height auto stretch -->
+    <div class="panel" data-panel="height">
+      <div class="card-body">
+        <pre class="code"><code>/* Float (高さ不揃い) vs Flexbox (高さ自動揃え) */
+.float-item { float: left; }
+
+.flex-container {
+  <span class="hl">display: flex;</span> /* 最も高いアイテムに自動で並ぶ */
+}</code></pre>
+        <div class="demo">
+          <iframe title="高さ揃え対比デモ" height="200" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:8px;color:#111}.sec{margin-bottom:12px}.ttl{font-weight:700;font-size:11px;color:#666;margin-bottom:4px}.float-box::after{content:"";display:block;clear:both}.float-box .item{float:left;width:30%;margin-right:3%;background:#f5f5f3;border:1px solid #ccc;padding:6px;box-sizing:border-box}.flex-box{display:flex;gap:3%}.flex-box .item{flex:1;background:#eaf2ff;border:1px solid #b8d4ff;padding:6px;box-sizing:border-box}</style></head><body><div class="sec"><div class="ttl">Float レイアウト（高さがバラバラ）:</div><div class="float-box"><div class="item">1. 短文</div><div class="item">2. コンテンツ量が多くて高くなる領域</div><div class="item">3. 短文</div></div></div><div class="sec"><div class="ttl">Flexbox（高さが一番高い要素に自動的に整列）:</div><div class="flex-box"><div class="item">1. 短文</div><div class="item">2. コンテンツ量が多くて高くなる領域</div><div class="item">3. 短文</div></div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: Order specification -->
+    <div class="panel" data-panel="order" hidden>
+      <div class="card-body">
+        <pre class="code"><code>/* HTML記述順を変更せず、orderプロパティで表示順を制御 */
+.item-1 { <span class="hl">order: 2;</span> }
+.item-2 { <span class="hl">order: 3;</span> }
+.item-3 { <span class="hl">order: 4;</span> }
+.item-4 { <span class="hl">order: 1;</span> } /* HTML上は4番目だが先頭に表示 */</code></pre>
+        <div class="demo">
+          <iframe title="並び順変更デモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:8px;color:#111}.flex-box{display:flex;gap:6px}.item{flex:1;background:#eaf2ff;border:1px solid #b8d4ff;padding:8px 4px;text-align:center;box-sizing:border-box}.item4{order:1;background:#ffe6e6;border-color:#d02020;font-weight:700}.item1{order:2}.item2{order:3}.item3{order:4}</style></head><body><div class="flex-box"><div class="item item1">HTML 1番目<br><code>order: 2</code></div><div class="item item2">HTML 2番目<br><code>order: 3</code></div><div class="item item3">HTML 3番目<br><code>order: 4</code></div><div class="item item4">HTML 4番目<br><code>order: 1</code></div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: Spacing -->
+    <div class="panel" data-panel="space" hidden>
+      <div class="card-body">
+        <pre class="code"><code>.container {
+  display: flex;
+  <span class="hl">justify-content: space-around;</span> /* 均等な余白を簡単に割り振る */
+}</code></pre>
+        <div class="demo">
+          <iframe title="余白調整デモ" height="130" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:8px;color:#111}.container{display:flex;justify-content:space-around;background:#f5f5f3;border:1px solid #ccc;padding:10px}.item{background:#eaf2ff;border:1px solid #b8d4ff;padding:8px 12px;text-align:center}</style></head><body><div class="container"><div class="item">アイテム1</div><div class="item">アイテム2</div><div class="item">アイテム3</div><div class="item">アイテム4</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 1.2.1 フレックスボックスの設定
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 1.2.1</span>
+      <h2 class="card-title">フレックスコンテナの指定<span class="en">/ display: flex vs inline-flex</span></h2>
+      <p class="card-desc">display プロパティにより親要素をフレックスコンテナ化する。直下の子要素のみがフレックスアイテムとなる。</p>
+    </div>
+
+    <table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px;border:1px solid var(--line);">
+      <thead>
+        <tr style="background:var(--surface);">
+          <th style="border:1px solid var(--line);padding:6px 10px;text-align:left;color:var(--muted)">プロパティ</th>
+          <th style="border:1px solid var(--line);padding:6px 10px;text-align:left;color:var(--muted)">値</th>
+          <th style="border:1px solid var(--line);padding:6px 10px;text-align:left;color:var(--muted)">振る舞い</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="border:1px solid var(--line);padding:6px 10px;font-family:monospace;font-weight:700">display</td>
+          <td style="border:1px solid var(--line);padding:6px 10px;font-family:monospace">flex</td>
+          <td style="border:1px solid var(--line);padding:6px 10px">コンテナがブロックレベル要素（Block-level Element）として振舞う</td>
+        </tr>
+        <tr>
+          <td style="border:1px solid var(--line);padding:6px 10px;font-family:monospace;font-weight:700">display</td>
+          <td style="border:1px solid var(--line);padding:6px 10px;font-family:monospace">inline-flex</td>
+          <td style="border:1px solid var(--line);padding:6px 10px">コンテナがインライン要素（Inline Element）として振舞う</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="flex" aria-selected="true">display: flex (ブロック)</button>
+      <button class="tab" role="tab" type="button" data-tab="inlineflex" aria-selected="false">display: inline-flex (インライン)</button>
+    </div>
+
+    <!-- Panel 1: display: flex -->
+    <div class="panel" data-panel="flex">
+      <div class="card-body">
+        <pre class="code"><code>.container {
+  <span class="hl">display: flex;</span> /* ブロックレベル要素化（改行して全幅を占有） */
+}
+.item {
+  background: #eaf2ff;
+  padding: 10px;
+  margin-right: 8px;
+}
+.other {
+  background: #ffebe6; /* フレックスアイテム内の要素（非アイテム） */
+}</code></pre>
+        <div class="demo">
+          <iframe title="display: flex デモ" height="160" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:8px;color:#111}.container{display:flex;background:#f5f5f3;border:2px dashed #999;padding:8px;margin:6px 0}.item{background:#eaf2ff;border:1px solid #b8d4ff;padding:8px;margin-right:8px}.other{background:#ffebe6;border:1px solid #ffc2b3;padding:4px;font-size:11px;margin-top:4px}</style></head><body><span>前方のテキスト</span><div class="container"><div class="item">アイテム1</div><div class="item">アイテム2</div><div class="item">アイテム3</div><div class="item"><div>アイテム4</div><div class="other">このdivは非アイテム</div></div></div><span>後方のテキスト（独立した行に配置される）</span></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: display: inline-flex -->
+    <div class="panel" data-panel="inlineflex" hidden>
+      <div class="card-body">
+        <pre class="code"><code>.container {
+  <span class="hl">display: inline-flex;</span> /* インライン要素化（周囲のテキストと同じ行に並ぶ） */
+}
+.item {
+  background: #eaf2ff;
+  padding: 10px;
+  margin-right: 8px;
+}</code></pre>
+        <div class="demo">
+          <iframe title="display: inline-flex デモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:8px;color:#111}.container{display:inline-flex;background:#f5f5f3;border:2px dashed #999;padding:8px;vertical-align:middle}.item{background:#eaf2ff;border:1px solid #b8d4ff;padding:8px;margin-right:8px}</style></head><body><span>前方のテキスト —&nbsp;</span><div class="container"><div class="item">アイテム1</div><div class="item">アイテム2</div><div class="item">アイテム3</div></div><span>&nbsp;— 後方のテキスト（横にそのまま流れる）</span></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 1.2.2 (1) flex-direction
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 1.2.2</span>
+      <h2 class="card-title">フレックスアイテムの方向と軸<span class="en">/ flex-direction &amp; Main/Cross Axis</span></h2>
+      <p class="card-desc">flex-direction プロパティで主軸（Main Axis）の方向を指定する。主軸と直交する軸を交差軸（Cross Axis）と呼ぶ。</p>
+    </div>
+
+    <div class="d-fig">
+      <svg viewBox="0 0 600 150" role="img" aria-label="主軸と交差軸の概念図">
+        <g transform="translate(10, 10)">
+          <rect x="0" y="0" width="275" height="130" fill="#fafafa" stroke="#ccc" stroke-width="1.5" rx="4"/>
+          <text x="10" y="20" font-size="12" font-weight="bold" fill="#333">flex-direction: row（水平方向）</text>
+          <line x1="20" y1="38" x2="250" y2="38" stroke="#d02020" stroke-width="2" marker-end="url(#arrow-red)"/>
+          <text x="135" y="33" text-anchor="middle" font-size="11" font-weight="bold" fill="#d02020">主軸（Main Axis）→</text>
+          <rect x="20" y="50" width="60" height="65" fill="#eaf2ff" stroke="#4a90e2" rx="2"/>
+          <text x="50" y="88" text-anchor="middle" font-size="12" font-weight="bold">1</text>
+          <rect x="90" y="50" width="60" height="65" fill="#eaf2ff" stroke="#4a90e2" rx="2"/>
+          <text x="120" y="88" text-anchor="middle" font-size="12" font-weight="bold">2</text>
+          <rect x="160" y="50" width="60" height="65" fill="#eaf2ff" stroke="#4a90e2" rx="2"/>
+          <text x="190" y="88" text-anchor="middle" font-size="12" font-weight="bold">3</text>
+          <line x1="235" y1="50" x2="235" y2="115" stroke="#2b579a" stroke-width="2" marker-end="url(#arrow-blue)"/>
+          <text x="252" y="88" font-size="10" font-weight="bold" fill="#2b579a">交差軸 ↓</text>
+        </g>
+        <g transform="translate(315, 10)">
+          <rect x="0" y="0" width="275" height="130" fill="#fafafa" stroke="#ccc" stroke-width="1.5" rx="4"/>
+          <text x="10" y="20" font-size="12" font-weight="bold" fill="#333">flex-direction: column（垂直方向）</text>
+          <line x1="25" y1="32" x2="25" y2="118" stroke="#d02020" stroke-width="2" marker-end="url(#arrow-red)"/>
+          <text x="14" y="80" font-size="10" font-weight="bold" fill="#d02020">主軸 ↓</text>
+          <rect x="45" y="30" width="160" height="24" fill="#eaf2ff" stroke="#4a90e2" rx="2"/>
+          <text x="125" y="46" text-anchor="middle" font-size="11" font-weight="bold">1</text>
+          <rect x="45" y="60" width="160" height="24" fill="#eaf2ff" stroke="#4a90e2" rx="2"/>
+          <text x="125" y="76" text-anchor="middle" font-size="11" font-weight="bold">2</text>
+          <rect x="45" y="90" width="160" height="24" fill="#eaf2ff" stroke="#4a90e2" rx="2"/>
+          <text x="125" y="106" text-anchor="middle" font-size="11" font-weight="bold">3</text>
+          <line x1="45" y1="122" x2="205" y2="122" stroke="#2b579a" stroke-width="2" marker-end="url(#arrow-blue)"/>
+          <text x="125" y="118" text-anchor="middle" font-size="10" font-weight="bold" fill="#2b579a">交差軸（Cross Axis）→</text>
+        </g>
+        <defs>
+          <marker id="arrow-red" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#d02020"/>
+          </marker>
+          <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#2b579a"/>
+          </marker>
+        </defs>
+      </svg>
+    </div>
+
+    <table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px;border:1px solid var(--line);">
+      <thead>
+        <tr style="background:var(--surface);">
+          <th style="border:1px solid var(--line);padding:6px 10px;text-align:left;color:var(--muted)">プロパティ</th>
+          <th style="border:1px solid var(--line);padding:6px 10px;text-align:left;color:var(--muted)">初期値</th>
+          <th style="border:1px solid var(--line);padding:6px 10px;text-align:left;color:var(--muted)">適用要素</th>
+          <th style="border:1px solid var(--line);padding:6px 10px;text-align:left;color:var(--muted)">継承</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="border:1px solid var(--line);padding:6px 10px;font-family:monospace;font-weight:700">flex-direction</td>
+          <td style="border:1px solid var(--line);padding:6px 10px;font-family:monospace">row</td>
+          <td style="border:1px solid var(--line);padding:6px 10px">フレックスコンテナ</td>
+          <td style="border:1px solid var(--line);padding:6px 10px">なし</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="row" aria-selected="true">row (左→右)</button>
+      <button class="tab" role="tab" type="button" data-tab="rowrev" aria-selected="false">row-reverse (右→左)</button>
+      <button class="tab" role="tab" type="button" data-tab="col" aria-selected="false">column (上→下)</button>
+      <button class="tab" role="tab" type="button" data-tab="colrev" aria-selected="false">column-reverse (下→上)</button>
+    </div>
+
+    <!-- Panel 1: row -->
+    <div class="panel" data-panel="row">
+      <div class="card-body">
+        <pre class="code"><code>.container {
+  display: flex;
+  <span class="hl">flex-direction: row;</span> /* 左から右へ順に並べる（初期値） */
+}</code></pre>
+        <div class="demo">
+          <iframe title="flex-direction: row デモ" height="130" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:8px;color:#111}.container{display:flex;flex-direction:row;background:#f5f5f3;border:1px solid #ccc;padding:8px;gap:8px}.item{flex:1;background:#eaf2ff;border:1px solid #b8d4ff;padding:10px;text-align:center;font-weight:700}</style></head><body><div class="container"><div class="item">1</div><div class="item">2</div><div class="item">3</div><div class="item">4</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: row-reverse -->
+    <div class="panel" data-panel="rowrev" hidden>
+      <div class="card-body">
+        <pre class="code"><code>.container {
+  display: flex;
+  <span class="hl">flex-direction: row-reverse;</span> /* 右から左へ逆順に並べる */
+}</code></pre>
+        <div class="demo">
+          <iframe title="flex-direction: row-reverse デモ" height="130" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:8px;color:#111}.container{display:flex;flex-direction:row-reverse;background:#f5f5f3;border:1px solid #ccc;padding:8px;gap:8px}.item{flex:1;background:#eaf2ff;border:1px solid #b8d4ff;padding:10px;text-align:center;font-weight:700}</style></head><body><div class="container"><div class="item">1</div><div class="item">2</div><div class="item">3</div><div class="item">4</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: column -->
+    <div class="panel" data-panel="col" hidden>
+      <div class="card-body">
+        <pre class="code"><code>.container {
+  display: flex;
+  <span class="hl">flex-direction: column;</span> /* 上から下へ縦方向に並べる */
+}</code></pre>
+        <div class="demo">
+          <iframe title="flex-direction: column デモ" height="190" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:8px;color:#111}.container{display:flex;flex-direction:column;background:#f5f5f3;border:1px solid #ccc;padding:8px;gap:6px}.item{background:#eaf2ff;border:1px solid #b8d4ff;padding:6px 12px;text-align:center;font-weight:700}</style></head><body><div class="container"><div class="item">1</div><div class="item">2</div><div class="item">3</div><div class="item">4</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 4: column-reverse -->
+    <div class="panel" data-panel="colrev" hidden>
+      <div class="card-body">
+        <pre class="code"><code>.container {
+  display: flex;
+  <span class="hl">flex-direction: column-reverse;</span> /* 下から上へ縦方向逆順に並べる */
+}</code></pre>
+        <div class="demo">
+          <iframe title="flex-direction: column-reverse デモ" height="190" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:8px;color:#111}.container{display:flex;flex-direction:column-reverse;background:#f5f5f3;border:1px solid #ccc;padding:8px;gap:6px}.item{background:#eaf2ff;border:1px solid #b8d4ff;padding:6px 12px;text-align:center;font-weight:700}</style></head><body><div class="container"><div class="item">1</div><div class="item">2</div><div class="item">3</div><div class="item">4</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 1.2.2 (2) flex-wrap
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 1.2.2</span>
+      <h2 class="card-title">フレックスアイテムの折り返し<span class="en">/ flex-wrap</span></h2>
+      <p class="card-desc">コンテナ幅を超えた場合の折り返し動態を指定する。初期値 nowrap では要素がコンテナ境界を突き抜けて配置される。</p>
+    </div>
+
+    <table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px;border:1px solid var(--line);">
+      <thead>
+        <tr style="background:var(--surface);">
+          <th style="border:1px solid var(--line);padding:6px 10px;text-align:left;color:var(--muted)">プロパティ</th>
+          <th style="border:1px solid var(--line);padding:6px 10px;text-align:left;color:var(--muted)">初期値</th>
+          <th style="border:1px solid var(--line);padding:6px 10px;text-align:left;color:var(--muted)">適用要素</th>
+          <th style="border:1px solid var(--line);padding:6px 10px;text-align:left;color:var(--muted)">継承</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="border:1px solid var(--line);padding:6px 10px;font-family:monospace;font-weight:700">flex-wrap</td>
+          <td style="border:1px solid var(--line);padding:6px 10px;font-family:monospace">nowrap</td>
+          <td style="border:1px solid var(--line);padding:6px 10px">フレックスコンテナ</td>
+          <td style="border:1px solid var(--line);padding:6px 10px">なし</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="nowrap" aria-selected="true">nowrap (突き抜け)</button>
+      <button class="tab" role="tab" type="button" data-tab="wrap" aria-selected="false">wrap (下段へ折り返し)</button>
+      <button class="tab" role="tab" type="button" data-tab="wraprev" aria-selected="false">wrap-reverse (上段へ折り返し)</button>
+    </div>
+
+    <!-- Panel 1: nowrap -->
+    <div class="panel" data-panel="nowrap">
+      <div class="card-body">
+        <pre class="code"><code>.container {
+  display: flex;
+  <span class="hl">flex-wrap: nowrap;</span> /* 折り返さない（初期値：枠を突き抜ける） */
+  width: 250px;
+}</code></pre>
+        <div class="demo">
+          <iframe title="flex-wrap: nowrap デモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:8px;color:#111}.outer{width:250px;border:2px dashed #d02020;padding:4px;background:#fff8f8}.container{display:flex;flex-wrap:nowrap;gap:4px}.item{min-width:42px;background:#eaf2ff;border:1px solid #b8d4ff;padding:8px 2px;text-align:center;font-weight:700;flex-shrink:0}</style></head><body><div class="outer"><div class="container"><div class="item">1</div><div class="item">2</div><div class="item">3</div><div class="item">4</div><div class="item">5</div><div class="item">6</div><div class="item">7</div><div class="item">8</div></div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: wrap -->
+    <div class="panel" data-panel="wrap" hidden>
+      <div class="card-body">
+        <pre class="code"><code>.container {
+  display: flex;
+  <span class="hl">flex-wrap: wrap;</span> /* 端に到達すると下の段へ折り返す */
+  width: 250px;
+}</code></pre>
+        <div class="demo">
+          <iframe title="flex-wrap: wrap デモ" height="170" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:8px;color:#111}.outer{width:250px;border:2px dashed #999;padding:4px;background:#f5f5f3}.container{display:flex;flex-wrap:wrap;gap:4px}.item{width:42px;background:#eaf2ff;border:1px solid #b8d4ff;padding:8px 2px;text-align:center;font-weight:700}</style></head><body><div class="outer"><div class="container"><div class="item">1</div><div class="item">2</div><div class="item">3</div><div class="item">4</div><div class="item">5</div><div class="item">6</div><div class="item">7</div><div class="item">8</div></div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: wrap-reverse -->
+    <div class="panel" data-panel="wraprev" hidden>
+      <div class="card-body">
+        <pre class="code"><code>.container {
+  display: flex;
+  <span class="hl">flex-wrap: wrap-reverse;</span> /* 端に到達すると上の段へ折り返す */
+  width: 250px;
+}</code></pre>
+        <div class="demo">
+          <iframe title="flex-wrap: wrap-reverse デモ" height="170" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:8px;color:#111}.outer{width:250px;border:2px dashed #999;padding:4px;background:#f5f5f3}.container{display:flex;flex-wrap:wrap-reverse;gap:4px}.item{width:42px;background:#eaf2ff;border:1px solid #b8d4ff;padding:8px 2px;text-align:center;font-weight:700}</style></head><body><div class="outer"><div class="container"><div class="item">1</div><div class="item">2</div><div class="item">3</div><div class="item">4</div><div class="item">5</div><div class="item">6</div><div class="item">7</div><div class="item">8</div></div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 1.2.2 (3) flex-flow ショートハンド
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 1.2.2</span>
+      <h2 class="card-title">方向と折り返しの短縮指定<span class="en">/ flex-flow shorthand</span></h2>
+      <p class="card-desc">flex-direction と flex-wrap を 1 つのプロパティでまとめて指定する。</p>
+    </div>
+
+    <table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px;border:1px solid var(--line);">
+      <thead>
+        <tr style="background:var(--surface);">
+          <th style="border:1px solid var(--line);padding:6px 10px;text-align:left;color:var(--muted)">プロパティ</th>
+          <th style="border:1px solid var(--line);padding:6px 10px;text-align:left;color:var(--muted)">初期値</th>
+          <th style="border:1px solid var(--line);padding:6px 10px;text-align:left;color:var(--muted)">適用要素</th>
+          <th style="border:1px solid var(--line);padding:6px 10px;text-align:left;color:var(--muted)">継承</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="border:1px solid var(--line);padding:6px 10px;font-family:monospace;font-weight:700">flex-flow</td>
+          <td style="border:1px solid var(--line);padding:6px 10px;font-family:monospace">row nowrap</td>
+          <td style="border:1px solid var(--line);padding:6px 10px">フレックスコンテナ</td>
+          <td style="border:1px solid var(--line);padding:6px 10px">なし</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="indiv" aria-selected="true">個別指定 (direction + wrap)</button>
+      <button class="tab" role="tab" type="button" data-tab="short" aria-selected="false">一括指定 (flex-flow)</button>
+    </div>
+
+    <!-- Panel 1: Individual -->
+    <div class="panel" data-panel="indiv">
+      <div class="card-body">
+        <pre class="code"><code>/* 個別に指定した場合 */
+div {
+  display: flex;
+  <span class="hl">flex-direction: row;</span>
+  <span class="hl">flex-wrap: wrap;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="個別指定デモ" height="160" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:8px;color:#111}.container{display:flex;flex-direction:row;flex-wrap:wrap;gap:6px;width:240px;background:#f5f5f3;border:1px solid #ccc;padding:6px}.item{width:50px;background:#eaf2ff;border:1px solid #b8d4ff;padding:6px;text-align:center;font-weight:700}</style></head><body><div class="container"><div class="item">1</div><div class="item">2</div><div class="item">3</div><div class="item">4</div><div class="item">5</div><div class="item">6</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: Shorthand -->
+    <div class="panel" data-panel="short" hidden>
+      <div class="card-body">
+        <pre class="code"><code>/* flex-flow でまとめて指定した場合（同等） */
+div {
+  display: flex;
+  <span class="hl">flex-flow: row wrap;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="flex-flow 短縮指定デモ" height="160" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:8px;color:#111}.container{display:flex;flex-flow:row wrap;gap:6px;width:240px;background:#f5f5f3;border:1px solid #ccc;padding:6px}.item{width:50px;background:#eaf2ff;border:1px solid #b8d4ff;padding:6px;text-align:center;font-weight:700}</style></head><body><div class="container"><div class="item">1</div><div class="item">2</div><div class="item">3</div><div class="item">4</div><div class="item">5</div><div class="item">6</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* ★このスクリプトは一行も変更しない。丸ごとコピーすること★ */
+
+/* タブ: [data-tabs] ごとにスコープされる。カードが何枚あっても干渉しない */
+document.querySelectorAll('[data-tabs]').forEach(function (group) {
+  var tabs = group.querySelectorAll(':scope > .tabs > .tab');
+  var panels = group.querySelectorAll(':scope > .panel');
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var key = tab.dataset.tab;
+      tabs.forEach(function (t) { t.setAttribute('aria-selected', String(t === tab)); });
+      panels.forEach(function (p) { p.hidden = (p.dataset.panel !== key); });
+    });
+  });
+});
+
+/* テーマ固定（ライト）。切替機能は廃止 */
+</script>
+</body>
+</html>

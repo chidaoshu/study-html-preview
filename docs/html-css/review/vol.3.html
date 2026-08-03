@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HTML&amp;CSS 期末試験 復習シート — vol.3 文書を構成する要素</title>
+<style>
+/* =========================================================
+   [1] テーマ (Swiss Vignelli Palette)
+   固定ライト。暗色モードの切替は廃止。
+   ========================================================= */
+:root {
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #666666;
+  --line: #cccccc;
+  --hairline: #e2e2e2;
+  --surface: #f5f5f3;
+  --accent: #d02020;        /* 差分・強調のみに使用 */
+  --demo-bg: #ffffff;
+  --demo-fg: #111111;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Helvetica Neue", Helvetica, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic Medium", sans-serif;
+  line-height: 1.6;
+  text-wrap: pretty;
+  -webkit-text-size-adjust: 100%;
+}
+
+code, pre, .mono {
+  font-family: "SF Mono", "Menlo", "Consolas", monospace;
+}
+
+/* =========================================================
+   [2] Swiss Layout & Grid
+   ========================================================= */
+.wrap {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+@media (min-width: 900px) {
+  .wrap { padding: 0 32px; }
+}
+
+/* Header */
+.top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+}
+.brand-tag {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 2px 6px;
+  background: var(--fg);
+  color: var(--bg);
+}
+.volnav {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  font-size: 13px;
+  font-weight: 500;
+}
+.volnav a {
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 2px 4px;
+}
+.volnav a[aria-current="page"] {
+  color: var(--fg);
+  font-weight: 700;
+  border-bottom: 2px solid var(--fg);
+}
+
+/* Card & Panels */
+.card {
+  border-top: 1px solid var(--line);
+  padding: 32px 0;
+}
+.card-header {
+  margin-bottom: 20px;
+}
+.card-num {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 4px;
+  display: block;
+}
+.card-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+.card-title .en {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-left: 8px;
+}
+.card-desc {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.card-body {
+  display: grid;
+  gap: 16px;
+}
+@media (min-width: 900px) {
+  .card-body {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+}
+
+/* =========================================================
+   [3] Vignelli Tab Bar
+   ========================================================= */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.tab {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  border-bottom: none;
+  background: var(--surface);
+  color: var(--muted);
+  border-radius: 0;
+  transition: color 0.1s, background 0.1s;
+}
+.tab:hover {
+  color: var(--fg);
+  background: var(--bg);
+}
+.tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.tab[aria-selected="true"] {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
+}
+.panel[hidden] {
+  display: none;
+}
+
+/* =========================================================
+   [4] Code & Explanation Blocks
+   ========================================================= */
+pre.code {
+  margin: 0;
+  padding: 14px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.65;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  white-space: pre;
+}
+.hl {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* =========================================================
+   [5] Demo Frame
+   ページの装飾とデモの効果を混同させないための iframe 隔離。
+   ========================================================= */
+.demo {
+  border: 1px solid var(--line);
+  background: var(--demo-bg);
+}
+.demo iframe {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: var(--demo-bg);
+}
+
+/* === 概念図解用 === */
+.d-fig {
+  border: 1px solid var(--line);
+  background: #fffefc;
+  padding: 14px;
+  margin: 10px 0;
+}
+.d-fig svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+</style>
+<style>
+/* === 375px 横溢れ修正（主代理が追加。設計・配色・書体には手を入れていない） === */
+.volnav{overflow-x:auto;min-width:0;flex:1 1 auto;scrollbar-width:none}
+.volnav::-webkit-scrollbar{display:none}
+.top{max-width:100%;overflow:hidden}
+.top>*{min-width:0}
+@media (max-width:899px){
+  .wrap{max-width:100%!important}
+  .card-body{display:block!important}
+  .card-body>*{width:auto!important;max-width:100%!important;min-width:0!important}
+  .card-body>*+*{margin-top:14px}
+  .panel [class*="col"]{width:auto!important;min-width:0!important;max-width:100%!important}
+}
+.wrap>*,.panel,.panel>*{min-width:0}
+pre,[class*="code"]{max-width:100%;min-width:0}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <span class="brand-tag">HTML&amp;CSS</span>
+  <nav class="volnav">
+    <a href="vol.1.html">1</a>
+    <a href="vol.2.html">2</a>
+    <a href="vol.3.html" aria-current="page">3</a>
+    <a href="vol.4.html">4</a>
+    <a href="vol.5.html">5</a>
+    <a href="vol.6.html">6</a>
+    <a href="vol.7.html">7</a>
+    <a href="vol.8.html">8</a>
+    <a href="vol.9.html">9</a>
+    <a href="vol.10.html">10</a>
+    <a href="vol.11.html">11</a>
+    <a href="vol.12.html">12</a>
+    <a href="vol.13.html">13</a>
+    <a href="vol.14.html">14</a>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <!-- ============================================================
+       SECTION 3.1　見出しを指定する（h1〜h6）🔴
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 3.1 🔴</span>
+      <h2 class="card-title">見出しを指定する<span class="en">/ Heading (h1–h6)</span></h2>
+      <p class="card-desc">h1〜h6 の 6 段階。数値が小さいほど大きな見出しを表す。カテゴリー：フロー / ヘディング / パルパブル</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="h1" aria-selected="true">h1</button>
+      <button class="tab" role="tab" type="button" data-tab="h2" aria-selected="false">h2</button>
+      <button class="tab" role="tab" type="button" data-tab="h3" aria-selected="false">h3</button>
+      <button class="tab" role="tab" type="button" data-tab="all" aria-selected="false">h1〜h6 比較</button>
+    </div>
+
+    <!-- Panel: h1 -->
+    <div class="panel" data-panel="h1">
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">&lt;h1&gt;</span>大見出しサンプル（h1）<span class="hl">&lt;/h1&gt;</span></code></pre>
+        <div class="demo">
+          <iframe title="h1 見出し描画" height="100" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:12px;color:#111}h1{margin:0}</style></head><body><h1>大見出しサンプル（h1）</h1></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: h2 -->
+    <div class="panel" data-panel="h2" hidden>
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">&lt;h2&gt;</span>中見出しサンプル（h2）<span class="hl">&lt;/h2&gt;</span></code></pre>
+        <div class="demo">
+          <iframe title="h2 見出し描画" height="100" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:12px;color:#111}h2{margin:0}</style></head><body><h2>中見出しサンプル（h2）</h2></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: h3 -->
+    <div class="panel" data-panel="h3" hidden>
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">&lt;h3&gt;</span>小見出しサンプル（h3）<span class="hl">&lt;/h3&gt;</span></code></pre>
+        <div class="demo">
+          <iframe title="h3 見出し描画" height="100" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:12px;color:#111}h3{margin:0}</style></head><body><h3>小見出しサンプル（h3）</h3></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: all -->
+    <div class="panel" data-panel="all" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;h1&gt;h1 見出し (最大)&lt;/h1&gt;
+&lt;h2&gt;h2 見出し&lt;/h2&gt;
+&lt;h3&gt;h3 見出し&lt;/h3&gt;
+&lt;h4&gt;h4 見出し&lt;/h4&gt;
+&lt;h5&gt;h5 見出し&lt;/h5&gt;
+&lt;h6&gt;h6 見出し (最小)&lt;/h6&gt;</code></pre>
+        <div class="demo">
+          <iframe title="h1〜h6 比較描画" height="240" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:12px;color:#111}h1,h2,h3,h4,h5,h6{margin:4px 0}</style></head><body><h1>h1 見出し (最大)</h1><h2>h2 見出し</h2><h3>h3 見出し</h3><h4>h4 見出し</h4><h5>h5 見出し</h5><h6>h6 見出し (最小)</h6></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 3.2.1　段落で区切る（p 要素）🔴
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 3.2.1 🔴</span>
+      <h2 class="card-title">段落で区切る<span class="en">/ Paragraph (p)</span></h2>
+      <p class="card-desc">文章を意味のまとまり（段落）にまとめる。段落前後には標準のマージンが生じる。カテゴリー：フロー / パルパブル</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="single" aria-selected="true">単一段落</button>
+      <button class="tab" role="tab" type="button" data-tab="multi" aria-selected="false">複数段落（上下余白）</button>
+    </div>
+
+    <!-- Panel: single -->
+    <div class="panel" data-panel="single">
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">&lt;p&gt;</span>段落サンプルです。文章を意味のまとまりでまとめます。<span class="hl">&lt;/p&gt;</span></code></pre>
+        <div class="demo">
+          <iframe title="単一段落描画" height="100" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.7 sans-serif;margin:12px;color:#111}p{margin:0}</style></head><body><p>段落サンプルです。文章を意味のまとまりでまとめます。</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: multi -->
+    <div class="panel" data-panel="multi" hidden>
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">&lt;p&gt;</span>1 行目の段落です。<span class="hl">&lt;/p&gt;</span>
+<span class="hl">&lt;p&gt;</span>2 行目の段落です。段落間に余白が入ります。<span class="hl">&lt;/p&gt;</span></code></pre>
+        <div class="demo">
+          <iframe title="複数段落描画" height="140" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.7 sans-serif;margin:12px;color:#111}</style></head><body><p>1 行目の段落です。</p><p>2 行目の段落です。段落間に余白が入ります。</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 3.2.2 / 3.2.3　改行とテーマの区切り（br & hr 要素）🟡
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 3.2.2 / 3.2.3 🟡</span>
+      <h2 class="card-title">改行とテーマの区切り<span class="en">/ Line Break &amp; Horizontal Rule (br &amp; hr)</span></h2>
+      <p class="card-desc">段落内の改行（br）とテーマ・話題の切り替え（hr）。br は内容を持たない空要素であり、余白目的の連続使用は非推奨。hr は意味的な区切りを表す。カテゴリー：フロー / フレージング</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="br" aria-selected="true">br（段落内改行）</button>
+      <button class="tab" role="tab" type="button" data-tab="hr" aria-selected="false">hr（テーマ区切り）</button>
+    </div>
+
+    <!-- Panel: br -->
+    <div class="panel" data-panel="br">
+      <div class="card-body">
+        <pre class="code"><code>&lt;p&gt;
+  1 行目の文章<span class="hl">&lt;br&gt;</span>
+  2 行目の文章（同一段落内での改行）
+&lt;/p&gt;</code></pre>
+        <div class="demo">
+          <iframe title="br 改行描画" height="100" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.7 sans-serif;margin:12px;color:#111}p{margin:0}</style></head><body><p>1 行目の文章<br>2 行目の文章（同一段落内での改行）</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: hr -->
+    <div class="panel" data-panel="hr" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;p&gt;前半の話題についての段落です。&lt;/p&gt;
+<span class="hl">&lt;hr&gt;</span>
+&lt;p&gt;後半の新しい話題についての段落です。&lt;/p&gt;</code></pre>
+        <div class="demo">
+          <iframe title="hr テーマ区切り描画" height="120" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.7 sans-serif;margin:12px;color:#111}p{margin:4px 0}</style></head><body><p>前半の話題についての段落です。</p><hr><p>後半の新しい話題についての段落です。</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 3.3.1 / 3.3.2　他のサイトの文章を引用する（blockquote & q 要素）🟡
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 3.3.1 / 3.3.2 🟡</span>
+      <h2 class="card-title">他のサイトの文章を引用する<span class="en">/ Quotation (blockquote &amp; q)</span></h2>
+      <p class="card-desc">長文のブロック引用（blockquote）とインラインの短文引用（q）。cite 属性で引用元 URL を指定できる。q 要素はブラウザが自動的に引用符（「」や“”）を付与する。カテゴリー：フロー / フレージング</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="blockquote" aria-selected="true">blockquote（長引用）</button>
+      <button class="tab" role="tab" type="button" data-tab="q" aria-selected="false">q（短引用）</button>
+    </div>
+
+    <!-- Panel: blockquote -->
+    <div class="panel" data-panel="blockquote">
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">&lt;blockquote cite="https://ja.wikipedia.org/wiki/HyperText_Markup_Language"&gt;</span>
+  HTML は、ウェブページを記述するためのマークアップ言語です。
+  文書の構造や意味を記述する役割を持ちます。
+<span class="hl">&lt;/blockquote&gt;</span></code></pre>
+        <div class="demo">
+          <iframe title="blockquote 引用描画" height="120" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.7 sans-serif;margin:12px;color:#111}blockquote{margin:8px 0;padding-left:12px;border-left:3px solid #ccc;color:#444}</style></head><body><blockquote cite="https://ja.wikipedia.org/wiki/HyperText_Markup_Language">HTML は、ウェブページを記述するためのマークアップ言語です。文書の構造や意味を記述する役割を持ちます。</blockquote></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: q -->
+    <div class="panel" data-panel="q" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;p&gt;
+  デカルトは <span class="hl">&lt;q cite="https://example.com"&gt;</span>我思う、ゆえに我あり<span class="hl">&lt;/q&gt;</span> という言葉を残した。
+&lt;/p&gt;</code></pre>
+        <div class="demo">
+          <iframe title="q 引用描画" height="100" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.7 sans-serif;margin:12px;color:#111}p{margin:0}</style></head><body><p>デカルトは <q cite="https://example.com">我思う、ゆえに我あり</q> という言葉を残した。</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 3.4.1　重要な部分を強調する（strong 要素）🔴
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 3.4.1 🔴</span>
+      <h2 class="card-title">重要な部分を強調する<span class="en">/ Importance (strong)</span></h2>
+      <p class="card-desc">文書内で重要な部分を強調する。ブラウザでは一般に太字（Bold）で表示される。カテゴリー：フロー / フレージング / パルパブル</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="warning" aria-selected="true">警告文</button>
+      <button class="tab" role="tab" type="button" data-tab="inline" aria-selected="false">文中の強調</button>
+    </div>
+
+    <!-- Panel: warning -->
+    <div class="panel" data-panel="warning">
+      <div class="card-body">
+        <pre class="code"><code>&lt;p&gt;
+  <span class="hl">&lt;strong&gt;警告&lt;/strong&gt;</span> まず初めに電源を OFF にしてください。
+&lt;/p&gt;</code></pre>
+        <div class="demo">
+          <iframe title="strong 警告描画" height="100" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.7 sans-serif;margin:12px;color:#111}</style></head><body><p><strong>警告</strong> まず初めに電源を OFF にしてください。</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: inline -->
+    <div class="panel" data-panel="inline" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;p&gt;
+  レポートの提出期限は <span class="hl">&lt;strong&gt;本日 17 時厳守&lt;/strong&gt;</span> です。
+&lt;/p&gt;</code></pre>
+        <div class="demo">
+          <iframe title="strong 文中強調描画" height="100" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.7 sans-serif;margin:12px;color:#111}</style></head><body><p>レポートの提出期限は <strong>本日 17 時厳守</strong> です。</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 3.4.2　アクセントをつける（em 要素）🟡
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 3.4.2 🟡</span>
+      <h2 class="card-title">アクセントをつける<span class="en">/ Stress Emphasis (em)</span></h2>
+      <p class="card-desc">文脈上の強勢（アクセント）を表す。em で囲む位置によって文章のニュアンスが変化する。一般に斜体（Italic）で表示される。カテゴリー：フロー / フレージング / パルパブル</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="compare" aria-selected="true">em vs strong 対比</button>
+      <button class="tab" role="tab" type="button" data-tab="nuance" aria-selected="false">em ニュアンス例</button>
+    </div>
+
+    <!-- Panel: compare -->
+    <div class="panel" data-panel="compare">
+      <div class="card-body">
+        <pre class="code"><code>&lt;p&gt;
+  これは <span class="hl">&lt;strong&gt;重要な強調（太字）&lt;/strong&gt;</span> です。&lt;br&gt;
+  これは <span class="hl">&lt;em&gt;強勢アクセント（斜体）&lt;/em&gt;</span> です。
+&lt;/p&gt;</code></pre>
+        <div class="demo">
+          <iframe title="em vs strong 対比描画" height="100" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.7 sans-serif;margin:12px;color:#111}p{margin:0}</style></head><body><p>これは <strong>重要な強調（太字）</strong> です。<br>これは <em>強勢アクセント（斜体）</em> です。</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: nuance -->
+    <div class="panel" data-panel="nuance" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- 主語を強調（他ではなく猫が可愛い） --&gt;
+&lt;p&gt;<span class="hl">&lt;em&gt;Cats&lt;/em&gt;</span> are cute animals.&lt;/p&gt;
+
+&lt;!-- 述語を強調（可愛くないのではなく可愛い） --&gt;
+&lt;p&gt;Cats are <span class="hl">&lt;em&gt;cute&lt;/em&gt;</span> animals.&lt;/p&gt;</code></pre>
+        <div class="demo">
+          <iframe title="em ニュアンス描画" height="120" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.7 sans-serif;margin:12px;color:#111}p{margin:4px 0}</style></head><body><p><em>Cats</em> are cute animals.（「猫」を強勢）</p><p>Cats are <em>cute</em> animals.（「可愛い」を強勢）</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 3.5.1　リストの種別を指定する（ol 要素・ul 要素）🔴
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 3.5.1 🔴</span>
+      <h2 class="card-title">リストの種別を指定する<span class="en">/ List Types (ol &amp; ul)</span></h2>
+      <p class="card-desc">順序付きリスト（ol = Ordered List）と順序なしリスト（ul = Unordered List）。カテゴリー：フロー</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="ul" aria-selected="true">ul（順序なし）</button>
+      <button class="tab" role="tab" type="button" data-tab="ol" aria-selected="false">ol（順序付き）</button>
+    </div>
+
+    <!-- Panel: ul -->
+    <div class="panel" data-panel="ul">
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">&lt;ul&gt;</span>
+  &lt;li&gt;順序なしリスト 1&lt;/li&gt;
+  &lt;li&gt;順序なしリスト 2&lt;/li&gt;
+  &lt;li&gt;順序なしリスト 3&lt;/li&gt;
+<span class="hl">&lt;/ul&gt;</span></code></pre>
+        <div class="demo">
+          <iframe title="ul リスト描画" height="140" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.7 sans-serif;margin:12px;color:#111}</style></head><body><ul><li>順序なしリスト 1</li><li>順序なしリスト 2</li><li>順序なしリスト 3</li></ul></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: ol -->
+    <div class="panel" data-panel="ol" hidden>
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">&lt;ol&gt;</span>
+  &lt;li&gt;順序付きリスト 1&lt;/li&gt;
+  &lt;li&gt;順序付きリスト 2&lt;/li&gt;
+  &lt;li&gt;順序付きリスト 3&lt;/li&gt;
+<span class="hl">&lt;/ol&gt;</span></code></pre>
+        <div class="demo">
+          <iframe title="ol リスト描画" height="140" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.7 sans-serif;margin:12px;color:#111}</style></head><body><ol><li>順序付きリスト 1</li><li>順序付きリスト 2</li><li>順序付きリスト 3</li></ol></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 3.5.1 / 3.5.2　ol 属性・li 属性制御 🔴
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 3.5.1 / 3.5.2 🔴</span>
+      <h2 class="card-title">ol と li の属性制御<span class="en">/ List Attributes (type, start, reversed, value)</span></h2>
+      <p class="card-desc">ol の type（1, a, A, i, I）・start（開始番号）・reversed（降順）、および li の value（個別番号指定）。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="type-a" aria-selected="true">type="a" / "A"</button>
+      <button class="tab" role="tab" type="button" data-tab="type-i" aria-selected="false">type="i" / "I"</button>
+      <button class="tab" role="tab" type="button" data-tab="start" aria-selected="false">start="5"</button>
+      <button class="tab" role="tab" type="button" data-tab="reversed" aria-selected="false">reversed</button>
+      <button class="tab" role="tab" type="button" data-tab="value" aria-selected="false">li value="10"</button>
+    </div>
+
+    <!-- Panel: type=a/A -->
+    <div class="panel" data-panel="type-a">
+      <div class="card-body">
+        <pre class="code"><code>&lt;ol <span class="hl">type="a"</span>&gt;
+  &lt;li&gt;英語小文字項目&lt;/li&gt;
+  &lt;li&gt;英語小文字項目&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ol <span class="hl">type="A"</span>&gt;
+  &lt;li&gt;英語大文字項目&lt;/li&gt;
+  &lt;li&gt;英語大文字項目&lt;/li&gt;
+&lt;/ol&gt;</code></pre>
+        <div class="demo">
+          <iframe title="ol type=a/A 描画" height="200" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.7 sans-serif;margin:12px;color:#111}</style></head><body><ol type="a"><li>英語小文字項目</li><li>英語小文字項目</li></ol><ol type="A"><li>英語大文字項目</li><li>英語大文字項目</li></ol></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: type=i/I -->
+    <div class="panel" data-panel="type-i" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;ol <span class="hl">type="i"</span>&gt;
+  &lt;li&gt;ローマ数字小文字&lt;/li&gt;
+  &lt;li&gt;ローマ数字小文字&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ol <span class="hl">type="I"</span>&gt;
+  &lt;li&gt;ローマ数字大文字&lt;/li&gt;
+  &lt;li&gt;ローマ数字大文字&lt;/li&gt;
+&lt;/ol&gt;</code></pre>
+        <div class="demo">
+          <iframe title="ol type=i/I 描画" height="200" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.7 sans-serif;margin:12px;color:#111}</style></head><body><ol type="i"><li>ローマ数字小文字</li><li>ローマ数字小文字</li></ol><ol type="I"><li>ローマ数字大文字</li><li>ローマ数字大文字</li></ol></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: start -->
+    <div class="panel" data-panel="start" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;ol <span class="hl">start="5"</span>&gt;
+  &lt;li&gt;5 番から開始&lt;/li&gt;
+  &lt;li&gt;6 番目&lt;/li&gt;
+  &lt;li&gt;7 番目&lt;/li&gt;
+&lt;/ol&gt;</code></pre>
+        <div class="demo">
+          <iframe title="ol start 描画" height="140" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.7 sans-serif;margin:12px;color:#111}</style></head><body><ol start="5"><li>5 番から開始</li><li>6 番目</li><li>7 番目</li></ol></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: reversed -->
+    <div class="panel" data-panel="reversed" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;ol <span class="hl">reversed</span>&gt;
+  &lt;li&gt;カウントダウン 3&lt;/li&gt;
+  &lt;li&gt;カウントダウン 2&lt;/li&gt;
+  &lt;li&gt;カウントダウン 1&lt;/li&gt;
+&lt;/ol&gt;</code></pre>
+        <div class="demo">
+          <iframe title="ol reversed 描画" height="140" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.7 sans-serif;margin:12px;color:#111}</style></head><body><ol reversed><li>カウントダウン 3</li><li>カウントダウン 2</li><li>カウントダウン 1</li></ol></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: value -->
+    <div class="panel" data-panel="value" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;ol&gt;
+  &lt;li&gt;1 番目の項目&lt;/li&gt;
+  &lt;li <span class="hl">value="10"</span>&gt;途中で 10 番に変更&lt;/li&gt;
+  &lt;li&gt;11 番目の項目&lt;/li&gt;
+&lt;/ol&gt;</code></pre>
+        <div class="demo">
+          <iframe title="li value 描画" height="140" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.7 sans-serif;margin:12px;color:#111}</style></head><body><ol><li>1 番目の項目</li><li value="10">途中で 10 番に変更</li><li>11 番目の項目</li></ol></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 3.6　説明リストを作成する（dl, dt, dd 要素）🟡
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 3.6 🟡</span>
+      <h2 class="card-title">説明リストを作成する<span class="en">/ Description List (dl, dt, dd)</span></h2>
+      <p class="card-desc">用語（dt = Definition Term）とその説明（dd = Definition Description）を組にしてリスト（dl = Description List）化する。1対1・1対多・多対1の構成が可能。カテゴリー：フロー</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="basic" aria-selected="true">基本（1対1）</button>
+      <button class="tab" role="tab" type="button" data-tab="one-to-many" aria-selected="false">1対多（1dt-複数dd）</button>
+      <button class="tab" role="tab" type="button" data-tab="many-to-one" aria-selected="false">多対1（複数dt-1dd）</button>
+    </div>
+
+    <!-- Panel: basic -->
+    <div class="panel" data-panel="basic">
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">&lt;dl&gt;</span>
+  <span class="hl">&lt;dt&gt;</span>HTML<span class="hl">&lt;/dt&gt;</span>
+  <span class="hl">&lt;dd&gt;</span>Web ページを記述するためのマークアップ言語です。<span class="hl">&lt;/dd&gt;</span>
+  <span class="hl">&lt;dt&gt;</span>CSS<span class="hl">&lt;/dt&gt;</span>
+  <span class="hl">&lt;dd&gt;</span>Web ページのデザイン、レイアウトを指定するための言語です。<span class="hl">&lt;/dd&gt;</span>
+<span class="hl">&lt;/dl&gt;</span></code></pre>
+        <div class="demo">
+          <iframe title="説明リスト 1対1 描画" height="160" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.7 sans-serif;margin:12px;color:#111}dl{margin:0}dt{font-weight:bold}dd{margin-left:16px;margin-bottom:8px}</style></head><body><dl><dt>HTML</dt><dd>Web ページを記述するためのマークアップ言語です。</dd><dt>CSS</dt><dd>Web ページのデザイン、レイアウトを指定するための言語です。</dd></dl></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: one-to-many -->
+    <div class="panel" data-panel="one-to-many" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;dl&gt;
+  &lt;dt&gt;タイガース&lt;/dt&gt;
+  <span class="hl">&lt;dd&gt;阪神タイガース。日本のプロ野球チーム&lt;/dd&gt;</span>
+  <span class="hl">&lt;dd&gt;レスター・タイガース。イングランドのプロラグビーチーム&lt;/dd&gt;</span>
+&lt;/dl&gt;</code></pre>
+        <div class="demo">
+          <iframe title="説明リスト 1対多 描画" height="140" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.7 sans-serif;margin:12px;color:#111}dl{margin:0}dt{font-weight:bold}dd{margin-left:16px;margin-bottom:4px}</style></head><body><dl><dt>タイガース</dt><dd>阪神タイガース。日本のプロ野球チーム</dd><dd>レスター・タイガース。イングランドのプロラグビーチーム</dd></dl></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: many-to-one -->
+    <div class="panel" data-panel="many-to-one" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;dl&gt;
+  <span class="hl">&lt;dt&gt;AI&lt;/dt&gt;</span>
+  <span class="hl">&lt;dt&gt;人工知能&lt;/dt&gt;</span>
+  &lt;dd&gt;人が実現するさまざまな知覚や知性を人工的に再現するもの&lt;/dd&gt;
+&lt;/dl&gt;</code></pre>
+        <div class="demo">
+          <iframe title="説明リスト 多対1 描画" height="130" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.7 sans-serif;margin:12px;color:#111}dl{margin:0}dt{font-weight:bold}dd{margin-left:16px;margin-bottom:4px}</style></head><body><dl><dt>AI</dt><dt>人工知能</dt><dd>人が実現するさまざまな知覚や知性を人工的に再現するもの</dd></dl></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 3.7　折りたたみ文書を作成する（details & summary 要素）🟡
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 3.7 🟡</span>
+      <h2 class="card-title">折りたたみ文書を作成する<span class="en">/ Collapsible Content (details &amp; summary)</span></h2>
+      <p class="card-desc">内容の表示/非表示を切り替えられるインタラクティブ要素。summary 要素で要約・見出しを指定し、open 属性でデフォルト展開状態に設定可能。カテゴリー：フロー / インタラクティブ</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="basic" aria-selected="true">基本（details + summary）</button>
+      <button class="tab" role="tab" type="button" data-tab="open" aria-selected="false">open 属性（デフォルト展開）</button>
+    </div>
+
+    <!-- Panel: basic -->
+    <div class="panel" data-panel="basic">
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">&lt;details&gt;</span>
+  <span class="hl">&lt;summary&gt;</span>4 月のコンビニアイスランキング<span class="hl">&lt;/summary&gt;</span>
+  &lt;ol&gt;
+    &lt;li&gt;パピコ チョココーヒー&lt;/li&gt;
+    &lt;li&gt;ハーゲンダッツ クリーミーコーン 抹茶マカデミア&lt;/li&gt;
+    &lt;li&gt;FUTABA サクレ パイン カップ&lt;/li&gt;
+  &lt;/ol&gt;
+<span class="hl">&lt;/details&gt;</span></code></pre>
+        <div class="demo">
+          <iframe title="details 基本描画" height="140" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.7 sans-serif;margin:12px;color:#111}summary{cursor:pointer;font-weight:bold}ol{margin:6px 0 0 20px;padding:0}</style></head><body><details><summary>4 月のコンビニアイスランキング</summary><ol><li>パピコ チョココーヒー</li><li>ハーゲンダッツ クリーミーコーン 抹茶マカデミア</li><li>FUTABA サクレ パイン カップ</li></ol></details></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: open -->
+    <div class="panel" data-panel="open" hidden>
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">&lt;details open&gt;</span>
+  &lt;summary&gt;デフォルトで展開されているアコーディオン&lt;/summary&gt;
+  &lt;p&gt;open 属性を指定すると、ページ読み込み時に最初から開いた状態になります。&lt;/p&gt;
+<span class="hl">&lt;/details&gt;</span></code></pre>
+        <div class="demo">
+          <iframe title="details open描画" height="120" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.7 sans-serif;margin:12px;color:#111}summary{cursor:pointer;font-weight:bold}p{margin:6px 0 0 0}</style></head><body><details open><summary>デフォルトで展開されているアコーディオン</summary><p>open 属性を指定すると、ページ読み込み時に最初から開いた状態になります。</p></details></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 3.8　補足説明と連絡先を示す（small & address 要素）🟡
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 3.8 🟡</span>
+      <h2 class="card-title">補足説明と連絡先を示す<span class="en">/ Fine Print &amp; Contact Info (small &amp; address)</span></h2>
+      <p class="card-desc">免責事項や著作権表示等の補足説明（small）と、著者・組織への連絡手段（address）。address 内のテキストはデフォルトで斜体（Italic）表示される。カテゴリー：フロー / フレージング</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="small" aria-selected="true">small（コピーライト・注記）</button>
+      <button class="tab" role="tab" type="button" data-tab="address" aria-selected="false">address（連絡先）</button>
+    </div>
+
+    <!-- Panel: small -->
+    <div class="panel" data-panel="small">
+      <div class="card-body">
+        <pre class="code"><code>&lt;p&gt;
+  &amp;copy; 2026 Sample Corp. All rights reserved.&lt;br&gt;
+  <span class="hl">&lt;small&gt;当サイトに掲載する内容の全部又は一部は、お客様へ事前の告知なしに変更する場合があります。&lt;/small&gt;</span>
+&lt;/p&gt;</code></pre>
+        <div class="demo">
+          <iframe title="small 描画" height="100" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.7 sans-serif;margin:12px;color:#111}p{margin:0}</style></head><body><p>&copy; 2026 Sample Corp. All rights reserved.<br><small>当サイトに掲載する内容の全部又は一部は、お客様へ事前の告知なしに変更する場合があります。</small></p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: address -->
+    <div class="panel" data-panel="address" hidden>
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">&lt;address&gt;</span>
+  情報太郎&lt;br&gt;
+  TEL：03-1234-5678
+<span class="hl">&lt;/address&gt;</span></code></pre>
+        <div class="demo">
+          <iframe title="address 描画" height="100" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:14px/1.7 sans-serif;margin:12px;color:#111}address{font-style:italic}</style></head><body><address>情報太郎<br>TEL：03-1234-5678</address></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* ★このスクリプトは一行も変更しない。丸ごとコピーすること★ */
+
+/* タブ: [data-tabs] ごとにスコープされる。カードが何枚あっても干渉しない */
+document.querySelectorAll('[data-tabs]').forEach(function (group) {
+  var tabs = group.querySelectorAll(':scope > .tabs > .tab');
+  var panels = group.querySelectorAll(':scope > .panel');
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var key = tab.dataset.tab;
+      tabs.forEach(function (t) { t.setAttribute('aria-selected', String(t === tab)); });
+      panels.forEach(function (p) { p.hidden = (p.dataset.panel !== key); });
+    });
+  });
+});
+
+/* テーマ固定（ライト）。切替機能は廃止 */
+</script>
+</body>
+</html>

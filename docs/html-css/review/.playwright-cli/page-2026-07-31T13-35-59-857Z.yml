@@ -1,0 +1,89 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "HTML&CSS REFERENCE" [ref=e4] [cursor=pointer]:
+        - /url: "#top"
+      - navigation "分野を移動" [ref=e5]:
+        - link "HTML" [ref=e6] [cursor=pointer]:
+          - /url: "#html"
+        - link "CSS" [ref=e7] [cursor=pointer]:
+          - /url: "#css"
+  - main [ref=e8]:
+    - generic [ref=e9]:
+      - generic [ref=e10]:
+        - generic [ref=e11]: TEMPLATE REFERENCE / HTML + CSS
+        - heading "コードと描画の対応 / Code to result" [level=1] [ref=e12]
+      - paragraph [ref=e13]: これは復習ページの形式見本。HTML 要素と CSS 規則を、同じ tab / panel / iframe 構造で表示する。
+    - generic [ref=e14]:
+      - generic [ref=e15]:
+        - generic [ref=e16]: HTML / EXAMPLE
+        - generic [ref=e17]:
+          - heading "要素・属性の差 / Element render" [level=2] [ref=e18]
+          - paragraph [ref=e19]: li の内容を固定し、外側の要素と属性だけを切り替える。
+      - tablist "HTML の比較" [ref=e20]:
+        - tab "ul / 順序なし" [ref=e21] [cursor=pointer]
+        - tab "ol / 数値" [ref=e22] [cursor=pointer]
+        - tab "ol type=\"a\"" [selected] [ref=e23] [cursor=pointer]
+      - tabpanel "ol type=\"a\"" [ref=e78]:
+        - generic [ref=e79]:
+          - figure "SOURCE HTML" [ref=e80]:
+            - generic [ref=e81]:
+              - generic [ref=e82]: SOURCE
+              - generic [ref=e83]: HTML
+            - code [ref=e85]: <ol type="a"> <li>項目 1</li> <li>項目 2</li> </ol>
+            - generic [ref=e86]:
+              - text: 差分属性を
+              - strong [ref=e87]: hl
+              - text: で示す。
+          - figure "PREVIEW LIVE RENDER" [ref=e88]:
+            - generic [ref=e89]:
+              - generic [ref=e90]: PREVIEW
+              - generic [ref=e91]: LIVE RENDER
+            - iframe [ref=e93]:
+              - list [ref=f3e2]:
+                - listitem [ref=f3e3]: 項目 1
+                - listitem [ref=f3e4]: 項目 2
+            - generic [ref=e94]:
+              - strong [ref=e95]: 結果：
+              - text: a / b のマーカー。
+    - generic [ref=e41]:
+      - generic [ref=e42]:
+        - generic [ref=e43]: CSS / EXAMPLE
+        - generic [ref=e44]:
+          - heading "セレクターの範囲 / Combinator" [level=2] [ref=e45]
+          - paragraph [ref=e46]: 共通 HTML を一度だけ表示し、selector の差分と結果を tab で切り替える。
+      - figure "COMMON HTML 全 tab 共通" [ref=e47]:
+        - generic [ref=e48]:
+          - generic [ref=e49]: COMMON HTML
+          - generic [ref=e50]: 全 tab 共通
+        - code [ref=e52]: <div class="sample"> <p>1. 直下の段落</p> <div class="inner"><p>2. 孫の段落</p></div> </div>
+      - tablist "CSS の比較" [ref=e53]:
+        - tab "子孫 / 空白" [ref=e54] [cursor=pointer]
+        - tab "子 / >" [active] [selected] [ref=e55] [cursor=pointer]
+      - tabpanel "子 / >" [ref=e96]:
+        - generic [ref=e97]:
+          - figure "RULE CSS" [ref=e98]:
+            - generic [ref=e99]:
+              - generic [ref=e100]: RULE
+              - generic [ref=e101]: CSS
+            - code [ref=e103]: ".sample > p { color: #a33232; }"
+            - generic [ref=e104]: "> は直下の子だけに届く。"
+          - figure "PREVIEW LIVE RENDER" [ref=e105]:
+            - generic [ref=e106]:
+              - generic [ref=e107]: PREVIEW
+              - generic [ref=e108]: LIVE RENDER
+            - iframe [ref=e110]:
+              - generic [ref=f5e2]:
+                - paragraph [ref=f5e3]: 1. 直下の段落
+                - paragraph [ref=f5e5]: 2. 孫の段落
+            - generic [ref=e111]:
+              - strong [ref=e112]: 対象：
+              - text: 1 だけ。
+      - paragraph [ref=e73]:
+        - code [ref=e74]: HTML unit
+        - text: は要素・属性の差、
+        - code [ref=e75]: CSS unit
+        - text: は規則の差。どちらも同じ
+        - code [ref=e76]: tabs → panel → compare
+        - text: を使う。
+    - generic [ref=e77]: このページは形式の参考実装。vol 固有の内容は各ノートから施工し、ここから内容をコピーしない。

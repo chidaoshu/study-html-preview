@@ -1,0 +1,119 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]: HTML&CSS
+    - navigation [ref=e4]:
+      - link "参考" [ref=e5] [cursor=pointer]:
+        - /url: "#"
+      - link "1" [ref=e6] [cursor=pointer]:
+        - /url: "#"
+      - link "2" [ref=e7] [cursor=pointer]:
+        - /url: "#"
+      - link "3" [ref=e8] [cursor=pointer]:
+        - /url: "#"
+      - link "4" [ref=e9] [cursor=pointer]:
+        - /url: "#"
+      - link "5" [ref=e10] [cursor=pointer]:
+        - /url: "#"
+      - link "6" [ref=e11] [cursor=pointer]:
+        - /url: "#"
+      - link "7" [ref=e12] [cursor=pointer]:
+        - /url: "#"
+      - link "8" [ref=e13] [cursor=pointer]:
+        - /url: "#"
+      - link "9" [ref=e14] [cursor=pointer]:
+        - /url: "#"
+      - link "10" [ref=e15] [cursor=pointer]:
+        - /url: "#"
+      - link "11" [ref=e16] [cursor=pointer]:
+        - /url: "#"
+      - link "12" [ref=e17] [cursor=pointer]:
+        - /url: "#"
+      - link "13" [ref=e18] [cursor=pointer]:
+        - /url: "#"
+      - link "14" [ref=e19] [cursor=pointer]:
+        - /url: "#"
+  - main [ref=e20]:
+    - generic [ref=e21]:
+      - generic [ref=e22]:
+        - generic [ref=e23]: 典型B・元素渲染 / SECTION 3.5
+        - heading "リストの種別と書式/ ol & ul" [level=2] [ref=e24]
+        - paragraph [ref=e25]: 同じ li の並びでも、ol / ul と type 属性で描画が変わる。
+      - tablist [ref=e26]:
+        - tab "ul（順序なし）" [selected] [ref=e27] [cursor=pointer]
+        - tab "ol（数値）" [ref=e28] [cursor=pointer]
+        - tab "ol type=\"a\"" [ref=e29] [cursor=pointer]
+      - generic [ref=e31]:
+        - code [ref=e33]: <ul> <li>順序なしリスト 1</li> <li>順序なしリスト 2</li> <li>順序なしリスト 3</li> </ul>
+        - iframe [ref=e35]:
+          - list [ref=f1e2]:
+            - listitem [ref=f1e3]: 順序なしリスト 1
+            - listitem [ref=f1e4]: 順序なしリスト 2
+            - listitem [ref=f1e5]: 順序なしリスト 3
+    - generic [ref=e36]:
+      - generic [ref=e37]:
+        - generic [ref=e38]: 典型B・元素渲染 / SECTION 6.2.2
+        - heading "セルを結合する/ colspan & rowspan" [level=2] [ref=e39]
+        - paragraph [ref=e40]: 結合の向きで描画がどう変わるか。colspan＝横（列方向）、rowspan＝縦（行方向）。
+      - tablist [ref=e41]:
+        - tab "colspan=\"3\"" [selected] [ref=e42] [cursor=pointer]
+        - tab "rowspan=\"3\"" [ref=e43] [cursor=pointer]
+        - tab "colspan+rowspan" [ref=e44] [cursor=pointer]
+      - generic [ref=e46]:
+        - code [ref=e48]: <table border="1"> <tbody> <tr> <td>1 列目</td><td>2 列目</td><td>3 列目</td><td>4 列目</td><td>5 列目</td> </tr> <tr> <td>1 列目</td> <td colspan="3">2 列目</td> <td>5 列目</td> </tr> </tbody> </table>
+        - iframe [ref=e50]:
+          - table [ref=f4e2]:
+            - rowgroup [ref=f4e3]:
+              - row [ref=f4e4]:
+                - cell "1 列目" [ref=f4e5]
+                - cell "2 列目" [ref=f4e6]
+                - cell "3 列目" [ref=f4e7]
+                - cell "4 列目" [ref=f4e8]
+                - cell "5 列目" [ref=f4e9]
+              - row [ref=f4e10]:
+                - cell "1 列目" [ref=f4e11]
+                - cell "2 列目" [ref=f4e12]
+                - cell "5 列目" [ref=f4e13]
+    - generic [ref=e51]:
+      - generic [ref=e52]:
+        - generic [ref=e53]: 典型C・CSS效果 / SECTION 2.6 ★主役
+        - heading "2.6 結合子/ Combinators" [level=2] [ref=e54]
+        - paragraph [ref=e55]:
+          - strong [ref=e56]: HTML は不変。セレクターだけが変わる。
+          - text: 書式：
+          - code [ref=e57]: セレクター1 結合子 セレクター2
+        - generic [ref=e58]:
+          - text: 試験で問われる形：結合子の記号（スペース /
+          - code [ref=e59]: ">"
+          - text: /
+          - code [ref=e60]: ~
+          - text: /
+          - code [ref=e61]: +
+          - text: ）と、どこまで届くかの範囲。
+      - generic [ref=e62]:
+        - generic [ref=e63]: "共通 HTML 構造（全タブ不変）:"
+        - code [ref=e65]: <div class="area"> <p>1. エリア直下の段落（子）</p> <div class="group"> <p>2. グループ内の段落（孫）</p> <p>3. グループ内の段落（孫）</p> </div> <span class="mark">目印</span> <p>4. 目印の直後の段落（隣接兄弟）</p> <p>5. 目印より後にある段落（一般兄弟）</p> </div>
+      - tablist [ref=e66]:
+        - tab "子孫（空白）" [selected] [ref=e67] [cursor=pointer]
+        - tab "子（>）" [ref=e68] [cursor=pointer]
+        - tab "後続兄弟（~）" [ref=e69] [cursor=pointer]
+        - tab "次兄弟（+）" [ref=e70] [cursor=pointer]
+      - generic [ref=e72]:
+        - generic [ref=e73]:
+          - generic [ref=e74]:
+            - paragraph [ref=e75]:
+              - strong [ref=e76]: 子孫結合子 (半角スペース)
+            - paragraph [ref=e77]:
+              - text: セレクター1の要素の
+              - strong [ref=e78]: 子孫要素
+              - text: のうちセレクター2が示す要素が対象。
+            - paragraph [ref=e79]: "青くなる段落: 1・2・3・4・5（全部）"
+          - code [ref=e81]: ".area p { color: blue; }"
+        - iframe [ref=e83]:
+          - generic [ref=f7e2]:
+            - paragraph [ref=f7e3]: 1. エリア直下の段落（子）
+            - generic [ref=f7e4]:
+              - paragraph [ref=f7e5]: 2. グループ内の段落（孫）
+              - paragraph [ref=f7e6]: 3. グループ内の段落（孫）
+            - generic [ref=f7e7]: 目印
+            - paragraph [ref=f7e8]: 4. 目印の直後の段落（隣接兄弟）
+            - paragraph [ref=f7e9]: 5. 目印より後にある段落（一般兄弟）

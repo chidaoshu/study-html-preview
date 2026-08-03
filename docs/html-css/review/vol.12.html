@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HTML&amp;CSS 期末試験 復習シート — vol.12</title>
+<style>
+/* =========================================================
+   [1] テーマ (Swiss Vignelli Palette)
+   固定ライト。暗色モードの切替は廃止。
+   ========================================================= */
+:root {
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #666666;
+  --line: #cccccc;
+  --hairline: #e2e2e2;
+  --surface: #f5f5f3;
+  --accent: #d02020;        /* 差分・強調のみに使用 */
+  --demo-bg: #ffffff;
+  --demo-fg: #111111;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Helvetica Neue", Helvetica, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic Medium", sans-serif;
+  line-height: 1.6;
+  text-wrap: pretty;
+  -webkit-text-size-adjust: 100%;
+}
+
+code, pre, .mono {
+  font-family: "SF Mono", "Menlo", "Consolas", monospace;
+}
+
+/* =========================================================
+   [2] Swiss Layout & Grid
+   ========================================================= */
+.wrap {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+@media (min-width: 900px) {
+  .wrap { padding: 0 32px; }
+}
+
+/* Header */
+.top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+}
+.brand-tag {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 2px 6px;
+  background: var(--fg);
+  color: var(--bg);
+}
+.volnav {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  font-size: 13px;
+  font-weight: 500;
+}
+.volnav a {
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 2px 4px;
+}
+.volnav a[aria-current="page"] {
+  color: var(--fg);
+  font-weight: 700;
+  border-bottom: 2px solid var(--fg);
+}
+
+/* Card & Panels */
+.card {
+  border-top: 1px solid var(--line);
+  padding: 32px 0;
+}
+.card-header {
+  margin-bottom: 20px;
+}
+.card-num {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 4px;
+  display: block;
+}
+.card-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+.card-title .en {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-left: 8px;
+}
+.card-desc {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.card-body {
+  display: grid;
+  gap: 16px;
+}
+@media (min-width: 900px) {
+  .card-body {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+}
+
+/* =========================================================
+   [3] Vignelli Tab Bar
+   ========================================================= */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.tab {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  border-bottom: none;
+  background: var(--surface);
+  color: var(--muted);
+  border-radius: 0;
+  transition: color 0.1s, background 0.1s;
+}
+.tab:hover {
+  color: var(--fg);
+  background: var(--bg);
+}
+.tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.tab[aria-selected="true"] {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
+}
+.panel[hidden] {
+  display: none;
+}
+
+/* =========================================================
+   [4] Code & Explanation Blocks
+   ========================================================= */
+pre.code {
+  margin: 0;
+  padding: 14px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.65;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  white-space: pre;
+}
+.hl {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* 仕様情報テーブル */
+.spec-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin-bottom: 14px;
+}
+.spec-table th, .spec-table td {
+  border: 1px solid var(--line);
+  padding: 6px 10px;
+  text-align: left;
+}
+.spec-table th {
+  background: var(--surface);
+  color: var(--muted);
+  font-weight: 600;
+  width: 75px;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   [5] Demo Frame（ 用）
+   ========================================================= */
+.demo {
+  border: 1px solid var(--line);
+  background: var(--demo-bg);
+}
+.demo iframe {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: var(--demo-bg);
+}
+</style>
+<style>
+/* === 375px 横溢れ修正（主代理が追加。設計・配色・書体には手を入れていない） === */
+.volnav{overflow-x:auto;min-width:0;flex:1 1 auto;scrollbar-width:none}
+.volnav::-webkit-scrollbar{display:none}
+.top{max-width:100%;overflow:hidden}
+.top>*{min-width:0}
+@media (max-width:899px){
+  .wrap{max-width:100%!important}
+  .card-body{display:block!important}
+  .card-body>*{width:auto!important;max-width:100%!important;min-width:0!important}
+  .card-body>*+*{margin-top:14px}
+  .panel [class*="col"]{width:auto!important;min-width:0!important;max-width:100%!important}
+}
+.wrap>*,.panel,.panel>*{min-width:0}
+pre,[class*="code"]{max-width:100%;min-width:0}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <span class="brand-tag">HTML&amp;CSS</span>
+  <nav class="volnav">
+    <a href="vol.1.html">1</a>
+    <a href="vol.2.html">2</a>
+    <a href="vol.3.html">3</a>
+    <a href="vol.4.html">4</a>
+    <a href="vol.5.html">5</a>
+    <a href="vol.6.html">6</a>
+    <a href="vol.7.html">7</a>
+    <a href="vol.8.html">8</a>
+    <a href="vol.9.html">9</a>
+    <a href="vol.10.html">10</a>
+    <a href="vol.11.html">11</a>
+    <a href="vol.12.html" aria-current="page">12</a>
+    <a href="vol.13.html">13</a>
+    <a href="vol.14.html">14</a>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <!-- ============================================================
+       SECTION 3.1.1　横方向の配置を指定する (text-align)
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 3.1.1</span>
+      <h2 class="card-title">横方向の配置指定<span class="en">/ text-align</span></h2>
+      <p class="card-desc">ブロックコンテナ要素内のインラインコンテンツの水平配置（揃え位置）を指定する。</p>
+    </div>
+
+    <table class="spec-table">
+      <tr>
+        <th>初期値</th>
+        <td><code>start</code></td>
+        <th>継承</th>
+        <td>あり（継承される）</td>
+      </tr>
+      <tr>
+        <th>適用要素</th>
+        <td colspan="3">主に display が block, inline-block の要素など（ブロックコンテナ）</td>
+      </tr>
+    </table>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="start" aria-selected="true">start</button>
+      <button class="tab" role="tab" type="button" data-tab="end" aria-selected="false">end</button>
+      <button class="tab" role="tab" type="button" data-tab="left" aria-selected="false">left</button>
+      <button class="tab" role="tab" type="button" data-tab="right" aria-selected="false">right</button>
+      <button class="tab" role="tab" type="button" data-tab="center" aria-selected="false">center</button>
+      <button class="tab" role="tab" type="button" data-tab="justify" aria-selected="false">justify</button>
+      <button class="tab" role="tab" type="button" data-tab="justify-last" aria-selected="false">text-align-last</button>
+    </div>
+
+    <!-- Panel: start -->
+    <div class="panel" data-panel="start">
+      <div class="card-body">
+        <pre class="code"><code>p {
+  <span class="hl">text-align: start;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="text-align: start" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}.box{border:1px solid #ccc;padding:10px;text-align:start;background:#fafafa}</style></head><body><div class="box">I am not lazy, I am on energy saving mode.<br>書字方向の始点（左から右記述では左詰め）に配置されます。</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: end -->
+    <div class="panel" data-panel="end" hidden>
+      <div class="card-body">
+        <pre class="code"><code>p {
+  <span class="hl">text-align: end;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="text-align: end" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}.box{border:1px solid #ccc;padding:10px;text-align:end;background:#fafafa}</style></head><body><div class="box">I am not lazy, I am on energy saving mode.<br>書字方向の終点（左から右記述では右詰め）に配置されます。</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: left -->
+    <div class="panel" data-panel="left" hidden>
+      <div class="card-body">
+        <pre class="code"><code>p {
+  <span class="hl">text-align: left;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="text-align: left" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}.box{border:1px solid #ccc;padding:10px;text-align:left;background:#fafafa}</style></head><body><div class="box">I am not lazy, I am on energy saving mode.<br>左詰めに配置されます。</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: right -->
+    <div class="panel" data-panel="right" hidden>
+      <div class="card-body">
+        <pre class="code"><code>p {
+  <span class="hl">text-align: right;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="text-align: right" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}.box{border:1px solid #ccc;padding:10px;text-align:right;background:#fafafa}</style></head><body><div class="box">I am not lazy, I am on energy saving mode.<br>右詰めに配置されます。</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: center -->
+    <div class="panel" data-panel="center" hidden>
+      <div class="card-body">
+        <pre class="code"><code>p {
+  <span class="hl">text-align: center;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="text-align: center" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}.box{border:1px solid #ccc;padding:10px;text-align:center;background:#fafafa}</style></head><body><div class="box">I am not lazy, I am on energy saving mode.<br>中央揃えに配置されます。</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: justify -->
+    <div class="panel" data-panel="justify" hidden>
+      <div class="card-body">
+        <pre class="code"><code>p {
+  <span class="hl">text-align: justify;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="text-align: justify" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}.box{border:1px solid #ccc;padding:10px;text-align:justify;background:#fafafa}</style></head><body><div class="box">I am not lazy, I am on energy saving mode. HTML and CSS layout rules specify how inline contents align horizontally. 最終行以外の行が両端揃えになります。（※最終行は揃いません）</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: justify-last -->
+    <div class="panel" data-panel="justify-last" hidden>
+      <div class="card-body">
+        <pre class="code"><code>p {
+  text-align: justify;
+  <span class="hl">text-align-last: justify;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="text-align-last: justify" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#111}.box{border:1px solid #ccc;padding:10px;text-align:justify;text-align-last:justify;background:#fafafa}</style></head><body><div class="box">I am not lazy, I am on energy saving mode. HTML and CSS layout rules specify how inline contents align horizontally. 最終行を含めたすべての行が均等に両端揃えになります。</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 3.1.2　縦方向の配置を指定する (vertical-align) 🔴高頻
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 3.1.2 🔴高頻</span>
+      <h2 class="card-title">縦方向の配置<span class="en">/ vertical-align</span></h2>
+      <p class="card-desc">インライン要素、インラインブロック要素、およびテーブルセル要素の垂直方向の配置（揃え位置）を指定する。</p>
+    </div>
+
+    <table class="spec-table">
+      <tr>
+        <th>初期値</th>
+        <td><code>baseline</code></td>
+        <th>継承</th>
+        <td>なし（継承されない）</td>
+      </tr>
+      <tr>
+        <th>適用要素</th>
+        <td colspan="3">インライン要素、インラインブロック要素、テーブルセル要素（inline, inline-block, table-cell）</td>
+      </tr>
+    </table>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="cell" aria-selected="true">テーブルセル用（Table Cells）</button>
+      <button class="tab" role="tab" type="button" data-tab="inline" aria-selected="false">インライン要素用（Inline Elements）</button>
+    </div>
+
+    <!-- Panel: cell -->
+    <div class="panel" data-panel="cell">
+      <div class="card-body">
+        <pre class="code"><code>/* display: table-cell 内での縦方向の配置 */
+td.base   { <span class="hl">vertical-align: baseline;</span> } /* ベースライン揃え */
+td.top    { <span class="hl">vertical-align: top;</span> }      /* 上揃え */
+td.middle { <span class="hl">vertical-align: middle;</span> }   /* 中央揃え */
+td.bottom { <span class="hl">vertical-align: bottom;</span> }   /* 下揃え */</code></pre>
+        <div class="demo">
+          <iframe title="vertical-align (table-cell)" height="190" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.4 sans-serif;margin:10px;color:#111}table{width:100%;border-collapse:collapse;table-layout:fixed}td{height:110px;border:1px solid #ccc;padding:6px;background:#fafafa;text-align:center}.label{display:block;font-weight:bold;font-size:11px;color:#d02020;margin-bottom:4px}td.base{vertical-align:baseline}td.top{vertical-align:top}td.mid{vertical-align:middle}td.bot{vertical-align:bottom}</style></head><body><table><tr><td class="base"><span class="label">baseline</span>基線揃え</td><td class="top"><span class="label">top</span>上揃え</td><td class="mid"><span class="label">middle</span>中央揃え</td><td class="bot"><span class="label">bottom</span>下揃え</td></tr></table></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: inline -->
+    <div class="panel" data-panel="inline" hidden>
+      <div class="card-body">
+        <pre class="code"><code>/* インライン要素 / 画像の縦方向揃え */
+.sub         { <span class="hl">vertical-align: sub;</span> }         /* 下付き文字 */
+.super       { <span class="hl">vertical-align: super;</span> }       /* 上付き文字 */
+.text-top    { <span class="hl">vertical-align: text-top;</span> }    /* 親文字の上端 */
+.text-bottom { <span class="hl">vertical-align: text-bottom;</span> } /* 親文字の下端 */
+.middle      { <span class="hl">vertical-align: middle;</span> }      /* 中央（x-height中央） */</code></pre>
+        <div class="demo">
+          <iframe title="vertical-align (inline)" height="190" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/2.2 sans-serif;margin:10px;color:#111}.line{border-bottom:1px dashed #d02020;padding:10px 0;background:#fafafa}.badge{display:inline-block;padding:2px 6px;font-size:11px;font-weight:bold;background:#ffe4e4;border:1px solid #d02020;border-radius:3px}.sub{vertical-align:sub}.super{vertical-align:super}.tt{vertical-align:text-top}.tb{vertical-align:text-bottom}.mid{vertical-align:middle}</style></head><body><div class="line">Text <span class="badge sub">sub</span> <span class="badge super">super</span> <span class="badge tt">text-top</span> <span class="badge tb">text-bottom</span> <span class="badge mid">middle</span> Baseline</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 3.2.1　要素の配置方法の指定 (position)
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 3.2.1</span>
+      <h2 class="card-title">要素の配置方法<span class="en">/ position</span></h2>
+      <p class="card-desc">通常フロー（Normal Flow）に従うか、フローから外れて任意の位置や固定位置に配置するかを指定する。</p>
+    </div>
+
+    <table class="spec-table">
+      <tr>
+        <th>初期値</th>
+        <td><code>static</code></td>
+        <th>継承</th>
+        <td>なし（継承されない）</td>
+      </tr>
+      <tr>
+        <th>適用要素</th>
+        <td colspan="3">すべての要素</td>
+      </tr>
+    </table>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="static" aria-selected="true">static</button>
+      <button class="tab" role="tab" type="button" data-tab="relative" aria-selected="false">relative</button>
+      <button class="tab" role="tab" type="button" data-tab="absolute" aria-selected="false">absolute</button>
+      <button class="tab" role="tab" type="button" data-tab="fixed" aria-selected="false">fixed</button>
+      <button class="tab" role="tab" type="button" data-tab="sticky" aria-selected="false">sticky</button>
+    </div>
+
+    <!-- Panel: static -->
+    <div class="panel" data-panel="static">
+      <div class="card-body">
+        <pre class="code"><code>.target {
+  <span class="hl">position: static;</span>
+  top: 20px;  /* static のため無効 */
+  left: 30px; /* static のため無効 */
+}</code></pre>
+        <div class="demo">
+          <iframe title="position: static" height="190" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:10px;color:#111}.item{padding:8px;background:#e5e5e5;margin-bottom:6px}.target{position:static;top:20px;left:30px;background:#ffe4e4;border:2px solid #d02020;padding:8px;margin-bottom:6px}</style></head><body><div class="item">Box 1 (通常のフロー)</div><div class="target">Target (position: static)<br>top/leftプロパティを指定しても位置は変更されません。</div><div class="item">Box 2 (通常のフロー)</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: relative -->
+    <div class="panel" data-panel="relative" hidden>
+      <div class="card-body">
+        <pre class="code"><code>.target {
+  <span class="hl">position: relative;</span>
+  top: 15px;
+  left: 20px;
+}</code></pre>
+        <div class="demo">
+          <iframe title="position: relative" height="190" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:10px;color:#111}.item{padding:8px;background:#e5e5e5;margin-bottom:6px}.target{position:relative;top:15px;left:20px;background:#ffe4e4;border:2px solid #d02020;padding:8px;margin-bottom:6px}</style></head><body><div class="item">Box 1 (通常のフロー)</div><div class="target">Target (position: relative)<br>本来の配置位置からずれ、元の場所には空間が残ります。</div><div class="item">Box 2 (元の位置のまま)</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: absolute -->
+    <div class="panel" data-panel="absolute" hidden>
+      <div class="card-body">
+        <pre class="code"><code>.parent { position: relative; }
+.target {
+  <span class="hl">position: absolute;</span>
+  top: 10px;
+  right: 10px;
+}</code></pre>
+        <div class="demo">
+          <iframe title="position: absolute" height="190" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:10px;color:#111}.parent{position:relative;border:1px dashed #666;padding:8px;min-height:150px;background:#fafafa}.item{padding:8px;background:#e5e5e5;margin-bottom:6px}.target{position:absolute;top:10px;right:10px;background:#ffe4e4;border:2px solid #d02020;padding:8px;width:150px}</style></head><body><div class="parent"><div class="item">Box 1</div><div class="target">Target (position: absolute)<br>親要素右上基準。元領域の空間は作成されません。</div><div class="item">Box 2 (Targetの元空間が消失し詰まる)</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: fixed -->
+    <div class="panel" data-panel="fixed" hidden>
+      <div class="card-body">
+        <pre class="code"><code>.target {
+  <span class="hl">position: fixed;</span>
+  bottom: 10px;
+  right: 10px;
+}</code></pre>
+        <div class="demo">
+          <iframe title="position: fixed" height="190" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:10px;color:#111;height:300px}.scroll-area{height:170px;overflow-y:auto;border:1px solid #ccc;padding:8px}.target{position:fixed;bottom:10px;right:10px;background:#ffe4e4;border:2px solid #d02020;padding:8px;font-weight:bold;z-index:99}</style></head><body><div class="scroll-area"><p>↓ スクロールしても画面右下に固定表示されます</p><p style="margin-top:50px;">スクロール中コンテンツ 1...</p><p style="margin-top:50px;">スクロール中コンテンツ 2...</p></div><div class="target">Target (fixed: 視口固定)</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: sticky -->
+    <div class="panel" data-panel="sticky" hidden>
+      <div class="card-body">
+        <pre class="code"><code>.target {
+  <span class="hl">position: sticky;</span>
+  top: 0px;
+}</code></pre>
+        <div class="demo">
+          <iframe title="position: sticky" height="190" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:10px;color:#111}.container{height:170px;overflow-y:auto;border:1px solid #ccc;padding:8px}.target{position:sticky;top:0;background:#ffe4e4;border:2px solid #d02020;padding:6px 10px;font-weight:bold}.long-content{height:300px;background:linear-gradient(#fff, #eee);margin-top:8px;padding:8px}</style></head><body><div class="container"><p style="margin:0 0 6px;">↓ 下にスクロールすると上端に吸着します</p><div class="target">Target (position: sticky / top:0)</div><div class="long-content">コンテナ内のスクロールコンテンツ...</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 3.2.2　要素の配置位置の指定 (top, right, bottom, left)
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 3.2.2</span>
+      <h2 class="card-title">要素の配置位置の指定<span class="en">/ top, right, bottom, left</span></h2>
+      <p class="card-desc"><code>position</code> の指定内容に応じて、四方の基点（基準位置）からの距離を設定する。</p>
+    </div>
+
+    <table class="spec-table">
+      <tr>
+        <th>初期値</th>
+        <td><code>auto</code></td>
+        <th>継承</th>
+        <td>なし（継承されない）</td>
+      </tr>
+      <tr>
+        <th>適用要素</th>
+        <td colspan="3">位置指定要素（position プロパティが static 以外の要素）</td>
+      </tr>
+    </table>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="rel-offset" aria-selected="true">relative の基準</button>
+      <button class="tab" role="tab" type="button" data-tab="abs-offset" aria-selected="false">absolute / fixed の基準</button>
+    </div>
+
+    <!-- Panel: relative offset -->
+    <div class="panel" data-panel="rel-offset">
+      <div class="card-body">
+        <pre class="code"><code>.target {
+  position: relative;
+  <span class="hl">top: 15px;</span>
+  <span class="hl">left: 25px;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="relative の配置基準" height="190" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:10px;color:#111}.origin-box{border:2px dashed #999;padding:8px;background:#f9f9f9;width:240px;height:100px;position:relative}.target{position:relative;top:15px;left:25px;background:#ffe4e4;border:2px solid #d02020;padding:8px;width:200px}.label{font-size:11px;color:#666}</style></head><body><div class="origin-box"><span class="label">← 元々の配置位置（基準点）</span><div class="target">Target (relative)<br>top: 15px, left: 25px<br>元位置からのオフセット</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: absolute offset -->
+    <div class="panel" data-panel="abs-offset" hidden>
+      <div class="card-body">
+        <pre class="code"><code>.parent { position: relative; }
+.target {
+  position: absolute;
+  <span class="hl">top: 15px;</span>
+  <span class="hl">right: 15px;</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="absolute / fixed の配置基準" height="190" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:10px;color:#111}.parent-box{border:2px dashed #333;padding:8px;background:#f5f5f5;height:150px;position:relative}.target{position:absolute;top:15px;right:15px;background:#ffe4e4;border:2px solid #d02020;padding:8px;width:180px}.label{font-size:11px;color:#333;font-weight:bold}</style></head><body><div class="parent-box"><span class="label">親要素 (position: relative)</span><div class="target">Target (absolute)<br>top: 15px, right: 15px<br>親要素（またはウィンドウ）の端からの距離</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 3.2.2　対向プロパティの優先順位 (Conflict Resolution)
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 3.2.2</span>
+      <h2 class="card-title">対向プロパティの競合と優先順位<span class="en">/ Conflict Resolution</span></h2>
+      <p class="card-desc"><code>top</code> と <code>bottom</code>、<code>left</code> と <code>right</code> を同時に指定した場合、<code>top</code> および <code>left</code> が優先される（LTR書字方向時）。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="tb" aria-selected="true">top vs bottom</button>
+      <button class="tab" role="tab" type="button" data-tab="lr" aria-selected="false">left vs right</button>
+      <button class="tab" role="tab" type="button" data-tab="all" aria-selected="false">4方向同時指定</button>
+    </div>
+
+    <!-- Panel: top vs bottom -->
+    <div class="panel" data-panel="tb">
+      <div class="card-body">
+        <pre class="code"><code>div {
+  position: relative;
+  <span class="hl">top: 15px;    /* 優先される */</span>
+  bottom: 60px; /* 無視される */
+}</code></pre>
+        <div class="demo">
+          <iframe title="top vs bottom 競合" height="170" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:10px;color:#111}.frame{border:1px dashed #999;padding:6px;height:130px}.target{position:relative;top:15px;bottom:60px;background:#ffe4e4;border:2px solid #d02020;padding:8px}</style></head><body><div class="frame"><div class="target">top: 15px; bottom: 60px;<br>→ <strong>top: 15px</strong> のみが適用され、bottom は無視されます。</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: left vs right -->
+    <div class="panel" data-panel="lr" hidden>
+      <div class="card-body">
+        <pre class="code"><code>div {
+  position: relative;
+  <span class="hl">left: 20px;   /* 優先される */</span>
+  right: 80px;  /* 無視される */
+}</code></pre>
+        <div class="demo">
+          <iframe title="left vs right 競合" height="170" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:10px;color:#111}.frame{border:1px dashed #999;padding:6px;height:130px}.target{position:relative;left:20px;right:80px;background:#ffe4e4;border:2px solid #d02020;padding:8px}</style></head><body><div class="frame"><div class="target">left: 20px; right: 80px;<br>→ <strong>left: 20px</strong> のみが適用され、right は無視されます。</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: 4方向同時指定 -->
+    <div class="panel" data-panel="all" hidden>
+      <div class="card-body">
+        <pre class="code"><code>div {
+  position: relative;
+  <span class="hl">top: 15px;</span>    /* 優先 */
+  bottom: 50px;
+  <span class="hl">left: 20px;</span>   /* 優先 */
+  right: 80px;
+}</code></pre>
+        <div class="demo">
+          <iframe title="4方向同時指定の競合" height="170" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:10px;color:#111}.frame{border:1px dashed #999;padding:6px;height:130px}.target{position:relative;top:15px;bottom:50px;left:20px;right:80px;background:#ffe4e4;border:2px solid #d02020;padding:8px}</style></head><body><div class="frame"><div class="target">top: 15px; bottom: 50px;<br>left: 20px; right: 80px;<br>→ <strong>top と left の組み合わせ</strong>が優先適用されます。</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 3.3　要素の回り込み (float & clear) 🔴高頻
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 3.3 🔴高頻</span>
+      <h2 class="card-title">要素の回り込み<span class="en">/ float &amp; clear</span></h2>
+      <p class="card-desc">要素を左右に寄せて後続コンテンツを回り込ませる <code>float</code> と、回り込みを解除する <code>clear</code>、および親要素の高さ塌陷を防ぐ <code>clearfix</code>。</p>
+    </div>
+
+    <table class="spec-table">
+      <tr>
+        <th>初期値</th>
+        <td><code>float: none / clear: none</code></td>
+        <th>継承</th>
+        <td>なし（継承されない）</td>
+      </tr>
+      <tr>
+        <th>適用要素</th>
+        <td colspan="3">すべての要素（float 指定時、display は自動的にブロック化される）</td>
+      </tr>
+    </table>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="float-effect" aria-selected="true">float（left / right / none）</button>
+      <button class="tab" role="tab" type="button" data-tab="clear-effect" aria-selected="false">clear（left / right / both）</button>
+      <button class="tab" role="tab" type="button" data-tab="clearfix-effect" aria-selected="false">高さ塌陷と clearfix</button>
+    </div>
+
+    <!-- Panel: float-effect -->
+    <div class="panel" data-panel="float-effect">
+      <div class="card-body">
+        <pre class="code"><code>/* 左・右への回り込みと回り込みなし */
+.box-left  { <span class="hl">float: left;</span> margin: 0 10px 5px 0; }
+.box-right { <span class="hl">float: right;</span> margin: 0 0 5px 10px; }
+.box-none  { <span class="hl">float: none;</span> }</code></pre>
+        <div class="demo">
+          <iframe title="float の効果" height="210" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:8px;color:#111}.block{border:1px solid #ccc;padding:8px;background:#fafafa;margin-bottom:8px}.float-l{float:left;width:70px;height:45px;background:#ffe4e4;border:2px solid #d02020;margin:0 8px 4px 0;padding:4px;font-weight:bold;font-size:11px}.float-r{float:right;width:70px;height:45px;background:#e4efff;border:2px solid #2060d0;margin:0 0 4px 8px;padding:4px;font-weight:bold;font-size:11px}</style></head><body><div class="block"><div class="float-l">float: left</div>テキストが右側に回り込みます。CSSのfloatプロパティは要素を通常フローから外し、左右に寄せて後続インライン要素を巻き込みます。</div><div class="block"><div class="float-r">float: right</div>テキストが左側に回り込みます。右側に配置された要素の周りを文章が囲むように流れます。</div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: clear-effect -->
+    <div class="panel" data-panel="clear-effect" hidden>
+      <div class="card-body">
+        <pre class="code"><code>/* 回り込みの解除 */
+.cleared-left  { <span class="hl">clear: left;</span> }  /* 左 float の回り込み解除 */
+.cleared-right { <span class="hl">clear: right;</span> } /* 右 float の回り込み解除 */
+.cleared-both  { <span class="hl">clear: both;</span> }  /* 左右両方の回り込み解除 */</code></pre>
+        <div class="demo">
+          <iframe title="clear の効果" height="210" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.5 sans-serif;margin:8px;color:#111}.box{float:left;width:90px;height:40px;background:#ffe4e4;border:2px solid #d02020;padding:4px;font-size:11px;font-weight:bold;margin-right:8px}.wrap-text{background:#fafafa;padding:6px;border:1px solid #ccc}.clear-box{clear:both;background:#e5f7e5;border:2px solid #208020;padding:6px;margin-top:6px;font-weight:bold}</style></head><body><div class="wrap-text"><div class="box">float: left</div><p style="margin:0 0 6px">回り込んでいる段落テキスト...</p><div class="clear-box">clear: both 指定された要素<br>→ 回り込みが解除され、float要素の下に配置されます。</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: clearfix-effect -->
+    <div class="panel" data-panel="clearfix-effect" hidden>
+      <div class="card-body">
+        <pre class="code"><code>/* 親要素の高さ Collapse (塌陷) と解決策 */
+/* clearfix (疑似要素による解法) */
+.parent::after {
+  content: "";
+  display: block;
+  <span class="hl">clear: both;</span>
+}
+/* または BFC (Block Formatting Context) 生成 */
+.parent-bfc { <span class="hl">overflow: hidden;</span> }</code></pre>
+        <div class="demo">
+          <iframe title="親要素の高さ塌陷とclearfix" height="210" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:11px/1.4 sans-serif;margin:8px;color:#111}.col-wrap{display:flex;gap:8px}.col{flex:1}.parent-bad{border:2px dashed #d02020;padding:4px;background:#fff0f0}.parent-good{border:2px solid #208020;padding:4px;background:#f0fff0}.parent-good::after{content:"";display:block;clear:both}.float-item{float:left;width:60px;height:45px;background:#ddd;border:1px solid #666;padding:2px}.title{font-weight:bold;margin-bottom:4px}</style></head><body><div class="col-wrap"><div class="col"><div class="title">❌ 塌陷 (親高さ 0)</div><div class="parent-bad"><div class="float-item">float</div></div><p style="margin-top:55px;color:#d02020">親枠がフロート子要素を包めず潰れます</p></div><div class="col"><div class="title">⭕️ clearfix 適用</div><div class="parent-good"><div class="float-item">float</div></div><p style="margin-top:8px;color:#208020">親枠が子要素の高さを正しく保持します</p></div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 3.4.1　要素の重なり順 (z-index) 🔴高頻
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 3.4.1 🔴高頻</span>
+      <h2 class="card-title">要素の重なり順<span class="en">/ z-index</span></h2>
+      <p class="card-desc">位置指定要素（position が static 以外）および Flex/Grid アイテムの画面垂直方向（Z軸）の重ね合わせ順序を指定する。</p>
+    </div>
+
+    <table class="spec-table">
+      <tr>
+        <th>初期値</th>
+        <td><code>auto</code></td>
+        <th>継承</th>
+        <td>なし（継承されない）</td>
+      </tr>
+      <tr>
+        <th>適用要素</th>
+        <td colspan="3">位置指定要素（position が static 以外の要素）、Flexアイテム、Gridアイテム</td>
+      </tr>
+    </table>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="z-basic" aria-selected="true">基本（auto vs 数値）</button>
+      <button class="tab" role="tab" type="button" data-tab="z-stacking" aria-selected="false">Stacking Context（重ね合わせ文脈）</button>
+    </div>
+
+    <!-- Panel: z-basic -->
+    <div class="panel" data-panel="z-basic">
+      <div class="card-body">
+        <pre class="code"><code>/* z-index の数値が大きいほど手前（上）に表示される */
+.box1 { position: absolute; top: 10px; left: 10px; <span class="hl">z-index: 1;</span> }
+.box2 { position: absolute; top: 30px; left: 40px; <span class="hl">z-index: 3;</span> } /* 最前面 */
+.box3 { position: absolute; top: 50px; left: 70px; <span class="hl">z-index: 2;</span> }</code></pre>
+        <div class="demo">
+          <iframe title="z-index の基本" height="190" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.4 sans-serif;margin:10px;color:#111}.stage{position:relative;height:140px;border:1px dashed #ccc;background:#fafafa}.box{position:absolute;width:110px;height:70px;padding:8px;font-weight:bold;border:2px solid #333;box-shadow:2px 2px 5px rgba(0,0,0,0.15)}.b1{top:10px;left:10px;background:#ffe4e4;border-color:#d02020;z-index:1}.b2{top:30px;left:50px;background:#e4efff;border-color:#2060d0;z-index:3}.b3{top:50px;left:90px;background:#e5f7e5;border-color:#208020;z-index:2}</style></head><body><div class="stage"><div class="box b1">Box 1<br>(z-index: 1)</div><div class="box b2">Box 2<br>(z-index: 3) ★最前面</div><div class="box b3">Box 3<br>(z-index: 2)</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: z-stacking -->
+    <div class="panel" data-panel="z-stacking" hidden>
+      <div class="card-body">
+        <pre class="code"><code>/* 【超高頻考点】重ね合わせコンテキスト (Stacking Context) */
+/* 親: z-index: auto → 新規文脈を作らない (子 z-index:-1 は親背景の後ろへ) */
+.parent-auto { position: relative; <span class="hl">z-index: auto;</span> }
+
+/* 親: z-index: 0 → 新規文脈を生成 (子 z-index:-1 は親の枠内に留まる) */
+.parent-zero { position: relative; <span class="hl">z-index: 0;</span> }</code></pre>
+        <div class="demo">
+          <iframe title="Stacking Context の違い" height="190" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:11px/1.4 sans-serif;margin:8px;color:#111}.col-wrap{display:flex;gap:12px}.col{flex:1}.p-box{position:relative;height:120px;background:#ffe4e4;border:2px solid #d02020;padding:6px;font-weight:bold}.p-auto{z-index:auto}.p-zero{z-index:0}.child{position:absolute;top:35px;left:20px;width:100px;height:60px;background:#2060d0;color:#fff;padding:6px;z-index:-1}.note{font-size:10px;margin-top:4px;color:#666}</style></head><body><div class="col-wrap"><div class="col"><div class="p-box p-auto">親 (z-index: auto)<div class="child">子 (z-index: -1)<br>親の背景下に隠れる</div></div><div class="note">新規文脈なし：子はルート背景側へ沈む</div></div><div class="col"><div class="p-box p-zero">親 (z-index: 0)<div class="child">子 (z-index: -1)<br>親の枠内に留まる</div></div><div class="note">新規文脈あり：子は親文脈内の最背面</div></div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 3.4.2　要素を透過する (opacity)
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 3.4.2</span>
+      <h2 class="card-title">要素を透過する<span class="en">/ opacity</span></h2>
+      <p class="card-desc">要素全体の不透明度を 0.0（完全透明）から 1.0（完全不透明）の数値で指定する。</p>
+    </div>
+
+    <table class="spec-table">
+      <tr>
+        <th>初期値</th>
+        <td><code>1.0</code></td>
+        <th>継承</th>
+        <td>なし（継承されない）</td>
+      </tr>
+      <tr>
+        <th>適用要素</th>
+        <td colspan="3">すべての要素</td>
+      </tr>
+    </table>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="op-range" aria-selected="true">0.0〜1.0 の範囲</button>
+      <button class="tab" role="tab" type="button" data-tab="op-vs-rgba" aria-selected="false">opacity vs rgba/hsla（子要素の継承）</button>
+    </div>
+
+    <!-- Panel: op-range -->
+    <div class="panel" data-panel="op-range">
+      <div class="card-body">
+        <pre class="code"><code>.box-100 { <span class="hl">opacity: 1.0;</span> }  /* 100% 不透明 */
+.box-75  { <span class="hl">opacity: 0.75;</span> } /* 75% */
+.box-50  { <span class="hl">opacity: 0.5;</span> }  /* 50% 半透明 */
+.box-25  { <span class="hl">opacity: 0.25;</span> } /* 25% */
+.box-0   { <span class="hl">opacity: 0.0;</span> }  /* 0% 完全透明（領域は保持） */</code></pre>
+        <div class="demo">
+          <iframe title="opacity 範囲" height="190" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:11px/1.3 sans-serif;margin:10px;color:#111}.bg-pattern{background:repeating-linear-gradient(45deg,#ccc,#ccc 10px,#eee 10px,#eee 20px);padding:10px;display:flex;gap:6px}.card-box{flex:1;height:100px;background:#d02020;color:#fff;padding:6px;font-weight:bold;text-align:center;border:1px solid #000}.o100{opacity:1.0}.o75{opacity:0.75}.o50{opacity:0.5}.o25{opacity:0.25}.o0{opacity:0.0}</style></head><body><div class="bg-pattern"><div class="card-box o100">1.0<br>(100%)</div><div class="card-box o75">0.75<br>(75%)</div><div class="card-box o50">0.5<br>(50%)</div><div class="card-box o25">0.25<br>(25%)</div><div class="card-box o0">0.0<br>(0%)</div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: op-vs-rgba -->
+    <div class="panel" data-panel="op-vs-rgba" hidden>
+      <div class="card-body">
+        <pre class="code"><code>/* 1. opacity: 子要素・テキストもまるごと半透明になる */
+.box-opacity {
+  <span class="hl">opacity: 0.5;</span>
+  background: #d02020;
+}
+
+/* 2. rgba(): 背景色のみ透過（子要素テキストは不透明） */
+.box-rgba {
+  <span class="hl">background: rgba(208, 32, 32, 0.5);</span>
+}</code></pre>
+        <div class="demo">
+          <iframe title="opacity vs rgba" height="190" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:12px/1.4 sans-serif;margin:10px;color:#111}.bg-pattern{background:repeating-linear-gradient(45deg,#ccc,#ccc 10px,#eee 10px,#eee 20px);padding:12px;display:flex;gap:12px}.box{flex:1;height:110px;padding:10px;font-weight:bold}.b-op{background:#d02020;color:#000;opacity:0.5;border:2px solid #000}.b-rgba{background:rgba(208,32,32,0.5);color:#000;border:2px solid #000}</style></head><body><div class="bg-pattern"><div class="box b-op">opacity: 0.5<br><span style="background:#fff;padding:2px 4px">テキストも薄くなる！</span></div><div class="box b-rgba">rgba(208,32,32,0.5)<br><span style="background:#fff;padding:2px 4px">テキストはくっきり不透明！</span></div></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* ★このスクリプトは一行も変更しない。丸ごとコピーすること★ */
+
+/* タブ: [data-tabs] ごとにスコープされる。カードが何枚あっても干渉しない */
+document.querySelectorAll('[data-tabs]').forEach(function (group) {
+  var tabs = group.querySelectorAll(':scope > .tabs > .tab');
+  var panels = group.querySelectorAll(':scope > .panel');
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var key = tab.dataset.tab;
+      tabs.forEach(function (t) { t.setAttribute('aria-selected', String(t === tab)); });
+      panels.forEach(function (p) { p.hidden = (p.dataset.panel !== key); });
+    });
+  });
+});
+
+/* テーマ固定（ライト）。切替機能は廃止 */
+</script>
+</body>
+</html>

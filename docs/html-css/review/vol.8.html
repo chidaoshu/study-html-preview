@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HTML&amp;CSS 期末試験 復習シート — vol.8</title>
+<style>
+/* =========================================================
+   [1] テーマ (Swiss Vignelli Palette)
+   固定ライト。暗色モードの切替は廃止。
+   ========================================================= */
+:root {
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #666666;
+  --line: #cccccc;
+  --hairline: #e2e2e2;
+  --surface: #f5f5f3;
+  --accent: #d02020;        /* 差分・強調のみに使用 */
+  --demo-bg: #ffffff;
+  --demo-fg: #111111;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Helvetica Neue", Helvetica, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic Medium", sans-serif;
+  line-height: 1.6;
+  text-wrap: pretty;
+  -webkit-text-size-adjust: 100%;
+}
+
+code, pre, .mono {
+  font-family: "SF Mono", "Menlo", "Consolas", monospace;
+}
+
+/* =========================================================
+   [2] Swiss Layout & Grid
+   ========================================================= */
+.wrap {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+@media (min-width: 900px) {
+  .wrap { padding: 0 32px; }
+}
+
+/* Header */
+.top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+}
+.brand-tag {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 2px 6px;
+  background: var(--fg);
+  color: var(--bg);
+}
+.volnav {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  font-size: 13px;
+  font-weight: 500;
+}
+.volnav a {
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 2px 4px;
+}
+.volnav a[aria-current="page"] {
+  color: var(--fg);
+  font-weight: 700;
+  border-bottom: 2px solid var(--fg);
+}
+
+/* Card & Panels */
+.card {
+  border-top: 1px solid var(--line);
+  padding: 32px 0;
+}
+.card-header {
+  margin-bottom: 20px;
+}
+.card-num {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 4px;
+  display: block;
+}
+.card-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+.card-title .en {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-left: 8px;
+}
+.card-desc {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.card-body {
+  display: grid;
+  gap: 16px;
+}
+@media (min-width: 900px) {
+  .card-body {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+}
+
+/* =========================================================
+   [3] Vignelli Tab Bar
+   ========================================================= */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.tab {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  border-bottom: none;
+  background: var(--surface);
+  color: var(--muted);
+  border-radius: 0;
+  transition: color 0.1s, background 0.1s;
+}
+.tab:hover {
+  color: var(--fg);
+  background: var(--bg);
+}
+.tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.tab[aria-selected="true"] {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
+}
+.panel[hidden] {
+  display: none;
+}
+
+/* =========================================================
+   [4] Code & Explanation Blocks
+   ========================================================= */
+pre.code {
+  margin: 0;
+  padding: 14px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.65;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  white-space: pre;
+}
+.hl {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* =========================================================
+   [5] Demo Frame
+   ページの装飾とデモの効果を混同させないための iframe 隔離。
+   ========================================================= */
+.demo {
+  border: 1px solid var(--line);
+  background: var(--demo-bg);
+}
+.demo iframe {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: var(--demo-bg);
+}
+
+/* === 概念図解用 === */
+.d-fig {
+  border: 1px solid var(--line);
+  background: #fffefc;
+  padding: 14px;
+  margin: 10px 0;
+}
+.d-fig svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+</style>
+<style>
+/* === 375px 横溢れ修正（主代理が追加。設計・配色・書体には手を入れていない） === */
+.volnav{overflow-x:auto;min-width:0;flex:1 1 auto;scrollbar-width:none}
+.volnav::-webkit-scrollbar{display:none}
+.top{max-width:100%;overflow:hidden}
+.top>*{min-width:0}
+@media (max-width:899px){
+  .wrap{max-width:100%!important}
+  .card-body{display:block!important}
+  .card-body>*{width:auto!important;max-width:100%!important;min-width:0!important}
+  .card-body>*+*{margin-top:14px}
+  .panel [class*="col"]{width:auto!important;min-width:0!important;max-width:100%!important}
+}
+.wrap>*,.panel,.panel>*{min-width:0}
+pre,[class*="code"]{max-width:100%;min-width:0}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <span class="brand-tag">HTML&amp;CSS</span>
+  <nav class="volnav">
+    <a href="vol.1.html">1</a>
+    <a href="vol.2.html">2</a>
+    <a href="vol.3.html">3</a>
+    <a href="vol.4.html">4</a>
+    <a href="vol.5.html">5</a>
+    <a href="vol.6.html">6</a>
+    <a href="vol.7.html">7</a>
+    <a href="vol.8.html" aria-current="page">8</a>
+    <a href="vol.9.html">9</a>
+    <a href="vol.10.html">10</a>
+    <a href="vol.11.html">11</a>
+    <a href="vol.12.html">12</a>
+    <a href="vol.13.html">13</a>
+    <a href="vol.14.html">14</a>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <!-- ============================================================
+       Card 1: 1.1 CSS の基本書式
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 1.1</span>
+      <h2 class="card-title">1.1 CSS の基本書式<span class="en">/ Basic Syntax</span></h2>
+      <p class="card-desc">CSS（Cascading Style Sheets）は Web ページのレイアウト・装飾を定義する言語。<code>セレクター { プロパティ: 値; }</code> で指定する。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="basic1" aria-selected="true">h1 { color: blue; }</button>
+      <button class="tab" role="tab" type="button" data-tab="basic2" aria-selected="false">複数宣言の例</button>
+    </div>
+
+    <div class="panel" data-panel="basic1">
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">h1</span> {
+  <span class="hl">color</span>: <span class="hl">blue</span>;
+  <span class="hl">font-size</span>: <span class="hl">28px</span>;
+}</code></pre>
+        <div class="demo">
+          <iframe title="CSS基本書式デモ1" height="120" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:12px;color:#111}h1{color:blue;font-size:28px;margin:0}</style></head><body><h1>見出しテキスト</h1><p>本文テキスト（影響なし）</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="basic2" hidden>
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">h1</span> {
+  <span class="hl">color</span>: <span class="hl">#d02020</span>;
+  <span class="hl">font-size</span>: <span class="hl">20px</span>;
+  <span class="hl">border-bottom</span>: <span class="hl">2px solid #d02020</span>;
+}</code></pre>
+        <div class="demo">
+          <iframe title="CSS基本書式デモ2" height="120" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:12px;color:#111}h1{color:#d02020;font-size:20px;border-bottom:2px solid #d02020;margin:0;padding-bottom:4px}</style></head><body><h1>下線付き見出し</h1><p>本文テキスト（影響なし）</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       Card 2 (追加): 1.1.2 & 1.1.3 CSSコメントと注意事項
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 1.1.2 &amp; 1.1.3</span>
+      <h2 class="card-title">1.1.2 &amp; 1.1.3 CSS コメントと注意事項<span class="en">/ Comments &amp; Formatting Rules</span></h2>
+      <p class="card-desc">CSS のコメント表記法（<code>/* ... */</code>）と、コード内の空白・改行・タブの自由な記述性（等価コード）について理解する。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="comment-rule" aria-selected="true">コメント (/* */、//は不可)</button>
+      <button class="tab" role="tab" type="button" data-tab="whitespace-rule" aria-selected="false">空白・改行の自由性</button>
+    </div>
+
+    <div class="panel" data-panel="comment-rule">
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">/* これが CSS のコメントです */</span>
+h1 {
+  color: blue; <span class="hl">/* 1行内でのコメント */</span>
+}
+<span class="hl">/*
+  複数行にわたるコメントも
+  記述することができます
+*/</span>
+<span class="hl">/* ※ // による 1 行コメントは CSS では無効 */</span></code></pre>
+        <div class="demo">
+          <iframe title="CSSコメント表記デモ" height="140" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:12px;color:#111}/* 見出しのスタイル設定 */h1{color:blue;font-size:24px;margin:0}/* // これはCSSでは無効な記法 */</style></head><body><h1>コメント適用見出し</h1><p>/* 〜 */ で囲まれた箇所はブラウザに無視されます。</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="whitespace-rule" hidden>
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">/* 1. 標準的な改行とインデント */</span>
+h1 {
+  color: blue;
+  font-size: 24px;
+}
+
+<span class="hl">/* 2. 空白・改行のない 1 行圧縮記述（全く同じ意味） */</span>
+h1{color:blue;font-size:24px;}</code></pre>
+        <div class="demo">
+          <iframe title="空白改行の自由性デモ" height="140" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:12px;color:#111}h1{color:blue;font-size:24px;margin:0}p{color:#d02020;font-weight:bold;margin:4px 0}</style></head><body><h1>改行なしのスタイル記述</h1><p>スペースや改行の有無に関わらず同じ結果になります。</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       Card 3: 1.2 CSS の組み込み
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 1.2</span>
+      <h2 class="card-title">1.2 CSS の組み込み<span class="en">/ Linking External CSS</span></h2>
+      <p class="card-desc">外部 CSS ファイル（.css）を作成し、head 要素内に <code>&lt;link rel="stylesheet" href="..."&gt;</code> を記述して読み込む。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="link-on" aria-selected="true">link 要素で読み込みあり</button>
+      <button class="tab" role="tab" type="button" data-tab="link-off" aria-selected="false">読み込みなし（ブラウザ標準）</button>
+    </div>
+
+    <div class="panel" data-panel="link-on">
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- index.html の head 要素内 --&gt;
+<span class="hl">&lt;link rel="stylesheet" href="style.css"&gt;</span>
+
+&lt;!-- style.css --&gt;
+body { background: #f5f5f3; color: #111; }
+h1 { color: #d02020; }</code></pre>
+        <div class="demo">
+          <iframe title="CSS組み込みあり" height="120" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{background:#f5f5f3;color:#111;font-family:sans-serif;margin:12px}h1{color:#d02020;font-size:20px;margin:0}</style></head><body><h1>外部CSS適用時</h1><p>装飾されたWebページ</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="link-off" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- CSSファイルの読み込みなし --&gt;
+&lt;!-- ブラウザ標準のスタイル（User Agent Stylesheet）のみ --&gt;</code></pre>
+        <div class="demo">
+          <iframe title="CSS組み込みなし" height="120" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"></head><body><h1>未適用時</h1><p>標準スタイルのWebページ</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       Card 4 (追加): 1.2.2 & 1.2.3 CSS組み込み方法（style要素・style属性）
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 1.2.2 &amp; 1.2.3</span>
+      <h2 class="card-title">1.2.2 &amp; 1.2.3 CSS 組み込み方法（style要素・style属性）<span class="en">/ Internal &amp; Inline CSS</span></h2>
+      <p class="card-desc">外部ファイルを使用せず、HTML 文書内に直接 CSS を埋め込む方法。<code>&lt;style&gt;</code> タグ（内部スタイルシート）と <code>style</code> 属性（インラインスタイル）。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="style-elem" aria-selected="true">style要素 (&lt;style&gt;タグ)</button>
+      <button class="tab" role="tab" type="button" data-tab="style-attr" aria-selected="false">style属性 (インラインスタイル)</button>
+    </div>
+
+    <div class="panel" data-panel="style-elem">
+      <div class="card-body">
+        <pre class="code"><code>&lt;head&gt;
+  <span class="hl">&lt;style&gt;</span>
+    h1 { color: #d02020; font-size: 20px; }
+    p  { color: #666; }
+  <span class="hl">&lt;/style&gt;</span>
+&lt;/head&gt;</code></pre>
+        <div class="demo">
+          <iframe title="style要素デモ" height="130" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:12px;color:#111}h1{color:#d02020;font-size:20px;margin:0}p{color:#666;margin:4px 0}</style></head><body><h1>style要素での指定</h1><p>head要素内に&lt;style&gt;タグを設置します。</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="style-attr" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- 各HTMLタグの中に直接 style 属性を記述 --&gt;
+&lt;h1 <span class="hl">style="color: blue; font-size: 20px;"</span>&gt;見出し&lt;/h1&gt;
+&lt;p <span class="hl">style="color: green; font-weight: bold;"</span>&gt;本文テキスト&lt;/p&gt;</code></pre>
+        <div class="demo">
+          <iframe title="style属性デモ" height="130" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"></head><body style="font-family:sans-serif;margin:12px"><h1 style="color:blue;font-size:20px;margin:0">style属性での指定</h1><p style="color:green;font-weight:bold;margin:4px 0">個別の要素タグ内に直接インラインスタイルを設定します。</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       Card 5: 2.1.1 要素を指定するセレクター
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.1.1</span>
+      <h2 class="card-title">2.1.1 要素を指定するセレクター<span class="en">/ Universal &amp; Type Selectors</span></h2>
+      <p class="card-desc">ユニバーサルセレクター <code>*</code>（全要素対象）とタイプセレクター <code>要素名</code>（指定要素対象）。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="univ" aria-selected="true">* （全要素）</button>
+      <button class="tab" role="tab" type="button" data-tab="type" aria-selected="false">h1 （タイプ指定）</button>
+    </div>
+
+    <div class="panel" data-panel="univ">
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">*</span> {
+  color: red;
+}</code></pre>
+        <div class="demo">
+          <iframe title="ユニバーサルセレクター" height="140" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>*{color:red;font-family:sans-serif;margin:4px 12px}</style></head><body><h1>甘いもの人気ランキング</h1><p>みんなが好きな甘いもの</p><ol><li>チョコレート</li><li>ケーキ</li></ol></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="type" hidden>
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">h1</span> {
+  color: blue;
+}</code></pre>
+        <div class="demo">
+          <iframe title="タイプセレクター" height="140" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:4px 12px;color:#111}h1{color:blue;margin:4px 0}</style></head><body><h1>甘いもの人気ランキング</h1><p>みんなが好きな甘いもの</p><ol><li>チョコレート</li><li>ケーキ</li></ol></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       Card 6: 2.1.2 属性を指定するセレクター
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.1.2</span>
+      <h2 class="card-title">2.1.2 属性を指定するセレクター<span class="en">/ ID, Class &amp; Attribute Selectors</span></h2>
+      <p class="card-desc">ID セレクター <code>#id</code>、クラスセレクター <code>.class</code>、属性セレクター <code>[attr]</code> / <code>[attr="val"]</code>。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="id-sel" aria-selected="true">ID (#rank / li#piyo)</button>
+      <button class="tab" role="tab" type="button" data-tab="class-sel" aria-selected="false">Class (.choco / li.sweets)</button>
+      <button class="tab" role="tab" type="button" data-tab="attr-sel" aria-selected="false">属性名 ([title] / p[lang])</button>
+      <button class="tab" role="tab" type="button" data-tab="attr-val-sel" aria-selected="false">属性値 ([title="no2"] / p[title="no1"])</button>
+    </div>
+
+    <div class="panel" data-panel="id-sel">
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">#rank</span> { color: blue; }
+<span class="hl">li#piyo</span> { color: green; }</code></pre>
+        <div class="demo">
+          <iframe title="IDセレクター" height="190" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:8px 12px;color:#111;font-size:13px}h1{font-size:16px;margin:4px 0}p,ol{margin:4px 0}#rank{color:blue}li#piyo{color:green}</style></head><body><h1 id="rank">甘いもの人気ランキング</h1><p class="sweets" lang="ja" title="no1">みんなが好きな甘いものをランキングにしました。</p><ol><li class="choco" title="no1">チョコレート</li><li class="sweets choco" title="no2">ケーキ</li><li class="ice vanilla" id="piyo">アイスクリーム</li></ol></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="class-sel" hidden>
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">.choco</span> { color: blue; }
+<span class="hl">li.sweets</span> { color: purple; }</code></pre>
+        <div class="demo">
+          <iframe title="クラスセレクター" height="190" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:8px 12px;color:#111;font-size:13px}h1{font-size:16px;margin:4px 0}p,ol{margin:4px 0}.choco{color:blue}li.sweets{color:purple}</style></head><body><h1 id="rank">甘いもの人気ランキング</h1><p class="sweets" lang="ja" title="no1">みんなが好きな甘いものをランキングにしました。</p><ol><li class="choco" title="no1">チョコレート</li><li class="sweets choco" title="no2">ケーキ</li><li class="ice vanilla" id="piyo">アイスクリーム</li></ol></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="attr-sel" hidden>
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">[title]</span> { color: blue; }
+<span class="hl">p[lang]</span> { color: purple; }</code></pre>
+        <div class="demo">
+          <iframe title="属性名セレクター" height="190" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:8px 12px;color:#111;font-size:13px}h1{font-size:16px;margin:4px 0}p,ol{margin:4px 0}[title]{color:blue}p[lang]{color:purple}</style></head><body><h1 id="rank">甘いもの人気ランキング</h1><p class="sweets" lang="ja" title="no1">みんなが好きな甘いものをランキングにしました。</p><ol><li class="choco" title="no1">チョコレート</li><li class="sweets choco" title="no2">ケーキ</li><li class="ice vanilla" id="piyo">アイスクリーム</li></ol></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="attr-val-sel" hidden>
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">[title="no2"]</span> { color: blue; }
+<span class="hl">p[title="no1"]</span> { color: purple; }</code></pre>
+        <div class="demo">
+          <iframe title="属性値セレクター" height="190" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:8px 12px;color:#111;font-size:13px}h1{font-size:16px;margin:4px 0}p,ol{margin:4px 0}[title="no2"]{color:blue}p[title="no1"]{color:purple}</style></head><body><h1 id="rank">甘いもの人気ランキング</h1><p class="sweets" lang="ja" title="no1">みんなが好きな甘いものをランキングにしました。</p><ol><li class="choco" title="no1">チョコレート</li><li class="sweets choco" title="no2">ケーキ</li><li class="ice vanilla" id="piyo">アイスクリーム</li></ol></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       Card 7: 2.2.1 疑似クラス :hover
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.2.1</span>
+      <h2 class="card-title">2.2.1 疑似クラス :hover<span class="en">/ Hover Pseudo-class</span></h2>
+      <p class="card-desc">要素上にマウスカーソルが存在する状態に限定してスタイルを適用する。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="h1-hover" aria-selected="true">h1:hover</button>
+      <button class="tab" role="tab" type="button" data-tab="btn-hover" aria-selected="false">.btn:hover</button>
+    </div>
+
+    <div class="panel" data-panel="h1-hover">
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">h1:hover</span> {
+  color: blue;
+}</code></pre>
+        <div class="demo">
+          <iframe title="h1 hoverデモ" height="120" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:12px;color:#111}h1{font-size:20px;margin:0;cursor:pointer;transition:color 0.2s}h1:hover{color:blue}</style></head><body><h1>大きな見出し（ホバーで青）</h1><p>マウスをのせてみてください。</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="btn-hover" hidden>
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">.btn:hover</span> {
+  background: #111;
+  color: #fff;
+}</code></pre>
+        <div class="demo">
+          <iframe title="btn hoverデモ" height="120" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:12px;color:#111}.btn{display:inline-block;padding:8px 16px;border:1px solid #111;background:#fff;color:#111;cursor:pointer;transition:all 0.2s}.btn:hover{background:#111;color:#fff}</style></head><body><button class="btn">ボタン（ホバーで反転）</button></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       Card 8: 2.2.2 疑似クラス :nth-child
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.2.2</span>
+      <h2 class="card-title">2.2.2 疑似クラス :nth-child<span class="en">/ Nth-child Pseudo-class</span></h2>
+      <p class="card-desc">子要素としての特定の順番を指定。正の整数、キーワード（even/odd）、一次関数式（An+B）。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="nth-4" aria-selected="true">:nth-child(4)</button>
+      <button class="tab" role="tab" type="button" data-tab="nth-li4" aria-selected="false">li:nth-child(4)</button>
+      <button class="tab" role="tab" type="button" data-tab="nth-even" aria-selected="false">li:nth-child(even)</button>
+      <button class="tab" role="tab" type="button" data-tab="nth-formula" aria-selected="false">li:nth-child(3n+1)</button>
+    </div>
+
+    <div class="panel" data-panel="nth-4">
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">:nth-child(4)</span> {
+  color: blue;
+}</code></pre>
+        <div class="demo">
+          <iframe title="nth-child(4)デモ" height="230" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:8px 12px;color:#111;font-size:13px}h2{font-size:15px;margin:2px 0}p,ol{margin:2px 0}:nth-child(4){color:blue;font-weight:bold}</style></head><body><h2>松尾芭蕉</h2><p>有名な俳句をあつめました。</p><ol><li>夏草や　兵どもが　夢の跡</li><li>閑さや　岩にしみ入る　蝉の声</li><li>古池や　蛙飛び込む　水の音</li><li>五月雨を　集めてはやし　最上川</li><li>あらたふと　青葉若葉の　日の光</li></ol><p>知っている句はありましたか？</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="nth-li4" hidden>
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">li:nth-child(4)</span> {
+  color: blue;
+}</code></pre>
+        <div class="demo">
+          <iframe title="li:nth-child(4)デモ" height="230" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:8px 12px;color:#111;font-size:13px}h2{font-size:15px;margin:2px 0}p,ol{margin:2px 0}li:nth-child(4){color:blue;font-weight:bold}</style></head><body><h2>松尾芭蕉</h2><p>有名な俳句をあつめました。</p><ol><li>夏草や　兵どもが　夢の跡</li><li>閑さや　岩にしみ入る　蝉の声</li><li>古池や　蛙飛び込む　水の音</li><li>五月雨を　集めてはやし　最上川</li><li>あらたふと　青葉若葉の　日の光</li></ol><p>知っている句はありましたか？</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="nth-even" hidden>
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">li:nth-child(even)</span> {
+  color: blue;
+}</code></pre>
+        <div class="demo">
+          <iframe title="li:nth-child(even)デモ" height="230" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:8px 12px;color:#111;font-size:13px}h2{font-size:15px;margin:2px 0}p,ol{margin:2px 0}li:nth-child(even){color:blue;font-weight:bold}</style></head><body><h2>松尾芭蕉</h2><p>有名な俳句をあつめました。</p><ol><li>夏草や　兵どもが　夢の跡</li><li>閑さや　岩にしみ入る　蝉の声</li><li>古池や　蛙飛び込む　水の音</li><li>五月雨を　集めてはやし　最上川</li><li>あらたふと　青葉若葉の　日の光</li></ol><p>知っている句はありましたか？</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="nth-formula" hidden>
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">li:nth-child(3n+1)</span> {
+  color: blue;
+}</code></pre>
+        <div class="demo">
+          <iframe title="li:nth-child(3n+1)デモ" height="230" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:8px 12px;color:#111;font-size:13px}h2{font-size:15px;margin:2px 0}p,ol{margin:2px 0}li:nth-child(3n+1){color:blue;font-weight:bold}</style></head><body><h2>松尾芭蕉</h2><p>有名な俳句をあつめました。</p><ol><li>夏草や　兵どもが　夢の跡</li><li>閑さや　岩にしみ入る　蝉の声</li><li>古池や　蛙飛び込む　水の音</li><li>五月雨を　集めてはやし　最上川</li><li>あらたふと　青葉若葉の　日の光</li></ol><p>知っている句はありましたか？</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       Card 9 (追加): 2.2.3 その他の疑似クラス ★高頻
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.2.3 ★高頻</span>
+      <h2 class="card-title">2.2.3 その他の疑似クラス<span class="en">/ Other Pseudo-classes</span></h2>
+      <p class="card-desc">リンク状態指定（<code>:link</code>, <code>:visited</code>, <code>:active</code>）、子要素の位置特定（<code>:first-child</code> vs <code>:first-of-type</code>）、否定・条件選択（<code>:not()</code>, <code>:is()</code>）。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="pseudo-link" aria-selected="true">リンク類 (:link, :visited, :active, LVHA順序)</button>
+      <button class="tab" role="tab" type="button" data-tab="pseudo-child" aria-selected="false">子要素類 (:first-child, :last-child, :first-of-type, :last-of-type)</button>
+      <button class="tab" role="tab" type="button" data-tab="pseudo-other" aria-selected="false">その他 (:not(), :is())</button>
+    </div>
+
+    <div class="panel" data-panel="pseudo-link">
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">/* LVHAの順序で記述する必要がある（Link - Visited - Hover - Active） */</span>
+a<span class="hl">:link</span>    { color: #0066cc; } <span class="hl">/* 未訪問リンク */</span>
+a<span class="hl">:visited</span> { color: #884488; } <span class="hl">/* 訪問済みリンク */</span>
+a:hover   { color: #d02020; } /* ホバー時 */
+a<span class="hl">:active</span>  { color: #00aa00; } <span class="hl">/* 押下中 */</span></code></pre>
+        <div class="demo">
+          <iframe title="リンク疑似クラスデモ" height="150" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:12px;font-size:13px}ul{margin:8px 0;padding-left:20px}li{margin:4px 0}a:link{color:#0066cc}a:visited{color:#884488}a:hover{color:#d02020;text-decoration:underline}a:active{color:#00aa00;font-weight:bold}</style></head><body><p style="margin:0;font-weight:bold">LVHA順序（Link, Visited, Hover, Active）:</p><ul><li><a href="#unvisited">未訪問リンク (:link)</a></li><li><a href="" onclick="return false;">クリック中の状態 (:active)</a></li></ul></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="pseudo-child" hidden>
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">/* :first-child: 種類に関係なく最初の子要素 */</span>
+.box p<span class="hl">:first-child</span> { color: red; }
+
+<span class="hl">/* :first-of-type: 同一要素（p）の中で最初の要素 */</span>
+.box p<span class="hl">:first-of-type</span> { color: blue; font-weight: bold; }</code></pre>
+        <div class="demo">
+          <iframe title="子要素疑似クラスデモ" height="180" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:8px 12px;font-size:13px}.box{border:1px solid #ccc;padding:8px;margin-bottom:8px}h4{margin:0 0 4px 0;font-size:14px}p{margin:2px 0}.demo1 p:first-child{color:red}.demo2 p:first-of-type{color:blue;font-weight:bold}</style></head><body><div class="box demo1"><h4>:first-child（1番目がh4のためpにマッチせず）</h4><h4>タイトル(1番目の子)</h4><p>1つ目のp(2番目の子)</p></div><div class="box demo2"><h4>:first-of-type（pの中で最初の要素を選択）</h4><h4>タイトル(1番目の子)</h4><p>1つ目のp (pの中で最初の要素)</p></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="pseudo-other" hidden>
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">/* :not(セレクター): 条件に一致しない要素 */</span>
+li<span class="hl">:not(.skip)</span> { color: blue; font-weight: bold; }
+
+<span class="hl">/* :is(セレクター群): いずれかに一致する要素 */</span>
+<span class="hl">:is(h3, p.highlight)</span> { color: #d02020; }</code></pre>
+        <div class="demo">
+          <iframe title="その他疑似クラスデモ" height="160" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:8px 12px;font-size:13px}ul{margin:4px 0;padding-left:20px}li:not(.skip){color:blue;font-weight:bold}:is(h3,p.highlight){color:#d02020;margin:4px 0}</style></head><body><h3>:not(.skip) と :is() デモ</h3><ul><li>通常アイテム（青色）</li><li class="skip">除外対象 (.skip)</li><li>通常アイテム（青色）</li></ul><p class="highlight">p.highlight (:is により赤色)</p></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       Card 10: 2.3.1 疑似要素 ::before / ::after
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.3.1</span>
+      <h2 class="card-title">2.3.1 疑似要素 ::before / ::after<span class="en">/ Pseudo-elements</span></h2>
+      <p class="card-desc">HTML に記述のない要素を前後に生成する。<code>content</code> プロパティの指定が必須。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="h1-ba" aria-selected="true">h1 前後修飾</button>
+      <button class="tab" role="tab" type="button" data-tab="li-ba" aria-selected="false">li 箇条書き装飾</button>
+    </div>
+
+    <div class="panel" data-panel="h1-ba">
+      <div class="card-body">
+        <pre class="code"><code>h1<span class="hl">::before</span> { content: "🎉 "; }
+h1<span class="hl">::after</span>  { content: " 😊"; }</code></pre>
+        <div class="demo">
+          <iframe title="::before ::after h1デモ" height="120" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:12px;color:#111}h1{font-size:20px;margin:0}h1::before{content:"🎉 "}h1::after{content:" 😊"}</style></head><body><h1>大きな見出し</h1></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="li-ba" hidden>
+      <div class="card-body">
+        <pre class="code"><code>li<span class="hl">::before</span> {
+  content: "★ ";
+  color: #d02020;
+}</code></pre>
+        <div class="demo">
+          <iframe title="::before liデモ" height="120" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:12px;color:#111}ul{list-style:none;padding:0;margin:0}li::before{content:"★ ";color:#d02020}</style></head><body><ul><li>アイテム 1</li><li>アイテム 2</li></ul></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       Card 11 (追加): 2.3.2 その他の疑似要素
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.3.2</span>
+      <h2 class="card-title">2.3.2 その他の疑似要素<span class="en">/ Other Pseudo-elements</span></h2>
+      <p class="card-desc">テキストの1行目（<code>::first-line</code>）、1文字目（<code>::first-letter</code>）、リスト記号（<code>::marker</code>）、選択範囲（<code>::selection</code>）を指定する疑似要素。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="pseudo-elem-other" aria-selected="true">::first-line, ::first-letter, ::marker, ::selection</button>
+    </div>
+
+    <div class="panel" data-panel="pseudo-elem-other">
+      <div class="card-body">
+        <pre class="code"><code>p<span class="hl">::first-letter</span> { font-size: 1.6em; color: #d02020; font-weight: bold; }
+p<span class="hl">::first-line</span>   { color: blue; }
+li<span class="hl">::marker</span>      { color: #d02020; font-weight: bold; }
+<span class="hl">::selection</span>     { background: #d02020; color: #ffffff; }</code></pre>
+        <div class="demo">
+          <iframe title="その他の疑似要素デモ" height="180" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:8px 12px;font-size:13px}p{margin:4px 0;line-height:1.5}p::first-letter{font-size:1.6em;color:#d02020;font-weight:bold;float:left;margin-right:2px}p::first-line{color:blue}ul{margin:8px 0;padding-left:20px}li::marker{color:#d02020;font-weight:bold}::selection{background:#d02020;color:#fff}</style></head><body><p>::first-letter と ::first-line の適用例です。1文字目が赤色かつ大きく表示され、1行目が青色になります。<br>2行目以降は通常のスタイルで表示されます。テキストを選択すると ::selection が適用されます。</p><ul><li>::marker による箇条書き記号の装飾</li><li>箇条書きマークが赤色になります</li></ul></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       Card 12: 2.4 セレクターの組み合わせ
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.4</span>
+      <h2 class="card-title">2.4 セレクターの組み合わせ<span class="en">/ Selector Combination</span></h2>
+      <p class="card-desc">タイプ/ユニバーサル ＋ クラス/ID/属性/疑似クラス ＋ 疑似要素を連結して対象を特定する。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="comb-1" aria-selected="true">h2.jec:hover</button>
+      <button class="tab" role="tab" type="button" data-tab="comb-2" aria-selected="false">li.ai::first-letter</button>
+      <button class="tab" role="tab" type="button" data-tab="comb-3" aria-selected="false">[title="jn"]:active.it::first-letter</button>
+    </div>
+
+    <div class="panel" data-panel="comb-1">
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">h2.jec:hover</span> {
+  color: red;
+}</code></pre>
+        <div class="demo">
+          <iframe title="h2.jec:hoverデモ" height="170" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:8px 12px;color:#111;font-size:13px}h2,h3,ul{margin:4px 0}h2.jec{cursor:pointer;transition:color 0.2s}h2.jec:hover{color:red}</style></head><body><h2 class="jec">日本電子専門学校（ホバーで赤）</h2><h3>AI 分野</h3><ul><li class="ai">AI システム科</li></ul></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="comb-2" hidden>
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">li.ai::first-letter</span> {
+  color: orange;
+  font-size: 1.3em;
+}</code></pre>
+        <div class="demo">
+          <iframe title="li.ai::first-letterデモ" height="170" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:8px 12px;color:#111;font-size:13px}h2,h3,ul{margin:4px 0}li.ai::first-letter{color:orange;font-size:1.3em;font-weight:bold}</style></head><body><h2 class="jec">日本電子専門学校</h2><h3>AI 分野</h3><ul><li class="ai">AI システム科（頭文字オレンジ）</li></ul></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="comb-3" hidden>
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">[title="jn"]:active.it::first-letter</span> {
+  color: blue;
+}</code></pre>
+        <div class="demo">
+          <iframe title="[title=jn]:active.it::first-letterデモ" height="170" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:8px 12px;color:#111;font-size:13px}ul{margin:4px 0}li{cursor:pointer}[title="jn"]:active.it::first-letter{color:blue;font-weight:bold}</style></head><body><h3>情報処理分野</h3><ul><li class="it" title="jn">情報処理科（押下中に頭文字青）</li><li class="it" title="jy">情報システム開発科</li></ul></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       Card 13 (追加): 2.5 セレクターのグループ化
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.5</span>
+      <h2 class="card-title">2.5 セレクターのグループ化<span class="en">/ Selector Grouping</span></h2>
+      <p class="card-desc">カンマ（<code>,</code>）で複数のセレクターを区切ることで、同じスタイルルールを一括適用する（セレクターリスト）。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="grouping" aria-selected="true">グループ化（セレクタ1, セレクタ2 { }）</button>
+    </div>
+
+    <div class="panel" data-panel="grouping">
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">.baseball, .soccer, .rugby</span> {
+  color: blue;
+  font-weight: bold;
+}</code></pre>
+        <div class="demo">
+          <iframe title="セレクターグループ化デモ" height="190" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:8px 12px;font-size:13px}h2{font-size:15px;margin:4px 0}ul{margin:4px 0;padding-left:20px}li{margin:2px 0}.baseball, .soccer, .rugby{color:blue;font-weight:bold}</style></head><body><h2>東京のプロスポーツチーム（例）</h2><ul><li class="baseball">東京ヤクルトスワローズ（野球）</li><li class="soccer">FC東京（サッカー）</li><li class="basketball">アルバルク東京（バスケットボール）</li><li class="basketball">サンロッカーズ渋谷（バスケットボール）</li><li class="rugby">サントリーサンゴリアス（ラグビー）</li><li class="rugby">東芝ブレイブルーパス（ラグビー）</li></ul></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       Card 14: 2.6 結合子 (Combinators)
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 2.6 ★主役</span>
+      <h2 class="card-title">2.6 結合子<span class="en">/ Combinators</span></h2>
+      <p class="card-desc"><strong>HTML は不変。セレクターだけが変わる。</strong> 書式：<code>セレクター1　結合子　セレクター2</code></p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="descendant" aria-selected="true">子孫（空白）</button>
+      <button class="tab" role="tab" type="button" data-tab="child" aria-selected="false">子（&gt;）</button>
+      <button class="tab" role="tab" type="button" data-tab="fol" aria-selected="false">後続兄弟（~）</button>
+      <button class="tab" role="tab" type="button" data-tab="adj" aria-selected="false">次兄弟（+）</button>
+    </div>
+
+    <!-- Panel 1: Descendant -->
+    <div class="panel" data-panel="descendant">
+      <div class="card-body">
+        <div>
+          <pre class="code"><code><span class="hl">.area p</span> { color: blue; }</code></pre>
+        </div>
+        <div class="demo">
+          <iframe title="子孫結合子デモ" height="230" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#1a1a1a}.area p{color:blue;margin:4px 0}.mark{display:inline-block;background:#e0e0e0;padding:2px 6px;font-size:12px;margin:4px 0}.group{border:1px dashed #ccc;padding:4px 8px;margin:4px 0}</style></head><body><div class="area"><p>1. エリア直下の段落（子）</p><div class="group"><p>2. グループ内の段落（孫）</p><p>3. グループ内の段落（孫）</p></div><span class="mark">目印</span><p>4. 目印の直後の段落（隣接兄弟）</p><p>5. 目印より後にある段落（一般兄弟）</p></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 2: Child -->
+    <div class="panel" data-panel="child" hidden>
+      <div class="card-body">
+        <div>
+          <pre class="code"><code><span class="hl">.area &gt; p</span> { color: blue; }</code></pre>
+        </div>
+        <div class="demo">
+          <iframe title="子結合子デモ" height="230" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#1a1a1a}.area>p{color:blue;margin:4px 0}.area p{margin:4px 0}.mark{display:inline-block;background:#e0e0e0;padding:2px 6px;font-size:12px;margin:4px 0}.group{border:1px dashed #ccc;padding:4px 8px;margin:4px 0}</style></head><body><div class="area"><p>1. エリア直下の段落（子）</p><div class="group"><p>2. グループ内の段落（孫）</p><p>3. グループ内の段落（孫）</p></div><span class="mark">目印</span><p>4. 目印の直後の段落（隣接兄弟）</p><p>5. 目印より後にある段落（一般兄弟）</p></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 3: Subsequent Sibling -->
+    <div class="panel" data-panel="fol" hidden>
+      <div class="card-body">
+        <div>
+          <pre class="code"><code><span class="hl">.mark ~ p</span> { color: blue; }</code></pre>
+        </div>
+        <div class="demo">
+          <iframe title="後続兄弟結合子デモ" height="230" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#1a1a1a}.mark~p{color:blue;margin:4px 0}.area p{margin:4px 0}.mark{display:inline-block;background:#e0e0e0;padding:2px 6px;font-size:12px;margin:4px 0}.group{border:1px dashed #ccc;padding:4px 8px;margin:4px 0}</style></head><body><div class="area"><p>1. エリア直下の段落（子）</p><div class="group"><p>2. グループ内の段落（孫）</p><p>3. グループ内の段落（孫）</p></div><span class="mark">目印</span><p>4. 目印の直後の段落（隣接兄弟）</p><p>5. 目印より後にある段落（一般兄弟）</p></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel 4: Next Sibling -->
+    <div class="panel" data-panel="adj" hidden>
+      <div class="card-body">
+        <div>
+          <pre class="code"><code><span class="hl">.mark + p</span> { color: blue; }</code></pre>
+        </div>
+        <div class="demo">
+          <iframe title="次兄弟結合子デモ" height="230" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font:13px/1.6 sans-serif;margin:12px;color:#1a1a1a}.mark+p{color:blue;margin:4px 0}.area p{margin:4px 0}.mark{display:inline-block;background:#e0e0e0;padding:2px 6px;font-size:12px;margin:4px 0}.group{border:1px dashed #ccc;padding:4px 8px;margin:4px 0}</style></head><body><div class="area"><p>1. エリア直下の段落（子）</p><div class="group"><p>2. グループ内の段落（孫）</p><p>3. グループ内の段落（孫）</p></div><span class="mark">目印</span><p>4. 目印の直後の段落（隣接兄弟）</p><p>5. 目印より後にある段落（一般兄弟）</p></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       Card 15: 3.1 継承
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 3.1</span>
+      <h2 class="card-title">3.1 継承<span class="en">/ Inheritance</span></h2>
+      <p class="card-desc">親要素（div等）のスタイルが子要素（p等）へ引き継がれる。直接的な要素指定がある場合はそちらが優先される。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="inh-1" aria-selected="true">親指定のみ（継承発生）</button>
+      <button class="tab" role="tab" type="button" data-tab="inh-2" aria-selected="false">子への直接指定（優先適用）</button>
+    </div>
+
+    <div class="panel" data-panel="inh-1">
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">div</span> {
+  color: red;
+}</code></pre>
+        <div class="demo">
+          <iframe title="継承デモ1" height="140" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:8px 12px;color:#111}div{color:red}p{margin:4px 0}</style></head><body><h1>子要素への継承</h1><div>div 要素の中のテキストです。<p>p 要素の中のテキスト（親のredを継承）</p></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="inh-2" hidden>
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">p</span> {
+  color: blue;
+}
+div {
+  color: red;
+}</code></pre>
+        <div class="demo">
+          <iframe title="継承デモ2" height="140" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:8px 12px;color:#111}div{color:red}p{color:blue;margin:4px 0}</style></head><body><h1>子要素への継承</h1><div>div 要素の中のテキストです。<p>p 要素の中のテキスト（直接指定のblueが優先）</p></div></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       Card 16: 3.2 詳細度
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 3.2</span>
+      <h2 class="card-title">3.2 詳細度<span class="en">/ Specificity</span></h2>
+      <p class="card-desc">同じ要素に対する複数の指定が競合した場合、詳細度の点数が高い指定が優先される（桁上がりは発生しない）。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="spec-table" aria-selected="true">詳細度点数表</button>
+      <button class="tab" role="tab" type="button" data-tab="spec-demo" aria-selected="false">優先度比較デモ</button>
+    </div>
+
+    <div class="panel" data-panel="spec-table">
+      <div class="card-body">
+        <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;font-size:13px;border:1px solid var(--line)">
+            <thead>
+              <tr style="background:var(--surface)">
+                <th style="padding:6px 10px;border:1px solid var(--line);text-align:left">指定方法 / セレクター</th>
+                <th style="padding:6px 10px;border:1px solid var(--line);text-align:right">点数</th>
+                <th style="padding:6px 10px;border:1px solid var(--line);text-align:left">4桁表記</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding:6px 10px;border:1px solid var(--line)">HTML の style 属性による指定</td>
+                <td style="padding:6px 10px;border:1px solid var(--line);text-align:right;font-weight:bold">1000点</td>
+                <td style="padding:6px 10px;border:1px solid var(--line)"><code>1.0.0.0</code></td>
+              </tr>
+              <tr>
+                <td style="padding:6px 10px;border:1px solid var(--line)">ID セレクター (<code>#id</code>)</td>
+                <td style="padding:6px 10px;border:1px solid var(--line);text-align:right;font-weight:bold">100点</td>
+                <td style="padding:6px 10px;border:1px solid var(--line)"><code>0.1.0.0</code></td>
+              </tr>
+              <tr>
+                <td style="padding:6px 10px;border:1px solid var(--line)">Class, 属性セレクター, 疑似クラス (<code>.class</code> / <code>[attr]</code> / <code>:hover</code>)</td>
+                <td style="padding:6px 10px;border:1px solid var(--line);text-align:right;font-weight:bold">10点</td>
+                <td style="padding:6px 10px;border:1px solid var(--line)"><code>0.0.1.0</code></td>
+              </tr>
+              <tr>
+                <td style="padding:6px 10px;border:1px solid var(--line)">要素セレクター, 疑似要素 (<code>h1</code> / <code>::before</code>)</td>
+                <td style="padding:6px 10px;border:1px solid var(--line);text-align:right;font-weight:bold">1点</td>
+                <td style="padding:6px 10px;border:1px solid var(--line)"><code>0.0.0.1</code></td>
+              </tr>
+              <tr>
+                <td style="padding:6px 10px;border:1px solid var(--line)">ユニバーサルセレクター, 結合子, 否定疑似クラス (<code>*</code> / <code>&gt;</code> / <code>:not()</code>)</td>
+                <td style="padding:6px 10px;border:1px solid var(--line);text-align:right;font-weight:bold">0点</td>
+                <td style="padding:6px 10px;border:1px solid var(--line)"><code>0.0.0.0</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="spec-demo" hidden>
+      <div class="card-body">
+        <pre class="code"><code><span class="hl">#bar</span> { color: orange; }       /* 100点 */
+<span class="hl">.foo</span> { color: blue; }         /* 10点  */
+<span class="hl">[title="hoge"]</span> { color: pink; } /* 10点  */
+<span class="hl">h2</span> { color: green; }         /* 1点   */</code></pre>
+        <div class="demo">
+          <iframe title="詳細度比較デモ" height="190" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:8px 12px;font-size:13px}h2{font-size:15px;margin:3px 0}#bar{color:orange}.foo{color:blue}[title="hoge"]{color:pink}h2{color:green}</style></head><body><h2 style="color:red;">見出し1 (style属性: 赤)</h2><h2 class="foo" id="bar" title="hoge">見出し2 (#bar: オレンジ)</h2><h2 class="foo">見出し3 (.foo: 青)</h2><h2 title="hoge">見出し4 ([title="hoge"]: ピンク)</h2><h2>見出し5 (h2: 緑)</h2></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       Card 17: 3.3 ソースオーダー
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 3.3</span>
+      <h2 class="card-title">3.3 ソースオーダー<span class="en">/ Source Order</span></h2>
+      <p class="card-desc">詳細度が全く同じである場合、記述順が後（下）の指定が前の指定を上書きする。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="order-same" aria-selected="true">単一ファイル内の記述順</button>
+      <button class="tab" role="tab" type="button" data-tab="order-multi" aria-selected="false">複数 style タグ・ファイルの順序</button>
+    </div>
+
+    <div class="panel" data-panel="order-same">
+      <div class="card-body">
+        <pre class="code"><code>.foo { color: red; }
+<span class="hl">.foo { color: blue; }</span>  &lt;-- 後勝ちで青</code></pre>
+        <div class="demo">
+          <iframe title="単一ファイルソースオーダー" height="120" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:12px}.foo{color:red}.foo{color:blue}</style></head><body><h2 class="foo">見出しテキスト（後勝ちで青）</h2></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="order-multi" hidden>
+      <div class="card-body">
+        <pre class="code"><code>&lt;!-- 1. head 内 style --&gt;
+&lt;style&gt; .bar { color: yellow; } &lt;/style&gt;
+
+&lt;!-- 2. 後続の style タグ（より後に記述） --&gt;
+&lt;style&gt; <span class="hl">.bar { color: blue; }</span> &lt;/style&gt;</code></pre>
+        <div class="demo">
+          <iframe title="複数ファイルソースオーダー" height="120" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:12px}.bar{color:yellow}</style><style>.bar{color:blue}</style></head><body><h2 class="bar">後続の style 要素が優先（青）</h2></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       Card 18: 3.4 !important の優先規則
+       ============================================================ -->
+  <section class="card" data-tabs>
+    <div class="card-header">
+      <span class="card-num">SECTION 3.4</span>
+      <h2 class="card-title">3.4 !important の優先規則<span class="en">/ !important Rule</span></h2>
+      <p class="card-desc">宣言の末尾に <code>!important</code> を付与すると詳細度・記述順を無視して最優先。<code>!important</code> 同士では通常の詳細度勝負に戻る。</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="imp-override" aria-selected="true">詳細度無視 (!important vs #id)</button>
+      <button class="tab" role="tab" type="button" data-tab="imp-vs-imp" aria-selected="false">!important 同士の比較</button>
+    </div>
+
+    <div class="panel" data-panel="imp-override">
+      <div class="card-body">
+        <pre class="code"><code>.bar {
+  <span class="hl">color: blue !important;</span>  &lt;-- IDを無視して青
+}
+#foo {
+  color: red;               /* 100点 */
+}</code></pre>
+        <div class="demo">
+          <iframe title="!important強行適用デモ" height="120" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:12px}.bar{color:blue !important}#foo{color:red}</style></head><body><h2 id="foo" class="bar">見出し（!importantにより青）</h2></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="imp-vs-imp" hidden>
+      <div class="card-body">
+        <pre class="code"><code>.bar {
+  <span class="hl">color: blue !important;</span>  &lt;-- クラス(10点)が勝利
+}
+h2 {
+  color: green !important; /* 要素(1点) */
+}</code></pre>
+        <div class="demo">
+          <iframe title="!important同士の比較デモ" height="120" srcdoc='<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><style>body{font-family:sans-serif;margin:12px}.bar{color:blue !important}h2{color:green !important}</style></head><body><h2 class="bar">両方 !important の場合詳細度で比較（青）</h2></body></html>'></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* ★このスクリプトは一行も変更しない。丸ごとコピーすること★ */
+
+/* タブ: [data-tabs] ごとにスコープされる。カードが何枚あっても干渉しない */
+document.querySelectorAll('[data-tabs]').forEach(function (group) {
+  var tabs = group.querySelectorAll(':scope > .tabs > .tab');
+  var panels = group.querySelectorAll(':scope > .panel');
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var key = tab.dataset.tab;
+      tabs.forEach(function (t) { t.setAttribute('aria-selected', String(t === tab)); });
+      panels.forEach(function (p) { p.hidden = (p.dataset.panel !== key); });
+    });
+  });
+});
+
+/* テーマ固定（ライト）。切替機能は廃止 */
+</script>
+</body>
+</html>
