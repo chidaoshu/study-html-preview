@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>微分 期末攻略 — 統計学Ⅰ vol.4</title>
+<style>
+:root{
+  --paper:#faf8f3; --card:#ffffff; --ink:#26241f; --sub:#6b675e;
+  --indigo:#3a5169; --indigo-soft:#e8edf2;
+  --red:#c2452d; --red-soft:#faece8;
+  --green:#3f7355; --green-soft:#e9f2ec;
+  --amber:#9a6b1f; --amber-soft:#f8f0dd;
+  --line:#e4e0d6; --code:#f3f1ea;
+  --radius:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#1c1b18; --card:#26241f; --ink:#ece9e1; --sub:#a49f93;
+    --indigo:#8fadc9; --indigo-soft:#2b3541;
+    --red:#e58a75; --red-soft:#412b25;
+    --green:#8dbfa2; --green-soft:#263a2f;
+    --amber:#d9b36b; --amber-soft:#3d341f;
+    --line:#3a372f; --code:#302d26;
+  }
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","PingFang SC","Yu Gothic",sans-serif;
+  font-size:17px; line-height:1.75; text-wrap:pretty;
+}
+.wrap{max-width:860px;margin:0 auto;padding:0 20px 120px}
+
+/* ---------- header ---------- */
+header{padding:64px 0 28px}
+.kicker{color:var(--red);font-weight:700;letter-spacing:.18em;font-size:13px}
+h1{font-size:clamp(30px,5vw,44px);font-weight:800;line-height:1.25;margin:10px 0 14px}
+.lead{color:var(--sub);max-width:640px}
+.lead b{color:var(--ink)}
+
+/* ---------- nav ---------- */
+nav{position:sticky;top:0;background:color-mix(in srgb,var(--paper) 88%,transparent);
+  backdrop-filter:blur(8px);z-index:50;padding:10px 0;border-bottom:1px solid var(--line);
+  display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav a{flex-shrink:0;font-size:13px;font-weight:600;color:var(--sub);text-decoration:none;
+  padding:5px 12px;border-radius:99px;border:1px solid var(--line);background:var(--card)}
+nav a:hover{color:var(--red);border-color:var(--red)}
+
+/* ---------- sections ---------- */
+section{margin-top:72px}
+.sec-num{font-size:13px;font-weight:700;color:var(--red);letter-spacing:.15em}
+h2{font-size:clamp(22px,3.4vw,30px);font-weight:800;margin:4px 0 6px}
+.sec-sub{color:var(--sub);font-size:15px;margin-bottom:22px}
+h3{font-size:19px;font-weight:800;margin:26px 0 10px}
+
+/* ---------- math typography ---------- */
+.m{font-family:"STIX Two Math","Times New Roman",Georgia,serif;font-style:italic;white-space:nowrap}
+.m b{font-style:normal;font-weight:400}
+sup{font-size:.68em}
+sup sup{font-size:.85em}
+sub{font-size:.68em}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;
+  font-size:.86em;line-height:1.3;margin:0 2px}
+.frac>span:first-child{border-bottom:1.4px solid currentColor;padding:0 4px}
+.frac>span:last-child{padding:0 4px}
+.big-eq{font-size:clamp(19px,3vw,24px);text-align:center;padding:18px 8px;overflow-x:auto}
+.hl-red{color:var(--red);font-weight:700}
+.hl-green{color:var(--green);font-weight:700}
+.hl-amber{color:var(--amber);font-weight:700}
+.hl-indigo{color:var(--indigo);font-weight:700}
+
+/* ---------- cards ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:24px 26px;margin-bottom:18px}
+.rule-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.rule-jp{font-size:20px;font-weight:800}
+.rule-cn{color:var(--sub);font-size:14px}
+.koketsu{display:inline-block;background:var(--red-soft);color:var(--red);font-weight:700;
+  font-size:15px;padding:4px 14px;border-radius:6px;margin:10px 0}
+.card .note{font-size:14.5px;color:var(--sub);margin-top:10px}
+.card .note b{color:var(--ink)}
+.imp{display:inline-block;font-size:13.5px;font-weight:700;background:var(--indigo-soft);
+  color:var(--indigo);border-radius:6px;padding:3px 12px;margin-top:12px}
+
+/* step-by-step example */
+.example{background:var(--code);border-radius:8px;padding:16px 18px;margin-top:14px}
+.example .ex-label{font-size:12.5px;font-weight:700;color:var(--indigo);letter-spacing:.1em;margin-bottom:8px}
+.example .ex-think{font-size:14.5px;margin-bottom:10px}
+.example .ex-think b{color:var(--indigo)}
+.steps{display:flex;flex-direction:column;gap:8px}
+.step{display:grid;grid-template-columns:110px 1fr;gap:12px;align-items:baseline;font-size:16px}
+.step .tag{font-size:12.5px;font-weight:700;color:var(--sub);background:var(--card);
+  border:1px solid var(--line);border-radius:5px;padding:2px 8px;text-align:center;font-style:normal}
+.step .expl{display:block;font-size:13.5px;color:var(--sub);font-style:normal;white-space:normal}
+@media(max-width:560px){.step{grid-template-columns:1fr;gap:2px}}
+
+/* warn box */
+.warn{background:var(--amber-soft);border-radius:8px;padding:14px 18px;margin-top:14px;font-size:15px}
+.warn b{color:var(--amber)}
+
+/* comparison table */
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);overflow:hidden;font-size:16px}
+.table-scroll{overflow-x:auto;border-radius:var(--radius);margin-top:10px}
+th{background:var(--indigo-soft);color:var(--indigo);font-size:13.5px;font-weight:700;
+  padding:10px 14px;text-align:left;white-space:nowrap}
+td{padding:12px 14px;border-top:1px solid var(--line);vertical-align:middle}
+td .m{font-size:17px}
+
+/* ---------- interactive graph ---------- */
+.graph-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:26px}
+.graph-flex{display:flex;gap:28px;align-items:center;flex-wrap:wrap}
+.graph-flex svg{flex:1 1 300px;max-width:100%;height:auto}
+.graph-panel{flex:1 1 220px}
+.slope-read{font-size:15px;color:var(--sub);margin-bottom:6px}
+.slope-val{font-size:34px;font-weight:800;font-variant-numeric:tabular-nums}
+.slope-eq{font-size:17px;margin:8px 0 18px;color:var(--sub)}
+input[type=range]{width:100%;accent-color:var(--red);cursor:pointer}
+.range-labels{display:flex;justify-content:space-between;font-size:12px;color:var(--sub)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">統計学Ⅰ · vol.4 · 微分 · 期末攻略</div>
+  <h1>微分：計算ができれば大丈夫！</h1>
+  <p class="lead">期末試験（<b>8/4</b>）の微分は、<b>証明ではなく計算ができるかが問われます</b>。本ページは「解法ツール」として再構成されており、まずは公式の形を確認し、<b>難易度順の例題チェーン</b>で計算力を身につけます。各問題で「式の問題特徴 → どの公式を使うか → 各ステップで何をすべきか」を省略せずに丁寧に解説しています。</p>
+</header>
+
+<nav>
+  <a href="#s0">§0 微分とは何か</a>
+  <a href="#s1">§1 4つの基本ルール</a>
+  <a href="#s2">§2 積の微分</a>
+  <a href="#s3">§3 合成関数</a>
+  <a href="#s4">§4 偏微分</a>
+  <a href="#s5">§5 接線の傾き</a>
+  <a href="#s6">§6 シグモイド関数</a>
+</nav>
+
+<!-- ============ §0 微分とは何か ============ -->
+<section id="s0">
+  <div class="sec-num">§0 · まず体感してみよう</div>
+  <h2>微分＝「傾き」を求めるマシン</h2>
+  <p class="sec-sub">微分（びぶん / derivative）とは、<b>「この曲線はある点においてどれくらい急か？」</b>という問いに答えるツールです。スライダーを動かして、<span class="m">y = x<sup>2</sup></span> の接線の傾きが位置によってどのように変化するか観察してみましょう。読み取り値は常に <span class="m">2x</span> に等しくなります。</p>
+
+  <div class="graph-card">
+    <div class="graph-flex">
+      <svg id="graph" viewBox="0 0 340 300" aria-label="y=x²と接線">
+        <line x1="20" y1="270" x2="330" y2="270" stroke="var(--line)" stroke-width="1.5"/>
+        <line x1="170" y1="10" x2="170" y2="285" stroke="var(--line)" stroke-width="1.5"/>
+        <path id="parabola" fill="none" stroke="var(--indigo)" stroke-width="3" stroke-linecap="round"/>
+        <line id="tangent" stroke="var(--red)" stroke-width="2.5" stroke-linecap="round"/>
+        <circle id="dot" r="6" fill="var(--red)"/>
+        <text x="322" y="262" font-size="13" fill="var(--sub)" font-style="italic">x</text>
+        <text x="178" y="22" font-size="13" fill="var(--sub)" font-style="italic">y</text>
+        <text x="60" y="40" font-size="14" fill="var(--indigo)" font-style="italic">y = x²</text>
+      </svg>
+      <div class="graph-panel">
+        <div class="slope-read">この点での傾き（接線の傾き）</div>
+        <div class="slope-val" id="slopeVal">2.0</div>
+        <div class="slope-eq m" id="slopeEq"><b>2 × </b>1.0<b> = </b>2.0</div>
+        <input type="range" id="xSlider" min="-2" max="2" step="0.1" value="1" aria-label="x の位置">
+        <div class="range-labels"><span>x = −2</span><span>0</span><span>x = 2</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <div class="rule-head"><span class="rule-jp">2つの問われ方を混同しない</span><span class="rule-cn">問題文の読み取り：求められているのは「関数」か「数値」か</span></div>
+    <div class="table-scroll"><table>
+      <tr><th>問題文の表現</th><th>求めるもの</th><th>解法アプローチ</th></tr>
+      <tr><td>「微分してください」<br>「導関数を求めよ」</td><td><b>関数</b>（導関数）</td><td>公式を適用し、<span class="m">f′(x)</span> を求めて完了</td></tr>
+      <tr><td>「x = □ における<b>接線の傾き</b>」</td><td><b>数値</b></td><td>まず導関数を求め、<b>その後に x の値を代入する</b>（§5参照）</td></tr>
+    </table></div>
+    <p class="note">曲線上の<b>点ごとに急傾斜具合（傾き）は異なります</b>。そのため、微分した結果は単一の数値ではなく新しい関数――<b>導関数（どうかんすう / derivative）</b>になります。導関数は「傾きを計算するマシン」であり、傾きを知りたい点の x を入力すると、その点における接線の傾きを出力します。</p>
+    <div class="imp">重要度：🔴 試験でやることは2つだけ――① 導関数を求める（§1〜§4、§6） ② 代入して傾きを計算する（§5）</div>
+  </div>
+</section>
+
+<!-- ============ §1 四条基本規則 ============ -->
+<section id="s1">
+  <div class="sec-num">§1 · 基本の土台</div>
+  <h2>基本ルール（これらをマスターすれば半分以上クリア）</h2>
+  <p class="sec-sub">5つのルール ①〜⑤ について、まずは公式の形を確認し、例題チェーンで演習しましょう。試験の多項式微分問題は、すべてこれらの組み合わせです。</p>
+
+  <!-- ① べき乗則 -->
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">① べき乗則</span><span class="rule-cn">power rule / 冪乗の微分</span></div>
+    <div class="big-eq m"><span class="frac"><span>d</span><span>dx</span></span> x<sup>n</sup> <b>=</b> <span class="hl-red">n</span>x<sup><span class="hl-red">n−1</span></sup></div>
+    <div class="koketsu">ポイント：指数を前に出して係数にし、指数自体は 1 引く</div>
+
+    <div class="example">
+      <div class="ex-label">ウォーミングアップ　f(x) = x² → 2x</div>
+      <div class="ex-think"><b>考え方：</b>最も標準的なべき関数です。そのまま公式を適用します。（ノート 1.2 例2 で微分の定義から証明されていますが、試験では公式 ① を直接適用すれば OK です。）</div>
+      <div class="steps">
+        <div class="step"><span class="tag">公式適用</span><span class="m">指数 <b>2</b> を前に出し、1 引く → <b>2</b>x<sup>2−1</sup> <b>=</b> <span class="hl-red">2x</span><span class="expl">これは §0 のスライダーの読み取り値 2x と一致します</span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">ノート 1.2 例3　f(x) = x³ → 3x²</div>
+      <div class="ex-think"><b>考え方：</b>前問との違いは指数が 2 から 3 に変わった点のみです。手順は全く同じです。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">公式適用</span><span class="m">指数 <b>3</b> を前に出し、1 引く → <b>3</b>x<sup>3−1</sup> <b>=</b> <span class="hl-red">3x<sup>2</sup></span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">問題集 ドリル4　f(x) = x¹⁰⁰ → 100x⁹⁹</div>
+      <div class="ex-think"><b>考え方：</b>前問との違いは指数が非常に大きくなった点のみです。ルールは変わらず、どれだけ大きな数でも同様に前に出します。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">公式適用</span><span class="m">指数 <b>100</b> を前に出し、1 引く → <span class="hl-red">100x<sup>99</sup></span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">問題集 ドリル3　f(x) = 1/x → −1/x²</div>
+      <div class="ex-think"><b>考え方：</b>今回は<b>先に式変形</b>を行います。分母にある x を分子に持ってくると<b>負の指数</b>になります：<span class="m">1/x = x<sup>−1</sup></span>。その後、公式 ① を適用します（n は負の数でも成り立ちます）。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">式変形</span><span class="m"><span class="frac"><span>1</span><span>x</span></span> <b>=</b> x<sup>−1</sup><span class="expl">分母から分子へ移動 → 指数が負になる</span></span></div>
+        <div class="step"><span class="tag">公式適用</span><span class="m">指数 <b>−1</b> を前に出し、1 引く → −1·x<sup>−1−1</sup> <b>=</b> −x<sup>−2</sup> <b>=</b> <span class="hl-red">−<span class="frac"><span>1</span><span>x<sup>2</sup></span></span></span><span class="expl">負の数も同様に前に出します。−1 から 1 引くと −2 になります（0 ではありません）</span></span></div>
+      </div>
+    </div>
+    <div class="imp">重要度：🔴 すべての微分の基礎です。負の指数への変形は頻出の試験ポイントです</div>
+  </div>
+
+  <!-- ② 定数は消える -->
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">② 定数は消える</span><span class="rule-cn">constant rule / 定数の微分</span></div>
+    <div class="big-eq m"><span class="frac"><span>d</span><span>dx</span></span> c <b>=</b> <span class="hl-red">0</span></div>
+    <div class="koketsu">ポイント：x を含まない単独の定数は、微分すると 0 になる</div>
+
+    <div class="example">
+      <div class="ex-label">問題集 ドリル2　f(x) = 15 → 0</div>
+      <div class="ex-think"><b>考え方：</b>15 は固定された定数です。グラフに描くと<b>水平線</b>になり、どこでも傾きがないため、傾きは常に 0 です。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">公式適用</span><span class="m">式中に x が含まれない → <span class="hl-red">0</span><span class="expl">水平線の傾きは 0 です（ノート 1.2 例5：f(x)=2→0 に対応）</span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">問題集 ドリル20（引っ掛け問題）　f(x) = e² → 0</div>
+      <div class="ex-think"><b>考え方：</b>一見すると指数関数に見えますが、<b>罠</b>です。指数部分を見ると x ではなく数字の <b>2</b> になっています。<span class="m">e</span> も 2 も定数なので、<span class="m">e<sup>2</sup></span> ≈ 7.39 全体が1つの定数です。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">確認</span><span class="m">e<sup>2</sup> には x が含まれない<span class="expl">eˣ（指数が x）と混同しないようにしましょう（ルール ⑤ 参照）</span></span></div>
+        <div class="step"><span class="tag">公式適用</span><span class="m">定数なので → <span class="hl-red">0</span></span></div>
+      </div>
+    </div>
+    <div class="imp">重要度：🔴 「x が含まれているかどうか」が唯一の判断基準です。e² のような引っ掛けに注意しましょう</div>
+  </div>
+
+  <!-- ③ 定数倍はそのまま -->
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">③ 定数倍はそのまま</span><span class="rule-cn">constant multiple / 定数倍の微分</span></div>
+    <div class="big-eq m"><span class="frac"><span>d</span><span>dx</span></span> {c·f(x)} <b>=</b> c·<span class="frac"><span>d</span><span>dx</span></span>f(x)</div>
+    <div class="koketsu">ポイント：係数はそのまま残し、x の部分だけを微分する</div>
+
+    <div class="example">
+      <div class="ex-label">ウォーミングアップ　f(x) = 2x² → 4x</div>
+      <div class="ex-think"><b>考え方：</b>係数 2 はそのまま残し、x² の部分にだけ公式 ① を適用します。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">係数を出す</span><span class="m">2·<span class="frac"><span>d</span><span>dx</span></span>[x<sup>2</sup>]<span class="expl">2 を微分の外に出す</span></span></div>
+        <div class="step"><span class="tag">公式①適用</span><span class="m">2 × 2x <b>=</b> <span class="hl-red">4x</span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">問題集 ドリル7　f(x) = ½x² → x</div>
+      <div class="ex-think"><b>考え方：</b>前問との違いは係数が分数 ½ になった点のみです。手順は同じで、最後に ½ と公式 ① で降りてきた 2 が約分されます。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">係数を出す</span><span class="m"><span class="frac"><span>1</span><span>2</span></span>·<span class="frac"><span>d</span><span>dx</span></span>[x<sup>2</sup>]</span></div>
+        <div class="step"><span class="tag">公式①適用</span><span class="m"><span class="frac"><span>1</span><span>2</span></span> × 2x <b>=</b> <span class="hl-red">x</span><span class="expl">½ × 2 = 1 となり約分される</span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">問題集 ドリル13　f(x) = ax² → 2ax（a は定数）</div>
+      <div class="ex-think"><b>考え方：</b>前問との違いは係数が文字 a になった点です。a は定数と指定されているので、数字と同様にそのまま残します。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">係数を出す</span><span class="m">a·<span class="frac"><span>d</span><span>dx</span></span>[x<sup>2</sup>]<span class="expl">a には x が含まれないため係数扱い</span></span></div>
+        <div class="step"><span class="tag">公式①適用</span><span class="m">a × 2x <b>=</b> <span class="hl-red">2ax</span></span></div>
+      </div>
+    </div>
+    <div class="imp">重要度：🔴 文字の係数（a や ½）も数値の係数と全く同じように扱います</div>
+  </div>
+
+  <!-- ④ 和は別々に -->
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">④ 和は別々に</span><span class="rule-cn">sum rule / 和の微分</span></div>
+    <div class="big-eq m"><span class="frac"><span>d</span><span>dx</span></span> {f + g} <b>=</b> <span class="frac"><span>d</span><span>dx</span></span>f <b>+</b> <span class="frac"><span>d</span><span>dx</span></span>g</div>
+    <div class="koketsu">ポイント：「＋」「−」で結ばれた項は分解し、各項ごとに微分して最後に足し合わせる</div>
+
+    <div class="example">
+      <div class="ex-label">ウォーミングアップ　f(x) = x² + 2x + 10 → 2x + 2</div>
+      <div class="ex-think"><b>考え方：</b>3つの項が加算でつながっているため、3つに分解してそれぞれ既出のルールを適用します。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">項ごとに分解</span><span class="m"><span class="frac"><span>d</span><span>dx</span></span>[x<sup>2</sup>] <b>+</b> <span class="frac"><span>d</span><span>dx</span></span>[2x] <b>+</b> <span class="frac"><span>d</span><span>dx</span></span>[10]</span></div>
+        <div class="step"><span class="tag">各項を計算</span><span class="m">2x <b>+</b> 2 <b>+</b> 0<span class="expl">x²→2x（①）；2x→2（③+①）；10→0（②）</span></span></div>
+        <div class="step"><span class="tag">まとめる</span><span class="m"><span class="hl-red">2x + 2</span><span class="expl">定数 10 は消滅します</span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">ノート 1.3 例1　f(x) = 2x² + 10x → 4x + 10</div>
+      <div class="ex-think"><b>考え方：</b>前問との違いは各項に係数がついている点です。講義ノートのようにステップを丁寧に分けて計算しましょう。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">項ごとに分解</span><span class="m"><span class="frac"><span>d</span><span>dx</span></span>[2x<sup>2</sup>] <b>+</b> <span class="frac"><span>d</span><span>dx</span></span>[10x]</span></div>
+        <div class="step"><span class="tag">係数を出す</span><span class="m">2<span class="frac"><span>d</span><span>dx</span></span>[x<sup>2</sup>] <b>+</b> 10<span class="frac"><span>d</span><span>dx</span></span>[x]<span class="expl">2 と 10 を外に出す（③）</span></span></div>
+        <div class="step"><span class="tag">公式①適用</span><span class="m">2×2x <b>+</b> 10×1</span></div>
+        <div class="step"><span class="tag">まとめる</span><span class="m"><span class="hl-red">4x + 10</span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">ノート 1.3 例2　f(x) = 2x² + 3x + 5 → 4x + 3</div>
+      <div class="ex-think"><b>考え方：</b>前問との違いは末尾に単独の定数項 <b>5</b> がついてい点です。x を含んでいないためルール ② により 0 になります。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">項ごとに分解</span><span class="m"><span class="frac"><span>d</span><span>dx</span></span>[2x<sup>2</sup>] <b>+</b> <span class="frac"><span>d</span><span>dx</span></span>[3x] <b>+</b> <span class="frac"><span>d</span><span>dx</span></span>[5]</span></div>
+        <div class="step"><span class="tag">各項を計算</span><span class="m">4x <b>+</b> 3 <b>+</b> 0<span class="expl">2x²→4x；3x→3；5→0</span></span></div>
+        <div class="step"><span class="tag">まとめる</span><span class="m"><span class="hl-red">4x + 3</span></span></div>
+      </div>
+    </div>
+    <div class="warn"><b>ミス注意：</b>定数項 +5 は微分すると<b>消滅</b>するため、答えに「+5」を残してはいけません。3x には x があるので係数 3 が残り、5 には x がないので 0 になります。「x があれば次数を下げて係数を残し、x がなければ 0」と覚えましょう。</div>
+  </div>
+
+  <!-- ⑤ eˣは自分のまま -->
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">⑤ eˣは自分のまま</span><span class="rule-cn">exponential / 指数関数の微分</span></div>
+    <div class="big-eq m"><span class="frac"><span>d</span><span>dx</span></span> e<sup>x</sup> <b>=</b> <span class="hl-red">e<sup>x</sup></span></div>
+    <div class="koketsu">ポイント：eˣ は微分しても形の変わらない特別な関数</div>
+    <p class="note">ノート 1.3 例3 でマクローリン展開（テイラー展開）を用いて導出されています（導出過程 ⚪ はスキップ可、結論 🔴 は必須記憶）。<b>指数が純粋な x である場合のみ</b>そのままになります。<br>指数部分に「何か塊が乗っている」場合――<span class="m">e<sup>−x</sup></span>、<span class="m">e<sup>2x</sup></span>、<span class="m">e<sup>−x²</sup></span> など――は §3 の合成関数の微分を使います。また、指数が定数の <span class="m">e<sup>2</sup></span> は定数なので 0 になります（ルール ②）。</p>
+    <div class="warn"><b>3つのパターンの識別：</b><span class="m">e<sup>x</sup></span> → そのまま（⑤）；<span class="m">e<sup>2</sup></span> → 0（②、定数）；<span class="m">e<sup>−x</sup></span> → −e⁻ˣ（パターンA、§3参照）。指数に x があるか、純粋な x かを見極めましょう。</div>
+  </div>
+</section>
+
+<!-- ============ §2 積の微分 ============ -->
+<section id="s2">
+  <div class="sec-num">§2 · 2つの関数の積</div>
+  <h2>積の微分</h2>
+  <p class="sec-sub">せきのびぶん / product rule ―― 両方の塊に x が含まれており、展開できない場合に使います。</p>
+
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">公式</span><span class="rule-cn">前・後 2つの積の微分</span></div>
+    <div class="big-eq m">(前·後)′ <b>=</b> <span class="hl-green">前′</span>·<span class="hl-indigo">後</span> <b>+</b> <span class="hl-green">前</span>·<span class="hl-indigo">後′</span></div>
+    <div class="koketsu">ポイント：前を微分×後そのまま ＋ 前そのまま×後を微分</div>
+    <div class="warn"><b>典型的な誤り：</b>積の微分は<b>決して</b> <span class="m">前′·後′</span> ではありません！必ず<b>2つの項の和</b>になります。1項しか書かないと半分失点します。</div>
+  </div>
+
+  <div class="card">
+    <div class="example">
+      <div class="ex-label">ノート 1.3 例4　f(x) = x·eˣ → eˣ + x·eˣ</div>
+      <div class="ex-think"><b>考え方：</b>x と eˣ の<b>両方に x が含まれており</b>、展開できません。そのため積の微分公式が必須です。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">塊に分ける</span><span class="m"><span class="hl-green">前 = x</span>，　<span class="hl-indigo">後 = e<sup>x</sup></span></span></div>
+        <div class="step"><span class="tag">前微分×後そのまま</span><span class="m"><span class="hl-green">1</span> · <span class="hl-indigo">e<sup>x</sup></span> <b>=</b> e<sup>x</sup><span class="expl">前 x→1（①）；後そのまま</span></span></div>
+        <div class="step"><span class="tag">前そのまま×後微分</span><span class="m"><span class="hl-green">x</span> · <span class="hl-indigo">e<sup>x</sup></span> <b>=</b> xe<sup>x</sup><span class="expl">前そのまま；後 eˣ→eˣ（⑤）</span></span></div>
+        <div class="step"><span class="tag">足し合わせる</span><span class="m"><span class="hl-red">e<sup>x</sup> + xe<sup>x</sup></span><span class="expl">因数分解して (1+x)eˣ と書いても正解です</span></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="example">
+      <div class="ex-label">問題集 ドリル10（効率的な解法との比較）　f(x) = (x+1)(x−1) → 2x</div>
+      <div class="ex-think"><b>考え方：</b>かっこ同士の積なので積の微分が使えそうですが、<b>先に展開した方が圧倒的に簡単</b>です。<span class="m">(x+1)(x−1) = x²−1</span> とすれば、§1 の基本問題に変わります。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">展開する</span><span class="m">(x+1)(x−1) <b>=</b> x<sup>2</sup> − 1<span class="expl">平方の差の公式</span></span></div>
+        <div class="step"><span class="tag">項ごとに計算</span><span class="m">2x − 0 <b>=</b> <span class="hl-red">2x</span><span class="expl">x²→2x（①）；−1→0（②）</span></span></div>
+      </div>
+    </div>
+    <p class="note"><b>判断基準：</b>eˣ が掛け合わされているなど<b>展開不可能な場合</b>にのみ積の微分を使い、多項式同士の掛け算は先に展開するのが簡単で計算ミスも防げます。</p>
+    <div class="imp">重要度：🔴 「いつ積の微分を使うべきか」と「いつ展開すべきか」を判断できるようにしましょう</div>
+  </div>
+</section>
+
+<!-- ============ §3 合成関数 ============ -->
+<section id="s3">
+  <div class="sec-num">§3 · 関数の入れ子構造</div>
+  <h2>合成関数の微分（置換の考え方）</h2>
+  <p class="sec-sub">ごうせいかんすう / chain rule ―― 指数、かっこ内、分母などに「塊（関数）」が入り込んでいる場合に使います。</p>
+
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">公式（2-1）</span><span class="rule-cn">全体の傾き ＝ 外側の微分 × 内側の微分</span></div>
+    <p style="font-size:15.5px">x が g によって z になり、z が f によって y になる構造：<span class="m">x ─g→ z ─f→ y</span>。<span class="m">z = g(x)</span>，<span class="m">y = f(z)</span> とおくと：</p>
+    <div class="big-eq m"><span class="frac"><span>dy</span><span>dx</span></span> <b>=</b> <span class="frac"><span>dy</span><span>dz</span></span> <b>×</b> <span class="frac"><span>dz</span><span>dx</span></span></div>
+    <p class="note"><b>歯車の例え：</b>x、z、y を噛み合う歯車と考えます。x が 1 回転すると z が dz/dx 回転し、z が 1 回転すると y が dy/dz 回転します。したがって x が 1 回転したときの y の回転数は「2つの伝達比の掛け算」になります。</p>
+    <div class="koketsu">ポイント：まず外側を微分し、それに内側の微分を掛ける（変数置き換え → 外側微分 → 内側微分 → 掛け合わせて x に戻す）</div>
+    <p class="note">試験に出る合成関数は主に2つのパターンがあります。<b>パターンA</b>「e の肩に塊」、<b>パターンB</b>「かっこの n 乗」。それぞれの解法に慣れましょう。</p>
+  </div>
+
+  <!-- パターンA -->
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">パターンA：e の肩に塊がある場合</span><span class="rule-cn">e<sup>塊</sup> → e<sup>塊</sup> × 塊′</span></div>
+    <div class="big-eq m"><span class="frac"><span>d</span><span>dx</span></span> e<sup>塊</sup> <b>=</b> e<sup>塊</sup> <b>×</b> <span class="hl-red">塊′</span></div>
+    <div class="koketsu">ポイント：e<sup>塊</sup> の部分はそのまま書き、そこに「指数部分（塊）の微分」を掛ける</div>
+
+    <div class="example">
+      <div class="ex-label">ウォーミングアップ　f(x) = e²ˣ → 2e²ˣ</div>
+      <div class="ex-think"><b>考え方：</b>指数の肩に乗っている塊は 2x です。外側の eᶻ はそのまま残し、塊の微分を掛けます。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">塊′</span><span class="m">塊 = 2x，塊′ = 2</span></div>
+        <div class="step"><span class="tag">パターンA適用</span><span class="m">e<sup>2x</sup> × 2 <b>=</b> <span class="hl-red">2e<sup>2x</sup></span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">ノート 2.1 例2（置換による完全解説）　f(x) = e⁻ˣ → −e⁻ˣ</div>
+      <div class="ex-think"><b>考え方：</b>前問との違いは塊 = −x とマイナスがついている点です。置換を行って「外側×内側」の構造をしっかり確認しましょう。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">変数置換</span><span class="m">z = −x，　y = e<sup>z</sup></span></div>
+        <div class="step"><span class="tag">外側の微分</span><span class="m"><span class="frac"><span>dy</span><span>dz</span></span> <b>=</b> e<sup>z</sup><span class="expl">eᶻ を微分してもそのまま（⑤）</span></span></div>
+        <div class="step"><span class="tag">内側の微分</span><span class="m"><span class="frac"><span>dz</span><span>dx</span></span> <b>=</b> −1<span class="expl">z = −x を微分すると −1</span></span></div>
+        <div class="step"><span class="tag">掛け合わせ・戻す</span><span class="m">e<sup>z</sup> × (−1) <b>=</b> <span class="hl-red">−e<sup>−x</sup></span></span></div>
+      </div>
+    </div>
+    <div class="warn"><b>最頻出のミス：符号のつけ忘れに注意！</b>「e の微分は変わらない」と丸暗記して e⁻ˣ と答えてしまうミスが多発します。内側の微分である −1 を必ず掛けなければなりません。e⁻ˣ は統計学（正規分布やシグモイド関数）で頻出します。</div>
+
+    <div class="example">
+      <div class="ex-label">問題集 ドリル19　f(x) = e²ˣ⁺³ → 2e²ˣ⁺³</div>
+      <div class="ex-think"><b>考え方：</b>前問との違いは塊 = 2x+3 と定数 3 が追加されている点です。塊′ の計算で 3 は 0 になるため 2 だけが残ります。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">塊′</span><span class="m">塊 = 2x+3，塊′ = 2<span class="expl">2x→2，3→0（②）</span></span></div>
+        <div class="step"><span class="tag">パターンA適用</span><span class="m">e<sup>2x+3</sup> × 2 <b>=</b> <span class="hl-red">2e<sup>2x+3</sup></span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">問題集 確認2-3　f(x) = e⁻ˣ² → −2x·e⁻ˣ²</div>
+      <div class="ex-think"><b>考え方：</b>前問との違いは塊 = −x² となり、塊′ が数値ではなく x を含む −2x になる点です。この形（正規分布の基礎）は今後頻繁に登場します。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">塊′</span><span class="m">塊 = −x<sup>2</sup>，塊′ = −2x<span class="expl">x²→2x（①）、前のマイナスを残す</span></span></div>
+        <div class="step"><span class="tag">パターンA適用</span><span class="m">e<sup>−x²</sup> × (−2x) <b>=</b> <span class="hl-red">−2x·e<sup>−x²</sup></span></span></div>
+      </div>
+    </div>
+    <div class="imp">重要度：🔴 パターンA は統計学で最もよく使われる微分です。負の符号と 塊′ の掛け忘れに注意しましょう</div>
+  </div>
+
+  <!-- パターンB -->
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">パターンB：かっこの n 乗</span><span class="rule-cn">(塊)<sup>n</sup> → n(塊)<sup>n−1</sup> × 塊′</span></div>
+    <div class="big-eq m"><span class="frac"><span>d</span><span>dx</span></span> (塊)<sup>n</sup> <b>=</b> n(塊)<sup>n−1</sup> <b>×</b> <span class="hl-red">塊′</span></div>
+    <div class="koketsu">ポイント：かっこ全体を 1 つの変数としてべき乗則を適用し、最後に「かっこ内の微分」を掛ける</div>
+
+    <div class="example">
+      <div class="ex-label">ノート 2.1 例1（置換による完全解説）　f(x) = (x−5)² → 2(x−5)</div>
+      <div class="ex-think"><b>考え方：</b>かっこ内が単なる x ではないため合成関数です。内側＝かっこ内 x−5、外側＝2乗として置換します。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">変数置換</span><span class="m">z = x−5，　y = z<sup>2</sup></span></div>
+        <div class="step"><span class="tag">外側の微分</span><span class="m"><span class="frac"><span>dy</span><span>dz</span></span> <b>=</b> 2z<span class="expl">z² にべき乗則を適用（①）</span></span></div>
+        <div class="step"><span class="tag">内側の微分</span><span class="m"><span class="frac"><span>dz</span><span>dx</span></span> <b>=</b> 1<span class="expl">x→1，−5→0 より 塊′=1</span></span></div>
+        <div class="step"><span class="tag">掛け合わせ・戻す</span><span class="m">2z × 1 <b>=</b> <span class="hl-red">2(x−5)</span></span></div>
+      </div>
+    </div>
+    <p class="note"><b>ポイント：</b>ここでは 塊′=1 のため掛けても値が変わりませんが、「常に 塊′ を掛ける」習慣をつけることで、塊′≠1 の問題でもミスを防げます。</p>
+
+    <div class="example">
+      <div class="ex-label">問題集 ドリル8　f(x) = ½(x−5)² → x−5</div>
+      <div class="ex-think"><b>考え方：</b>前問との違いは前に係数 ½ がついている点だけです（③ で外に出す）。最後に ½ と外側の微分で降りてくる 2 が約分されます。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">係数を出す</span><span class="m"><span class="frac"><span>1</span><span>2</span></span>·<span class="frac"><span>d</span><span>dx</span></span>(x−5)<sup>2</sup></span></div>
+        <div class="step"><span class="tag">パターンB適用</span><span class="m"><span class="frac"><span>1</span><span>2</span></span> × 2(x−5) × 1 <b>=</b> <span class="hl-red">x−5</span><span class="expl">½ × 2 = 1，塊′=1</span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">問題集 確認2-5　f(x) = (x²+x+1)² → 2(2x+1)(x²+x+1)</div>
+      <div class="ex-think"><b>考え方：</b>前問との違いはかっこ内が x²+x+1 となっており、塊′ = 2x+1 が <b>1 ではない</b>点です。この 塊′ を掛け忘れると不正解になります。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">塊′</span><span class="m">塊 = x²+x+1，塊′ = 2x+1<span class="expl">各項：x²→2x，x→1，1→0</span></span></div>
+        <div class="step"><span class="tag">パターンB適用</span><span class="m">2(x²+x+1)<sup>1</sup> × (2x+1) <b>=</b> <span class="hl-red">2(2x+1)(x²+x+1)</span></span></div>
+      </div>
+    </div>
+    <div class="warn"><b>ミス注意：</b>かっこ内が単なる x でないときは、塊′ を 1 と決めつけないようにしましょう。</div>
+
+    <div class="example">
+      <div class="ex-label">ノート 2.1 例3　f(x) = 1/(x+1) → −1/(x+1)²</div>
+      <div class="ex-think"><b>考え方：</b>分母が単なる x ではなく「塊」になっています。まず <span class="m">1/(x+1) = (x+1)<sup>−1</sup></span> と指数形式に変形することで、n=−1 のパターンBとして扱えます。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">式変形</span><span class="m"><span class="frac"><span>1</span><span>x+1</span></span> <b>=</b> (x+1)<sup>−1</sup></span></div>
+        <div class="step"><span class="tag">パターンB適用</span><span class="m">−1·(x+1)<sup>−2</sup> × 1<span class="expl">n=−1 を前に出し、1 引いて −2 にする；塊′=1</span></span></div>
+        <div class="step"><span class="tag">整理する</span><span class="m"><span class="hl-red">−<span class="frac"><span>1</span><span>(x+1)<sup>2</sup></span></span></span></span></div>
+      </div>
+    </div>
+    <p class="note"><b>ポイント：</b>「マイナス符号 ＋ 分母の2乗」の形は、§6 のシグモイド関数の微分問題でも再登場します。</p>
+    <div class="imp">重要度：🔴 パターンB は「かっこの2乗」や「分数の逆数」を網羅しており、塊′ の計算が命です</div>
+  </div>
+</section>
+
+<!-- ============ §4 偏微分 ============ -->
+<section id="s4">
+  <div class="sec-num">§4 · 2変数以上の関数</div>
+  <h2>偏微分</h2>
+  <p class="sec-sub">へんびぶん / partial derivative ―― 式の中に x と y など複数の変数が含まれる場合の微分です。</p>
+
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">ルール</span><span class="rule-cn">ターゲットの変数のみに着目し、他の変数は数字として扱う</span></div>
+    <div class="koketsu">講義ノートの重要ポイント 🔴：x について偏微分する＝ y をただの数字（定数）とみなして普通に微分する</div>
+    <p class="note">記号は <b>d</b> ではなく <b>∂</b>（「ラウンド」「パーシャル」と読む）を使用し、「多変数関数のうち1つの変数だけで微分する」ことを示します。<br><b>計算のコツ：</b>x で偏微分する場合、<b>y を具体的な数字（例えば 3）だと思い込んで</b>、§1〜§3 のルールをそのまま適用します。y が単独の項なら定数として 0 になり（②）、x に掛け合わされていれば係数としてそのまま残ります（③）。</p>
+  </div>
+
+  <div class="card">
+    <div class="example">
+      <div class="ex-label">ノート 3.1 例1 準備 · 問題集 確認1　f(x,y) = x + y → 1（x について）</div>
+      <div class="ex-think"><b>考え方：</b>ウォーミングアップです。y を数字とみなすと、x→1、y（x を含まない）→0 となります。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">項ごとに計算</span><span class="m">1 + 0 <b>=</b> <span class="hl-red">1</span><span class="expl">x→1（①）；y は定数扱い→0（②）</span></span></div>
+      </div>
+    </div>
+    <div class="example">
+      <div class="ex-label">問題集 確認4　f(x,y) = y → 0（x について）</div>
+      <div class="ex-think"><b>考え方：</b>前問との違いは式全体に <b>x が全く含まれていない</b>点です。全体が1つの定数扱いになります。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">公式②適用</span><span class="m">x が含まれない → <span class="hl-red">0</span></span></div>
+      </div>
+    </div>
+    <div class="example">
+      <div class="ex-label">問題集 確認3　f(x,y) = xy → y（x について）</div>
+      <div class="ex-think"><b>考え方：</b>前問との違いは x と y が掛け合わされている点です。y を数字とみなすと xy は「3x」のようなものです。係数 y を残して x→1 とします。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">係数を出す</span><span class="m">y·<span class="frac"><span>∂</span><span>∂x</span></span>x<span class="expl">y を係数扱いにする（③）</span></span></div>
+        <div class="step"><span class="tag">公式①適用</span><span class="m">y × 1 <b>=</b> <span class="hl-red">y</span></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="example">
+      <div class="ex-label">ノート 3.1 例1　f(x,y) = x² + xy → 2x + y（x について）</div>
+      <div class="ex-think"><b>考え方：</b>基本ルールを組み合わせます。加算で分解し、各項を処理します（y=3 と考えると x²+3x の微分と同じです）。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">項ごとに分解</span><span class="m"><span class="frac"><span>∂</span><span>∂x</span></span>x<sup>2</sup> <b>+</b> <span class="frac"><span>∂</span><span>∂x</span></span>(xy)</span></div>
+        <div class="step"><span class="tag">各項を計算</span><span class="m">2x <b>+</b> y<span class="expl">x²→2x（①）；xy→y（③+①、前問参照）</span></span></div>
+        <div class="step"><span class="tag">まとめる</span><span class="m"><span class="hl-red">2x + y</span></span></div>
+      </div>
+    </div>
+    <div class="example">
+      <div class="ex-label">ノート 3.1 例2　f(x,y) = x²y → 2xy（x について）</div>
+      <div class="ex-think"><b>考え方：</b>前問の xy と同様に、x が x² になっただけです。「係数 y × x²」として扱います（y=3 と考えれば 3x² の微分と同じです）。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">係数を出す</span><span class="m">y·<span class="frac"><span>∂</span><span>∂x</span></span>x<sup>2</sup></span></div>
+        <div class="step"><span class="tag">公式①適用</span><span class="m">y × 2x <b>=</b> <span class="hl-red">2xy</span></span></div>
+      </div>
+    </div>
+    <div class="warn"><b>ミス注意：</b>x²y に対して積の微分を使おうとしないでください。y は関数ではなく定数です。（積の微分を使っても 2x·y + x²·0 = 2xy となりますが無駄な計算になります。）</div>
+    <div class="example">
+      <div class="ex-label">問題集 確認5　f(x,y) = x² + 2xy + y² → 2x + 2y（x について）</div>
+      <div class="ex-think"><b>考え方：</b>例1と同様のパターンに y² が追加されています。y² は x を含んでいないため 0 になります。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">分解して計算</span><span class="m">2x <b>+</b> 2y <b>+</b> 0<span class="expl">x²→2x；2xy→2y（係数 2y を残し x→1）；y²→0（②）</span></span></div>
+        <div class="step"><span class="tag">まとめる</span><span class="m"><span class="hl-red">2x + 2y</span></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="example">
+      <div class="ex-label">ノート 3.1 例3　f(x,y) = 1/e<sup>x+y</sup> → −e⁻ʸ·e⁻ˣ　※ やや発展 ⚪、複合テクニック</div>
+      <div class="ex-think"><b>考え方：</b>これまで練習したテクニックの組み合わせです。2つの変形を行います――① <span class="m">e<sup>x+y</sup> = e<sup>x</sup>·e<sup>y</sup></span>（指数の和＝冪の積）；② <span class="m">1/e<sup>x</sup> = e<sup>−x</sup></span>。y を含む部分を定数として前に出し、残り x の部分に §3 パターンA を適用します。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">指数を分解</span><span class="m"><span class="frac"><span>1</span><span>e<sup>x+y</sup></span></span> <b>=</b> <span class="frac"><span>1</span><span>e<sup>y</sup></span></span> × <span class="frac"><span>1</span><span>e<sup>x</sup></span></span></span></div>
+        <div class="step"><span class="tag">定数を外に出す</span><span class="m"><span class="frac"><span>1</span><span>e<sup>y</sup></span></span>·<span class="frac"><span>∂</span><span>∂x</span></span><span class="frac"><span>1</span><span>e<sup>x</sup></span></span><span class="expl">1/eʸ は x を含まないため定数として外へ（③）</span></span></div>
+        <div class="step"><span class="tag">パターンA適用</span><span class="m"><span class="frac"><span>∂</span><span>∂x</span></span>e<sup>−x</sup> <b>=</b> −e<sup>−x</sup><span class="expl">§3 パターンA：塊=−x，塊′=−1</span></span></div>
+        <div class="step"><span class="tag">まとめる</span><span class="m"><span class="frac"><span>1</span><span>e<sup>y</sup></span></span> × (−e<sup>−x</sup>) <b>=</b> <span class="hl-red">−e<sup>−y</sup>·e<sup>−x</sup></span><span class="expl">−e<sup>−(x+y)</sup> と書いても同値です</span></span></div>
+      </div>
+    </div>
+    <p class="note"><b>ミス注意：</b>ここでもマイナス符号が登場します。これは §3 パターンA と同じく、塊 −x の微分 −1 から来ています。</p>
+    <div class="imp">重要度：🔴 基本ルール＋例1・例2は必須；例3 ⚪ は理解できれば十分です</div>
+  </div>
+</section>
+
+<!-- ============ §5 接線の傾き ============ -->
+<section id="s5">
+  <div class="sec-num">§5 · 得点源の問題</div>
+  <h2>接線の傾き（2ステップ法）</h2>
+  <p class="sec-sub">せっせんのかたむき / tangent slope ―― 求められているのは「関数」ではなく「数値」です。</p>
+
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">決まった2ステップ</span><span class="rule-cn">導関数を求める → 数値を代入する</span></div>
+    <div class="steps" style="margin-top:8px">
+      <div class="step"><span class="tag">STEP 1</span><span>まず§1〜§4の公式を使って<b>導関数</b> <span class="m">f′(x)</span> を求める。</span></div>
+      <div class="step"><span class="tag">STEP 2</span><span>問題文で指定された x の値を <b>f′(x) に代入</b>し、数値を計算する。</span></div>
+    </div>
+    <div class="koketsu">ポイント：STEP 2 を忘れずに！導関数を求めるだけで代入を行わないと途中で終わってしまいます</div>
+
+    <div class="example">
+      <div class="ex-label">問題集 確認1-1　f(x) = 2x²，x = −1 における傾き → −4</div>
+      <div class="ex-think"><b>考え方：</b>標準的な2ステップです。まず導関数を求め（§1 ③+①）、次に x=−1 を代入します。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">STEP 1 導関数</span><span class="m">f′(x) <b>=</b> 4x<span class="expl">2x²→4x</span></span></div>
+        <div class="step"><span class="tag">STEP 2 代入</span><span class="m">f′(−1) <b>=</b> 4×(−1) <b>=</b> <span class="hl-red">−4</span><span class="expl">傾きが負 → 曲線はこの点で右下がりになっています</span></span></div>
+      </div>
+    </div>
+    <div class="warn"><b>ミス注意：負の数</b>を代入するときは必ず<b>かっこをつけましょう</b>。例えば導関数に 2 乗が含まれる場合、(−1)² = +1 となりますが、かっこを付け忘れると符号ミスを起こします。本問は 4×(−1) = −4 となります。</div>
+    <div class="imp">重要度：🔴 確実に得点できる2ステップです。STEP 2 の代入漏れと負の数のかっこ付けに気をつけましょう</div>
+  </div>
+</section>
+
+<!-- ============ §6 sigmoid ============ -->
+<section id="s6">
+  <div class="sec-num">§6 · 大題の解法パターン</div>
+  <h2>シグモイド関数（複合テクニックの実践）</h2>
+  <p class="sec-sub">シグモイド関数 / sigmoid ―― 機械学習の定番であり、問題集の大題プロトタイプです。使用する個別テクニックはすべて練習済みです。</p>
+
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">問題集 ドリル28</span><span class="rule-cn">本講義では「商の微分」は扱わないため、分数はすべて先に −1 乗に変換する</span></div>
+    <div class="big-eq m">f(x) <b>=</b> <span class="frac"><span>1</span><span>1 + e<sup>−x</sup></span></span></div>
+    <div class="example">
+      <div class="ex-label">定番の4ステップ</div>
+      <div class="ex-think"><b>考え方：</b>分母が「塊」なので、まず <b>−1 乗</b>に変形して §3 パターンB にあてはめます。途中で e⁻ˣ の微分に §3 パターンA を使用します。いずれも既出の要素技術です。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">① 式変形</span><span class="m">(1 + e<sup>−x</sup>)<sup>−1</sup><span class="expl">分母の逆数＝−1 乗としてパターンB（§3）へ</span></span></div>
+        <div class="step"><span class="tag">② 外側の微分</span><span class="m">−1·(1 + e<sup>−x</sup>)<sup>−2</sup><span class="expl">かっこ全体を z としてパターンBを適用：n=−1 を前に出し、1 引いて −2</span></span></div>
+        <div class="step"><span class="tag">③ 内側の微分（塊′）</span><span class="m">塊 = 1 + e<sup>−x</sup>，　塊′ = −e<sup>−x</sup><span class="expl">1→0（②）；e⁻ˣ→−e⁻ˣ（パターンA、マイナス符号を忘れない）</span></span></div>
+        <div class="step"><span class="tag">④ 掛け合わせる</span><span class="m">(−1)(1+e<sup>−x</sup>)<sup>−2</sup> × (−e<sup>−x</sup>) <b>=</b> <span class="hl-red"><span class="frac"><span>e<sup>−x</sup></span><span>(1 + e<sup>−x</sup>)<sup>2</sup></span></span></span><span class="expl">マイナス × マイナス ＝ プラス</span></span></div>
+      </div>
+    </div>
+    <p class="note">4ステップの中の個々のテクニックはすべて既出です：<b>負の指数 / −1 乗</b>（§1 ①、§3 パターンB）、<b>パターンA の e⁻ˣ→−e⁻ˣ</b>（§3）、<b>定数 1→0</b>（§1 ②）。ステップ ④ まで計算すれば正解が得られます。</p>
+    <p class="note">指数が −2x や −ax−b に変わる場合も（ドリル29、30）、③ の 塊′ に係数（−2 や −a）が追加されるだけで、全体の手順は完全に同一です。</p>
+    <div class="imp">重要度：🔴 複合問題の典型テンプレートです。分数を見たらまず −1 乗に変形し、4ステップで解き進めましょう</div>
+  </div>
+</section>
+
+</div>
+
+<script>
+/* ---- 放物線 + ドラッグ可能な接線 ---- */
+(function(){
+  var CX=170, CY=270, SX=60, SY=60;           // 原点とスケール
+  function px(x){return CX + x*SX}
+  function py(y){return CY - y*SY}
+  // 放物線を描画
+  var d="";
+  for(var x=-2.3;x<=2.301;x+=0.05){
+    d += (d?" L":"M") + px(x).toFixed(1) + " " + py(x*x).toFixed(1);
+  }
+  document.getElementById("parabola").setAttribute("d", d);
+
+  var slider=document.getElementById("xSlider"),
+      tangent=document.getElementById("tangent"),
+      dot=document.getElementById("dot"),
+      slopeVal=document.getElementById("slopeVal"),
+      slopeEq=document.getElementById("slopeEq");
+
+  function update(){
+    var a=parseFloat(slider.value), y=a*a, k=2*a;   // 傾き = 2x
+    dot.setAttribute("cx",px(a)); dot.setAttribute("cy",py(y));
+    var dx=0.9;                                      // 接線を左右に延長
+    tangent.setAttribute("x1",px(a-dx)); tangent.setAttribute("y1",py(y-k*dx));
+    tangent.setAttribute("x2",px(a+dx)); tangent.setAttribute("y2",py(y+k*dx));
+    slopeVal.textContent=(k>0?"+":"")+k.toFixed(1);
+    slopeEq.innerHTML="<b>2 × </b>"+a.toFixed(1)+"<b> = </b>"+k.toFixed(1);
+    slopeVal.style.color = Math.abs(k)<0.05 ? "var(--green)" : "var(--red)";
+  }
+  slider.addEventListener("input",update);
+  update();
+})();
+</script>
+</body>
+</html>
