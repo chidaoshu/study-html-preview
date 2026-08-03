@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>確率変数 期末攻略 — 統計学Ⅰ vol.7</title>
+<style>
+:root{
+  --paper:#faf8f3; --card:#ffffff; --ink:#26241f; --sub:#6b675e;
+  --indigo:#3a5169; --indigo-soft:#e8edf2;
+  --red:#c2452d; --red-soft:#faece8;
+  --green:#3f7355; --green-soft:#e9f2ec;
+  --amber:#9a6b1f; --amber-soft:#f8f0dd;
+  --line:#e4e0d6; --code:#f3f1ea;
+  --radius:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#1c1b18; --card:#26241f; --ink:#ece9e1; --sub:#a49f93;
+    --indigo:#8fadc9; --indigo-soft:#2b3541;
+    --red:#e58a75; --red-soft:#412b25;
+    --green:#8dbfa2; --green-soft:#263a2f;
+    --amber:#d9b36b; --amber-soft:#3d341f;
+    --line:#3a372f; --code:#302d26;
+  }
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","PingFang SC","Yu Gothic",sans-serif;
+  font-size:17px; line-height:1.75; text-wrap:pretty;
+}
+.wrap{max-width:860px;margin:0 auto;padding:0 20px 120px}
+
+header{padding:64px 0 28px}
+.kicker{color:var(--red);font-weight:700;letter-spacing:.18em;font-size:13px}
+h1{font-size:clamp(30px,5vw,44px);font-weight:800;line-height:1.25;margin:10px 0 14px}
+.lead{color:var(--sub);max-width:660px}
+.lead b{color:var(--ink)}
+
+nav{position:sticky;top:0;background:color-mix(in srgb,var(--paper) 88%,transparent);
+  backdrop-filter:blur(8px);z-index:50;padding:10px 0;border-bottom:1px solid var(--line);
+  display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav a{flex-shrink:0;font-size:13px;font-weight:600;color:var(--sub);text-decoration:none;
+  padding:5px 12px;border-radius:99px;border:1px solid var(--line);background:var(--card)}
+nav a:hover{color:var(--red);border-color:var(--red)}
+
+section{margin-top:72px}
+.sec-num{font-size:13px;font-weight:700;color:var(--red);letter-spacing:.15em}
+h2{font-size:clamp(22px,3.4vw,30px);font-weight:800;margin:4px 0 6px}
+.sec-sub{color:var(--sub);font-size:15px;margin-bottom:22px}
+
+.m{font-family:"STIX Two Math","Times New Roman",Georgia,serif;font-style:italic;white-space:nowrap}
+.m b{font-style:normal;font-weight:400}
+sup{font-size:.68em}
+sup sup{font-size:.85em}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;
+  font-size:.86em;line-height:1.3;margin:0 2px}
+.frac>span:first-child{border-bottom:1.4px solid currentColor;padding:0 4px}
+.frac>span:last-child{padding:0 4px}
+.big-eq{font-size:clamp(19px,3vw,24px);text-align:center;padding:18px 8px;overflow-x:auto}
+.hl-red{color:var(--red);font-weight:700}
+.hl-green{color:var(--green);font-weight:700}
+.hl-amber{color:var(--amber);font-weight:700}
+.hl-indigo{color:var(--indigo);font-weight:700}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:24px 26px;margin-bottom:18px}
+.rule-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.rule-jp{font-size:20px;font-weight:800}
+.rule-cn{color:var(--sub);font-size:14px}
+.koketsu{display:inline-block;background:var(--red-soft);color:var(--red);font-weight:700;
+  font-size:15px;padding:4px 14px;border-radius:6px;margin:10px 0}
+.card .note{font-size:14.5px;color:var(--sub);margin-top:10px}
+.card .note b{color:var(--ink)}
+.imp{display:inline-block;font-size:13.5px;font-weight:700;background:var(--indigo-soft);
+  color:var(--indigo);border-radius:6px;padding:3px 12px;margin-top:12px}
+
+.example{background:var(--code);border-radius:8px;padding:16px 18px;margin-top:14px}
+.example .ex-label{font-size:12.5px;font-weight:700;color:var(--indigo);letter-spacing:.06em;margin-bottom:8px}
+.example .ex-think{font-size:14.5px;margin-bottom:10px}
+.example .ex-think b{color:var(--indigo)}
+.steps{display:flex;flex-direction:column;gap:8px}
+.step{display:grid;grid-template-columns:128px 1fr;gap:12px;align-items:baseline;font-size:16px}
+.step .tag{font-size:12.5px;font-weight:700;color:var(--sub);background:var(--card);
+  border:1px solid var(--line);border-radius:5px;padding:2px 8px;text-align:center;font-style:normal}
+.step .expl{display:block;font-size:13.5px;color:var(--sub);font-style:normal;white-space:normal}
+@media(max-width:560px){.step{grid-template-columns:1fr;gap:2px}}
+
+.warn{background:var(--amber-soft);border-radius:8px;padding:14px 18px;margin-top:14px;font-size:15px}
+.warn b{color:var(--amber)}
+
+table{width:100%;border-collapse:collapse;background:var(--card);font-size:16px}
+.table-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);margin-top:10px}
+th{background:var(--indigo-soft);color:var(--indigo);font-size:13.5px;font-weight:700;
+  padding:10px 14px;text-align:left;white-space:nowrap}
+td{padding:10px 12px;border-top:1px solid var(--line);vertical-align:middle}
+td .m{font-size:16px}
+.tbl-tight th,.tbl-tight td{padding:7px 10px;text-align:center;white-space:nowrap}
+.tbl-tight td:first-child,.tbl-tight th:first-child{text-align:left;color:var(--sub);font-weight:700}
+
+/* concept hierarchy tree */
+.tree{display:flex;flex-direction:column;gap:0;font-size:15px;margin-top:6px}
+.tree .lv{display:flex;align-items:center;gap:12px;padding:10px 0}
+.tree .badge{flex-shrink:0;width:96px;text-align:center;font-weight:700;font-size:13px;
+  padding:5px 0;border-radius:6px}
+.b-trial{background:var(--indigo-soft);color:var(--indigo)}
+.b-event{background:var(--amber-soft);color:var(--amber)}
+.b-basic{background:var(--red-soft);color:var(--red)}
+.tree .arrow{color:var(--sub);flex-shrink:0}
+
+/* dice grid */
+.dice-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:26px;margin-bottom:18px}
+.dice-controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;align-items:center}
+.dice-controls .lbl{font-size:14px;color:var(--sub);margin-right:4px}
+.sum-btn{font:inherit;font-size:14px;font-weight:700;border:1px solid var(--line);background:var(--card);
+  color:var(--ink);border-radius:7px;padding:6px 13px;cursor:pointer;transition:all .12s}
+.sum-btn:hover{border-color:var(--red)}
+.sum-btn.active{background:var(--red);color:#fff;border-color:var(--red)}
+.grid6{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;max-width:400px;margin:0 auto}
+.cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:14px;
+  font-variant-numeric:tabular-nums;border-radius:6px;background:var(--code);color:var(--sub);
+  transition:all .15s;font-family:"STIX Two Math",serif}
+.cell.hit{background:var(--red);color:#fff;font-weight:700;transform:scale(1.04)}
+.dice-read{text-align:center;margin-top:16px;font-size:16px}
+.dice-read b{color:var(--red);font-size:20px}
+
+/* judge two-dimension cards */
+.judge{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px}
+@media(max-width:620px){.judge{grid-template-columns:1fr}}
+.jbox{border:1px solid var(--line);border-radius:99px;padding:16px 18px;border-radius:9px}
+.jbox h4{font-size:16px;margin-bottom:4px}
+.jbox .jq{font-size:13.5px;color:var(--sub);font-weight:700;letter-spacing:.05em}
+.jbox .ja{font-size:14.5px;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">統計学Ⅰ · vol.7 · 確率変数 · 期末攻略</div>
+  <h1>確率変数：計算いらずの概念攻略</h1>
+  <p class="lead">vol.4/5とは異なり、vol.7は<b>概念の理解</b>を中心とした講義です。微積分などの複雑な計算はなく、<b>「分類・判断＋個数のカウント」</b>がメインとなります。ポイントは<b>「事象の階層構造」「排反と独立の判別」「確率変数の理解」</b>の3点です。本ページでは<b>講義ノートの具体例を主軸</b>とし、難易度順のストーリー形式で「何を意味するか・どう読み解くか・つまずきやすい点」を丁寧に解説します。最後は問題集の原問題で実践力を高めましょう。</p>
+</header>
+
+<nav>
+  <a href="#s0">§0 3つの概念</a>
+  <a href="#s1">§1 4つの用語</a>
+  <a href="#s2">§2 排反 vs 独立</a>
+  <a href="#s3">§3 基本事象のカウント</a>
+  <a href="#s4">§4 確率変数</a>
+  <a href="#s5">§5 Gauss 分布</a>
+</nav>
+
+<!-- ============ §0 3つの概念 ============ -->
+<section id="s0">
+  <div class="sec-num">§0 · 基礎知識</div>
+  <h2>3つの概念：試行 → 事象 → 基本事象</h2>
+  <p class="sec-sub">この3つの用語は本冊すべての基礎であり、概念問題の土台となります。まずは概念カードで全体像を把握し、ノートの3つの例を通して「基本事象」のカウントをマスターしましょう。</p>
+
+  <div class="card">
+    <div class="tree">
+      <div class="lv"><span class="badge b-trial">試行</span><span class="arrow">→</span>
+        <span><b>しこう / trial / 試行</b>：「実験や観測を行う」動作のこと。例：サイコロを1回振る、コインを2枚投げる、魚の長さを測る。</span></div>
+      <div class="lv"><span class="badge b-event">事象</span><span class="arrow">→</span>
+        <span><b>じしょう / event / 事象</b>：試行によって起こる「結果・出来事」のこと。例：偶数の目が出る、1の目が出る、コインの表が出る。</span></div>
+      <div class="lv"><span class="badge b-basic">基本事象</span><span class="arrow">→</span>
+        <span><b>きほんじしょう / elementary event / 基本事象</b>：これ以上分割できない最小単位の事象。例：1の目が出る、2の目が出る…（「偶数の目が出る」はさらに分割できるため基本事象ではない）。</span></div>
+    </div>
+    <div class="warn"><b>同義語に注意：</b>基本事象 ＝ 根元事象（こんげんじしょう）。試験ではどちらの表記でも正解となります。<br>
+    さらに分割可能な事象（例：「偶数の目が出る」＝「2の目」または「4の目」または「6の目」）を <b>複合事象（composite event）</b> と呼びます。
+    以下の3つの例はすべてノート1.1からの抜粋です。基本事象の個数が 2 → 6 → 4（次元上昇）と変化していく流れを確認しましょう。</div>
+  </div>
+
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">具体例：基本事象と複合事象の違い</span><span class="rule-cn">ノート 1.1 例1〜例3</span></div>
+
+    <div class="example">
+      <div class="ex-label">例1 導入 · ノート 1.1 例1 &nbsp;|&nbsp; コイン投げ（コインを1回投げる）</div>
+      <div class="ex-think"><b>この例のポイント：</b>最小単位の基本事象（2つのみ）の構造と、複合事象における「または」と「かつ」の意味を理解します。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">基本事象</span><span>表面が出る、裏面が出る<span class="expl">計 2 個（これ以上分割不可）</span></span></div>
+        <div class="step"><span class="tag">複合「または」</span><span>「表面が出る <b>または</b> 裏面が出る」<span class="expl">「または」＝いずれか一方が成立すればよい</span></span></div>
+        <div class="step"><span class="tag">複合「かつ」</span><span>「表面が出る <b>かつ</b> 裏面が出る」<span class="expl">「かつ」＝両方が同時に成立する（1枚のコインで同時に表裏は出ないため空事象）</span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">例2 · ノート 1.1 例2 &nbsp;|&nbsp; 六面サイコロ（サイコロを1回振る）</div>
+      <div class="ex-think"><b>この例のポイント（例1からのステップアップ）：</b>基本事象が 2 個から <b>6 個</b> に増えます。「複合事象 ＝ 基本事象の組み合わせ」であることを、「偶数の目が出る」を分解して確認しましょう。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">基本事象</span><span>1の目が出る、2の目が出る、3の目が出る、4の目が出る、5の目が出る、6の目が出る<span class="expl">計 6 個</span></span></div>
+        <div class="step"><span class="tag">複合「偶数」</span><span>偶数の目が出る ⇔ [2の目が出る] <b>または</b> [4の目が出る] <b>または</b> [6の目が出る]<span class="expl">1つの複合事象 ＝ 3つの基本事象のまとめ</span></span></div>
+        <div class="step"><span class="tag">複合「4以上」</span><span>4以上の目が出る ⇔ [4の目が出る] <b>または</b> [5の目が出る] <b>または</b> [6の目が出る]</span></div>
+      </div>
+      <p class="note"><b>ここが重要：</b>「これ以上分割できるかどうか」が基本事象と複合事象の境界線です。「偶数の目」は2・4・6に分解できるので複合事象、「2の目」は分解できないので基本事象です。</p>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">例3 · ノート 1.1 例3 &nbsp;|&nbsp; 2枚の区別できるコイン</div>
+      <div class="ex-think"><b>この例のポイント（例2からのステップアップ）：</b>1つの対象（1次元）から<b>2つの対象（2次元）</b>へと広がります。基本事象は<b>順序対</b>で表記し、<span class="m">(表, 裏)</span> と <span class="m">(裏, 表)</span> は<b>異なる2つの</b>基本事象となります（これが§3の 6×6=36 の基礎となります）。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">表記の約束</span><span class="m">(1枚目, 2枚目)<span class="expl" style="font-style:normal">1枚目が表、2枚目が裏の場合は (表, 裏) と略記</span></span></div>
+        <div class="step"><span class="tag">基本事象</span><span class="m">(表, 表) (表, 裏) (裏, 表) (裏, 裏)<span class="expl" style="font-style:normal">計 4 個（＝ 2 × 2）。(表, 裏) ≠ (裏, 表) であり、順序が違えば別の事象</span></span></div>
+        <div class="step"><span class="tag">複合「少なくとも表1枚」</span><span class="m">(表, 表) または (表, 裏) または (裏, 表)<span class="expl" style="font-style:normal">少なくとも表面が1枚出る ＝ 3 個</span></span></div>
+        <div class="step"><span class="tag">複合「両方同じ面」</span><span class="m">(表, 表) または (裏, 裏)<span class="expl" style="font-style:normal">両方同じ面が出る ＝ 2 個</span></span></div>
+      </div>
+      <p class="note"><b>つまずきやすい点：</b>コイン2枚の場合、結果は 2 + 2 ＝ 4（足し算）ではなく、 2 × 2 ＝ 4（掛け算のペアリング）です。「区別できる ＝ 順序対 ＝ 積の法則」という考え方は、§3のサイコロの問題でもそのまま使います。</p>
+    </div>
+    <div class="imp">重要度：🔴 試行 / 事象 / 基本事象 / 複合事象 を明確に区別し、「分割可能かどうか」を判定の基準とすること</div>
+  </div>
+</section>
+
+<!-- ============ §1 四術語速査 ============ -->
+<section id="s1">
+  <div class="sec-num">§1 · 用語の整理</div>
+  <h2>4つの用語速査（定義問題の対策）</h2>
+  <p class="sec-sub">問題集の確認問題1（問題1〜4）は「定義から用語名を答える」形式です。1対1で暗記すれば確実に得点できます。特に混同しやすい<b>「排反」と「独立」</b>は、まずイメージで掴み、§2で詳しく解説します。</p>
+
+  <div class="table-scroll">
+    <table>
+      <tr><th>定義（問題文の表現）</th><th>解答（用語）</th><th>English</th></tr>
+      <tr><td>分割できない最小単位の事象</td><td class="hl-red">基本事象 / 根元事象</td><td>elementary event</td></tr>
+      <tr><td>分割可能な事象</td><td class="hl-red">複合事象</td><td>composite event</td></tr>
+      <tr><td>同時に起こらない事象</td><td class="hl-red">排反事象</td><td>exclusive event</td></tr>
+      <tr><td>無関係に起こる事象</td><td class="hl-red">独立事象</td><td>independent event</td></tr>
+    </table>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <p class="note" style="margin-top:0">記憶のコツ（混同しやすい2つの概念）：</p>
+    <div class="steps" style="margin-top:8px">
+      <div class="step"><span class="tag">排反</span><span><b>「両立不能・同時に起きない」</b>——2つの事象が<b>同時に起こり得ない</b>関係。「同時に起こるか？」に着目。</span></div>
+      <div class="step"><span class="tag">独立</span><span><b>「互いに無関係・影響し合わない」</b>——一方の生起がもう一方の確率に<b>影響を与えない</b>関係。「影響があるか？」に着目。</span></div>
+    </div>
+    <div class="imp">重要度：🟡 用語の定義を暗記すること。排反と独立は異なる次元の概念であるため、混同しないように注意</div>
+  </div>
+</section>
+
+<!-- ============ §2 排反 vs 独立 ============ -->
+<section id="s2">
+  <div class="sec-num">§2 · 最重要ポイント</div>
+  <h2>排反 vs 独立（期末試験の超重要判定問題）</h2>
+  <p class="sec-sub">問題集の問題5では、各シナリオにおいて<b>「排反か否か」と「独立か否か」の両方</b>を同時に判断する必要があります。これらは<b>全く異なる2つの視点</b>（同時発生できるか / 影響を与えるか）に基づいている点に注意しましょう。</p>
+
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">2つの視点による判定カード</span><span class="rule-cn">どの視点で考えているかを意識する</span></div>
+    <div class="judge">
+      <div class="jbox">
+        <div class="jq">視点 A：排反かどうか？</div>
+        <h4>「同時に起こり得るか？」を確認</h4>
+        <div class="ja">同時に起こり得る → 排反では<b>ない</b><br>同時に起こらない → 排反である<br><span style="color:var(--sub);font-size:13px">判定方法：重複するケースを探す。両方が同時に成立する結果が存在すれば「非排反」</span></div>
+      </div>
+      <div class="jbox">
+        <div class="jq">視点 B：独立かどうか？</div>
+        <h4>「一方の生起が他方の確率に影響を与えるか？」を確認</h4>
+        <div class="ja">明確に影響しない → 独立である<br>問題文に記載がない → <b>独立かどうかはわからない</b><br><span style="color:var(--sub);font-size:13px">情報がない場合は安易に「独立」と決めつけない</span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">シナリオ① 基本例 · ノート 1.2 例1 &nbsp;|&nbsp; 1つのサイコロ：「偶数の目」vs「奇数の目」→ 排反</div>
+      <div class="ex-think"><b>この例のポイント：</b>「排反」の典型的な正例です。「重複を探す」方法で判定しましょう。偶数であり、かつ奇数でもある出目は存在するか？</div>
+      <div class="steps">
+        <div class="step"><span class="tag">重複の確認</span><span>1〜6の出目のうち、<b>偶数かつ奇数</b>である目は存在しない<span class="expl">同時に成立するケースが存在しない</span></span></div>
+        <div class="step"><span class="tag">結論</span><span>重複なし → <span class="hl-red">排反事象である</span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">シナリオ② 反例 · ノート 1.2 例2 &nbsp;|&nbsp; 1つのサイコロ：「1の目」vs「奇数の目」→ 非排反</div>
+      <div class="ex-think"><b>この例のポイント（例1からのステップアップ）：</b>ノートで示された重要な反例です。名前が違うからといって安易に排反だと判断してはいけません。「ケースの重複があるか」を確認します。「1の目」は<b>奇数でもある</b>ため、1が出たときに両方の事象が同時に成立します。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">重複の確認</span><span>「1の目が出た」とき：「1の目が出た」も「奇数の目が出た」も同時に成立<span class="expl">1 は奇数に含まれるため、重複が存在する</span></span></div>
+        <div class="step"><span class="tag">結論</span><span>重複あり（同時に起こり得る）→ <span class="hl-red">排反事象ではない</span></span></div>
+      </div>
+      <p class="note"><b>例1との比較（重要）：</b>①「偶数 vs 奇数」は互いに排他で重複なし → 排反。②「1の目 vs 奇数」は名前は異なりますが<b>重複がある</b> → 非排反。「事象の名称」ではなく「結果の重複の有無」だけで判断します。</p>
+    </div>
+
+    <div class="koketsu">速解のコツ：同じサイコロ・コインの2つの結果 → 排反 ＋ 独立ではない ／ 2つの異なるサイコロ・コイン → 排反ではない ＋ 独立かどうかはわからない</div>
+
+    <div class="example">
+      <div class="ex-label">シナリオ③ 実践 · 問題集 問題5 &nbsp;|&nbsp; 5つの設問を速解コツ＋2つの視点で解答</div>
+      <div class="ex-think"><b>この例のポイント（実践への応用）：</b>①②の「重複探索」をさらに深め、「排反（A/B）」と「独立（C/D/E）」の組み合わせを判定します。対象が「同じ1つの物体」か「2つの異なる物体」かが判別の分かれ目です。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">(1) 1つのサイコロ</span><span>偶数の目 vs 奇数の目 → 1回の試行で同時に出ない → <span class="hl-red">A. 排反事象である ＋ D. 独立事象ではない</span></span></div>
+        <div class="step"><span class="tag">(2) 1枚のコイン</span><span>表が出た vs 裏が出た → 上記と同様、1枚で同時に出ない → <span class="hl-red">A. 排反事象である ＋ D. 独立事象ではない</span></span></div>
+        <div class="step"><span class="tag">(3) 2つのサイコロ</span><span>サイコロ1が偶数 vs サイコロ2が奇数 → 異なる2つのサイコロで同時に成立可能 → <span class="hl-red">B. 排反事象ではない ＋ E. 独立事象かどうかはわからない</span></span></div>
+        <div class="step"><span class="tag">(4) 2つのサイコロ</span><span>サイコロ1が偶数 vs サイコロ2が偶数 → (3)と同様、同時に成立可能 → <span class="hl-red">B. 排反事象ではない ＋ E. 独立事象かどうかはわからない</span></span></div>
+        <div class="step"><span class="tag">(5) 2枚の硬貨</span><span>100円が裏 vs 10円が表 → 異なる2枚の硬貨 → <span class="hl-red">B. 排反事象ではない ＋ E. 独立事象かどうかはわからない</span></span></div>
+      </div>
+      <p class="note"><b>なぜ(1)(2)は「独立事象ではない」となるのか？</b>1つの同じ対象において、一方が起きると他方は絶対に起きない（同時に起きない）ため、「互いに無関係に起きる」という独立の定義を満たさないからです。</p>
+    </div>
+
+    <div class="warn"><b>なぜ(3)(4)(5)の独立性は「独立である」ではなく「わからない」になるのか？（深掘り解説）</b><br>
+    独立の定義は「一方の生起が他方の生起する確率に影響を与えないこと」です。独立であると断定するには、2つの物体が互いに影響を及ぼさないという保証が必要です。しかし問題5の文面では、2つのサイコロや硬貨の出目が相互に影響するかどうかについて一切言及されていません。情報が不足しているため、勝手に独立だと断定することはできず、「わからない」と答えるのが数学的に厳密な解答となります。日常の直感で「独立」と答えると失点するトラップです。<b>条件の記述がない ＝ 決めつけずに E を選択。</b></div>
+    <div class="imp">重要度：🔴 排反は「重複があるか」、独立は「影響があるか」で判定する。影響についての記述がない場合は「わからない」を選択すること</div>
+  </div>
+</section>
+
+<!-- ============ §3 数基本事象 ============ -->
+<section id="s3">
+  <div class="sec-num">§3 · 個数のカウント</div>
+  <h2>基本事象のカウント（全列挙＋総数の計算）</h2>
+  <p class="sec-sub">問題集の確認問題2は「すべて列挙し、総数を答える」形式です。1つのサイコロから十二面体、さらに2つのサイコロ（6×6）へとステップアップしていきましょう。2つのサイコロの合計値は、以下のインタラクティブ格子で視覚的に確認できます。</p>
+
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">具体例：6個から36個へのカウント</span><span class="rule-cn">ノート 1.1 例2 ＋ 問題集 問題2</span></div>
+
+    <div class="example">
+      <div class="ex-label">シナリオ① 基本 · §0の例2を参照 &nbsp;|&nbsp; 六面サイコロ</div>
+      <div class="ex-think"><b>この例のポイント：</b>最も基本的なカウントです。基本事象は「1の目〜6の目」の6通りです。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">列挙</span><span>1の目が出る、2の目が出る、3の目が出る、4の目が出る、5の目が出る、6の目が出る</span></div>
+        <div class="step"><span class="tag">総数</span><span>基本事象の総数は <span class="hl-red">6</span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">シナリオ② · 問題集 問題2〔確認問題2・問題1〕 &nbsp;|&nbsp; 十二面サイコロ</div>
+      <div class="ex-think"><b>この例のポイント（例1からのステップアップ）：</b>6面から12面に増えても考え方は同じです。各出目が1つの基本事象となります。複合事象の例として「偶数の目」の個数も数えてみましょう。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">基本事象</span><span>1の目が出る、2の目が出る……12の目が出る → 基本事象の総数は <span class="hl-red">12</span></span></div>
+        <div class="step"><span class="tag">偶数（複合）</span><span>2, 4, 6, 8, 10, 12 → 事象の数は <span class="hl-red">6</span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">シナリオ③ · 問題集 問題2〔確認問題2・問題2〕 &nbsp;|&nbsp; 2個の区別できる六面サイコロ</div>
+      <div class="ex-think"><b>この例のポイント（ステップアップ）：</b>対象が1つから<b>2つ</b>に増えます（§0の例3「(表,裏)≠(裏,表)」のサイコロ版です）。区別できるため順序対 (第1, 第2) を使い、6 × 6 ＝ 36通りとなります。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">表記法</span><span class="m">(サイコロ1, サイコロ2)<span class="expl" style="font-style:normal">例：1つ目が2、2つ目が5のときは (2, 5) と記述</span></span></div>
+        <div class="step"><span class="tag">積の法則</span><span class="m">6 × 6 = <span class="hl-red">36</span> 個<span class="expl" style="font-style:normal">(2, 5) と (5, 2) は異なる基本事象</span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">シナリオ④ · 問題集 問題2〔確認問題2・問題2 〔2〕〕 &nbsp;|&nbsp; 「2つの目の合計が6」となる事象の個数</div>
+      <div class="ex-think"><b>この例のポイント（ステップアップ）：</b>36個の基本事象から「和が6」となる条件を満たす複合事象を抽出します。<span class="m">a + b = 6</span> （ただし <span class="m">a, b ∈ {1,…,6}</span>）を満たす順序対を探します。下のインタラクティブグリッドで確認してみましょう。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">列挙</span><span class="m">(1, 5), (2, 4), (3, 3), (4, 2), (5, 1)</span></div>
+        <div class="step"><span class="tag">総数</span><span class="m"><span class="hl-red">5</span> 個<span class="expl" style="font-style:normal">6個ではありません</span></span></div>
+      </div>
+      <p class="note"><b>間違えやすいポイント：</b>「合計が6」になる組み合せは <b>6個ではなく 5個</b> です。サイコロの最小の目は1であり0の目は存在しないため、(0, 6) や (6, 0) は作れません。出目の範囲が 1〜6 に限られていることを必ず意識しましょう。</p>
+    </div>
+  </div>
+
+  <div class="dice-card">
+    <div class="dice-controls">
+      <span class="lbl">「合計値」ボタンを押して、36マス中の該当箇所を確認：</span>
+      <button class="sum-btn" data-sum="2">合計=2</button>
+      <button class="sum-btn" data-sum="4">合計=4</button>
+      <button class="sum-btn active" data-sum="6">合計=6</button>
+      <button class="sum-btn" data-sum="7">合計=7</button>
+      <button class="sum-btn" data-sum="11">合計=11</button>
+    </div>
+    <div class="grid6" id="grid"></div>
+    <div class="dice-read">合計 = <span id="sumLabel">6</span> となる組み合わせは計 <b id="hitCount">5</b> 個</div>
+  </div>
+  <p class="note" style="color:var(--sub);font-size:14px">「合計=7」をクリックすると最多の6個になり、「合計=2」「合計=11」はそれぞれ1個しかありません。合計値が中央に近いほど組み合わせが多くなります。これがvol.6以降で学ぶ確率分布「中央が高く両端が低い」の原型です。</p>
+  <div class="imp">重要度：🔴 区別できる場合は順序対の積（6×6）で計算する。「合計がN」のカウントでは0の出目が存在しないことに注意</div>
+</section>
+
+<!-- ============ §4 確率変数 ============ -->
+<section id="s4">
+  <div class="sec-num">§4 · 核心概念</div>
+  <h2>確率変数（概念問題の中心テーマ）</h2>
+  <p class="sec-sub">確率変数（random variable）は、名前に「変数」とついていますが、実際には<b>「関数（対応規則）」</b>のことです（ノートでもこの紛らわしさについて触れられています）。ノート2.2〜2.4に登場する6つの例を通して、基礎から四則演算、標本平均、連続型確率変数までの流れを網羅します。</p>
+
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">定義カード</span><span class="rule-cn">ノート 2.1</span></div>
+    <div class="big-eq"><span class="hl-red" style="font-size:.8em">確率変数 ＝ 「試行の結果（事象）」を「実現値（数値）」に対応させる規則（関数）</span></div>
+    <div class="koketsu">ポイント：事象を数値に変換する翻訳機（通常は大文字 X などで表記する）</div>
+    <p class="note" style="margin-top:8px"><b>「関数なのに変数」と呼ばれる理由：</b>「事象を入力すると数値を出力する」働きを持つため本質的には<b>関数</b>ですが、慣例的に「変数」と呼ばれ、大文字 <span class="m">X</span> などで表されます。言葉の違和感に惑わされず、その働きを理解しましょう。</p>
+    <div class="warn"><b>2つの種類を区別する：</b><br>
+    <b>離散型確率変数（discrete random variable）</b>：実現値が飛び飛びの値をとる（例：サイコロの出目 1, 2, 3…）<br>
+    <b>連続型確率変数（continuous random variable）</b>：実現値が連続的な値をとる（例：魚の体長。小数をいくらでも細かく取れる）。「小数を連続的に取り得るかどうか」で見分けます。</div>
+  </div>
+
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">具体例：確率変数 X の決め方</span><span class="rule-cn">ノート 2.2〜2.4 の6例を完全網羅</span></div>
+
+    <div class="example">
+      <div class="ex-label">シナリオ① 基本 · ノート 2.2 &nbsp;|&nbsp; 成績サンプリング</div>
+      <div class="ex-think"><b>この例のポイント：</b>最も直接的な確率変数です。<b>結果そのものが数値</b>であるパターンです。成績を S=4, A=3, B=2, C=1 と評価ポイントに換算し、ランダムに5回サンプリングしたときのポイント <span class="m">X</span> は確率変数となります。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">対応規則</span><span class="m">X ＝ サンプリングされた評価ポイント<span class="expl" style="font-style:normal">S→4, A→3, B→2, C→1</span></span></div>
+        <div class="step"><span class="tag">1回の試行例</span><span class="m">3, 4, 3, 1, 2 が選ばれた場合、X も順に 3, 4, 3, 1, 2 となる<span class="expl" style="font-style:normal">結果がランダムに決まるため X は確率変数</span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">シナリオ② · ノート 2.3.1 &nbsp;|&nbsp; 六面サイコロを10回振る</div>
+      <div class="ex-think"><b>この例のポイント（例1からのステップアップ）：</b>1つの試行に対して<b>異なる確率変数 <span class="m">X</span> を定義できる</b>ことを示します。出目をそのまま <span class="m">X</span> とする（例1と同じ）だけでなく、「偶数なら1、奇数なら0」というルール（ダミー変数化）を定めることもできます。<b><span class="m">X</span> は「人間が定めたルール」であり、試行自体に固定されているわけではありません。</b></div>
+      <div class="table-scroll">
+        <table class="tbl-tight">
+          <tr><th>試行回数</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th></tr>
+          <tr><td>出目</td><td>3</td><td>4</td><td>3</td><td>1</td><td>6</td><td>5</td><td>4</td><td>1</td><td>1</td><td>2</td></tr>
+          <tr><td>X ＝ 出目</td><td>3</td><td>4</td><td>3</td><td>1</td><td>6</td><td>5</td><td>4</td><td>1</td><td>1</td><td>2</td></tr>
+          <tr><td class="hl-red">X ＝ 偶数なら1, 奇数なら0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+        </table>
+      </div>
+      <p class="note"><b>読み取り方：</b>1回目の「出目＝3」のとき、上の定めたルールでは <span class="m">X = 3</span>、下のルールでは <span class="m">X = 0</span>（3は奇数だから）となります。同じ試行であっても、定義するルールによって確率変数の値は変化します。</p>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">シナリオ③ · ノート 2.3.2 &nbsp;|&nbsp; 2個のサイコロを同時に振る</div>
+      <div class="ex-think"><b>この例のポイント（ステップアップ）：</b>「1つの <span class="m">X</span>」から「<b>複数の <span class="m">X</span> の合成</b>」へと発展します。2つのサイコロの出目をそれぞれ <span class="m">X<sub>1</sub>, X<sub>2</sub></span> とし、その和を <span class="m">X = X<sub>1</sub> + X<sub>2</sub></span> と定義します。重要な結論：<b>確率変数を四則演算して得られる量も、また確率変数となります。</b></div>
+      <div class="big-eq m">X <b>=</b> X<sub>1</sub> <b>+</b> X<sub>2</sub></div>
+      <div class="table-scroll">
+        <table class="tbl-tight">
+          <tr><th>試行回数</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th></tr>
+          <tr><td><span class="m">X<sub>1</sub></span></td><td>3</td><td>4</td><td>3</td><td>1</td><td>6</td><td>5</td><td>4</td><td>1</td><td>1</td><td>2</td></tr>
+          <tr><td><span class="m">X<sub>2</sub></span></td><td>1</td><td>2</td><td>3</td><td>2</td><td>6</td><td>3</td><td>3</td><td>1</td><td>1</td><td>4</td></tr>
+          <tr><td class="hl-red"><span class="m">X ＝ X<sub>1</sub>+X<sub>2</sub></span></td><td>4</td><td>6</td><td>6</td><td>3</td><td>12</td><td>8</td><td>7</td><td>2</td><td>2</td><td>6</td></tr>
+        </table>
+      </div>
+      <p class="note"><b>読み取り方：</b>各列で上下の値を足し合わせたものが <span class="m">X</span> になります。第1回は 3+1=4、第5回は 6+6=12 です。これが「四則演算した量もまた確率変数となる」ということです。</p>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">シナリオ④ 簡潔解説 · ノート 2.3.3 &nbsp;|&nbsp; コイン投げ10回</div>
+      <div class="ex-think"><b>この例のポイント（ステップアップ）：</b>シナリオ②の「ダミー変数化」をコイン投げに適用したものです。<b>表なら1、裏なら0</b>と変換します。次のシナリオ⑤（これを5回繰り返す）の準備段階となります。</div>
+      <div class="table-scroll">
+        <table class="tbl-tight">
+          <tr><th>試行回数</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th></tr>
+          <tr><td>表裏</td><td>表</td><td>表</td><td>裏</td><td>表</td><td>裏</td><td>裏</td><td>表</td><td>裏</td><td>表</td><td>表</td></tr>
+          <tr><td class="hl-red">X ＝ 表なら1, 裏なら0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">シナリオ⑤ · ノート 2.3.4 &nbsp;|&nbsp; 「10回のコイン投げ」を5回行う</div>
+      <div class="ex-think"><b>この例のポイント（ステップアップ）：</b>「合成」から「<b>平均（標本平均）</b>」へと発展し、vol.6への架け橋となります。シナリオ④を5回行い、5×10の表を作ります。<b>列ごとに見ると</b>、 <span class="m">k</span> 回目のトスで得られる値 <span class="m">X<sub>k</sub></span> も確率変数であり、<b>行ごとに平均をとった値</b> <span class="m">X&#772;</span> も確率変数となります（これは「10回中表が出た割合」を意味します）。</div>
+      <div class="table-scroll">
+        <table class="tbl-tight">
+          <tr><th></th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th></tr>
+          <tr><td>第1回</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td></tr>
+          <tr><td>第2回</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+          <tr><td>第3回</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+          <tr><td>第4回</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+          <tr><td>第5回</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+          <tr><td class="hl-indigo">↓ 列方向</td><td><span class="m">X<sub>1</sub></span></td><td><span class="m">X<sub>2</sub></span></td><td><span class="m">X<sub>3</sub></span></td><td><span class="m">X<sub>4</sub></span></td><td><span class="m">X<sub>5</sub></span></td><td><span class="m">X<sub>6</sub></span></td><td><span class="m">X<sub>7</sub></span></td><td><span class="m">X<sub>8</sub></span></td><td><span class="m">X<sub>9</sub></span></td><td><span class="m">X<sub>10</sub></span></td></tr>
+        </table>
+      </div>
+      <div class="big-eq m">X&#772; <b>=</b> <span class="frac"><span>X<sub>1</sub> + X<sub>2</sub> + ⋯ + X<sub>10</sub></span><span>10</span></span> <b>=</b> <span style="font-style:normal">「10回のコイン投げで表が出た割合」</span></div>
+      <p class="note"><b>2つの視点：</b>①<b>列方向（縦）</b>： <span class="m">k</span> 回目のトスは5回の実験を通じて一列の値を持ち、 <span class="m">X<sub>k</sub></span> は確率変数となります。②<b>行方向（横）</b>：1回の実験での10個の値を平均した <span class="m">X&#772;</span> も確率変数となり、数値としては「表の出た割合」を表します。</p>
+      <p class="note"><b>vol.6とのつながり（伏線）：</b>この <span class="m">X&#772;</span> こそが vol.6 で学ぶ<b>標本平均</b>です。標本平均自体が確率変数（実験を行うたびに値が変動する）であるという事実こそが、<b>推測統計学</b>の核心（標本から母集団を推測する）となります。</p>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">シナリオ⑥ · ノート 2.4 &nbsp;|&nbsp; 魚釣り（基準長からの魚の全長を記録する）</div>
+      <div class="ex-think"><b>この例のポイント（ステップアップ）：</b><b>離散型</b>から<b>連続型</b>への移行です。前の5つのシナリオの <span class="m">X</span> はすべて整数（飛び飛びの値）でしたが、魚の全長は<b>任意の小数値（連続値）</b>をとります。これが連続型確率変数であり、Gauss分布に従います（§5で詳しく解説）。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">X の意味</span><span class="m">X ＝ 基準長からの魚の全長<span class="expl" style="font-style:normal">基準長からの差分のため、負の値になる可能性もある</span></span></div>
+        <div class="step"><span class="tag">型</span><span>任意の小数値を連続的にとり得る → <span class="hl-red">連続型確率変数</span></span></div>
+        <div class="step"><span class="tag">分布</span><span>Gauss（正規）分布に従う → §5へ</span></div>
+      </div>
+      <p class="note"><b>母集団の設定：</b>実際の池の魚の数は有限ですが、池が十分に広大である場合は「無限の要素を持つ母集団」とみなすことができます。釣り上げた魚の体長は、この母集団から抽出された1つの連続型確率変数となります。</p>
+    </div>
+    <div class="imp">重要度：🔴 確率変数は事象を数値に対応させる規則（関数）である。四則演算や平均値も確率変数となる。離散型と連続型の違いを把握すること</div>
+  </div>
+</section>
+
+<!-- ============ §5 Gauss 分布 ============ -->
+<section id="s5">
+  <div class="sec-num">§5 · 概要の理解</div>
+  <h2>Gauss 分布（式の構造と意味の理解）</h2>
+  <p class="sec-sub">Gauss（ガウス）分布 / Gaussian distribution（＝正規分布）は、魚の体長のような連続型確率変数が従う代表的な確率分布です。vol.7では複雑な積分計算は求められず、公式の形と <span class="m">μ, σ</span> の意味を理解することが中心となります。</p>
+
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">公式 (2-3) の要素分解</span><span class="rule-cn">ノート 2.4</span></div>
+    <div class="big-eq m">f(x) <b>=</b> <span class="frac"><span>1</span><span>√(2πσ<sup>2</sup>)</span></span> e<sup>−(x−μ)<sup>2</sup> / 2σ<sup>2</sup></sup></div>
+    <p>一見複雑に見えますが、4つのパーツに分解すればシンプルです：</p>
+    <div class="example">
+      <div class="steps">
+        <div class="step"><span class="tag">正規化定数</span><span class="m"><span class="frac"><span>1</span><span>√(2πσ<sup>2</sup>)</span></span><span class="expl" style="font-style:normal">全体の定数倍。曲線下の総面積を 1 に保つための係数（vol.5の「全確率密度面積＝1」に対応）</span></span></div>
+        <div class="step"><span class="tag">e の指数部分</span><span class="m">e<sup>−(x−μ)<sup>2</sup>/2σ<sup>2</sup></sup><span class="expl" style="font-style:normal">「釣鐘型」の形状を作る部分（vol.4で学んだ e^-(x^2) の形）</span></span></div>
+        <div class="step"><span class="tag">μ（ミュー）</span><span>平均値。釣鐘の中心の位置を表す。 <span class="m">x ＝ μ</span> のとき指数が 0 となり <span class="m">f(x)</span> は最大値をとる</span></div>
+        <div class="step"><span class="tag">σ（シグマ）</span><span>標準偏差。分布の広がりの度合いを表す。 <span class="m">σ</span> が大きいと横広がり（平べったい）、小さいと鋭く尖った形状になる</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">図2-1 の読み解き</span><span class="rule-cn">橙色 vs 青色</span></div>
+    <p style="font-size:15px">図の中で2種類のグラフ（度数分布）が重ね合わされています。いずれも中央（5付近）を頂点とする釣鐘型です：</p>
+    <div class="steps" style="margin-top:8px">
+      <div class="step"><span class="tag" style="color:var(--amber)">橙色</span><span><b>真の確率密度</b>——母集団が持つ本当の確率分布（理論上の真値）</span></div>
+      <div class="step"><span class="tag" style="color:var(--indigo)">青色</span><span><b>標本からの確率密度</b>——実際に観測・サンプリングしたデータから得られた分布</span></div>
+    </div>
+    <p class="note"><b>重要メッセージ（§4とvol.6との関わり）：</b>青（標本）は橙（真の分布）に近似しますが、<b>完全には一致しません</b>。有限の標本から推測を行う以上、標本分布は真の分布の周りで揺らぎます。これこそがシナリオ⑤の $\bar{X}$ が変動することの意味であり、統計的推測の基本原理です。</p>
+  </div>
+
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">3つの講義のつながり</span><span class="rule-cn">vol.4 / vol.5 / vol.6 → vol.7</span></div>
+    <div class="steps">
+      <div class="step"><span class="tag">vol.4 微分</span><span class="m">e<sup>−x<sup>2</sup></sup> の微分<span class="expl" style="font-style:normal">釣鐘型指数の変化率を解析するツール</span></span></div>
+      <div class="step"><span class="tag">vol.5 積分</span><span class="m"><span style="font-style:normal">∫</span>e<sup>−x</sup> dx ＝ 1<span class="expl" style="font-style:normal">「総面積＝1」という確率密度の基本性質</span></span></div>
+      <div class="step"><span class="tag">vol.6 パラメータ</span><span class="m">N(μ, σ<sup>2</sup>)<span class="expl" style="font-style:normal">中心 μ と広がり σ² による分布の特定</span></span></div>
+      <div class="step"><span class="tag">vol.7 結びつき</span><span><span class="hl-red">連続型確率変数の分布</span><span class="expl" style="font-style:normal">これまでの微積分・統計的概念がGauss分布として1つに結実する</span></span></div>
+    </div>
+    <div class="imp">重要度：🔴 公式の各要素の意味、μ（平均）と σ（広がり）、および「真の分布（橙）と標本分布（青）」の違いを理解すること（計算問題は出題されません）</div>
+  </div>
+</section>
+
+</div>
+
+<script>
+/* ---- 6×6 サイコロ格子 ---- */
+(function(){
+  var grid=document.getElementById("grid"),
+      sumLabel=document.getElementById("sumLabel"),
+      hitCount=document.getElementById("hitCount"),
+      btns=document.querySelectorAll(".sum-btn"),
+      current=6;
+
+  // 36マスを生成（行 = 第1サイコロ 1..6、列 = 第2サイコロ 1..6）
+  var cells=[];
+  for(var a=1;a<=6;a++){
+    for(var b=1;b<=6;b++){
+      var c=document.createElement("div");
+      c.className="cell";
+      c.dataset.sum=a+b;
+      c.textContent="("+a+","+b+")";
+      grid.appendChild(c);
+      cells.push(c);
+    }
+  }
+
+  function render(){
+    var n=0;
+    cells.forEach(function(c){
+      var hit=parseInt(c.dataset.sum,10)===current;
+      c.classList.toggle("hit",hit);
+      if(hit) n++;
+    });
+    sumLabel.textContent=current;
+    hitCount.textContent=n;
+  }
+  btns.forEach(function(btn){
+    btn.addEventListener("click",function(){
+      btns.forEach(function(x){x.classList.remove("active")});
+      btn.classList.add("active");
+      current=parseInt(btn.dataset.sum,10);
+      render();
+    });
+  });
+  render();
+})();
+</script>
+</body>
+</html>
