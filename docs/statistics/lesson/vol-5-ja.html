@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>積分 期末攻略 — 統計学Ⅰ vol.5</title>
+<style>
+:root{
+  --paper:#faf8f3; --card:#ffffff; --ink:#26241f; --sub:#6b675e;
+  --indigo:#3a5169; --indigo-soft:#e8edf2;
+  --red:#c2452d; --red-soft:#faece8;
+  --green:#3f7355; --green-soft:#e9f2ec;
+  --amber:#9a6b1f; --amber-soft:#f8f0dd;
+  --line:#e4e0d6; --code:#f3f1ea;
+  --radius:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#1c1b18; --card:#26241f; --ink:#ece9e1; --sub:#a49f93;
+    --indigo:#8fadc9; --indigo-soft:#2b3541;
+    --red:#e58a75; --red-soft:#412b25;
+    --green:#8dbfa2; --green-soft:#263a2f;
+    --amber:#d9b36b; --amber-soft:#3d341f;
+    --line:#3a372f; --code:#302d26;
+  }
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif;
+  font-size:17px; line-height:1.75; text-wrap:pretty;
+}
+.wrap{max-width:860px;margin:0 auto;padding:0 20px 120px}
+
+/* ---------- header ---------- */
+header{padding:64px 0 28px}
+.kicker{color:var(--red);font-weight:700;letter-spacing:.18em;font-size:13px}
+h1{font-size:clamp(30px,5vw,44px);font-weight:800;line-height:1.25;margin:10px 0 14px}
+.lead{color:var(--sub);max-width:640px}
+.lead b{color:var(--ink)}
+
+/* ---------- nav ---------- */
+nav{position:sticky;top:0;background:color-mix(in srgb,var(--paper) 88%,transparent);
+  backdrop-filter:blur(8px);z-index:50;padding:10px 0;border-bottom:1px solid var(--line);
+  display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav a{flex-shrink:0;font-size:13px;font-weight:600;color:var(--sub);text-decoration:none;
+  padding:5px 12px;border-radius:99px;border:1px solid var(--line);background:var(--card)}
+nav a:hover{color:var(--red);border-color:var(--red)}
+
+/* ---------- sections ---------- */
+section{margin-top:72px}
+.sec-num{font-size:13px;font-weight:700;color:var(--red);letter-spacing:.15em}
+h2{font-size:clamp(22px,3.4vw,30px);font-weight:800;margin:4px 0 6px}
+.sec-sub{color:var(--sub);font-size:15px;margin-bottom:22px}
+
+/* ---------- math typography ---------- */
+.m{font-family:"STIX Two Math","Times New Roman",Georgia,serif;font-style:italic;white-space:nowrap}
+.m b{font-style:normal;font-weight:400}
+sup{font-size:.68em}
+sup sup{font-size:.85em}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;
+  font-size:.86em;line-height:1.3;margin:0 2px}
+.frac>span:first-child{border-bottom:1.4px solid currentColor;padding:0 4px}
+.frac>span:last-child{padding:0 4px}
+.int{font-style:normal;font-size:1.5em;vertical-align:-.12em;margin-right:1px}
+.int sub{font-size:.5em;vertical-align:-.5em}
+.int sup{font-size:.5em;vertical-align:.75em;margin-left:-.35em}
+.big-eq{font-size:clamp(19px,3vw,24px);text-align:center;padding:18px 8px;overflow-x:auto}
+.hl-red{color:var(--red);font-weight:700}
+.hl-green{color:var(--green);font-weight:700}
+.hl-amber{color:var(--amber);font-weight:700}
+.hl-indigo{color:var(--indigo);font-weight:700}
+
+/* ---------- cards ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:24px 26px;margin-bottom:18px}
+.rule-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.rule-jp{font-size:20px;font-weight:800}
+.rule-cn{color:var(--sub);font-size:14px}
+.koketsu{display:inline-block;background:var(--red-soft);color:var(--red);font-weight:700;
+  font-size:15px;padding:4px 14px;border-radius:6px;margin:10px 0}
+.card .note{font-size:14.5px;color:var(--sub);margin-top:10px}
+.card .note b{color:var(--ink)}
+.imp{display:inline-block;font-size:13.5px;font-weight:700;background:var(--indigo-soft);
+  color:var(--indigo);border-radius:6px;padding:3px 12px;margin-top:12px}
+
+.example{background:var(--code);border-radius:8px;padding:16px 18px;margin-top:14px}
+.example .ex-label{font-size:12.5px;font-weight:700;color:var(--indigo);letter-spacing:.06em;margin-bottom:8px}
+.example .ex-think{font-size:14.5px;margin-bottom:10px}
+.example .ex-think b{color:var(--indigo)}
+.steps{display:flex;flex-direction:column;gap:8px}
+.step{display:grid;grid-template-columns:118px 1fr;gap:12px;align-items:baseline;font-size:16px}
+.step .tag{font-size:12.5px;font-weight:700;color:var(--sub);background:var(--card);
+  border:1px solid var(--line);border-radius:5px;padding:2px 8px;text-align:center;font-style:normal}
+.step .expl{display:block;font-size:13.5px;color:var(--sub);font-style:normal;white-space:normal}
+@media(max-width:560px){.step{grid-template-columns:1fr;gap:2px}}
+
+.warn{background:var(--amber-soft);border-radius:8px;padding:14px 18px;margin-top:14px;font-size:15px}
+.warn b{color:var(--amber)}
+
+table{width:100%;border-collapse:collapse;background:var(--card);font-size:16px}
+.table-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);margin-top:10px}
+th{background:var(--indigo-soft);color:var(--indigo);font-size:13.5px;font-weight:700;
+  padding:10px 14px;text-align:left;white-space:nowrap}
+td{padding:12px 14px;border-top:1px solid var(--line);vertical-align:middle}
+td .m{font-size:17px}
+
+/* ---------- interactive ---------- */
+.graph-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:26px}
+.graph-flex{display:flex;gap:28px;align-items:center;flex-wrap:wrap}
+.graph-flex svg{flex:1 1 300px;max-width:100%;height:auto}
+.graph-panel{flex:1 1 220px}
+.slope-read{font-size:15px;color:var(--sub);margin-bottom:6px}
+.slope-val{font-size:34px;font-weight:800;font-variant-numeric:tabular-nums}
+.slope-eq{font-size:15px;margin:8px 0 18px;color:var(--sub)}
+input[type=range]{width:100%;accent-color:var(--red);cursor:pointer}
+.range-labels{display:flex;justify-content:space-between;font-size:12px;color:var(--sub)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">統計学Ⅰ · vol.5 · 積分 · 期末攻略</div>
+  <h1>積分：微分を逆向きにたどる</h1>
+  <p class="lead">期末試験（<b>8/4</b>）で積分は必出です。<b>証明や導出ではなく、「実際に計算できるか」</b>が問われます。本ページでは「解法ツール」として再構築し、「積分＝面積」という視点から、唯一の基本動作である<b>原関数を求める → 上端・下端を代入する → 上端の代入値から下端の代入値を引く</b>をマスターします。各ルールには<b>易しい問題から順に並んだ例題チェーン</b>を用意し、応用問題に入る前に必要なパーツを一つずつ身につけられる構成にしています。</p>
+</header>
+
+<nav>
+  <a href="#s0">§0 積分とは何か</a>
+  <a href="#s1">§1 計算の3ステップ</a>
+  <a href="#s2">§2 原関数の早見表</a>
+  <a href="#s3">§3 3つの基本公式</a>
+  <a href="#s4">§4 計算の時短テクニック</a>
+  <a href="#s5">§5 広義積分</a>
+  <a href="#s6">§6 積の形はまず展開</a>
+</nav>
+
+<!-- ============ §0 積分とは何か ============ -->
+<section id="s0">
+  <div class="sec-num">§0 · まずはイメージをつかむ</div>
+  <h2>積分＝「曲線と x 軸で囲まれた面積」を求める</h2>
+  <p class="sec-sub">積分（せきぶん / integral）＝曲線と x 軸で囲まれた部分の面積です。曲線が複雑で公式がない場合、細長い長方形をたくさん並べて近似します——<b>長方形の数が増えるほど、精度が高くなります</b>。スライダーを動かしてみましょう。これこそが講義ノートの定義式 (1-10) で行っていることです。</p>
+
+  <div class="graph-card">
+    <div class="graph-flex">
+      <svg id="graph" viewBox="0 0 340 300" aria-label="y=x²の矩形近似">
+        <g id="rects"></g>
+        <line x1="30" y1="270" x2="330" y2="270" stroke="var(--line)" stroke-width="1.5"/>
+        <line x1="40" y1="10" x2="40" y2="285" stroke="var(--line)" stroke-width="1.5"/>
+        <path id="curve" fill="none" stroke="var(--indigo)" stroke-width="3" stroke-linecap="round"/>
+        <text x="322" y="262" font-size="13" fill="var(--sub)" font-style="italic">x</text>
+        <text x="48" y="22" font-size="13" fill="var(--sub)" font-style="italic">y</text>
+        <text x="60" y="45" font-size="14" fill="var(--indigo)" font-style="italic">y = x²</text>
+        <text x="36" y="284" font-size="12" fill="var(--sub)">0</text>
+        <text x="296" y="284" font-size="12" fill="var(--sub)">2</text>
+      </svg>
+      <div class="graph-panel">
+        <div class="slope-read">長方形の合計面積</div>
+        <div class="slope-val" id="sumVal">—</div>
+        <div class="slope-eq">真の面積 <span class="m"><span class="int">∫<sub>0</sub><sup>2</sup></span>x<b><sup>2</sup></b>dx = <span class="frac"><span>8</span><span>3</span></span></span> ≈ 2.667</div>
+        <input type="range" id="nSlider" min="2" max="60" step="1" value="6" aria-label="長方形の数">
+        <div class="range-labels"><span>N = 2</span><span id="nRead">N = 6</span><span>N = 60</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <div class="rule-head"><span class="rule-jp">幾何学的に計算する：公式を使わず、直接面積を見る</span><span class="rule-cn">ノート 1.2〜1.3 例題</span></div>
+    <p>最もシンプルな積分は、小学生で習う三角形の面積公式だけで計算できます。以下の4題でステップアップしながら、「積分＝面積」の感覚を養いましょう。</p>
+
+    <div class="example">
+      <div class="ex-label">ウォームアップ · ノート 1.2 例1 &nbsp;|&nbsp; <span class="m"><span class="int">∫<sub>0</sub><sup>3</sup></span>x dx = <span class="frac"><span>9</span><span>2</span></span></span></div>
+      <div class="ex-think"><b>考え方：</b><span class="m">f(x)=x</span> は原点を通る右上がりの直線で、[0,3] の範囲で x 軸と<b>直角三角形</b>を作ります。この三角形の面積がそのまま積分の値になります。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">グラフ描画</span><span class="m">[0,3] で直角三角形を形成：底辺 = 3、高さ = 3</span></div>
+        <div class="step"><span class="tag">面積計算</span><span class="m">底辺 3 × 高さ 3 ÷ 2 = <span class="hl-red"><span class="frac"><span>9</span><span>2</span></span></span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">ノート 1.2 例2 &nbsp;|&nbsp; <span class="m"><span class="int">∫<sub>−1</sub><sup>0</sup></span>x dx = −<span class="frac"><span>1</span><span>2</span></span></span></div>
+      <div class="ex-think"><b>考え方：</b>前問との<b>唯一の違い</b>：区間が x 軸の負の側 [−1,0] に移動し、三角形が <b>x 軸の下側</b>に現れます。面積の計算方法は同じですが、下側の面積には<b>マイナス符号を付けます</b>。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">グラフ描画</span><span class="m">[−1,0] の三角形：底辺 1、高さ 1（全体が x 軸の<b>下側</b>）</span></div>
+        <div class="step"><span class="tag">面積計算</span><span class="m">底辺 1 × 高さ 1 ÷ 2 = <span class="frac"><span>1</span><span>2</span></span></span></div>
+        <div class="step"><span class="tag">符号付加</span><span class="m">x 軸の下側にあるため → <span class="hl-red">−<span class="frac"><span>1</span><span>2</span></span></span><span class="expl">図形的な面積は ½ ですが、「定積分の値」としてはマイナスがつきます</span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">ノート 1.3 例2 &nbsp;|&nbsp; <span class="m"><span class="int">∫<sub>−1</sub><sup>1</sup></span>x dx = 0</span></div>
+      <div class="ex-think"><b>考え方：</b>前問との違い：区間が 0 を跨いで [−1,1] になっています。左半分は x 軸の下側（負）、右半分は上側（正）であり、2つの領域は<b>大きさ（面積）が等しく正負が打ち消し合います</b>。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">左半分 [−1,0]</span><span class="m">−<span class="frac"><span>1</span><span>2</span></span><span class="expl">前問の結論（x 軸の下側）</span></span></div>
+        <div class="step"><span class="tag">右半分 [0,1]</span><span class="m">+<span class="frac"><span>1</span><span>2</span></span><span class="expl">対称な三角形（x 軸の上側）</span></span></div>
+        <div class="step"><span class="tag">合計</span><span class="m">−<span class="frac"><span>1</span><span>2</span></span> + <span class="frac"><span>1</span><span>2</span></span> = <span class="hl-red">0</span></span></div>
+      </div>
+      <p class="note" style="margin-top:8px"><b>予告：</b>この「左が負・右が正でちょうど打ち消し合って 0 になる」という性質は、§4 テクニック②の<b>「奇関数を対称区間で積分すると 0 になる」</b>の図形的プロトタイプです。</p>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">ノート 1.3 例1 &nbsp;|&nbsp; 区間の分割 <span class="m"><span class="int">∫<sub>0</sub><sup>10</sup></span>x dx = <span class="int">∫<sub>0</sub><sup>5</sup></span> + <span class="int">∫<sub>5</sub><sup>10</sup></span></span></div>
+      <div class="ex-think"><b>考え方：</b>これまでの問題との違い：大きな区間を<b>2つに分けてそれぞれ計算し、後から足し合わせます</b>。結果は全体の計算と一致するはずです（面積は分割して足しても変わらないため）。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">全体 [0,10]</span><span class="m">底辺 10 × 高さ 10 ÷ 2 = 50</span></div>
+        <div class="step"><span class="tag">2つに分割</span><span class="m">[0,5] → <span class="frac"><span>25</span><span>2</span></span>，&nbsp; [5,10] → <span class="frac"><span>75</span><span>2</span></span></span></div>
+        <div class="step"><span class="tag">足し合わせ</span><span class="m"><span class="frac"><span>25</span><span>2</span></span> + <span class="frac"><span>75</span><span>2</span></span> = <span class="frac"><span>100</span><span>2</span></span> = <span class="hl-red">50</span><span class="expl">全体の計算結果と一致 ✓</span></span></div>
+      </div>
+      <p class="note" style="margin-top:8px">これが<b>区間加法性</b>（1-13）：<span class="m"><span class="int">∫<sub>a</sub><sup>c</sup></span> = <span class="int">∫<sub>a</sub><sup>b</sup></span> + <span class="int">∫<sub>b</sub><sup>c</sup></span></span> です。§3 で公式として再び登場しますが、図から直感的に成り立つことが分かります。</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <p>記号の読み方（記述式問題や講義の理解で役立ちます）：</p>
+    <div class="big-eq m"><span class="int hl-red">∫<sub class="hl-indigo">a</sub><sup class="hl-indigo">b</sup></span>&nbsp;<span class="hl-green">f(x)</span>&nbsp;<span class="hl-amber">dx</span></div>
+    <p style="font-size:15px"><span class="hl-red">∫</span> 積分記号（Sum「和」の頭文字 S を引き伸ばしたもの）&nbsp;
+    <span class="hl-indigo">a → 下端、b → 上端</span>（積分区間）&nbsp;
+    <span class="hl-green">f(x)</span> 被積分関数（ひせきぶんかんすう / integrand）&nbsp;
+    <span class="hl-amber">dx</span>「変数 x について積分する」ことを示す記号</p>
+    <div class="imp">重要度：🔴 2つのポイントを確実に抑える——① 定積分の計算結果は「面積」を意味する；② <b>x 軸より下側の面積にはマイナスがつく</b></div>
+  </div>
+</section>
+
+<!-- ============ §1 計算の3ステップ ============ -->
+<section id="s1">
+  <div class="sec-num">§1 · 基本の土台</div>
+  <h2>計算の3ステップ（すべての問題で共通）</h2>
+  <p class="sec-sub">講義ノートでは「積分の基本定理（(1-11)）」と呼ばれる概念です。難しそうに聞こえますが、実際の操作はわずか3ステップです。</p>
+
+  <div class="card">
+    <div class="big-eq"><span class="hl-indigo">STEP 1</span> 原関数 F を探す　→　<span class="hl-indigo">STEP 2</span> [F(x)] と書いて上下端を置く　→　<span class="hl-indigo">STEP 3</span> 上端の代入値 − 下端の代入値</div>
+    <div class="koketsu">合い言葉：微分して問題の関数になるものは何か？それを見つけて上下端を代入し、上から下を引く</div>
+    <p style="margin-top:6px">「原関数」（げんかんすう / antiderivative）＝<b>微分すると元の被積分関数に戻る関数</b>のことです。積分とは、「微分すると <span class="m">2x</span> になるものは何か？」と微分を逆向きに問う操作です（答えは <span class="m">x<sup>2</sup></span>）。</p>
+
+    <div class="example">
+      <div class="ex-label">ウォームアップ · ノート 1.6 例1 &nbsp;|&nbsp; <span class="m"><span class="int">∫<sub>a</sub><sup>b</sup></span>1 dx = b − a</span></div>
+      <div class="ex-think"><b>考え方：</b>最も基本的な例です。被積分関数は定数 1 です。まず<b>「微分して 1 になる関数は何か？」</b>と考えます。答えは x です（x を微分すると 1 になるため）。原関数が見つかったら、あとは上下端を代入して引き算するだけです。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">STEP 1 原関数を探す</span><span class="m">微分して 1 になるのは？ → <b>x</b></span></div>
+        <div class="step"><span class="tag">STEP 2 上下端を置く</span><span class="m"><b>[</b>x<b>]</b><sub>a</sub><sup>b</sup><span class="expl">角括弧 ＝「b と a をそれぞれ代入する準備」</span></span></div>
+        <div class="step"><span class="tag">STEP 3 上 − 下</span><span class="m"><span class="hl-red">b − a</span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">問題集 問題1 &nbsp;|&nbsp; <span class="m"><span class="int">∫<sub>0</sub><sup>1</sup></span>2 dx = 2</span></div>
+      <div class="ex-think"><b>考え方：</b>前問との<b>唯一の違い</b>：定数が 1 から 2 に変わり、上下端が具体的な数値 0 と 1 になっています。全く同じ 3 ステップで解けます。この問題は<b>図形的にも確認</b>できます：[0,1] の範囲で高さ 2、幅 1 の長方形の面積です。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">STEP 1 原関数を探す</span><span class="m">微分して 2 になるのは？ → <b>2x</b></span></div>
+        <div class="step"><span class="tag">STEP 2 上下端を置く</span><span class="m"><b>[</b>2x<b>]</b><sub>0</sub><sup>1</sup></span></div>
+        <div class="step"><span class="tag">STEP 3 上 − 下</span><span class="m">2×1 − 2×0 = <span class="hl-red">2</span><span class="expl">＝長方形の面積（高さ 2 × 幅 1）と一致</span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">標準 · 問題集 問題7 &nbsp;|&nbsp; <span class="m"><span class="int">∫<sub>1</sub><sup>2</sup></span>3x<sup>2</sup> dx = 7</span></div>
+      <div class="ex-think"><b>考え方：</b>前問との違い：被積分関数に x が含まれています。考えるべき核心は同じです——<b>「微分して 3x<sup>2</sup> になる関数は何か？」</b>。微分の公式「指数を前に出して 1 引く」を逆算すると、x<sup>3</sup> を微分すればちょうど 3x<sup>2</sup> になります。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">STEP 1 原関数を探す</span><span class="m">微分して 3x<sup>2</sup> になるのは？ → <b>x<sup>3</sup></b><span class="expl">確認：x³ を微分すると 3x² になるので正しい</span></span></div>
+        <div class="step"><span class="tag">STEP 2 上下端を置く</span><span class="m"><b>[</b>x<sup>3</sup><b>]</b><sub>1</sub><sup>2</sup></span></div>
+        <div class="step"><span class="tag">STEP 3 上 − 下</span><span class="m">2<sup>3</sup> − 1<sup>3</sup> = 8 − 1 = <span class="hl-red">7</span></span></div>
+      </div>
+    </div>
+
+    <div class="warn"><b>微分との大きな違い：</b>微分の計算結果は<b>関数</b>になりますが、上下端がある定積分（ていせきぶん）の計算結果は<b>1つの「数値」</b>になります。計算を最後まで終えると<b>式の中に x は一切残りません</b>。</div>
+    <div class="imp">重要度：🔴 試験のすべての計算問題はこの3ステップに従います。特に STEP 1 の「原関数を探す」が最大の核心です</div>
+  </div>
+</section>
+
+<!-- ============ §2 原関数の早見表 ============ -->
+<section id="s2">
+  <div class="sec-num">§2 · パーツライブラリ</div>
+  <h2>原関数の早見表（この 4 行を覚える）</h2>
+  <p class="sec-sub">STEP 1 の「原関数を探す」で迷う必要はありません。試験範囲に出てくるパーツは以下の 4 種類のみです。ルールの適用は微分の手順と<b>ちょうど逆</b>になります。各行がどのように導かれるか確認しましょう。</p>
+
+  <div class="table-scroll">
+    <table>
+      <tr><th>被積分関数 f(x)</th><th>原関数 F(x)</th><th>逆算のコツ</th></tr>
+      <tr><td><span class="m">c（定数）</span></td><td><span class="m hl-red">cx</span></td><td>定数に x がつく</td></tr>
+      <tr><td><span class="m">x<sup>n</sup>　(n ≠ −1)</span></td><td><span class="m hl-red"><span class="frac"><span>x<sup>n+1</sup></span><span>n+1</span></span></span></td><td>指数に 1 を足し、新しい指数で割る</td></tr>
+      <tr><td><span class="m">e<sup>x</sup></span></td><td><span class="m hl-red">e<sup>x</sup></span></td><td>不死鳥：そのまま変わらない</td></tr>
+      <tr><td><span class="m">e<sup>cx</sup></span></td><td><span class="m hl-red"><span class="frac"><span>1</span><span>c</span></span>e<sup>cx</sup></span></td><td>e はそのまま書き、指数の係数 c で<b>割る</b></td></tr>
+    </table>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <div class="rule-head"><span class="rule-jp">各公式の成り立ち</span><span class="rule-cn">ノート 1.6 例2〜4：「微分の逆算」による導出</span></div>
+    <p>丸暗記する必要はありません。被積分関数を<b>「ある関数の微分」の形に変形</b>してから 3 ステップを適用しているだけです。具体例から通式へと追っていけば自然と頭に入ります。</p>
+
+    <div class="example">
+      <div class="ex-label">ウォームアップ（数値例） &nbsp;|&nbsp; <span class="m">x<sup>2</sup></span> の原関数は <span class="m"><span class="frac"><span>x<sup>3</sup></span><span>3</span></span></span></div>
+      <div class="ex-think"><b>考え方：</b>馴染みのある x<sup>2</sup> で試してみましょう。逆算ルール「指数に 1 を足し、新しい指数で割る」：2 + 1 = 3 とし、3 で割ります。<b>検算：</b>微分して元に戻るか確かめます。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">指数に 1 を足す</span><span class="m">x<sup>2</sup> → x<sup>3</sup></span></div>
+        <div class="step"><span class="tag">新指数で割る</span><span class="m"><span class="frac"><span>x<sup>3</sup></span><span>3</span></span></span></div>
+        <div class="step"><span class="tag">検算</span><span class="m"><span class="frac"><span>x<sup>3</sup></span><span>3</span></span> を微分 = <span class="frac"><span>3x<sup>2</sup></span><span>3</span></span> = x<sup>2</sup><span class="expl">問題の式に戻る → 正しい</span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">公式 · ノート 1.6 例2 &nbsp;|&nbsp; <span class="m">x<sup>n</sup></span> → <span class="m"><span class="frac"><span>x<sup>n+1</sup></span><span>n+1</span></span></span>　(n ≠ −1)</div>
+      <div class="ex-think"><b>考え方：</b>前問との違い：具体的な 2 を任意の指数 n に置き換えた一般公式です。やり方は全く同じで、文字で表現しただけです。<b>微分のルールとちょうど逆</b>になります（微分は「前に出して 1 引く」、積分は「1 足して割る」）。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">1 足して割る</span><span class="m">x<sup>n</sup> → <span class="frac"><span>x<sup>n+1</sup></span><span>n+1</span></span><span class="expl">n = 2 のときは前問の x³/3 になります</span></span></div>
+      </div>
+      <p class="note" style="margin-top:8px">条件 <b>n ≠ −1</b>：n = −1 の場合、分母 n+1 が 0 になってしまうためです。試験範囲で 1/x の積分が問われることはないので、この条件の存在を知っておくだけで十分です。</p>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">ノート 1.6 例3 &nbsp;|&nbsp; <span class="m">e<sup>x</sup></span> → <span class="m">e<sup>x</sup></span>（不死鳥）</div>
+      <div class="ex-think"><b>考え方：</b>指数関数です。e<sup>x</sup> は微分してもそのままなので、逆に積分してもそのままです。形を変えずにそのまま残ります。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">そのまま書く</span><span class="m">e<sup>x</sup> の原関数 = <span class="hl-red">e<sup>x</sup></span>，代入すると e<sup>b</sup> − e<sup>a</sup></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">ウォームアップ（数値例） &nbsp;|&nbsp; <span class="m">e<sup>2x</sup></span> の原関数は <span class="m"><span class="frac"><span>1</span><span>2</span></span>e<sup>2x</sup></span></div>
+      <div class="ex-think"><b>考え方：</b>e<sup>x</sup> との違い：指数の上に係数 2 がついています。e の部分はそのまま書き、その係数で<b>割ります</b>（合成関数の微分の逆操作）。<b>検算</b>で確認しましょう。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">e はそのまま</span><span class="m">e<sup>2x</sup></span></div>
+        <div class="step"><span class="tag">係数 2 で割る</span><span class="m"><span class="frac"><span>1</span><span>2</span></span>e<sup>2x</sup></span></div>
+        <div class="step"><span class="tag">検算</span><span class="m"><span class="frac"><span>1</span><span>2</span></span>e<sup>2x</sup> を微分 = <span class="frac"><span>1</span><span>2</span></span>×2e<sup>2x</sup> = e<sup>2x</sup><span class="expl">問題の式に戻る → 正しい</span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">公式 · ノート 1.6 例4 &nbsp;|&nbsp; <span class="m">e<sup>cx</sup></span> → <span class="m"><span class="frac"><span>1</span><span>c</span></span>e<sup>cx</sup></span>　(c ≠ 0)</div>
+      <div class="ex-think"><b>考え方：</b>前問の 2 を任意の係数 c に変えた通式です：e の部分はそのまま書き、指数の係数で割ります。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">そのまま＋割る</span><span class="m">e<sup>cx</sup> → <span class="frac"><span>1</span><span>c</span></span>e<sup>cx</sup><span class="expl">c = 2 のとき前問と一致します</span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">頻出 · 問題集 問題11 &nbsp;|&nbsp; <span class="m">e<sup>−x</sup></span> → <span class="m">−e<sup>−x</sup></span></div>
+      <div class="ex-think"><b>考え方：</b>通式の中で最もミスが起きやすい特例：<b>c = −1</b> のケースです。c で割る ＝ −1 で割る ＝ −1 を掛ける、となるため、前に<b>マイナス符号</b>が現れます。このマイナスの付け忘れは失点原因の第1位です。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">公式適用 c=−1</span><span class="m">e<sup>−x</sup> → <span class="frac"><span>1</span><span>−1</span></span>e<sup>−x</sup> = <span class="hl-red">−e<sup>−x</sup></span></span></div>
+        <div class="step"><span class="tag">検算</span><span class="m">−e<sup>−x</sup> を微分 = −(−1)e<sup>−x</sup> = e<sup>−x</sup><span class="expl">問題の式に戻る → 正しい</span></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">微分対照カード</span><span class="rule-cn">同じ関係を逆方向から見る</span></div>
+    <div class="example">
+      <div class="ex-label">微分 ↔ 積分：逆向きに進む</div>
+      <div class="steps">
+        <div class="step"><span class="tag">微分の方向</span><span class="m">x<sup>3</sup> <b>—（指数を前に出し1引く）→</b> 3x<sup>2</sup></span></div>
+        <div class="step"><span class="tag">積分の方向</span><span class="m">3x<sup>2</sup> <b>—（1足して割る）→</b> <span class="frac"><span>3x<sup>3</sup></span><span>3</span></span> = x<sup>3</sup></span></div>
+        <div class="step"><span class="tag">微分の方向</span><span class="m">−e<sup>−x</sup> <b>—（合成関数の微分）→</b> e<sup>−x</sup></span></div>
+        <div class="step"><span class="tag">積分の方向</span><span class="m">e<sup>−x</sup> <b>—（係数 −1 で割る）→</b> <span class="hl-red">−e<sup>−x</sup></span><span class="expl">マイナス符号を忘れない！</span></span></div>
+      </div>
+    </div>
+    <div class="note"><b>検算の習慣：</b>見つけた原関数を<b>1回微分してみる</b>習慣をつけましょう。微分して元の式に戻れば確実に正解です。この10秒の確認が完答につながります。</div>
+    <div class="imp">重要度：🔴 4行の早見表は STEP 1 を解くための弾薬です。特に e⁻ˣ のマイナス符号は落とし穴です</div>
+  </div>
+</section>
+
+<!-- ============ §3 3つの基本公式 ============ -->
+<section id="s3">
+  <div class="sec-num">§3 · 分解の道具</div>
+  <h2>3つの実用公式（微分と同ルール）</h2>
+  <p class="sec-sub">講義ノートには 5 つの公式（(1-12)〜(1-16)）が載っていますが、実際の計算で使うのは最初の 3 つだけです。ルールは微分のときと全く同じです。各公式の形を確認し、段階的な例題でマスターしましょう。</p>
+
+  <!-- ① 定数倍 -->
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">① 定数倍は外へ出す</span><span class="rule-cn">定数倍の性質 · (1-12)</span></div>
+    <div class="big-eq m"><span class="int">∫</span><span class="hl-green">c</span>·f(x) dx <b>=</b> <span class="hl-green">c</span><span class="int">∫</span>f(x) dx</div>
+    <div class="koketsu">合い言葉：x を含まない係数は、あらかじめ積分記号の外に出す</div>
+
+    <div class="example">
+      <div class="ex-label">ウォームアップ（数値の係数） &nbsp;|&nbsp; <span class="m"><span class="int">∫</span>2x<sup>2</sup> dx = 2<span class="int">∫</span>x<sup>2</sup> dx</span></div>
+      <div class="ex-think"><b>考え方：</b>係数 2 は純粋な定数なので ∫ の外に出します。残った x<sup>2</sup> に §2 の早見表を適用します。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">定数を出す</span><span class="m">2<span class="int">∫</span>x<sup>2</sup> dx</span></div>
+        <div class="step"><span class="tag">早見表を適用</span><span class="m">2 × <span class="frac"><span>x<sup>3</sup></span><span>3</span></span> = <span class="hl-red"><span class="frac"><span>2x<sup>3</sup></span><span>3</span></span></span><span class="expl">x² の原関数は x³/3（§2 の第1例）</span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">応用（数値の係数 × 指数） &nbsp;|&nbsp; <span class="m"><span class="int">∫<sub>a</sub><sup>b</sup></span>5e<sup>x</sup> dx</span></div>
+      <div class="ex-think"><b>考え方：</b>前問との違い：外に出した後に残るのが e<sup>x</sup> になっています。係数 5 はそのまま外に出し、中は §2 の「不死鳥」を適用します。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">定数を出す</span><span class="m">5<span class="int">∫<sub>a</sub><sup>b</sup></span>e<sup>x</sup> dx</span></div>
+        <div class="step"><span class="tag">早見表を適用</span><span class="m">5<b>[</b>e<sup>x</sup><b>]</b><sub>a</sub><sup>b</sup> = <span class="hl-red">5(e<sup>b</sup> − e<sup>a</sup>)</span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">応用発展 · ノート 1.7 例5 &nbsp;|&nbsp; <span class="m"><span class="int">∫<sub>a</sub><sup>b</sup></span>e<sup>x−c</sup> dx</span></div>
+      <div class="ex-think"><b>考え方：</b>前問との<b>唯一の違い</b>：係数が「5」のように分かりやすく前に出ておらず、<b>指数のの中に隠れて</b>います。まず「指数の引き算 ＝ 割り算」の性質を使って係数を分離します。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">準備・指数を分解</span><span class="m">e<sup>x−c</sup> = <span class="frac"><span>e<sup>x</sup></span><span>e<sup>c</sup></span></span> = e<sup>−c</sup>·e<sup>x</sup><span class="expl">指数の引き算 ＝ 割り算；e⁻ᶜ には x が含まれていません</span></span></div>
+        <div class="step"><span class="tag">定数を外へ</span><span class="m">e<sup>−c</sup> は x を含まない → ∫ の外へ：e<sup>−c</sup><span class="int">∫<sub>a</sub><sup>b</sup></span>e<sup>x</sup> dx</span></div>
+        <div class="step"><span class="tag">早見表を適用</span><span class="m">e<sup>−c</sup><b>[</b>e<sup>x</sup><b>]</b><sub>a</sub><sup>b</sup> = <span class="hl-red">e<sup>−c</sup>(e<sup>b</sup> − e<sup>a</sup>)</span></span></div>
+      </div>
+      <p class="note" style="margin-top:8px"><b>前問との違い：</b>係数が直感的に見えない形になっていますが、「指数の引き算＝割り算」を使って e<sup>−c</sup> を取り出せば、5e<sup>x</sup> と全く同じ計算になります。</p>
+    </div>
+    <div class="imp">重要度：🔴 「x を含まない定数部分」を正しく見極め、指数の奥に隠れている定数も外に取り出せるようにする</div>
+  </div>
+
+  <!-- ② 和は別々 -->
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">② 和は別々に計算する</span><span class="rule-cn">和の線形性 · (1-14)</span></div>
+    <div class="big-eq m"><span class="int">∫</span>(e<sup>x</sup> + x<sup>2</sup>) dx <b>=</b> <span class="int">∫</span>e<sup>x</sup> dx <b>+</b> <span class="int">∫</span>x<sup>2</sup> dx</div>
+    <div class="koketsu">合い言葉：「＋」「−」を見つけたら項ごとに分割し、それぞれ積分してから足し合わせる</div>
+
+    <div class="example">
+      <div class="ex-label">ウォームアップ（2項） · 問題集 問題12 &nbsp;|&nbsp; <span class="m"><span class="int">∫<sub>0</sub><sup>1</sup></span>(e<sup>−x</sup> + 1) dx</span></div>
+      <div class="ex-think"><b>考え方：</b>2つの項がプラスでつながれています → 2つに分割し、それぞれの原関数を求めます。e<sup>−x</sup> には §2 の頻出パターン（マイナス符号に注意）、定数 1 には第1行を使います。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">項ごとに分割</span><span class="m"><span class="int">∫<sub>0</sub><sup>1</sup></span>e<sup>−x</sup> dx <b>+</b> <span class="int">∫<sub>0</sub><sup>1</sup></span>1 dx</span></div>
+        <div class="step"><span class="tag">各項の原関数</span><span class="m"><b>[</b>−e<sup>−x</sup><b>]</b><sub>0</sub><sup>1</sup> <b>+</b> <b>[</b>x<b>]</b><sub>0</sub><sup>1</sup><span class="expl">e⁻ˣ → −e⁻ˣ（符号注意）；1 → x</span></span></div>
+        <div class="step"><span class="tag">上 − 下</span><span class="m">(−e<sup>−1</sup> + 1) + (1 − 0) = <span class="hl-red">2 − e<sup>−1</sup></span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">標準（4項） · 問題集 問題5 &nbsp;|&nbsp; <span class="m"><span class="int">∫<sub>0</sub><sup>1</sup></span>(2x<sup>3</sup> + x<sup>2</sup> + 5x + 7) dx = <span class="frac"><span>31</span><span>3</span></span></span></div>
+      <div class="ex-think"><b>考え方：</b>前問との違い：項数が 4 つに増え、係数もついています。項ごとに原関数を求めます（冪乗は「1 足して割る」＋ 係数を処理）。下端が 0 なので、下端の代入結果はすべて 0 になり計算が楽になります。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">各項の原関数</span><span class="m">2·<span class="frac"><span>x<sup>4</sup></span><span>4</span></span> + <span class="frac"><span>x<sup>3</sup></span><span>3</span></span> + 5·<span class="frac"><span>x<sup>2</sup></span><span>2</span></span> + 7x = <span class="frac"><span>1</span><span>2</span></span>x<sup>4</sup> + <span class="frac"><span>1</span><span>3</span></span>x<sup>3</sup> + <span class="frac"><span>5</span><span>2</span></span>x<sup>2</sup> + 7x</span></div>
+        <div class="step"><span class="tag">x = 1 を代入</span><span class="m"><span class="frac"><span>1</span><span>2</span></span> + <span class="frac"><span>1</span><span>3</span></span> + <span class="frac"><span>5</span><span>2</span></span> + 7</span></div>
+        <div class="step"><span class="tag">x = 0 を代入</span><span class="m">すべて 0<span class="expl">下端が 0 なのでこの部分は 0</span></span></div>
+        <div class="step"><span class="tag">通分して引き算</span><span class="m"><span class="frac"><span>3+2+15+42</span><span>6</span></span> = <span class="frac"><span>62</span><span>6</span></span> = <span class="hl-red"><span class="frac"><span>31</span><span>3</span></span></span></span></div>
+      </div>
+    </div>
+    <div class="imp">重要度：🔴 多項式積分の王道手順：分割 → 各項の原関数 → 代入 → 通分</div>
+  </div>
+
+  <!-- ③ その他の公式 -->
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">③ 上下端を入れ替えると符号反転</span><span class="rule-cn">(1-15)</span></div>
+    <div class="big-eq m"><span class="int">∫<sub>a</sub><sup>b</sup></span> f dx <b>=</b> <span class="hl-red">−</span><span class="int">∫<sub>b</sub><sup>a</sup></span> f dx</div>
+    <div class="note">上下端を交換すると、定積分全体の符号が反転します。概念として知っておけば十分です。</div>
+    <div class="note" style="margin-top:14px">残りの2つの公式について：<br>
+    · <b>区間加法性</b>(1-13)：<span class="m"><span class="int">∫<sub>a</sub><sup>c</sup></span> = <span class="int">∫<sub>a</sub><sup>b</sup></span> + <span class="int">∫<sub>b</sub><sup>c</sup></span></span> —— §0 の図で見た通り（[0,10] ＝ [0,5]＋[5,10]）、直感的に明らかです。<br>
+    · <b>部分積分</b>(1-16 / Integration by Parts)：問題集の 16 題では一度も使わないため、名称を知っておく程度で問題ありません。</div>
+  </div>
+</section>
+
+<!-- ============ §4 計算の時短テクニック ============ -->
+<section id="s4">
+  <div class="sec-num">§4 · 時短テクニック</div>
+  <h2>2つの時短テクニック（計算を大幅省略）</h2>
+  <p class="sec-sub">問題集で繰り返し登場する「真面目に計算する必要がない」パターンです。見抜くことができれば、計算量を大幅に減らせます。</p>
+
+  <!-- テクニック① -->
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">テクニック① 定数の積分 ＝ 定数 × 区間の長さ</span></div>
+    <div class="koketsu">「∫ 定数 dx」を見たら、即座に 定数 × (上端 − 下端)</div>
+
+    <div class="example">
+      <div class="ex-label">秒殺 · 問題集 問題1 &nbsp;|&nbsp; <span class="m"><span class="int">∫<sub>0</sub><sup>1</sup></span>2 dx = 2</span></div>
+      <div class="ex-think"><b>考え方：</b>§1 では基本の 3 ステップで解きましたが、長方形の面積というイメージがあれば一瞬です：高さ 2 × 幅 (1−0)。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">定数 × 区間の長</span><span class="m">2 × (1 − 0) = <span class="hl-red">2</span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">問題集 問題2 &nbsp;|&nbsp; <span class="m"><span class="int">∫<sub>−1</sub><sup>1</sup></span>1 dx = 2</span></div>
+      <div class="ex-think"><b>考え方：</b>前問との違い：区間が 0 を跨いでいるため、区間の長さを正確に計算します。区間の長さ ＝ 1 − (−1) ＝ <b>2</b> です。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">定数 × 区間の長</span><span class="m">1 × (1 − (−1)) = 1 × 2 = <span class="hl-red">2</span><span class="expl">区間の長さは 2 です（1 ではありません）</span></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- テクニック② -->
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">テクニック② 奇関数 × 対称区間 ＝ 0</span><span class="rule-cn">奇関数（きかんすう）</span></div>
+    <div class="koketsu">対称区間（[−1,1] や [−2,2] など）では、奇数乗の項を即座に消去できる</div>
+
+    <div class="example">
+      <div class="ex-label">ルールの由来 · ノート 1.3 例2 &nbsp;|&nbsp; <span class="m"><span class="int">∫<sub>−1</sub><sup>1</sup></span>x dx = 0</span></div>
+      <div class="ex-think"><b>考え方：</b>§0 で登場した図形的イメージです。f(x)=x のグラフにおいて、左半分は x 軸の下側（負）、右半分は上側（正）で面積が等しいため打ち消し合います。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">左半分 [−1,0]</span><span class="m">−<span class="frac"><span>1</span><span>2</span></span><span class="expl">x 軸の下側（負）</span></span></div>
+        <div class="step"><span class="tag">右半分 [0,1]</span><span class="m">+<span class="frac"><span>1</span><span>2</span></span><span class="expl">x 軸の上側（正）</span></span></div>
+        <div class="step"><span class="tag">合計</span><span class="m">−<span class="frac"><span>1</span><span>2</span></span> + <span class="frac"><span>1</span><span>2</span></span> = <span class="hl-red">0</span></span></div>
+      </div>
+    </div>
+    <p class="note" style="margin-top:8px"><b>判定方法：</b>式の中の x に <b>−x</b> を代入したとき、全体が<b>元の式のマイナス倍</b>になるものが奇関数です。該当するもの：<b>x, x<sup>3</sup>, x<sup>5</sup>…（奇数乗の項）</b>や <span class="m">2xe<sup>x<sup>2</sup></sup></span> のような原点対称な関数です。</p>
+
+    <div class="example">
+      <div class="ex-label">応用（多項式） · 問題集 問題14 &nbsp;|&nbsp; <span class="m"><span class="int">∫<sub>−1</sub><sup>1</sup></span>(2e<sup>x</sup> + x<sup>3</sup> + x<sup>2</sup> + x + 1) dx</span></div>
+      <div class="ex-think"><b>考え方：</b>対称区間 [−1,1] での積分です。奇数乗の項（x<sup>3</sup>, x）は<b>計算せずに 0 として消去</b>し、残った 3 つの項だけを計算すれば手間が半減します。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">奇数乗を消去</span><span class="m">x<sup>3</sup> と x を消去<span class="expl">対称区間＋奇数乗 → それぞれ 0 になる</span></span></div>
+        <div class="step"><span class="tag">残りを計算</span><span class="m">2<span class="int">∫<sub>−1</sub><sup>1</sup></span>e<sup>x</sup> + <span class="int">∫<sub>−1</sub><sup>1</sup></span>x<sup>2</sup> + <span class="int">∫<sub>−1</sub><sup>1</sup></span>1</span></div>
+        <div class="step"><span class="tag">合計</span><span class="m">2(e − e<sup>−1</sup>) + <span class="frac"><span>2</span><span>3</span></span> + 2 = <span class="hl-red">2e − 2e<sup>−1</sup> + <span class="frac"><span>8</span><span>3</span></span></span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">秒殺 · 問題集 問題16 &nbsp;|&nbsp; <span class="m"><span class="int">∫<sub>−1</sub><sup>1</sup></span>2xe<sup>x<sup>2</sup></sup> dx = 0</span></div>
+      <div class="ex-think"><b>考え方：</b>前問との違い：関数全体が奇関数（−x を代入すると符号が反転する）になっています。対称区間上の積分なので<b>直接 0 になります</b>。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">奇偶判定</span><span class="m">−x を代入：2(−x)e<sup>(−x)<sup>2</sup></sup> = −2xe<sup>x<sup>2</sup></sup><span class="expl">符号が反転する → 奇関数</span></span></div>
+        <div class="step"><span class="tag">秒殺</span><span class="m">奇関数 × 対称区間 [−1,1] = <span class="hl-red">0</span></span></div>
+        <div class="step"><span class="tag">正面から計算</span><span class="m">原関数は e<sup>x<sup>2</sup></sup>，<b>[</b>e<sup>x<sup>2</sup></sup><b>]</b><sub>−1</sub><sup>1</sup> = e<sup>1</sup> − e<sup>1</sup> = 0<span class="expl">(−1)² = 1² = 1 より両端の値が等しいため 0 になり、一致します</span></span></div>
+      </div>
+    </div>
+    <div class="warn"><b>奇数乗のみ適用可能！</b><span class="m">x<sup>2</sup></span> や <span class="m">x<sup>4</sup></span> は<b>偶関数（ぐうかんすう）</b>であり、左右の領域で同符号となるため消去できません（問題 14 の x<sup>2</sup> は真面目に計算する必要があります）。判定は必ず「−x を代入して全体がマイナス倍になるか」で行ってください。</div>
+    <div class="imp">重要度：🔴 対称区間を見たら、まず奇数乗の項を探して消去する</div>
+  </div>
+</section>
+
+<!-- ============ §5 広義積分 ============ -->
+<section id="s5">
+  <div class="sec-num">§5 · 無限大への拡張</div>
+  <h2>広義積分（積分区間に無限大を含む場合）</h2>
+  <p class="sec-sub">広義積分（こうぎせきぶん / improper integral）——上端が ∞ の場合、∞ を「非常に大きな値」とみなし、代入したときにどの値に収束するかを考えます。</p>
+
+  <div class="card">
+    <div class="big-eq m"><span class="int">∫<sub>0</sub><sup>∞</sup></span> e<sup>−x</sup> dx <b>=</b> <b>[</b>−e<sup>−x</sup><b>]</b><sub>0</sub><sup>∞</sup> <b>=</b> 0 − (−1) <b>=</b> <span class="hl-red">1</span></div>
+    <div class="example">
+      <div class="ex-label">ノート 1.7 &nbsp;|&nbsp; <span class="m"><span class="int">∫<sub>0</sub><sup>∞</sup></span>e<sup>−x</sup> dx = 1</span></div>
+      <div class="ex-think"><b>考え方：</b>基本の 3 ステップ通りに進めます（上端が ∞ である点だけが異なります）。原関数は −e<sup>−x</sup>（§2 の頻出パターン）です。∞ を代入する際は「極限値」として挙動を確認します。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">STEP 1 原関数を探す</span><span class="m">e<sup>−x</sup> → −e<sup>−x</sup><span class="expl">§2 の c=−1 の行（マイナス符号注意）</span></span></div>
+        <div class="step"><span class="tag">上端 ∞ を代入</span><span class="m">x が非常に大きいとき e<sup>−x</sup> = <span class="frac"><span>1</span><span>e<sup>x</sup></span></span> → 0 となるため、−e<sup>−∞</sup> → 0</span></div>
+        <div class="step"><span class="tag">下端 0 を代入</span><span class="m">−e<sup>0</sup> = −1</span></div>
+        <div class="step"><span class="tag">上 − 下</span><span class="m">0 − (−1) = <span class="hl-red">1</span></span></div>
+      </div>
+    </div>
+    <div class="note"><b>この結果は丸暗記推奨：</b><span class="m"><span class="int">∫<sub>0</sub><sup>∞</sup></span> e<sup>−x</sup> dx = 1</span>。これは vol.6 で学ぶ「<b>確率密度関数の全領域の面積 ＝ 1</b>」（指数分布の正規化定数）の最初の重要例であり、今後も繰り返し登場します。</div>
+    <div class="imp">重要度：🔴 超重要公式として覚える；∞ は極限として扱い、e⁻∞ → 0</div>
+  </div>
+</section>
+
+<!-- ============ §6 積の形はまず展開 ============ -->
+<section id="s6">
+  <div class="sec-num">§6 · 最後の手段</div>
+  <h2>積の形はまず展開する（積分には「積の微分公式」がない）</h2>
+  <p class="sec-sub">積の形をした被積分関数を見ても焦る必要はありません。積分には微分のような「積の微分公式」がありません。<b>まず括弧を展開して足し算の形にし</b>、§3 の項ごとの積分に持ち込むのが基本戦略です。</p>
+
+  <div class="card">
+    <div class="example">
+      <div class="ex-label">問題集 問題15 &nbsp;|&nbsp; <span class="m"><span class="int">∫<sub>−1</sub><sup>1</sup></span>e<sup>x</sup>(1 + e<sup>−2x</sup>) dx = 2(e − e<sup>−1</sup>)</span></div>
+      <div class="ex-think"><b>考え方：</b>e<sup>x</sup> に括弧が掛け合わされています。積分には積の公式がないため、<b>まず展開します</b>。「指数法則：底が同じ積は指数の足し算」で整理し、§3 ② の項別積分に持ち込みます。展開後の各項はすべて §2 で練習済みのパーツです。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">まず展開する</span><span class="m">e<sup>x</sup>(1 + e<sup>−2x</sup>) = e<sup>x</sup> + e<sup>x</sup>·e<sup>−2x</sup> = e<sup>x</sup> + e<sup>−x</sup><span class="expl">e^x · e^(−2x)：指数の足し算 x + (−2x) = −x</span></span></div>
+        <div class="step"><span class="tag">各項の原関数</span><span class="m">e<sup>x</sup> → e<sup>x</sup>；&nbsp; e<sup>−x</sup> → −e<sup>−x</sup><span class="expl">全体の原関数 e^x − e^(−x)</span></span></div>
+        <div class="step"><span class="tag">上下端を代入</span><span class="m"><b>[</b>e<sup>x</sup> − e<sup>−x</sup><b>]</b><sub>−1</sub><sup>1</sup> = (e − e<sup>−1</sup>) − (e<sup>−1</sup> − e)</span></div>
+        <div class="step"><span class="tag">上 − 下</span><span class="m">= <span class="hl-red">2(e − e<sup>−1</sup>)</span></span></div>
+      </div>
+    </div>
+    <div class="imp">重要度：🔴 積の形を見たら即座に展開。無理に積の公式を探さない</div>
+  </div>
+</section>
+
+</div>
+
+<script>
+/* ---- 矩形近似アニメ ---- */
+(function(){
+  var X0=40, Y0=270, W=280, H=240;              // 描画領域
+  var XMAX=2, YMAX=4.4;                          // 数学座標
+  function px(x){return X0 + x/XMAX*W}
+  function py(y){return Y0 - y/YMAX*H}
+
+  var d="";
+  for(var x=0;x<=2.001;x+=0.04){
+    d += (d?" L":"M") + px(x).toFixed(1) + " " + py(x*x).toFixed(1);
+  }
+  document.getElementById("curve").setAttribute("d", d);
+
+  var slider=document.getElementById("nSlider"),
+      rects=document.getElementById("rects"),
+      sumVal=document.getElementById("sumVal"),
+      nRead=document.getElementById("nRead");
+
+  function update(){
+    var N=parseInt(slider.value,10), w=XMAX/N, sum=0, html="";
+    for(var i=0;i<N;i++){
+      var xl=i*w, h=xl*xl;                       // 左端の高さ（教材の定義と同じ）
+      sum += h*w;
+      html += '<rect x="'+px(xl).toFixed(1)+'" y="'+py(h).toFixed(1)+
+              '" width="'+(W/N-0.6).toFixed(1)+'" height="'+((h/YMAX*H)).toFixed(1)+
+              '" fill="var(--red)" opacity="0.35" stroke="var(--red)" stroke-width="1"/>';
+    }
+    rects.innerHTML=html;
+    sumVal.textContent=sum.toFixed(3);
+    nRead.textContent="N = "+N;
+    sumVal.style.color = Math.abs(sum-8/3)<0.1 ? "var(--green)" : "var(--red)";
+  }
+  slider.addEventListener("input",update);
+  update();
+})();
+</script>
+</body>
+</html>
