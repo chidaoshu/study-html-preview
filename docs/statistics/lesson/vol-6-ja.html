@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>確率分布・母平均 期末攻略 — 統計学Ⅰ vol.6</title>
+<style>
+:root{
+  --paper:#faf8f3; --card:#ffffff; --ink:#26241f; --sub:#6b675e;
+  --indigo:#3a5169; --indigo-soft:#e8edf2;
+  --red:#c2452d; --red-soft:#faece8;
+  --green:#3f7355; --green-soft:#e9f2ec;
+  --amber:#9a6b1f; --amber-soft:#f8f0dd;
+  --line:#e4e0d6; --code:#f3f1ea;
+  --radius:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#1c1b18; --card:#26241f; --ink:#ece9e1; --sub:#a49f93;
+    --indigo:#8fadc9; --indigo-soft:#2b3541;
+    --red:#e58a75; --red-soft:#412b25;
+    --green:#8dbfa2; --green-soft:#263a2f;
+    --amber:#d9b36b; --amber-soft:#3d341f;
+    --line:#3a372f; --code:#302d26;
+  }
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","PingFang SC","Yu Gothic",sans-serif;
+  font-size:17px; line-height:1.75; text-wrap:pretty;
+}
+.wrap{max-width:860px;margin:0 auto;padding:0 20px 120px}
+
+header{padding:64px 0 28px}
+.kicker{color:var(--red);font-weight:700;letter-spacing:.18em;font-size:13px}
+h1{font-size:clamp(30px,5vw,44px);font-weight:800;line-height:1.25;margin:10px 0 14px}
+.lead{color:var(--sub);max-width:640px}
+.lead b{color:var(--ink)}
+
+nav{position:sticky;top:0;background:color-mix(in srgb,var(--paper) 88%,transparent);
+  backdrop-filter:blur(8px);z-index:50;padding:10px 0;border-bottom:1px solid var(--line);
+  display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav a{flex-shrink:0;font-size:13px;font-weight:600;color:var(--sub);text-decoration:none;
+  padding:5px 12px;border-radius:99px;border:1px solid var(--line);background:var(--card)}
+nav a:hover{color:var(--red);border-color:var(--red)}
+
+section{margin-top:72px}
+.sec-num{font-size:13px;font-weight:700;color:var(--red);letter-spacing:.15em}
+h2{font-size:clamp(22px,3.4vw,30px);font-weight:800;margin:4px 0 6px}
+.sec-sub{color:var(--sub);font-size:15px;margin-bottom:22px}
+
+.m{font-family:"STIX Two Math","Times New Roman",Georgia,serif;font-style:italic;white-space:nowrap}
+.m b{font-style:normal;font-weight:400}
+sup{font-size:.68em}
+sup sup{font-size:.85em}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;
+  font-size:.86em;line-height:1.3;margin:0 2px}
+.frac>span:first-child{border-bottom:1.4px solid currentColor;padding:0 4px}
+.frac>span:last-child{padding:0 4px}
+.int{font-style:normal;font-size:1.5em;vertical-align:-.12em;margin-right:1px}
+.int sub{font-size:.5em;vertical-align:-.5em}
+.int sup{font-size:.5em;vertical-align:.75em;margin-left:-.35em}
+.sig{font-style:normal;font-size:1.35em;vertical-align:-.2em}
+.sig sub{font-size:.45em;vertical-align:-.9em;margin-left:-.9em;display:inline-block}
+.sig sup{font-size:.45em;vertical-align:.95em;margin-left:-.6em;display:inline-block}
+.rt{font-style:normal}
+.big-eq{font-size:clamp(19px,3vw,24px);text-align:center;padding:18px 8px;overflow-x:auto}
+.hl-red{color:var(--red);font-weight:700}
+.hl-green{color:var(--green);font-weight:700}
+.hl-amber{color:var(--amber);font-weight:700}
+.hl-indigo{color:var(--indigo);font-weight:700}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:24px 26px;margin-bottom:18px}
+.rule-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.rule-jp{font-size:20px;font-weight:800}
+.rule-cn{color:var(--sub);font-size:14px}
+.koketsu{display:inline-block;background:var(--red-soft);color:var(--red);font-weight:700;
+  font-size:15px;padding:4px 14px;border-radius:6px;margin:10px 0}
+.card .note{font-size:14.5px;color:var(--sub);margin-top:10px}
+.card .note b{color:var(--ink)}
+.imp{display:inline-block;font-size:13.5px;font-weight:700;background:var(--indigo-soft);
+  color:var(--indigo);border-radius:6px;padding:3px 12px;margin-top:12px}
+
+.example{background:var(--code);border-radius:8px;padding:16px 18px;margin-top:14px}
+.example .ex-label{font-size:12.5px;font-weight:700;color:var(--indigo);letter-spacing:.06em;margin-bottom:8px}
+.example .ex-think{font-size:14.5px;margin-bottom:10px}
+.example .ex-think b{color:var(--indigo)}
+.diff{display:inline-block;font-size:12px;font-weight:700;background:var(--amber-soft);color:var(--amber);
+  border-radius:5px;padding:2px 9px;margin-bottom:8px}
+.steps{display:flex;flex-direction:column;gap:8px}
+.step{display:grid;grid-template-columns:128px 1fr;gap:12px;align-items:baseline;font-size:16px}
+.step .tag{font-size:12.5px;font-weight:700;color:var(--sub);background:var(--card);
+  border:1px solid var(--line);border-radius:5px;padding:2px 8px;text-align:center;font-style:normal}
+.step .expl{display:block;font-size:13.5px;color:var(--sub);font-style:normal;white-space:normal}
+@media(max-width:560px){.step{grid-template-columns:1fr;gap:2px}}
+
+.warn{background:var(--amber-soft);border-radius:8px;padding:14px 18px;margin-top:14px;font-size:15px}
+.warn b{color:var(--amber)}
+
+table{width:100%;border-collapse:collapse;background:var(--card);font-size:16px}
+.table-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);margin-top:10px}
+th{background:var(--indigo-soft);color:var(--indigo);font-size:13.5px;font-weight:700;
+  padding:10px 14px;text-align:left;white-space:nowrap}
+td{padding:12px 14px;border-top:1px solid var(--line);vertical-align:top}
+td .m{font-size:16px}
+
+/* ---- interactive pmf bar ---- */
+.pmf-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:26px;margin-top:18px}
+.pmf-chart{display:flex;align-items:flex-end;gap:10px;height:200px;padding:0 6px 0 34px;
+  position:relative;border-left:1.5px solid var(--line);border-bottom:1.5px solid var(--line)}
+.pmf-yaxis{position:absolute;left:-30px;top:-6px;font-size:11px;color:var(--sub)}
+.pmf-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.pmf-bar{width:100%;max-width:46px;background:var(--indigo);border-radius:5px 5px 0 0;
+  transition:height .12s ease;min-height:2px;position:relative}
+.pmf-bar span{position:absolute;top:-19px;left:0;right:0;text-align:center;font-size:11.5px;
+  color:var(--sub);font-variant-numeric:tabular-nums}
+.pmf-face{margin-top:7px;font-weight:700;font-size:15px;font-family:"STIX Two Math",serif;font-style:italic}
+.pmf-slider{width:100%;accent-color:var(--red);cursor:pointer;margin-top:6px}
+.pmf-sliders{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:18px;padding:0 6px 0 34px}
+.pmf-readout{display:flex;gap:20px;flex-wrap:wrap;margin-top:20px;align-items:baseline}
+.pmf-mu{font-size:15px;color:var(--sub)}
+.pmf-mu b{font-size:30px;color:var(--red);font-variant-numeric:tabular-nums;margin-left:6px}
+.pmf-sum{font-size:14px}
+.pmf-sum.ok{color:var(--green);font-weight:700}
+.pmf-note{font-size:13px;color:var(--sub);margin-top:8px}
+.pmf-preset{font:inherit;font-size:13px;font-weight:700;border:1px solid var(--line);background:var(--card);
+  color:var(--ink);border-radius:7px;padding:5px 12px;cursor:pointer;margin-right:8px;margin-top:4px}
+.pmf-preset:hover{border-color:var(--red)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">統計学Ⅰ · vol.6 · 確率分布と母平均 · 期末攻略</div>
+  <h1>母平均：1つの公式で全パターン攻略</h1>
+  <p class="lead">期末 <b>8/4</b>。vol.6 の計算問題はほぼ1つの公式——<b>母平均 μ = Σ（値 × 確率）</b>だけで解くことができます。残るは<b>「離散か連続か」の分類</b>、2つの分布公式の<b>識別</b>、そして「密度 ≠ 確率」といった<b>概念判定</b>です。本ページは解法ツールごとに再構成し、各法則に<b>難易度順の例題チェーン</b>を配置しています。講義ノートの例題をメインとし、問題集を応用補足として網羅的に解説します。</p>
+</header>
+
+<nav>
+  <a href="#s0">§0 割合＝確率</a>
+  <a href="#s1">§1 離散/連続</a>
+  <a href="#s2">§2 母平均の公式★</a>
+  <a href="#s3">§3 0-1型即答</a>
+  <a href="#s4">§4 2つの分布公式</a>
+  <a href="#s5">§5 密度と積分</a>
+</nav>
+
+<!-- ============ §0 割合=確率 ============ -->
+<section id="s0">
+  <div class="sec-num">§0 · 基礎固め</div>
+  <h2>なぜ「割合 ＝ 確率」なのか</h2>
+  <p class="sec-sub">本冊すべての出発点です。講義ノートでは「10人の成績」実験からステップバイステップで導出しています（ノート 2.1〜2.2）。この導出プロセスをたどることで、後半の母平均公式が自然な結果として理解できます。</p>
+
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">成績実験：「平均点」から生まれる「確率」</span><span class="rule-cn">ノート 2.2 の段階的導出</span></div>
+    <p>背景：10人の成績を評価ポイント（S=4, A=3, B=2, C=1）に換算します。10人中、ポイント1が2人、2が4人、3が3人、4が1人です。まず「5人を抽出して平均を計算する」ことから始め、この平均の式を段階的に変形していきます。</p>
+
+    <div class="example">
+      <div class="ex-label">STEP 1 · 直接平均 &nbsp;|&nbsp; ノート式 (2-1)</div>
+      <div class="ex-think"><b>出発点：</b>抽出された5人のポイントを <span class="m">x<sub>1</sub>, …, x<sub>5</sub></span> とすると、標本平均は「すべて足して5で割る」となります。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">平均の式</span><span class="m">x̄ = <span class="frac"><span>x<sub>1</sub> + x<sub>2</sub> + ⋯ + x<sub>5</sub></span><span>5</span></span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">STEP 2 · 同じ値でグループ化 &nbsp;|&nbsp; ノート式 (2-2)</div>
+      <div class="ex-think"><b>操作：グループごとにカウント。</b>1つずつ足す代わりに、「ポイント k が何回現れたか」を数えます。ポイント1が <span class="m">n<sub>1</sub></span> 回、ポイント2が <span class="m">n<sub>2</sub></span> 回…… とおき、同じ値をまとめます。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">グループ変形</span><span class="m">x̄ = <span class="frac"><span>n<sub>1</sub>×1 + n<sub>2</sub>×2 + n<sub>3</sub>×3 + n<sub>4</sub>×4</span><span>5</span></span><span class="expl">分子 ＝ 各ポイント × その出現回数 の総和</span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">STEP 3 · 「÷5」を各項に分配</div>
+      <div class="ex-think"><b>操作：分解。</b>「足してから5で割る」＝「各項を先に5で割ってから足す」。分母の5を各 <span class="m">n<sub>k</sub></span> に分配します。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">各項の分解</span><span class="m">x̄ = <span class="frac"><span>n<sub>1</sub></span><span>5</span></span>×1 + <span class="frac"><span>n<sub>2</sub></span><span>5</span></span>×2 + <span class="frac"><span>n<sub>3</sub></span><span>5</span></span>×3 + <span class="frac"><span>n<sub>4</sub></span><span>5</span></span>×4</span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">STEP 4 · 「割合」の登場 &nbsp;|&nbsp; ノート式 (2-3)(2-4)</div>
+      <div class="ex-think"><b>観察：</b>各項の前の <span class="m"><span class="frac"><span>n<sub>k</sub></span><span>5</span></span></span> とは何でしょうか？それは「ポイント k の人数 ÷ 全人数」＝ <b>ポイント k の割合（標本内の割合）</b>です。そして、すべての割合を足し合わせると当然全体 ＝ 1 になります。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">割合の確認</span><span class="m"><span class="frac"><span>n<sub>k</sub></span><span>5</span></span> ＝ ポイント k の割合</span></div>
+        <div class="step"><span class="tag">割合の和 = 1</span><span class="m"><span class="sig">Σ</span> <span class="frac"><span>n<sub>k</sub></span><span>5</span></span> = <span class="frac"><span>n<sub>1</sub></span><span>5</span></span> + <span class="frac"><span>n<sub>2</sub></span><span>5</span></span> + <span class="frac"><span>n<sub>3</sub></span><span>5</span></span> + <span class="frac"><span>n<sub>4</sub></span><span>5</span></span> = <span class="hl-green">1</span><span class="expl">全員を足し合わせると全体になるため、割合の総和は必ず 1</span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">STEP 5 · 標本から母集団全体へ → 「確率」 &nbsp;|&nbsp; ノート式 (2-5)(2-6)</div>
+      <div class="ex-think"><b>操作：極限をとる。</b>標本サイズを5人から母集団全体の10人へ広げると（<span class="m">n</span> を大きくする）、割合 <span class="m"><span class="frac"><span>n<sub>k</sub></span><span>n</span></span></span> はある定数値に近づき、それを <span class="m">p<sub>k</sub></span> と書きます。この <span class="m">p<sub>k</sub></span> を「ポイント k が出現する<b>確率</b>」と呼びます。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">割合→確率</span><span class="m"><span class="frac"><span>n<sub>k</sub></span><span>n</span></span> → p<sub>k</sub><span class="expl">母集団におけるポイント k の割合が、そのまま出現確率となる</span></span></div>
+        <div class="step"><span class="tag">本例の計算</span><span class="m">p<sub>1</sub>=<span class="frac"><span>2</span><span>10</span></span>, p<sub>2</sub>=<span class="frac"><span>4</span><span>10</span></span>, p<sub>3</sub>=<span class="frac"><span>3</span><span>10</span></span>, p<sub>4</sub>=<span class="frac"><span>1</span><span>10</span></span></span></div>
+        <div class="step"><span class="tag">確率の和 = 1</span><span class="m"><span class="sig">Σ</span> p<sub>k</sub> = <span class="hl-green">1</span><span class="expl">割合の総和が 1 であり、確率も割合と同義であるため、確率の総和も 1 になる</span></span></div>
+      </div>
+    </div>
+
+    <div class="koketsu">結論：割合（ひ / 比）＝ 確率（かくりつ / probability）。本質的に同じ概念の異なる呼び名です。</div>
+    <div class="warn"><b>Σp = 1</b>（すべての確率の総和＝1）——「割合の総和が全体（=1）になる」ことから直接導かれる極めて重要な性質であり、正誤問題で頻出です。</div>
+  </div>
+
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">重要ポイント：有限母集団は「可知」、無限母集団は「不可知」</span><span class="rule-cn">正誤問題の頻出出題点</span></div>
+    <p>同じ「確率」であっても、真の値を知ることができるかどうかは母集団が<b>有限</b>か<b>無限</b>かによって決まります。正誤問題で最も狙われやすい落とし穴です。</p>
+    <div class="table-scroll">
+      <table>
+        <tr><th>母集団</th><th>例</th><th>真の確率を知ることができるか</th><th>理由</th></tr>
+        <tr><td class="hl-green">有限母集団</td><td>10人の成績</td><td class="hl-green">可能</td><td>要素数が有限であるため、すべての要素を調べ尽くすことができ、割合＝確率が直接求まる</td></tr>
+        <tr><td class="hl-red">無限母集団</td><td>サイコロ / コイン（無限回可能）</td><td class="hl-red">不可</td><td>真の割合を得るには無限回の試行が必要であり、現実には不可能なため、標本から推測するしかない</td></tr>
+      </table>
+    </div>
+    <div class="warn"><b>正誤問題の罠：</b>「いかなる状況でも人間は確率分布を必ず知ることができる」は<b>誤り</b>です。無限母集団の真の確率は<b>完全には知り得ません</b>——これこそが「標本から母集団を推測する」統計的推測を学ぶ理由です。（対応：問題集 Q4 の選択肢 A）</div>
+    <div class="imp">重要度：🔴 割合＝確率、Σp=1、無限母集団は不可知——この3点を確実に暗記</div>
+  </div>
+</section>
+
+<!-- ============ §1 離散/連続 ============ -->
+<section id="s1">
+  <div class="sec-num">§1 · 分類</div>
+  <h2>確率分布の2種類：「離散型か連続型か」</h2>
+  <p class="sec-sub">問題集 Q1・Q2 で直接問われる分類です。測定値が<b>飛び飛びの値（離散的）</b>か<b>連続した値（連続的）</b>かで決まります。</p>
+
+  <div class="table-scroll">
+    <table>
+      <tr><th>測定値の性質</th><th>分布の名称</th><th>日文 / English</th><th>具体例</th></tr>
+      <tr><td><span class="hl-red">離散</span>（飛び飛びの値）</td><td class="hl-red">確率質量関数</td><td>pmf / probability mass function</td><td>サイコロの出目、コインの表裏</td></tr>
+      <tr><td><span class="hl-green">連続</span>（切れ目のない値）</td><td class="hl-green">確率密度関数</td><td>pdf / probability density function</td><td>魚の体長、身長</td></tr>
+    </table>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <div class="koketsu">暗記のコツ：質量（mass）＝1粒1粒重みのある「粒」→ 離散；密度（density）＝連続して広がる「面」→ 連続</div>
+    <p>サイコロの目は 1, 2, 3, 4, 5, 6 しか出ず、間に「3.5の目」はありません——これを<b>離散的（飛び飛び）</b>と呼び、<b>確率質量関数</b>を用います。一方、魚の体長は 2.13 cm, 2.134 cm, 2.1349 cm…… などどんな小数値も取り得ます——これを<b>連続的（切れ目のない値）</b>と呼び、<b>確率密度関数</b>を用います。</p>
+    <div class="warn"><b>選択肢のひっかけ注意：</b>「確率分布関数」「累積分布関数」は本講義の対照範囲における正解用語では<b>ありません</b>。惑わされないようにしましょう。離散は「質量」、連続は「密度」一択です。（対応：問題集 Q1→質量, Q2→密度）</div>
+    <div class="imp">重要度：🔴 離散＝質量、連続＝密度、この対応をセットで覚える</div>
+  </div>
+</section>
+
+<!-- ============ §2 母平均公式 ============ -->
+<section id="s2">
+  <div class="sec-num">§2 · 核心公式</div>
+  <h2>★ 母平均 μ = Σ（値 × 確率）</h2>
+  <p class="sec-sub">母平均（population mean）——本冊<b>唯一</b>の計算公式です。§0の成績の導出も最終的にこの式に行き着きます。以下の6つの例題を通して、基本形から分数・逆算までステップアップしていきましょう。</p>
+
+  <div class="card">
+    <div class="big-eq m">μ = <span class="sig">Σ</span> x · p<sub><span style="font-style:italic">x</span></sub> = （値<sub>1</sub> × 確率<sub>1</sub>）+（値<sub>2</sub> × 確率<sub>2</sub>）+ ⋯</div>
+    <div class="koketsu">覚え方：各実現値 × その確率 をすべて足し合わせる。「加重平均」と同じ構造です</div>
+    <div class="warn"><b>間違いやすいポイント：</b>「値 × 確率」であって、「値 × 度数（回数）」ではありません。また、確率だけを単に足すのでもありません。必ず各項で<b>取リ得る値そのものを掛ける</b>必要があります。</div>
+  </div>
+
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">例題チェーン ①〜⑥</span><span class="rule-cn">基本 → 共通因数のくくり出し → ゼロ項 → 極端な例 → 分数 → 確率の事前計算</span></div>
+
+    <!-- ① -->
+    <div class="example">
+      <div class="ex-label">① 基本例 · ノート 2.4 &nbsp;|&nbsp; 成績の母平均 μ = 2.3</div>
+      <div class="ex-think"><b>考え方：</b>§0で求めた4つの確率 <span class="m">p<sub>1</sub>=0.2, p<sub>2</sub>=0.4, p<sub>3</sub>=0.3, p<sub>4</sub>=0.1</span> を用い、公式「値 × 確率 を足す」をそのまま適用します。全4項を順に代入します。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">代入</span><span class="m">μ = 0.2×1 + 0.4×2 + 0.3×3 + 0.1×4</span></div>
+        <div class="step"><span class="tag">各項の計算</span><span class="m">= 0.2 + 0.8 + 0.9 + 0.4</span></div>
+        <div class="step"><span class="tag">足し算</span><span class="m">= <span class="hl-red">2.3</span><span class="expl">平均ポイントが 2 と 3 の間に収まり妥当</span></span></div>
+      </div>
+    </div>
+
+    <!-- ② -->
+    <div class="example">
+      <div class="ex-label">② ノート 3.4 例1 &nbsp;|&nbsp; 公正なサイコロ μ = 3.5</div>
+      <span class="diff">①との違い：全6項 ＋ 確率がすべて等しいため共通因数をくくり出せる</span>
+      <div class="ex-think"><b>考え方：</b>サイコロの各目が出る確率はすべて <span class="m"><span class="frac"><span>1</span><span>6</span></span></span> です（これを<b>一様分布 / uniform distribution</b>といいます）。全6項に共通する <span class="m"><span class="frac"><span>1</span><span>6</span></span></span> を<b>シグマの外にくくり出す</b>ことができます。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">代入</span><span class="m">μ = <span class="frac"><span>1</span><span>6</span></span>×1 + <span class="frac"><span>1</span><span>6</span></span>×2 + ⋯ + <span class="frac"><span>1</span><span>6</span></span>×6</span></div>
+        <div class="step"><span class="tag">くくり出し</span><span class="m">= <span class="frac"><span>1</span><span>6</span></span>(1+2+3+4+5+6) = <span class="frac"><span>1</span><span>6</span></span>×21</span></div>
+        <div class="step"><span class="tag">約分</span><span class="m">= <span class="frac"><span>21</span><span>6</span></span> = <span class="hl-red">3.5</span><span class="expl">対応：問題集 Q10 同様</span></span></div>
+      </div>
+    </div>
+
+    <!-- ③ -->
+    <div class="example">
+      <div class="ex-label">③ ノート 3.4 例2 &nbsp;|&nbsp; 偶数の目しか出ないサイコロ μ = 4</div>
+      <span class="diff">②との違い：「ゼロ項」が存在するため、まず全6項を書いてから確率 0 の項を消去する</span>
+      <div class="ex-think"><b>考え方：</b>確率は <span class="m">p<sub>1</sub>=p<sub>3</sub>=p<sub>5</sub>=0</span>, <span class="m">p<sub>2</sub>=p<sub>4</sub>=p<sub>6</sub>=<span class="frac"><span>1</span><span>3</span></span></span> です。全6項の公式を一通り書き下し、<b>確率が 0 の項は掛け算すると 0 になるため消去</b>します。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">全6項の列挙</span><span class="m">μ = 0×1 + <span class="frac"><span>1</span><span>3</span></span>×2 + 0×3 + <span class="frac"><span>1</span><span>3</span></span>×4 + 0×5 + <span class="frac"><span>1</span><span>3</span></span>×6</span></div>
+        <div class="step"><span class="tag">ゼロ項の消去</span><span class="m">= <span class="frac"><span>1</span><span>3</span></span>×2 + <span class="frac"><span>1</span><span>3</span></span>×4 + <span class="frac"><span>1</span><span>3</span></span>×6<span class="expl">確率が 0 の 3 項が消滅</span></span></div>
+        <div class="step"><span class="tag">くくり出しと計算</span><span class="m">= <span class="frac"><span>1</span><span>3</span></span>(2+4+6) = <span class="frac"><span>12</span><span>3</span></span> = <span class="hl-red">4</span></span></div>
+      </div>
+    </div>
+
+    <!-- ④ -->
+    <div class="example">
+      <div class="ex-label">④ ノート 3.4 例3 &nbsp;|&nbsp; イカサマサイコロ（2の目しか出ない） μ = 2</div>
+      <span class="diff">③との違い：極端なケースであり、1項しか残らず即計算完了</span>
+      <div class="ex-think"><b>考え方：</b><span class="m">p<sub>2</sub>=1</span> で、残りはすべて 0 です。ゼロ項消去のテクニックを極限まで推し進めると、6項のうち「2の目の項」しか残りません。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">1項のみ残留</span><span class="m">μ = 1×2 = <span class="hl-red">2</span><span class="expl">100% 2が出るため、平均も当然 2 となる</span></span></div>
+      </div>
+    </div>
+
+    <!-- ⑤ -->
+    <div class="example">
+      <div class="ex-label">⑤ 問題集 Q9 &nbsp;|&nbsp; 歪んだサイコロ μ = 56/15</div>
+      <span class="diff">これまでの例との違い：確率が分数で与えられており、主な作業は「通分」</span>
+      <div class="ex-think"><b>考え方：</b>確率は分数で与えられています：<span class="m">p<sub>1</sub>=<span class="frac"><span>1</span><span>60</span></span>, p<sub>2</sub>=<span class="frac"><span>19</span><span>60</span></span>, p<sub>3</sub>=<span class="frac"><span>1</span><span>12</span></span>, p<sub>4</sub>=<span class="frac"><span>1</span><span>4</span></span>, p<sub>5</sub>=<span class="frac"><span>1</span><span>6</span></span>, p<sub>6</sub>=<span class="frac"><span>1</span><span>6</span></span></span>。公式は変わらず、各項の「値×確率」を計算してから<b>分母を 60 に通分して相加</b>します。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">立式</span><span class="m">μ = 1·<span class="frac"><span>1</span><span>60</span></span> + 2·<span class="frac"><span>19</span><span>60</span></span> + 3·<span class="frac"><span>1</span><span>12</span></span> + 4·<span class="frac"><span>1</span><span>4</span></span> + 5·<span class="frac"><span>1</span><span>6</span></span> + 6·<span class="frac"><span>1</span><span>6</span></span></span></div>
+        <div class="step"><span class="tag">分母を60に通分</span><span class="m"><span class="frac"><span>1</span><span>60</span></span> + <span class="frac"><span>38</span><span>60</span></span> + <span class="frac"><span>15</span><span>60</span></span> + <span class="frac"><span>60</span><span>60</span></span> + <span class="frac"><span>50</span><span>60</span></span> + <span class="frac"><span>60</span><span>60</span></span><span class="expl">3·1/12=15/60；4·1/4=60/60；5·1/6=50/60；6·1/6=60/60</span></span></div>
+        <div class="step"><span class="tag">分子の和</span><span class="m">= <span class="frac"><span>1+38+15+60+50+60</span><span>60</span></span> = <span class="frac"><span>224</span><span>60</span></span></span></div>
+        <div class="step"><span class="tag">約分</span><span class="m">= <span class="hl-red"><span class="frac"><span>56</span><span>15</span></span></span><span class="expl">分子・分母を 4 で割る</span></span></div>
+      </div>
+    </div>
+
+    <!-- ⑥ -->
+    <div class="example">
+      <div class="ex-label">⑥ 問題集 Q8 &nbsp;|&nbsp; 箱の中のボール μ = 1/2</div>
+      <span class="diff">⑤との違い：確率が直接与えられていないため、先に「個数 ÷ 総数」で確率を求める</span>
+      <div class="ex-think"><b>考え方：</b>箱の中に赤2個、青3個、緑1個の合計6個が入っています。得点は赤 −1点、青 1点、緑 2点です。<b>確率は問題文に書かれていない</b>ため、まず「各色の出現確率 ＝ その色の個数 ÷ 総数6」を自分で計算し、その後で公式に代入します。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">確率の算出</span><span class="m">赤 <span class="frac"><span>2</span><span>6</span></span>, 青 <span class="frac"><span>3</span><span>6</span></span>, 緑 <span class="frac"><span>1</span><span>6</span></span><span class="expl">個数 ÷ 総数 6</span></span></div>
+        <div class="step"><span class="tag">公式への代入</span><span class="m">μ = (−1)·<span class="frac"><span>2</span><span>6</span></span> + 1·<span class="frac"><span>3</span><span>6</span></span> + 2·<span class="frac"><span>1</span><span>6</span></span></span></div>
+        <div class="step"><span class="tag">足し算</span><span class="m">= <span class="frac"><span>−2+3+2</span><span>6</span></span> = <span class="frac"><span>3</span><span>6</span></span> = <span class="hl-red"><span class="frac"><span>1</span><span>2</span></span></span></span></div>
+      </div>
+      <div class="warn"><b>「標本平均」との混同に注意（Q8〔2〕）：</b>非復元抽出で実際に赤2個、青1個を取り出した場合、問われているのは<b>標本平均 x̄</b> です。その場合は<b>実際に取り出されたデータ</b>を直接平均します：<span class="m">x̄ = <span class="frac"><span>(−1)+(−1)+1</span><span>3</span></span> = −<span class="frac"><span>1</span><span>3</span></span></span>。<br><b>母平均 μ は「確率」を使い、標本平均 x̄ は「抽出されたデータ」を使う</b>——問題がどちらを求めているか慎重に読み取りましょう。</div>
+    </div>
+    <div class="imp">重要度：🔴 μ=Σ(値×確率) 1つの公式で Q8・Q9・Q10 をカバー。ゼロ項消去、通分、確率の事前計算が3大ポイント</div>
+  </div>
+
+  <div class="pmf-card">
+    <div class="rule-head"><span class="rule-jp">インタラクティブ：バーを動かして μ の変化を体感</span><span class="rule-cn">例題②③⑤に対応</span></div>
+    <div class="pmf-yaxis">確率</div>
+    <div class="pmf-chart" id="chart"></div>
+    <div class="pmf-sliders" id="sliders"></div>
+    <div style="padding-left:34px">
+      <button class="pmf-preset" data-preset="uniform">一様分布（各1/6）</button>
+      <button class="pmf-preset" data-preset="even">偶数の目のみ</button>
+      <button class="pmf-preset" data-preset="q9">問題集 Q9</button>
+    </div>
+    <div class="pmf-readout" style="padding-left:34px">
+      <div class="pmf-mu">母平均 μ =<b id="muVal">3.50</b></div>
+      <div class="pmf-sum ok" id="sumVal">Σp = 1.00 ✓</div>
+    </div>
+    <div class="pmf-note" style="padding-left:34px">各バーをドラッグして各出目の確率を調整できます（自動的に正規化され、Σp は常に 1 を保ちます）。μ は Σ(値×確率) によりリアルタイムで再計算されます。3つのプリセットを試し、例題②（一様=3.5）、③（偶数=4）、⑤（Q9=56/15≈3.73）と見比べてみましょう。</div>
+  </div>
+</section>
+
+<!-- ============ §3 0-1型即答 ============ -->
+<section id="s3">
+  <div class="sec-num">§3 · 即答テクニック</div>
+  <h2>0-1 型（コイン）の即答ルール：μ = p₁</h2>
+  <p class="sec-sub">実現値が 0 と 1 のみ（コインの表裏、ダミー化）である場合、母平均には一瞬で答えが出る結論が存在します。これは §2 例題③「ゼロ項消去」の最短応用です。</p>
+
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">導出：0の項が自動的に消滅</span><span class="rule-cn">ノート 4.3</span></div>
+    <div class="big-eq m">μ = 0·p<sub>0</sub> + 1·p<sub>1</sub> = <span class="hl-red">p<sub>1</sub></span></div>
+    <div class="ex-think" style="margin-bottom:0"><b>理由：</b>値が 0 と 1 のみであるため、公式 <span class="m">μ = 0·p<sub>0</sub> + 1·p<sub>1</sub></span> に代入すると、「0の項は 0 を掛けるため消滅」（§2 ③のゼロ項テクニックと同様）、直接 <span class="m">1·p<sub>1</sub></span> だけが残ります。</div>
+    <div class="koketsu">結論：母平均 ＝ 「1（表）が出る確率」であり、計算不要で即答可能</div>
+
+    <div class="example">
+      <div class="ex-label">基本例 · 問題集 Q11 &nbsp;|&nbsp; p₁ = 1/3 → μ = 1/3</div>
+      <div class="ex-think"><b>考え方：</b>結論 <span class="m">μ = p<sub>1</sub></span> を直接適用します。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">結論適用</span><span class="m">μ = p<sub>1</sub> = <span class="hl-red"><span class="frac"><span>1</span><span>3</span></span></span><span class="expl">0の項が消滅するため、母平均は表（1）が出る確率にそのまま等しくなる</span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">問題集 Q12 &nbsp;|&nbsp; 公正なコイン（一様分布） → μ = 1/2</div>
+      <span class="diff">Q11との違い：確率が直接書かれておらず、「一様」から p₁ を導く</span>
+      <div class="ex-think"><b>考え方：</b>「一様分布」＝表裏の確率が等しいことを意味するので、<span class="m">p<sub>1</sub>=p<sub>0</sub>=<span class="frac"><span>1</span><span>2</span></span></span> となります。これを結論に代入します。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">一様→1/2</span><span class="m">p<sub>1</sub> = p<sub>0</sub> = <span class="frac"><span>1</span><span>2</span></span></span></div>
+        <div class="step"><span class="tag">結論適用</span><span class="m">μ = p<sub>1</sub> = <span class="hl-red"><span class="frac"><span>1</span><span>2</span></span></span></span></div>
+      </div>
+    </div>
+    <div class="note"><b>ダミー化（dummy coding）の補足：</b>コインの「表 / 裏」は元々数値ではないため、平均を計算できるように<b>表 = 1、裏 = 0</b> と数値に置き換えます（ノート 4.1）。これにより 0-1 の数値データとなり、母平均の公式が適用できるようになります。</div>
+    <div class="imp">重要度：🔴 「0と1の2値のみ」を見たら、母平均は立式せずに即座に p₁ を書く</div>
+  </div>
+</section>
+
+<!-- ============ §4 2つの分布公式 ============ -->
+<section id="s4">
+  <div class="sec-num">§4 · 識別</div>
+  <h2>2つの確率分布公式（識別問題）</h2>
+  <p class="sec-sub">問題集 Q3・Q6・Q7 では選択肢から正しい公式を選ばせます。暗記するよりも、それぞれの「検証法 / 識別ポイント」を押さえる方が確実に解けます。</p>
+
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">Bernoulli 分布（ベルヌーイ分布）</span><span class="rule-cn">0-1 型 · ノート 4.4</span></div>
+    <div class="big-eq m">f(x) = p<sub>1</sub><sup>x</sup>(1 − p<sub>1</sub>)<sup>1−x</sup>　(x = 0, 1)</div>
+    <div class="koketsu">検証法：x = 1 と x = 0 を実際に代入し、それぞれ p₁ と 1−p₁ が再現されるか確かめる</div>
+
+    <div class="example">
+      <div class="ex-label">検証法 · 対応 問題集 Q3・Q6</div>
+      <div class="ex-think"><b>考え方：</b>指数の付け方を丸暗記しなくても、0と1を代入して確認すれば確実です。正しい公式であれば、「1が出る確率」と「0が出る確率」が正しく得られます。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">x = 1 を代入</span><span class="m">p<sub>1</sub><sup>1</sup>(1−p<sub>1</sub>)<sup>0</sup> = p<sub>1</sub><span class="expl">✓ 「1が出る確率」に一致</span></span></div>
+        <div class="step"><span class="tag">x = 0 を代入</span><span class="m">p<sub>1</sub><sup>0</sup>(1−p<sub>1</sub>)<sup>1</sup> = 1−p<sub>1</sub><span class="expl">✓ 「0が出る確率」に一致</span></span></div>
+        <div class="step"><span class="tag">誤り選択肢の判定</span><span class="m">指数の組み合わせが不適切な式（両方 x、両方 1−x など）は代入しても p<sub>1</sub> や 1−p<sub>1</sub> にならない<span class="expl">対応 Q6：D が正解、A/B/C は不可</span></span></div>
+      </div>
+    </div>
+
+    <div class="rule-cn" style="margin-top:10px">3種類のコインと、それぞれの μ = p₁（§3 に対応）：</div>
+    <div class="table-scroll">
+      <table>
+        <tr><th>コインの種類</th><th>p<sub>0</sub>（裏）</th><th>p<sub>1</sub>（表）</th><th>母平均 μ = p<sub>1</sub></th></tr>
+        <tr><td>若干裏が出やすい（図 4-1）</td><td>0.7</td><td>0.3</td><td class="hl-red">0.3</td></tr>
+        <tr><td>公正なコイン（図 4-2）</td><td>0.5</td><td>0.5</td><td class="hl-red">0.5</td></tr>
+        <tr><td>表しか出ない（図 4-3）</td><td>0.0</td><td>1.0</td><td class="hl-red">1.0</td></tr>
+      </table>
+    </div>
+    <div class="note">いずれのコインも §3 の結論 <b>μ = p₁</b> により、計算なしで直接読み取ることができます。</div>
+  </div>
+
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">Gauss 分布（正規分布）</span><span class="rule-cn">連続型・ベル型曲線 · ノート 5.4</span></div>
+    <div class="big-eq m">f(x) = <span class="frac"><span>1</span><span>√(2πσ<sup>2</sup>)</span></span> e<sup>−(x−μ)<sup>2</sup> / 2σ<sup>2</sup></sup></div>
+    <div class="koketsu">識別3大チェックポイント：① 指数に<b>マイナス（負号）</b>がある ② 分子が <b>(x−μ)²</b> ③ 分母が <b>2σ²</b></div>
+
+    <div class="example">
+      <div class="ex-label">識別法 · 対応 問題集 Q7</div>
+      <div class="ex-think"><b>考え方：</b>Q7の誤り選択肢は、上記の3大ポイントのいずれかを壊した形になっています。指数の部分を1つずつ照合しましょう。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">誤りパターン1</span><span class="m">分子分母の逆転：e<sup>−2σ<sup>2</sup>/(x−μ)<sup>2</sup></sup><span class="expl">(x−μ)² と 2σ² が上下逆になっている</span></span></div>
+        <div class="step"><span class="tag">誤りパターン2</span><span class="m">分母の二乗抜け：2σ<sup>2</sup> ではなく 2σ になっている</span></div>
+        <div class="step"><span class="tag">誤りパターン3</span><span class="m">マイナス抜け：e<sup>+(x−μ)<sup>2</sup>/2σ<sup>2</sup></sup><span class="expl">指数前のマイナスが脱落している</span></span></div>
+        <div class="step"><span class="tag">正解の判定</span><span class="m">3大ポイントがすべて揃っているものが正解<span class="expl">対応 Q7：C が正解</span></span></div>
+      </div>
+    </div>
+
+    <div class="rule-cn" style="margin-top:10px">記号とパラメータ（対応 問題集 Q14）：</div>
+    <p style="font-size:15px">記号 <span class="m hl-indigo">N(μ, σ<sup>2</sup>)</span> で表されます。2つのパラメータが曲線全体を決定します：</p>
+    <div class="table-scroll">
+      <table>
+        <tr><th>パラメータ</th><th>役割</th><th>直感的な意味</th></tr>
+        <tr><td class="m">μ（母平均）</td><td>分布の<b>中心位置</b></td><td>中心が左右に移動</td></tr>
+        <tr><td class="m">σ<sup>2</sup>（母分散）</td><td>分布の<b>広がり（形状）</b></td><td>大きいほど低く幅広く、小さいほど高く鋭くなる</td></tr>
+      </table>
+    </div>
+    <div class="note"><b>パラメータに関する解答の注意（Q14）：</b>「Gauss分布のパラメータは何か」と問われたら、<b>母平均 μ と母分散 σ²</b>（または母平均と母標準偏差）と答えます。σ² と σ は相互に定まるためどちらでも可です。</div>
+    <div class="imp">重要度：🔴 Bernoulli は「0/1代入による検証」、Gauss は「マイナス・(x−μ)²・2σ²」の3大ポイントで識別</div>
+  </div>
+</section>
+
+<!-- ============ §5 密度と積分 ============ -->
+<section id="s5">
+  <div class="sec-num">§5 · 概念の徹底理解</div>
+  <h2>確率密度関数 pdf と「密度」の本質</h2>
+  <p class="sec-sub">連続型は講義全体で最も抽象的な概念であり、正誤問題（Q4・Q5）の主戦場です。「池の中の魚」の実験を通して直感を構築し（ノート 5.2〜5.3）、「密度 ≠ 確率」の理由を明確に理解しましょう。</p>
+
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">魚の実験：「密度」はいかにして生まれるか</span><span class="rule-cn">ノート 5.2 の段階的導出</span></div>
+    <p>背景：池の中の魚の体長は<b>連続的</b>（どんな小数も取り得る）です。目的は平均体長を求めることですが、連続値はサイコロのように「1つずつカウントする」ことができません。</p>
+
+    <div class="example">
+      <div class="ex-label">STEP 1 · 連続値は直接数えられない → 区間に区切る</div>
+      <div class="ex-think"><b>課題：</b>魚の長さは 2.13 cm, 2.134 cm…… など無限に存在するため、特定の長さにぴったり一致する魚を数えても意味がありません。<b>対策：</b>長さの軸を小さな区間 <span class="m">Δx</span> に分割し、「各区間に何匹の魚が入っているか」を数えます。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">区間分割</span><span class="m">区間幅 Δx<sub>k</sub>、第 k 区間内の魚の数を n<sub>k</sub> とする</span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">STEP 2 · 密度 = 割合 ÷ 区間幅 &nbsp;|&nbsp; ノート式 (5-6)</div>
+      <div class="ex-think"><b>密度の定義：</b>区間内の魚の「割合」は <span class="m"><span class="frac"><span>n<sub>k</sub></span><span>n</span></span></span> です。これを<b>区間幅 Δx で割る</b>ことで、「単位長さあたりの割合」＝<b>密度 f</b> が定義されます。幅で割ることで、異なる幅の区間同士を公平に比較できます。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">定義式</span><span class="m">f(x<sub>k</sub>) = <span class="frac"><span>n<sub>k</sub></span><span>n·Δx<sub>k</sub></span></span> = <span class="frac"><span>区間内の割合</span><span>区間幅</span></span></span></div>
+        <div class="step"><span class="tag">重要な帰結</span><span class="m">区間が十分に狭く Δx が極小のとき → f の値は <span class="hl-red">&gt; 1</span> となり得る<span class="expl">割合自体は最大 1 ですが、極小の Δx で割るため、計算結果（密度）は 1 を超えることができます！</span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">STEP 3 · 母集団全体へ拡大 → 「確率の密度」 &nbsp;|&nbsp; ノート式 (5-9)</div>
+      <div class="ex-think"><b>極限操作：</b>釣る魚の数を無制限に増やしていくと（<span class="m">n → ∞</span>）、「割合」は「確率」へと収束し、関数 <span class="m">f</span> は<b>「確率の密度」</b>——単位長さあたりの確率の濃密さ——を表すようになります。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">n→∞</span><span class="m">f(x) ＝ 確率の密度（pdf）<span class="expl">密度そのものは確率ではなく、「確率の濃度」を表す</span></span></div>
+      </div>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">STEP 4 · Δx → 0 → 面積＝確率 &nbsp;|&nbsp; ノート式 (5-12)(5-13)</div>
+      <div class="ex-think"><b>極限の細分化：</b>区間幅 Δx を 0 に限りなく近づけると、和 Σ は積分 ∫ へと変化します。このとき「密度 × 幅」で表される長方形の面積を足し合わせた<b>曲線下の面積</b>こそが<b>確率</b>となります。</div>
+      <div class="steps">
+        <div class="step"><span class="tag">指定区間の面積＝確率</span><span class="m"><span class="int">∫<sub>a</sub><sup>b</sup></span> f(x) dx ＝ 体長が [a, b] の範囲に入る確率</span></div>
+        <div class="step"><span class="tag">全区間の総面積＝1</span><span class="m"><span class="int">∫<sub>−∞</sub><sup>∞</sup></span> f(x) dx = <span class="hl-green">1</span><span class="expl">全確率の和は 1（§0 の Σp=1 に対応）</span></span></div>
+      </div>
+    </div>
+    <div class="warn"><b>導出全体の核心：密度 ≠ 確率。</b>密度は「確率の濃度」であり、1を超えることがあります。一方、<b>確率は密度曲線の下の特定区間の「面積」</b>（積分によって得られる）であり、常に 1 以下です。密度が 1 を超え得るという事実こそ、両者が別物である明確な証拠です。</div>
+  </div>
+
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">正誤判定まとめカード（根拠付き）</span><span class="rule-cn">対応 問題集 Q4・Q5</span></div>
+    <div class="table-scroll">
+      <table>
+        <tr><th>記述</th><th>正誤</th><th>理由・根拠</th></tr>
+        <tr><td>確率質量関数の総和は 1（Σp = 1）</td><td class="hl-green">✓ 正解</td><td>すべての確率を足すと全体（1）になるため（§0）</td></tr>
+        <tr><td>確率密度関数を全区間で積分すると 1 になる</td><td class="hl-green">✓ 正解</td><td><span class="m"><span class="int">∫</span>f dx = 1</span> であり、全領域の面積＝全確率＝1</td></tr>
+        <tr><td>確率密度関数の値が 1 を超える場合もある</td><td class="hl-green">✓ 正解</td><td>密度＝割合÷区間幅であり、幅が小さければ 1 を超える（グラフの縦軸も2.0まで存在）</td></tr>
+        <tr><td>確率密度関数の値が負になる場合もある</td><td class="hl-red">✗ 誤り</td><td>密度は「個数の割合÷幅」であるため、常に 0 以上（負の値は取らない）</td></tr>
+        <tr><td>確率密度関数の値は確率を表す</td><td class="hl-red">✗ 誤り</td><td>密度 ≠ 確率。特定区間上の「<b>面積</b>（積分値）」が確率を表す</td></tr>
+        <tr><td>人間はどんな状況でも確率分布を必ず知ることができる</td><td class="hl-red">✗ 誤り</td><td>無限母集団の真の確率は完全には知り得ない（§0 の基本事項）</td></tr>
+      </table>
+    </div>
+    <div class="note"><b>問題集の正解対応：</b>Q4 は C・D が正しい記述（Σp=1, ∫f=1 が正解、A・B は誤り）。Q5 は教材の判定基準に従い B・D が正解（密度は 1 を超え得る）。根底にある最重要原則は<b>密度値 ≠ 確率</b> です。</div>
+  </div>
+
+  <div class="card">
+    <div class="rule-head"><span class="rule-jp">連続型の母平均：Σ を ∫ に置き換える</span><span class="rule-cn">ノート 5.3 / 6.2 · 対応 問題集 Q13</span></div>
+    <div class="big-eq m">μ = <span class="int">∫<sub>−∞</sub><sup>∞</sup></span> <span class="hl-red">x · f(x)</span> dx</div>
+    <p>離散型と連続型は<b>同じ数学的構造の別表現</b>です。離散型は各値に確率を掛けて<b>求和（Σ）</b>し、連続型は各値に密度を掛けて<b>積分（∫）</b>します。「和 Σ → 積分 ∫」「確率 p → 密度 f(x)」の対応関係です。</p>
+    <div class="table-scroll">
+      <table>
+        <tr><th>具体例</th><th>型</th><th>母平均の式</th></tr>
+        <tr><td>サイコロ</td><td class="hl-red">離散型</td><td class="m"><span class="sig">Σ</span> x · p<sub>x</sub></td></tr>
+        <tr><td>コイン（0-1）</td><td class="hl-red">離散型</td><td class="m">p<sub>1</sub><span class="rt">（0の項消滅、§3）</span></td></tr>
+        <tr><td>魚の体長</td><td class="hl-green">連続型</td><td class="m"><span class="int">∫</span> x · f(x) dx</td></tr>
+      </table>
+    </div>
+
+    <div class="example">
+      <div class="ex-label">問題集 Q13 タイプ &nbsp;|&nbsp; 穴埋め：f(x) を Gauss 密度に置き換える</div>
+      <div class="ex-think"><b>考え方：</b>問題文で <span class="m">μ = <span class="int">∫<sub>−∞</sub><sup>∞</sup></span> [　] dx</span> の空欄を埋めるよう求められます。被積分関数は <span class="m">x · f(x)</span> であり、<span class="m">f(x)</span> の部分に§4の Gauss 分布の密度関数を代入するだけです。<b>実際に積分計算を行う必要はありません。</b></div>
+      <div class="steps">
+        <div class="step"><span class="tag">被積分関数</span><span class="m">x · f(x)</span></div>
+        <div class="step"><span class="tag">f を Gauss に置換</span><span class="m hl-red">x · <span class="frac"><span>1</span><span>√(2πσ<sup>2</sup>)</span></span> e<sup>−(x−μ)<sup>2</sup>/2σ<sup>2</sup></sup></span></div>
+      </div>
+    </div>
+    <div class="imp">重要度：🔴 密度≠確率、面積＝確率、連続型の μ=∫x·f(x)dx（Σ↔∫ の対応で覚える）</div>
+  </div>
+</section>
+
+</div>
+
+<script>
+/* ---- インタラクティブ pmf バーグラフ + リアルタイム母平均 ---- */
+(function(){
+  var chart=document.getElementById("chart"),
+      sliders=document.getElementById("sliders"),
+      muVal=document.getElementById("muVal"),
+      sumVal=document.getElementById("sumVal");
+
+  // 初期値：一様分布、整数重み（相対高さ）から正規化
+  var w=[1,1,1,1,1,1];           // 6つの面の相対重み
+  var bars=[], inputs=[];
+
+  for(var i=0;i<6;i++){
+    var col=document.createElement("div"); col.className="pmf-col";
+    var bar=document.createElement("div"); bar.className="pmf-bar";
+    var lab=document.createElement("span"); bar.appendChild(lab);
+    var face=document.createElement("div"); face.className="pmf-face"; face.textContent=(i+1);
+    col.appendChild(bar); col.appendChild(face); chart.appendChild(col);
+    bars.push({bar:bar,lab:lab});
+
+    var s=document.createElement("input");
+    s.type="range"; s.min="0"; s.max="100"; s.value="16.67"; s.className="pmf-slider";
+    s.dataset.idx=i;
+    s.addEventListener("input",function(){ w[this.dataset.idx]=parseFloat(this.value); render(); });
+    sliders.appendChild(s); inputs.push(s);
+  }
+
+  function render(){
+    var total=w.reduce(function(a,b){return a+b;},0);
+    if(total<=0) total=1;
+    var mu=0, maxp=0, p=[];
+    for(var i=0;i<6;i++){ p[i]=w[i]/total; mu+=(i+1)*p[i]; if(p[i]>maxp) maxp=p[i]; }
+    for(var j=0;j<6;j++){
+      var h = maxp>0 ? (p[j]/maxp*100) : 0;
+      bars[j].bar.style.height=h+"%";
+      bars[j].lab.textContent=p[j].toFixed(2);
+    }
+    muVal.textContent=mu.toFixed(2);
+    sumVal.textContent="Σp = 1.00 ✓";   // 正規化後は常に 1
+    sumVal.className="pmf-sum ok";
+  }
+
+  document.querySelectorAll(".pmf-preset").forEach(function(btn){
+    btn.addEventListener("click",function(){
+      var pre=btn.dataset.preset;
+      if(pre==="uniform") w=[1,1,1,1,1,1];
+      else if(pre==="even") w=[0,1,0,1,0,1];
+      else if(pre==="q9") w=[1/60,19/60,1/12,1/4,1/6,1/6];
+      // スライダー位置を同期（相対割合）
+      var total=w.reduce(function(a,b){return a+b;},0)||1;
+      inputs.forEach(function(s,i){ s.value=(w[i]/total*100).toFixed(2); });
+      render();
+    });
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
